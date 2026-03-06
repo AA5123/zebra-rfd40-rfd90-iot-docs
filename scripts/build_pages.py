@@ -367,7 +367,11 @@ def load_toc():
 def sidebar(current):
     nav_title, nav_items = load_toc()
     current_base = current.split("#")[0]
-    lines = ['<div class="sidebar">', '  <div class="nav-title">' + nav_title + '</div>']
+    title_text = _html_escape(nav_title)
+    lines = [
+        '<div class="sidebar">',
+        '  <div class="nav-title"><div class="nav-title-main">' + title_text + '</div><div class="nav-title-sub">Developer Guide</div></div>',
+    ]
 
     def is_group_expanded(item):
         href = item.get("href", "")

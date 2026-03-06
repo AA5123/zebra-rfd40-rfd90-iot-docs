@@ -624,3 +624,128 @@ body.sidebar-collapsed .sidebar {
     padding: 1.25rem 1rem 1.5rem;
   }
 }
+
+/* ============================================================
+   TOC Skin: light documentation-style navigation
+   ============================================================ */
+
+.doc-header {
+  background: #ffffff;
+  border-bottom: 1px solid #d5d9e0;
+}
+
+.toc-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid #d5d9e0;
+  background: #f8f9fb;
+  color: #1b2838;
+}
+
+.toc-toggle:hover {
+  background: #eef2f7;
+}
+
+.sidebar {
+  width: 300px;
+  min-width: 300px;
+  background: #f8f9fb;
+  border-right: 1px solid #d5d9e0;
+}
+
+.sidebar .nav-title {
+  background: #f2f3f7;
+  border-bottom: 1px solid #d5d9e0;
+  padding: 1.15rem 1.25rem;
+}
+
+.sidebar .nav-title-main {
+  color: #16191f;
+  font-size: 1.16rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.sidebar .nav-title-sub {
+  margin-top: 0.35rem;
+  color: #5f6b7a;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.sidebar a {
+  color: #1b2838;
+  border-left: 3px solid transparent;
+  margin: 0;
+  padding: 0.4rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.sidebar a:hover {
+  background: #eef2f7;
+  color: #0972d3;
+  border-left-color: #9cc3e5;
+}
+
+.sidebar .nav-group {
+  border-left: 0;
+}
+
+.sidebar .nav-group > .nav-group-toggle {
+  color: #1b2838;
+  font-size: 0.96rem;
+  font-weight: 600;
+  min-height: 2.1rem;
+}
+
+.sidebar .nav-group-toggle::before {
+  width: 1.2rem;
+  height: 1.2rem;
+  font-size: 0.95rem;
+  color: #5f6b7a;
+}
+
+.sidebar .nav-group-children {
+  padding-left: 0;
+}
+
+.sidebar .nav-group-children a {
+  padding-left: 2.45rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: #2c3a4a;
+}
+
+.sidebar .nav-group-children a.nav-sub-depth2 {
+  padding-left: 3.25rem;
+  font-size: 0.89rem;
+  opacity: 1;
+}
+
+.sidebar a.active,
+.sidebar .nav-group-toggle.active {
+  background: #eef5fc;
+  color: #0972d3;
+  border-left-color: #0972d3;
+  font-weight: 700;
+}
+
+.sidebar a.nav-top-link {
+  padding-left: 2.2rem !important;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 300px;
+    min-width: 300px;
+  }
+
+  body.sidebar-collapsed .sidebar {
+    width: 300px;
+    min-width: 300px;
+  }
+}
