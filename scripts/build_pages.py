@@ -929,6 +929,16 @@ def main():
       }
       setupGroupToggle();
       setInterval(setupGroupToggle, 800);
+
+      /* Force depth-2 indentation via inline styles (CSS alone can't beat styled-components) */
+      function indentDepth2() {
+        var labels = root.querySelectorAll('label.-depth2');
+        for (var d = 0; d < labels.length; d++) {
+          labels[d].style.setProperty('padding-left', '72px', 'important');
+        }
+      }
+      indentDepth2();
+      setInterval(indentDepth2, 600);
     }
 
     var specUrl = 'openapi.yaml?v=' + Date.now();
