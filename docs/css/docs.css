@@ -551,13 +551,15 @@ body {
 }
 
 .layout-shell {
-  height: 100vh;
-  padding-top: 56px;
+  height: calc(100vh - 56px);
+  margin-top: 56px;
+  overflow: hidden;
 }
 
 .layout {
   height: 100%;
   min-height: 0;
+  overflow: hidden;
 }
 
 .sidebar {
