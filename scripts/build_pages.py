@@ -851,11 +851,11 @@ def main():
                 var links = sidebar.querySelectorAll('a');
                 for (var i = 0; i < links.length; i++) {
                     var a = links[i];
-                    var t = String(a.textContent || '').trim().replace(/\s+/g, ' ');
+                    var t = String(a.textContent || '').trim().replace(/\\s+/g, ' ');
                     // Keep section headers like "Management - Device Status" as-is.
                     // Simplify operation labels such as "get_version - Retrieves ...".
-                    if (/^[a-z_][a-z0-9_]*\s+-\s+/i.test(t)) {
-                        a.textContent = t.split(/\s+-\s+/, 2)[0];
+                    if (/^[a-z_][a-z0-9_]*\\s+-\\s+/i.test(t)) {
+                        a.textContent = t.split(/\\s+-\\s+/, 2)[0];
                     }
                 }
             }
