@@ -99,6 +99,10 @@
                             if (/default/i.test(raw)) {
                                 t.textContent = String(t.textContent || '').replace(/default/gi, 'Response');
                             }
+                            // Also replace inline occurrences (e.g., icon + label wrappers).
+                            if (/default/i.test(String(t.textContent || ''))) {
+                                t.textContent = String(t.textContent || '').replace(/default/gi, 'Response');
+                            }
             }
             for (var k = 0; k < r.children.length; k++) walkRoot(r.children[k]);
           }

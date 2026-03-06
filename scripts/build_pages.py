@@ -795,6 +795,10 @@ def main():
                             if (/default/i.test(raw)) {
                                 t.textContent = String(t.textContent || '').replace(/default/gi, 'Response');
                             }
+                            // Also replace inline occurrences (e.g., icon + label wrappers).
+                            if (/default/i.test(String(t.textContent || ''))) {
+                                t.textContent = String(t.textContent || '').replace(/default/gi, 'Response');
+                            }
             }
             for (var k = 0; k < r.children.length; k++) walkRoot(r.children[k]);
           }
@@ -848,7 +852,7 @@ def main():
         f.write(redoc_standalone_html)
     print("Generated docs/api-reference-redoc.html")
 
-    api_ref_body = """<iframe src="api-reference-redoc.html?v=5" title="API Reference" class="api-ref-iframe"></iframe>"""
+    api_ref_body = """<iframe src="api-reference-redoc.html?v=6" title="API Reference" class="api-ref-iframe"></iframe>"""
     api_ref_html = """<!DOCTYPE html>
 <html lang="en" class="layout-api-ref-page">
 <head>
