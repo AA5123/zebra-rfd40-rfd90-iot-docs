@@ -856,12 +856,8 @@ def main():
       css.push('[role="menu"] li:not([aria-expanded]) > label.-depth1 { padding-left:50px!important; }');
 
       /* ---- Depth 2: Operations — "get_status", "get_version" etc. ---- */
-      /* Operations use OperationMenuItemContent with a different label structure.
-         Target by multiple selectors to ensure we catch the right elements. */
-      css.push('[role="menu"] li li li[role="menuitem"] > label { padding-left:72px!important; font-size:13px!important; color:#16191f!important; }');
-      css.push('[role="menu"] li > label.-depth2 { padding-left:72px!important; font-size:13px!important; color:#16191f!important; }');
-      css.push('[role="menu"] li li li[role="menuitem"] > label::before, [role="menu"] li > label.-depth2::before { content:""!important; display:none!important; }');
-      css.push('li[role="menuitem"] > label.-depth2 { padding-left:72px!important; }');
+      css.push('[role="menu"] li > label.-depth2 { padding-left:60px!important; font-size:13px!important; color:#16191f!important; }');
+      css.push('[role="menu"] li > label.-depth2::before { content:""!important; display:none!important; }');
 
       /* ---- Hover & active ---- */
       css.push('[role="menu"] li > label:hover { color:#0073bb!important; background:transparent!important; }');
@@ -929,16 +925,6 @@ def main():
       }
       setupGroupToggle();
       setInterval(setupGroupToggle, 800);
-
-      /* Force depth-2 indentation via inline styles (CSS alone can't beat styled-components) */
-      function indentDepth2() {
-        var labels = root.querySelectorAll('label.-depth2');
-        for (var d = 0; d < labels.length; d++) {
-          labels[d].style.setProperty('padding-left', '72px', 'important');
-        }
-      }
-      indentDepth2();
-      setInterval(indentDepth2, 600);
     }
 
     var specUrl = 'openapi.yaml?v=' + Date.now();
