@@ -698,15 +698,16 @@ body.sidebar-collapsed .sidebar {
   padding: 0 1.15rem;
   border-bottom: 1px solid var(--toc-border);
   background: #f3f4f7;
+  overflow: hidden;
 }
 
 .sidebar .nav-brand-logo {
   display: block;
-  width: 220px;
-  max-width: 100%;
-  max-height: 68px;
-  height: auto;
-  object-fit: contain;
+  width: 240px;
+  height: 68px;
+  max-width: none;
+  object-fit: cover;
+  object-position: left center;
 }
 
 .sidebar .nav-title {
