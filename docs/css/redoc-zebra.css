@@ -9,23 +9,22 @@
   display: none !important;
 }
 
-/* ═══ HIDE Redoc built-in sidebar entirely (navigation provided by outer api-reference.html) ═══ */
-#redoc-container > div > div:first-child,
-#redoc-container [class*="sidebar"],
-#redoc-container [class*="Sidebar"],
-#redoc-container [class*="menu-content"],
-#redoc-container [class*="MenuContent"],
-#redoc-container [role="navigation"] {
-  display: none !important;
-  width: 0 !important;
-  min-width: 0 !important;
-  max-width: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  overflow: hidden !important;
-  visibility: hidden !important;
-  position: absolute !important;
-  left: -9999px !important;
+/* ═══ Redoc sidebar styling ═══ */
+#redoc-container [role="navigation"] a:hover {
+  color: #2563eb !important;
+}
+
+#redoc-container [role="navigation"] li.active > label,
+#redoc-container [role="navigation"] li.active > a {
+  border-left: 3px solid #2563eb;
+}
+
+#redoc-container [class*="group-title"],
+#redoc-container label[role="menuitem"] {
+  color: #94a3b8 !important;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
 }
 
 /* MQTT API: hide HTTP method badges (POST, GET, etc.) – Redoc uses class "http-verb" + type */
@@ -37,8 +36,7 @@
   display: none !important;
 }
 
-/* Hide method badge in sidebar menu items (first small badge in each link) */
-/* (sidebar is fully hidden above, these are kept as safety fallback) */
+/* Hide method badge in sidebar menu items (MQTT API has no HTTP verbs) */
 
 /* Hide method + path line in operation header (POST /get_status) – show only operation name */
 #redoc-container > div > div:nth-child(2) [class*="operation"] > div > div:first-child > span:first-child,
@@ -47,7 +45,10 @@
   display: none !important;
 }
 
-/* (Redoc sidebar is fully hidden — no styling needed) */
+/* Sidebar section separators */
+#redoc-container [role="navigation"] ul > li {
+  border-bottom: 1px solid #1f2937;
+}
 
 /* Reduce large blank gaps when response sections are collapsed */
 #redoc-container > div > div:nth-child(2) [class*="operation"],

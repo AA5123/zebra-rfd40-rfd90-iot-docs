@@ -706,15 +706,6 @@ def main():
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; height: 100%; }
     body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: #fff; }
-
-    /* Hide Redoc built-in sidebar — navigation is provided by the outer api-reference.html page */
-    #redoc-container > div > div:first-child {
-      display: none !important;
-      width: 0 !important;
-      min-width: 0 !important;
-      max-width: 0 !important;
-      overflow: hidden !important;
-    }
   </style>
 </head>
 <body>
@@ -826,7 +817,7 @@ def main():
       theme: {
         colors: { primary: { main: '#2563eb' }, success: { main: '#059669' }, warning: { main: '#d97706' }, error: { main: '#dc2626' } },
         typography: { fontFamily: '"Inter", "Segoe UI", system-ui, sans-serif', headings: { fontFamily: '"Inter", "Segoe UI", system-ui, sans-serif' }, code: { fontFamily: 'Consolas, Monaco, monospace' } },
-        sidebar: { width: '0px', backgroundColor: '#111827', textColor: '#cbd5e1', activeTextColor: '#ffffff', groupItems: { activeBackgroundColor: '#1e293b' } },
+        sidebar: { backgroundColor: '#111827', textColor: '#cbd5e1', activeTextColor: '#ffffff', groupItems: { activeBackgroundColor: '#1e293b' } },
         rightPanel: { backgroundColor: '#1e293b', textColor: '#e2e8f0' }
       },
       pathInMiddlePanel: true,
