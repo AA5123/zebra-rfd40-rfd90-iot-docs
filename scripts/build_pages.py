@@ -920,6 +920,38 @@ def main():
       style.id = 'tree-sidebar-css';
       style.textContent = css.join('\\n');
       document.head.appendChild(style);
+
+      /* --- Add click-to-toggle for group headings (depth-0) --- */
+      /* Redoc depth-0 items don't collapse/expand by default. We add custom handlers. */
+      function setupGroupToggle() {
+        var groupItems = root.querySelectorAll(':scope > li[role="menuitem"]');
+        for (var i = 0; i < groupItems.length; i++) {
+          var li = groupItems[i];
+          if (li.getAttribute('data-tree-toggle') === '1') continue;
+          li.setAttribute('data-tree-toggle', '1');
+          (function(groupLi) {
+            var label = groupLi.querySelector('label.-depth0');
+            if (!label) return;
+            label.addEventListener('click', function(e) {
+              e.stopPropagation();
+              /* Find the child <ul> inside this <li> */
+              var childUl = null;
+              var kids = groupLi.children;
+              for (var k = 0; k < kids.length; k++) {
+                if (kids[k].tagName === 'UL') { childUl = kids[k]; break; }
+              }
+              if (!childUl) return;
+              /* Toggle visibility */
+              var isVisible = childUl.style.display !== 'none';
+              childUl.style.display = isVisible ? 'none' : '';
+              groupLi.setAttribute('aria-expanded', isVisible ? 'false' : 'true');
+            });
+          })(li);
+        }
+      }
+      setupGroupToggle();
+      /* Re-run after Redoc re-renders */
+      setInterval(setupGroupToggle, 800);
     }
 
     var specUrl = 'openapi.yaml?v=' + Date.now();
