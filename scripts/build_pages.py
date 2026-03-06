@@ -815,132 +815,111 @@ def main():
     }
 
     function runHide() {
-      hideMethodBadges();
-      injectShadowStyles(el);
-      styleSidebar();
+      try { hideMethodBadges(); } catch(e) {}
+      try { injectShadowStyles(el); } catch(e) {}
+      try { styleSidebar(); } catch(e) {}
     }
 
-    /* AWS-style tree indentation applied via JS since Redoc uses hashed class names */
+    /* AWS-style tree indentation: inject a <style> tag targeting Redoc's actual DOM.
+       Redoc renders: <ul role="menu"> > <li role="menuitem" depth=N> > <label class="-depthN [active]">
+       Labels use className "-depth0", "-depth1", "-depth2" etc.
+       Arrows are ShelfIcon SVGs inside <label>.
+       Nested groups: <li> contains another <ul> (MenuItemUl) with $expanded toggling display:none. */
     function styleSidebar() {
-      var wrap = el.children[0];
-      if (!wrap) return;
-      var sidebar = wrap.children[0];
-      if (!sidebar) return;
+      if (document.getElementById('tree-sidebar-css')) return;
+      var root = el.querySelector('[role="menu"]');
+      if (!root) return;
 
-      // Hide ALL Redoc default arrow SVGs in sidebar
-      var allSvgs = sidebar.querySelectorAll('svg');
-      for (var s = 0; s < allSvgs.length; s++) {
-        allSvgs[s].style.setProperty('display', 'none', 'important');
-      }
+      var css = [];
 
-      // Find all <label> with role="menuitem" — these are group headers (Level 1)
-      var groupLabels = sidebar.querySelectorAll('label[role="menuitem"]');
-      for (var g = 0; g < groupLabels.length; g++) {
-        var lbl = groupLabels[g];
-        lbl.style.cssText = 'color:#545b64!important;text-transform:uppercase;font-size:0.72rem;font-weight:700;letter-spacing:0.04em;padding:10px 12px 4px 12px!important;cursor:pointer;display:flex;align-items:center;gap:6px;';
+      /* ---- Hide Redoc default arrow SVGs (ShelfIcon) inside sidebar labels ---- */
+      css.push('[role="menu"] label svg, [role="menu"] label polygon { display: none !important; visibility: hidden !important; }');
 
-        // Add or update disclosure triangle for group heading
-        var groupTriangle = lbl.querySelector('.tree-triangle');
-        if (!groupTriangle) {
-          groupTriangle = document.createElement('span');
-          groupTriangle.className = 'tree-triangle';
-          groupTriangle.style.cssText = 'font-size:0.6rem;color:#545b64;flex-shrink:0;width:12px;display:inline-block;';
-          lbl.insertBefore(groupTriangle, lbl.firstChild);
-        }
-        // Determine if expanded: check if child <ul> is visible
-        var groupLi = lbl.closest('li');
-        if (!groupLi) continue;
-        var groupChildUl = groupLi.querySelector('ul');
-        var groupExpanded = groupChildUl && groupChildUl.offsetHeight > 0 && groupChildUl.style.display !== 'none';
-        groupTriangle.textContent = groupExpanded ? '\u25BC' : '\u25B6';
+      /* ---- Level 0: Group headings (depth=0) like MANAGEMENT INTERFACE ---- */
+      css.push('[role="menu"] > li[role="menuitem"] > label.-depth0 {');
+      css.push('  color: #545b64 !important;');
+      css.push('  text-transform: uppercase !important;');
+      css.push('  font-size: 0.72rem !important;');
+      css.push('  font-weight: 700 !important;');
+      css.push('  letter-spacing: 0.04em !important;');
+      css.push('  padding: 10px 14px 6px 14px !important;');
+      css.push('  cursor: pointer !important;');
+      css.push('}');
+      /* Group heading <li> separator */
+      css.push('[role="menu"] > li[role="menuitem"] { border-bottom: 1px solid #eaeded !important; padding-bottom: 4px !important; margin-bottom: 4px !important; }');
 
-        groupLi.style.borderBottom = '1px solid #eaeded';
-        groupLi.style.paddingBottom = '6px';
-        groupLi.style.marginBottom = '6px';
+      /* Disclosure triangle for depth-0 (group headings) */
+      css.push('[role="menu"] > li[role="menuitem"] > label.-depth0::before {');
+      css.push('  content: "\\25B6" !important;');
+      css.push('  font-size: 0.5rem !important;');
+      css.push('  color: #545b64 !important;');
+      css.push('  margin-right: 6px !important;');
+      css.push('  display: inline-block !important;');
+      css.push('  width: 10px !important;');
+      css.push('  flex-shrink: 0;');
+      css.push('}');
+      /* Expanded group: show downward triangle */
+      css.push('[role="menu"] > li[role="menuitem"][aria-expanded="true"] > label.-depth0::before {');
+      css.push('  content: "\\25BC" !important;');
+      css.push('}');
 
-        // Level 2: tag items inside this group
-        if (!groupChildUl) continue;
-        var tagItems = groupChildUl.children;
-        for (var t = 0; t < tagItems.length; t++) {
-          var tagLi = tagItems[t];
-          var tagLink = tagLi.querySelector(':scope > label, :scope > a');
-          if (!tagLink) continue;
+      /* ---- Level 1: Tag items (depth=1) like "Management - Device Status" ---- */
+      css.push('[role="menu"] li[role="menuitem"] > label.-depth1 {');
+      css.push('  padding-left: 32px !important;');
+      css.push('  font-size: 0.87rem !important;');
+      css.push('  font-weight: 400 !important;');
+      css.push('  color: #16191f !important;');
+      css.push('  line-height: 1.9 !important;');
+      css.push('  text-transform: none !important;');
+      css.push('  letter-spacing: normal !important;');
+      css.push('  opacity: 1 !important;');
+      css.push('}');
+      /* No border for nested items */
+      css.push('[role="menu"] li li[role="menuitem"] { border-bottom: none !important; padding-bottom: 0 !important; margin-bottom: 0 !important; margin-top: 0 !important; }');
 
-          // Check if this tag has child operations (expandable)
-          var opUl = tagLi.querySelector('ul');
-          var hasChildren = opUl && opUl.children.length > 0;
+      /* Disclosure triangle for depth-1 (tag items that have children) */
+      css.push('[role="menu"] li[role="menuitem"] > label.-depth1::before {');
+      css.push('  content: "\\25B6" !important;');
+      css.push('  font-size: 0.45rem !important;');
+      css.push('  color: #545b64 !important;');
+      css.push('  margin-right: 5px !important;');
+      css.push('  display: inline-block !important;');
+      css.push('  width: 9px !important;');
+      css.push('  flex-shrink: 0;');
+      css.push('}');
+      /* Expanded tag: show downward triangle */
+      css.push('[role="menu"] li[role="menuitem"][aria-expanded="true"] > label.-depth1::before {');
+      css.push('  content: "\\25BC" !important;');
+      css.push('}');
+      /* Collapsed tag (no children visible): hide triangle for leaf tags */
+      css.push('[role="menu"] li[role="menuitem"][aria-expanded="false"] > label.-depth1::before {');
+      css.push('  content: "\\25B6" !important;');
+      css.push('}');
 
-          if (hasChildren) {
-            tagLink.style.cssText = 'padding-left:24px!important;font-size:0.87rem;font-weight:400;color:#16191f!important;line-height:1.8;display:flex;align-items:center;gap:5px;cursor:pointer;';
-            // Add or update triangle for tag item
-            var tagTriangle = tagLink.querySelector('.tree-triangle');
-            if (!tagTriangle) {
-              tagTriangle = document.createElement('span');
-              tagTriangle.className = 'tree-triangle';
-              tagTriangle.style.cssText = 'font-size:0.5rem;color:#545b64;flex-shrink:0;width:12px;display:inline-block;';
-              tagLink.insertBefore(tagTriangle, tagLink.firstChild);
-            }
-            var tagExpanded = opUl.offsetHeight > 0 && opUl.style.display !== 'none';
-            tagTriangle.textContent = tagExpanded ? '\u25BC' : '\u25B6';
-          } else {
-            tagLink.style.cssText = 'padding-left:40px!important;font-size:0.87rem;font-weight:400;color:#16191f!important;line-height:1.8;';
-          }
+      /* ---- Level 2: Operation items (depth=2) like endpoints ---- */
+      css.push('[role="menu"] li[role="menuitem"] > label.-depth2 {');
+      css.push('  padding-left: 56px !important;');
+      css.push('  font-size: 0.84rem !important;');
+      css.push('  font-weight: 400 !important;');
+      css.push('  color: #16191f !important;');
+      css.push('  line-height: 1.9 !important;');
+      css.push('  text-transform: none !important;');
+      css.push('  letter-spacing: normal !important;');
+      css.push('  opacity: 1 !important;');
+      css.push('}');
+      /* No triangle for operation items */
+      css.push('[role="menu"] li[role="menuitem"] > label.-depth2::before { content: "" !important; display: none !important; }');
 
-          // Level 3: operation items
-          if (!opUl) continue;
-          var opItems = opUl.children;
-          for (var o = 0; o < opItems.length; o++) {
-            var opLink = opItems[o].querySelector('a');
-            if (opLink) {
-              opLink.style.cssText = 'padding-left:56px!important;font-size:0.84rem;font-weight:400;color:#16191f!important;line-height:1.8;';
-            }
-          }
-        }
-      }
+      /* ---- Hover / active states ---- */
+      css.push('[role="menu"] li[role="menuitem"] > label:hover { background-color: #f2f3f3 !important; color: #0073bb !important; }');
+      css.push('[role="menu"] li[role="menuitem"] > label.active { color: #0073bb !important; background-color: #f2f3f3 !important; }');
+      css.push('[role="menu"] li[role="menuitem"] > label.-depth0.active { color: #0073bb !important; }');
+      css.push('[role="menu"] li[role="menuitem"] > label.-depth0:hover { color: #0073bb !important; }');
 
-      // Fallback: if no group labels found, walk all <li> by depth
-      if (groupLabels.length === 0) {
-        var navEl = sidebar.querySelector('[role="navigation"]') || sidebar;
-        var allLis = navEl.querySelectorAll('li');
-        for (var i = 0; i < allLis.length; i++) {
-          var li = allLis[i];
-          var depth = 0;
-          var p = li.parentElement;
-          while (p && p !== navEl) {
-            if (p.tagName === 'UL' || p.tagName === 'OL') depth++;
-            p = p.parentElement;
-          }
-          var link = li.querySelector(':scope > a, :scope > label');
-          if (!link) continue;
-          var childUl = li.querySelector('ul');
-          var isExpandable = childUl && childUl.children.length > 0;
-          var isOpen = childUl && childUl.offsetHeight > 0;
-
-          if (depth <= 1) {
-            link.style.cssText = 'color:#545b64!important;text-transform:uppercase;font-size:0.72rem;font-weight:700;letter-spacing:0.04em;padding:10px 12px 4px 12px!important;display:flex;align-items:center;gap:6px;cursor:pointer;';
-            li.style.borderBottom = '1px solid #eaeded';
-            li.style.paddingBottom = '6px';
-            li.style.marginBottom = '6px';
-          } else if (depth === 2) {
-            link.style.cssText = 'padding-left:24px!important;font-size:0.87rem;font-weight:400;color:#16191f!important;line-height:1.8;display:flex;align-items:center;gap:5px;';
-            li.style.borderBottom = 'none';
-          } else {
-            link.style.cssText = 'padding-left:56px!important;font-size:0.84rem;font-weight:400;color:#16191f!important;line-height:1.8;';
-            li.style.borderBottom = 'none';
-          }
-
-          if (isExpandable && depth <= 2) {
-            var tri = link.querySelector('.tree-triangle');
-            if (!tri) {
-              tri = document.createElement('span');
-              tri.className = 'tree-triangle';
-              tri.style.cssText = 'font-size:' + (depth <= 1 ? '0.6' : '0.5') + 'rem;color:#545b64;flex-shrink:0;width:12px;display:inline-block;';
-              link.insertBefore(tri, link.firstChild);
-            }
-            tri.textContent = isOpen ? '\u25BC' : '\u25B6';
-          }
-        }
-      }
+      var style = document.createElement('style');
+      style.id = 'tree-sidebar-css';
+      style.textContent = css.join('\\n');
+      document.head.appendChild(style);
     }
 
     var specUrl = 'openapi.yaml?v=' + Date.now();
@@ -975,7 +954,7 @@ def main():
         f.write(redoc_standalone_html)
     print("Generated docs/api-reference-redoc.html")
 
-    api_ref_body = """<iframe src="api-reference-redoc.html?v=10" title="API Reference" class="api-ref-iframe"></iframe>"""
+    api_ref_body = """<iframe src="api-reference-redoc.html?v=11" title="API Reference" class="api-ref-iframe"></iframe>"""
     api_ref_html = """<!DOCTYPE html>
 <html lang="en" class="layout-api-ref-page">
 <head>
