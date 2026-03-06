@@ -733,10 +733,11 @@ body.sidebar-collapsed .sidebar {
   color: var(--toc-text);
   border-left: 0;
   margin: 0;
-  padding: 0.32rem 0.9rem;
+  padding: 0.32rem 1rem;
   font-size: 0.88rem;
   font-weight: 500;
   min-height: 1.9rem;
+  line-height: 1.35;
 }
 
 .sidebar a:hover {
@@ -754,30 +755,30 @@ body.sidebar-collapsed .sidebar {
   font-size: 0.91rem;
   font-weight: 600;
   min-height: 1.95rem;
-  padding-left: 0.5rem;
-  gap: 0.35rem;
+  padding-left: 0.45rem;
+  gap: 0.3rem;
 }
 
 .sidebar .nav-group-toggle::before {
-  width: 0.9rem;
-  height: 0.9rem;
+  width: 0.85rem;
+  height: 0.85rem;
   font-size: 0.72rem;
   color: var(--toc-text-muted);
 }
 
 .sidebar .nav-group-children {
-  padding-left: 0.75rem;
+  padding-left: 0;
 }
 
 .sidebar .nav-group-children a {
-  padding-left: 1.55rem;
+  padding-left: 2.35rem;
   font-size: 0.86rem;
   font-weight: 500;
   color: #2c3a4a;
 }
 
 .sidebar .nav-group-children a.nav-sub-depth2 {
-  padding-left: 2.25rem;
+  padding-left: 3.2rem;
   font-size: 0.84rem;
   opacity: 1;
 }
@@ -791,7 +792,7 @@ body.sidebar-collapsed .sidebar {
 }
 
 .sidebar a.nav-top-link {
-  padding-left: 1.42rem !important;
+  padding-left: 1rem !important;
 }
 
 .sidebar > a[href="index.html"] {
