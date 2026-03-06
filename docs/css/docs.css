@@ -1,0 +1,510 @@
+/*
+ * RFD40 / RFD90 IoT Connector API Reference
+ * Industrial / enterprise documentation theme
+ */
+:root {
+  /* Zebra-style, black & white / grayscale palette */
+  --side-bg: #000000;
+  --side-bg-hover: #111827;
+  --side-text: #d1d5db;
+  --side-text-active: #f9fafb;
+  --side-accent: #f5f5f5;
+  --side-border: #111827;
+
+  --main-bg: #ffffff;
+  --main-text: #111111;
+  --main-text-muted: #4b5563;
+  --main-border: #e5e7eb;
+  --main-heading: #111111;
+
+  --link: #111111;
+  --link-hover: #000000;
+  --accent: #111111;
+
+  --table-header-bg: #f5f5f5;
+  --table-header-text: #111111;
+  --table-border: #e5e7eb;
+  --table-row-alt: #fafafa;
+
+  --code-bg: #111827;
+  --code-text: #f9fafb;
+  --code-inline-bg: #f3f4f6;
+  --code-inline-text: #111111;
+
+  --hr: #e5e7eb;
+  --strong: #111111;
+
+  /* Content area padding – enterprise-grade spacing (40–60px) */
+  --content-padding-x: 52px;
+  --content-padding-y: 2.5rem;
+  --content-padding-bottom: 4rem;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--main-text);
+  background: var(--main-bg);
+}
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Sidebar – industrial dark, fixed width (base, later overridden by modern styles) */
+.sidebar {
+  width: 280px;
+  min-width: 280px;
+  flex-shrink: 0;
+  background: var(--side-bg);
+  border-right: 1px solid var(--side-border);
+  padding: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar .nav-title {
+  padding: 1rem 1.25rem;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--side-accent);
+  border-bottom: 1px solid var(--side-border);
+  background: rgba(56, 189, 248, 0.06);
+}
+
+.sidebar a {
+  display: block;
+  padding: 0.6rem 1.25rem;
+  color: var(--side-text);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border-left: 3px solid transparent;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.sidebar a:hover {
+  background: var(--side-bg-hover);
+  color: var(--side-text-active);
+  border-left-color: var(--side-accent);
+}
+
+.sidebar a.active {
+  background: var(--side-bg-hover);
+  color: var(--side-text-active);
+  font-weight: 600;
+  border-left-color: var(--side-accent);
+}
+
+/* Nested collapsible navigation (base) */
+.sidebar .nav-group {
+  border-left: 3px solid transparent;
+}
+
+.sidebar .nav-group-toggle {
+  padding-left: 1.25rem;
+}
+
+.sidebar .nav-group-toggle::before {
+  display: inline-block;
+  width: 0.6rem;
+  margin-right: 0.35rem;
+  content: "▾";
+  font-size: 0.75rem;
+  transition: transform 0.15s ease;
+}
+
+.sidebar .nav-group.collapsed .nav-group-toggle::before {
+  content: "▸";
+}
+
+.sidebar .nav-group-children {
+  overflow: hidden;
+}
+
+.sidebar .nav-group.collapsed .nav-group-children {
+  display: none;
+}
+
+.sidebar .nav-group-children a {
+  padding-left: 2rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Main content area – 90–100% of available width, no max-width */
+.main {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  max-width: none;
+  padding: var(--content-padding-y) var(--content-padding-x) var(--content-padding-bottom);
+  background: var(--main-bg);
+  overflow-y: auto;
+}
+
+/* Automatic numbering for h2, h3, h4 */
+.main {
+  counter-reset: h2counter 0 h3counter 0 h4counter 0;
+}
+.main h2 {
+  counter-increment: h2counter;
+  counter-reset: h3counter 0 h4counter 0;
+}
+.main h2::before {
+  content: counter(h2counter) ". ";
+}
+.main h3 {
+  counter-increment: h3counter;
+  counter-reset: h4counter 0;
+}
+.main h3::before {
+  content: counter(h2counter) "." counter(h3counter) " ";
+}
+.main h4 {
+  counter-increment: h4counter;
+}
+.main h4::before {
+  content: counter(h2counter) "." counter(h3counter) "." counter(h4counter) " ";
+}
+
+.main h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: var(--main-heading);
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 0.6rem;
+  letter-spacing: -0.02em;
+}
+
+.main h2 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--main-heading);
+}
+
+.main h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1.35rem;
+  margin-bottom: 0.4rem;
+  color: var(--main-heading);
+}
+
+.main h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 1.1rem;
+  margin-bottom: 0.35rem;
+  color: var(--main-heading);
+}
+
+.main p {
+  margin: 0.75rem 0;
+  color: var(--main-text);
+}
+
+.main strong { color: var(--strong); font-weight: 600; }
+
+/* Code – industrial dark block, light inline */
+.main pre {
+  background: var(--code-bg);
+  color: var(--code-text);
+  font-family: "Consolas", "Monaco", "Liberation Mono", monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  border-radius: 6px;
+  border: 1px solid var(--side-border);
+  margin: 1rem 0;
+}
+
+.main code {
+  font-family: "Consolas", "Monaco", "Liberation Mono", monospace;
+  font-size: 0.875em;
+}
+
+.main pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+}
+
+.main p code,
+.main li code,
+.main td code {
+  background: var(--code-inline-bg);
+  color: var(--code-inline-text);
+  padding: 0.2em 0.45em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* Tables – Zebra monochrome, high-contrast, enterprise */
+.main table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 1.5rem 0;
+  font-size: 0.9375rem;
+  color: var(--main-text);
+  border: 1px solid var(--table-border);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.main thead {
+  background: var(--table-header-bg);
+}
+
+.main th {
+  background: var(--table-header-bg);
+  color: var(--table-header-text);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid var(--table-border);
+  white-space: nowrap;
+}
+
+.main td {
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid var(--table-border);
+  border-right: 1px solid var(--table-border);
+}
+
+.main tr:last-child td {
+  border-bottom: none;
+}
+
+.main td:last-child,
+.main th:last-child {
+  border-right: none;
+}
+
+.main tbody tr:nth-child(even) {
+  background: var(--table-row-alt);
+}
+
+.main tbody tr:hover {
+  background: #f3f4f6;
+}
+
+.main td.numeric {
+  text-align: center;
+}
+
+/* Lists */
+.main ul, .main ol {
+  margin: 0.75rem 0;
+  padding-left: 1.5rem;
+  color: var(--main-text);
+}
+
+.main li { margin: 0.35rem 0; }
+
+.main li::marker { color: var(--accent); }
+
+/* Links */
+.main a {
+  color: var(--link);
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.main a:hover {
+  color: var(--link-hover);
+  border-bottom-color: var(--link-hover);
+}
+
+/* Horizontal rule */
+.main hr {
+  border: none;
+  border-top: 1px solid var(--hr);
+  margin: 2rem 0;
+}
+
+/* Responsive – smaller padding on tablets and phones */
+@media (max-width: 1024px) {
+  :root {
+    --content-padding-x: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .layout { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    min-width: unset;
+    height: auto;
+    position: relative;
+    max-height: 40vh;
+  }
+  .sidebar .nav-title { padding: 0.75rem 1rem; }
+  .sidebar a { padding: 0.5rem 1rem; }
+  .main {
+    padding: 1.5rem 1.25rem 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding: 1.25rem 1rem 1.5rem;
+  }
+}
+
+/********************************************
+ * Modern, enterprise left navigation sidebar
+ * Overrides base sidebar styles above
+ ********************************************/
+
+/* Wider sidebar */
+.sidebar {
+  width: 310px;
+  min-width: 310px;
+}
+
+/* Dark, enterprise background */
+.sidebar {
+  background: #020617;
+  border-right: 1px solid #111827;
+}
+
+.sidebar .nav-title {
+  background: rgba(15, 23, 42, 0.96);
+  color: #e5e7eb;
+  border-bottom: 1px solid #111827;
+}
+
+/* Typography & spacing */
+.sidebar a {
+  font-size: 1.05rem;              /* ~16–17px */
+  font-weight: 500;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  margin: 0.15rem 0;              /* 8–12px vertical spacing between items */
+}
+
+/* Top-level groups: slightly larger and bolder */
+.sidebar .nav-group > .nav-group-toggle {
+  font-size: 1.08rem;
+  font-weight: 600;
+}
+
+/* Child links: clear indentation under section title */
+.sidebar .nav-group-children {
+  padding-left: 0.5rem;                  /* extra indent for whole block */
+}
+.sidebar .nav-group-children a {
+  font-size: 0.97rem;
+  font-weight: 500;
+  padding-left: 2.5rem;                  /* first-level sub-items */
+}
+
+/* Depth-2 children (#### headings) – further indented for clear hierarchy */
+.sidebar .nav-group-children a.nav-sub-depth2 {
+  font-size: 0.94rem;
+  padding-left: 4rem;                    /* nested under 3.1-style items */
+  opacity: 0.92;
+}
+
+/* Active & hover states with left border highlight */
+.sidebar a {
+  border-left: 3px solid transparent;
+  background: transparent;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.sidebar a:hover {
+  background: rgba(30, 64, 175, 0.23);      /* subtle indigo tint */
+  border-left-color: rgba(229, 231, 235, 0.65);
+  color: var(--side-text-active);
+}
+
+.sidebar a.active,
+.sidebar .nav-group-toggle.active {
+  background: linear-gradient(
+    90deg,
+    rgba(15, 23, 42, 1) 0%,
+    rgba(30, 64, 175, 0.35) 100%
+  );
+  border-left-color: #f9fafb;
+  color: var(--side-text-active);
+}
+
+/* Expand/collapse arrow: larger, with rotation and better spacing */
+.sidebar .nav-group {
+  border-left: 3px solid transparent;
+}
+
+.sidebar .nav-group-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;                         /* 8–10px gap between arrow & text */
+  padding-left: 1.3rem;
+  min-height: 2rem;                    /* ≥32px click area */
+}
+
+.sidebar .nav-group-toggle::before {
+  content: "▸";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;                       /* ≥24px clickable width */
+  height: 1.6rem;                      /* ≥24px clickable height */
+  font-size: 1.1rem;                   /* ~1.6–1.8× original */
+  transform-origin: center center;
+  transform: rotate(90deg);            /* expanded = pointing down */
+  transition: transform 0.18s ease, color 0.18s ease;
+  color: var(--side-text);
+}
+
+.sidebar .nav-group.collapsed .nav-group-toggle::before {
+  transform: rotate(0deg);             /* collapsed = pointing right */
+}
+
+.sidebar .nav-group-toggle:hover::before,
+.sidebar .nav-group-toggle.active::before {
+  color: var(--side-text-active);
+}
+
+/* Align direct top-level numbered links (e.g., 6. API Reference) with group labels */
+.sidebar a.nav-top-link {
+  display: block !important;
+  min-height: 2rem !important;
+  padding-left: 3.4rem !important; /* 1.3rem + 1.6rem arrow slot + 0.5rem gap */
+}
+
+/* Children visibility */
+.sidebar .nav-group-children {
+  overflow: hidden;
+}
+
+.sidebar .nav-group.collapsed .nav-group-children {
+  display: none;
+}
+
+.sidebar .nav-group-children a {
+  font-size: 0.97rem;
+}

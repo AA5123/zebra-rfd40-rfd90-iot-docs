@@ -1,0 +1,102 @@
+asyncapi: 2.4.0
+
+info:
+  title: RFD40 / RFD90 IoT Connector API (MQTT)
+  version: v2
+  description: |
+    **MQTT API** for Zebra RFD40/90 handheld RFID readers. All communication is via MQTT publish/subscribe — no HTTP.
+    - **Publish** command payloads (JSON) to the command topic.
+    - **Subscribe** to response, event, and data topics for replies and streams.
+    See the [MQTT Communication Protocol](mqtt-protocol.html) for topic setup.
+
+servers:
+  mqttBroker:
+    url: mqtt://localhost:1883
+    protocol: mqtt
+    description: Your MQTT broker. Use the URL configured in the device endpoint (e.g. port 8883 for TLS).
+
+channels:
+  commandTopic:
+    description: "**Publish** commands here. Topic format: {tenantId}/CTRL/clients/cmnd/{deviceSerialNo}"
+    publish:
+      operationId: publishCommand
+      summary: Publish a command
+      message:
+        name: Command
+        title: MQTT command payload
+        contentType: application/json
+        payload:
+          type: object
+          required: [command, requestId]
+          properties:
+            command:
+              type: string
+              description: Command name (e.g. get_status, set_operating_mode, get_post_filter)
+            requestId:
+              type: string
+              description: Client-defined ID for correlating with the response
+          additionalProperties: true
+        examples:
+          - name: get_status
+            payload: { command: get_status, requestId: "req-1" }
+          - name: set_operating_mode
+            payload: { command: set_operating_mode, requestId: "req-2", operatingMode: { operatingModes: { profiles: BALANCED_PERFORMANCE } } }
+
+  commandResponseTopic:
+    description: "**Subscribe** for command responses. Topic: {tenantId}/CTRL/clients/resp/{deviceSerialNo}"
+    subscribe:
+      operationId: subscribeCommandResponse
+      summary: Receive command responses
+      message:
+        name: Command response
+        contentType: application/json
+        payload:
+          type: object
+          properties:
+            command: { type: string }
+            requestId: { type: string }
+            response: { type: object, properties: { code: { type: integer }, description: { type: string } } }
+          additionalProperties: true
+
+  eventsTopic:
+    description: "**Subscribe** for alerts and events. Topic: {tenantId}/CTRL/clients/event/{deviceSerialNo}"
+    subscribe:
+      operationId: subscribeEvents
+      summary: Receive events and alerts
+      message:
+        name: Event / Alert
+        contentType: application/json
+        payload:
+          type: object
+          properties:
+            id: { type: string }
+            timestamp: { type: string }
+            type: { type: string }
+            priority: { type: string }
+            description: { type: string }
+          additionalProperties: true
+
+  dataTopic:
+    description: "**Subscribe** for tag/barcode data. Topic: {tenantId}/DATA/clients/data1event/{deviceSerialNo}"
+    subscribe:
+      operationId: subscribeData
+      summary: Receive tag and barcode data
+      message:
+        name: Tag / barcode data event
+        contentType: application/json
+        payload:
+          type: object
+          description: Tag read data (EPC, TID, RSSI, etc.) or barcode decode.
+          additionalProperties: true
+
+  lwtTopic:
+    description: "**Subscribe** for Last Will (device disconnect). Topic: {tenantId}/CTRL/clients/rfid/{deviceSerialNo}"
+    subscribe:
+      operationId: subscribeLwt
+      summary: Last Will and Testament
+      message:
+        name: LWT
+        contentType: application/json
+        payload:
+          type: object
+          additionalProperties: true

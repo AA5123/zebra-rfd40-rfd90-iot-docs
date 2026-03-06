@@ -1,0 +1,102 @@
+/**
+ * API Reference page only – Zebra Technologies branding.
+ * Sidebar styling applies only when .layout-api-ref is present (API reference page).
+ * Critical layout is also inlined in api-reference.html so iframe fills the page.
+ */
+
+html.layout-api-ref-page,
+html.layout-api-ref-page body {
+  height: 100%;
+}
+
+.layout-api-ref {
+  height: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.layout-api-ref .main-api-ref {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.layout-api-ref .api-ref-iframe {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  border: none;
+  display: block;
+}
+
+.api-ref-notice {
+  flex-shrink: 0;
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   Zebra Technologies branding – sidebar (API reference only)
+   ============================================================ */
+
+.layout-api-ref .sidebar {
+  background: #111827;
+  border-right: 1px solid #1f2937;
+}
+
+/* Nav title – no logo to avoid overlap; Zebra colors only */
+.layout-api-ref .sidebar .nav-title {
+  background: #111827;
+  color: #94a3b8;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #1f2937;
+  min-height: auto;
+  padding-top: 1rem;
+  text-align: left;
+}
+
+/* Default menu text */
+.layout-api-ref .sidebar a {
+  color: #cbd5e1;
+  border-left: 3px solid transparent;
+}
+
+/* Section titles (group toggles) */
+.layout-api-ref .sidebar .nav-group > .nav-group-toggle {
+  color: #94a3b8;
+}
+
+/* Active menu item */
+.layout-api-ref .sidebar a.active,
+.layout-api-ref .sidebar .nav-group-toggle.active {
+  background: #1e293b;
+  border-left-color: #2563eb;
+  border-left-width: 3px;
+  color: #ffffff;
+}
+
+/* Hover */
+.layout-api-ref .sidebar a:hover {
+  color: #2563eb;
+}
+
+/* Section separators */
+.layout-api-ref .sidebar .nav-group {
+  border-left: 3px solid transparent;
+  border-bottom: 1px solid #1f2937;
+}
+
+.layout-api-ref .sidebar .nav-group:last-child {
+  border-bottom: none;
+}
+
+/* Ensure expand/collapse icons remain visible */
+.layout-api-ref .sidebar .nav-group-toggle::before {
+  color: #94a3b8;
+}
+
+.layout-api-ref .sidebar .nav-group-toggle:hover::before,
+.layout-api-ref .sidebar .nav-group-toggle.active::before {
+  color: #2563eb;
+}

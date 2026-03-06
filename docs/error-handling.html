@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>6. Error Handling - RFD40/RFD90 IoT Connector API</title>
+  <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/docs.css" />
+</head>
+<body>
+  <div class="layout">
+<div class="sidebar">
+  <div class="nav-title">RFD40 / RFD90 API</div>
+  <a href="index.html">Home</a>
+  <div class="nav-group collapsed" data-nav-group>
+    <a href="overview.html" class="nav-group-toggle">1. Overview</a>
+    <div class="nav-group-children">
+      <a href="overview.html#1-1-purpose-of-this-document" class="nav-sub">1.1. Purpose of This Document</a>
+      <a href="overview.html#1-2-supported-devices" class="nav-sub">1.2. Supported Devices</a>
+      <a href="overview.html#1-3-system-architecture" class="nav-sub">1.3. System Architecture</a>
+      <a href="overview.html#1-4-communication-protocol-mqtt-json" class="nav-sub">1.4. Communication Protocol (MQTT + JSON)</a>
+    </div>
+  </div>
+  <div class="nav-group collapsed" data-nav-group>
+    <a href="getting-started.html" class="nav-group-toggle">2. Getting Started</a>
+    <div class="nav-group-children">
+      <a href="getting-started.html#2-1-prerequisites" class="nav-sub">2.1. Prerequisites</a>
+      <a href="getting-started.html#2-2-initial-device-and-network-configuration" class="nav-sub">2.2. Initial Device and Network Configuration</a>
+      <a href="getting-started.html#2-3-verifying-connectivity-using-get-status" class="nav-sub">2.3. Verifying Connectivity (Using get_status)</a>
+    </div>
+  </div>
+  <div class="nav-group collapsed" data-nav-group>
+    <a href="mqtt-protocol.html" class="nav-group-toggle">3. MQTT Communication Protocol</a>
+    <div class="nav-group-children">
+      <a href="mqtt-protocol.html#3-1-topic-structure-and-naming-conventions" class="nav-sub">3.1. Topic Structure and Naming Conventions</a>
+      <a href="mqtt-protocol.html#publish-topic-commands-to-the-device" class="nav-sub nav-sub-depth2">3.1.1 Publish topic (commands to the device)</a>
+      <a href="mqtt-protocol.html#subscribe-topics-from-the-device" class="nav-sub nav-sub-depth2">3.1.2 Subscribe topics (from the device)</a>
+      <a href="mqtt-protocol.html#3-2-command-and-response-flow" class="nav-sub">3.2. Command and Response Flow</a>
+      <a href="mqtt-protocol.html#3-3-asynchronous-event-and-data-flow" class="nav-sub">3.3. Asynchronous Event and Data Flow</a>
+    </div>
+  </div>
+  <a href="api-reference.html">4. API Reference</a>
+  <div class="nav-group collapsed" data-nav-group>
+    <a href="data-models.html" class="nav-group-toggle">5. Data Models</a>
+    <div class="nav-group-children">
+      <a href="data-models.html#5-1-tag-data-fields-explained" class="nav-sub">5.1. Tag Data Fields Explained</a>
+      <a href="data-models.html#5-2-other-key-data-structures" class="nav-sub">5.2. Other Key Data Structures</a>
+      <a href="data-models.html#command-envelope-request" class="nav-sub nav-sub-depth2">5.2.1 Command envelope (request)</a>
+      <a href="data-models.html#response-envelope" class="nav-sub nav-sub-depth2">5.2.2 Response envelope</a>
+      <a href="data-models.html#alert-event-payloads" class="nav-sub nav-sub-depth2">5.2.3 Alert / event payloads</a>
+      <a href="data-models.html#endpoint-and-configuration-structures" class="nav-sub nav-sub-depth2">5.2.4 Endpoint and configuration structures</a>
+    </div>
+  </div>
+  <div class="nav-group" data-nav-group>
+    <a href="error-handling.html" class="nav-group-toggle active">6. Error Handling</a>
+    <div class="nav-group-children">
+      <a href="error-handling.html#6-1-command-failure-responses" class="nav-sub">6.1. Command Failure Responses</a>
+      <a href="error-handling.html#6-2-troubleshooting-common-issues" class="nav-sub">6.2. Troubleshooting Common Issues</a>
+      <a href="error-handling.html#no-response-from-device" class="nav-sub nav-sub-depth2">6.2.1 No Response from Device</a>
+      <a href="error-handling.html#no-tag-data-received" class="nav-sub nav-sub-depth2">6.2.2 No Tag Data Received</a>
+      <a href="error-handling.html#mqtt-connection-issues" class="nav-sub nav-sub-depth2">6.2.3 MQTT Connection Issues</a>
+    </div>
+  </div>
+</div>
+    <main class="main">
+<h2 id="6-error-handling">Error Handling</h2>
+
+<p>
+A guide to interpreting and troubleshooting errors and failure responses.
+</p>
+
+<h3 id="6-1-command-failure-responses">Command Failure Responses</h3>
+
+<p>
+When a command fails, the device publishes a response to the <strong>command response</strong> topic with:
+</p>
+<ul>
+<li><strong>response.code</strong> — Non-zero value indicating failure. Specific codes are defined in the API/implementation (see your API documentation or OpenAPI examples).</li>
+<li><strong>response.description</strong> — Short text describing the error (e.g. invalid parameter, not supported, timeout).</li>
+</ul>
+
+<p>
+Always check <code>response.code</code> after sending a command. <code>0</code> typically means success; any other value indicates an error. Use <code>requestId</code> to match the response to your request.
+</p>
+
+<h3 id="6-2-troubleshooting-common-issues">Troubleshooting Common Issues</h3>
+
+<h4 id="no-response-from-device">No Response from Device</h4>
+<ul>
+<li><strong>Broker connectivity:</strong> Ensure the MQTT broker is running and reachable from both the reader and your client (ping, firewall, VPN).</li>
+<li><strong>Topic:</strong> Verify you are publishing to the <strong>exact</strong> publish topic (tenant ID, topic path, device serial number). No extra spaces or typos.</li>
+<li><strong>Endpoint state:</strong> Control/Data endpoints must be <strong>activated</strong> and the device <strong>rebooted</strong> after activation. Use the IOTC utility or ZETI to confirm.</li>
+<li><strong>Wi‑Fi / Ethernet:</strong> Confirm the reader is connected and has an IP. Use 123RFID or the utility to check connection status.</li>
+<li><strong>Payload:</strong> Ensure the JSON is valid and includes <code>command</code> and <code>requestId</code>. Check for invalid or unsupported field values.</li>
+</ul>
+
+<h4 id="no-tag-data-received">No Tag Data Received</h4>
+<ul>
+<li><strong>Data topic:</strong> Subscribe to the <strong>Data events</strong> topic (e.g. <code>zebra/DATA/clients/data1event/<SerialNo></code>), not only the command response topic.</li>
+<li><strong>Inventory running:</strong> Tag data is sent only when inventory is <strong>started</strong> via <code>control_operation</code> (start). Send a start command and keep the session active.</li>
+<li><strong>Operating mode:</strong> In <strong>FAST_READ</strong> profile, tag data events are not reported. Use another profile (e.g. CYCLE_COUNT, BALANCED_PERFORMANCE) or ADVANCED with the desired settings.</li>
+<li><strong>Filters:</strong> Post-filters or select/query settings may exclude all tags. Try with no or minimal filters to confirm tags are read.</li>
+<li><strong>Antenna / environment:</strong> Verify tags are in range and antenna is connected; check for RF interference or power issues.</li>
+</ul>
+
+<h4 id="mqtt-connection-issues">MQTT Connection Issues</h4>
+<ul>
+<li><strong>Port and protocol:</strong> Use 1883 for MQTT and 8883 for MQTT TLS. Ensure the broker is listening on the expected port.</li>
+<li><strong>Certificates:</strong> For MQTT TLS, ensure PEM (PKCS#1) certificates are installed on the device and the broker accepts them. Use the utility to add/remove certificates.</li>
+<li><strong>Credentials:</strong> If the broker requires username/password, configure them in the endpoint and ensure they are correct.</li>
+<li><strong>Keep-alive and LWT:</strong> Configure keep-alive so the broker does not disconnect idle clients. Use the LWT topic to detect unexpected disconnects.</li>
+<li><strong>Debug:</strong> Enable debug logs (e.g. ZETI <code>sa .dp 1</code>) to see connection attempts and errors on the device.</li>
+</ul>
+
+<p>
+For further support (e.g. early access features), contact <strong>ZebraRFIDEarlyAccess@zebra.com</strong> as indicated in the product documentation.
+</p>
+    </main>
+  </div>
+
+  <script>
+    (function() {
+      document.querySelectorAll('.nav-group-toggle').forEach(function(toggle) {
+        toggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          var group = toggle.closest('.nav-group');
+          if (group) group.classList.toggle('collapsed');
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>

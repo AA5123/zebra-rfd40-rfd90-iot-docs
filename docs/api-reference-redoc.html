@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>API Reference - RFD40 / RFD90 IOT developer guide</title>
+  <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/redoc@2.2.0/bundles/redoc.standalone.css" />
+  <link rel="stylesheet" href="css/redoc-zebra.css" />
+  <style>body { margin: 0; }</style>
+</head>
+<body>
+  <div id="redoc-container"></div>
+  <script src="https://cdn.jsdelivr.net/npm/redoc@2.2.0/bundles/redoc.standalone.js"></script>
+  <script>
+    (function() {
+      var el = document.getElementById('redoc-container');
+      var methods = ['post', 'get', 'put', 'delete', 'patch', 'options', 'head'];
+      function collectAll(root) {
+        var list = [];
+        function walk(r) {
+          if (r.shadowRoot) walk(r.shadowRoot);
+          list.push(r);
+          for (var i = 0; i < r.children.length; i++) walk(r.children[i]);
+        }
+        walk(root);
+        return list;
+      }
+      function isMethodText(text) {
+        return methods.indexOf(String(text || '').trim().toLowerCase()) !== -1;
+      }
+      function hideMethodBadges() {
+        if (!el) return;
+        var sidebar = el.querySelector('div > div:first-child');
+        if (sidebar) {
+          var sideNodes = collectAll(sidebar);
+          for (var s = 0; s < sideNodes.length; s++) {
+            var sideNode = sideNodes[s];
+            if (sideNode.nodeType !== 1) continue;
+            if (isMethodText(sideNode.textContent)) {
+              sideNode.style.setProperty('display', 'none', 'important');
+            }
+          }
+        }
+        var all = collectAll(el);
+        for (var i = 0; i < all.length; i++) {
+          var node = all[i];
+          if (node.nodeType !== 1) continue;
+          var className = String(node.className || '').toLowerCase();
+          var dataMethod = String(node.getAttribute && node.getAttribute('data-method') || '').toLowerCase();
+          if (isMethodText(node.textContent) || dataMethod || className.indexOf('http-verb') !== -1 || className.indexOf('method') !== -1) {
+            node.style.setProperty('display', 'none', 'important');
+          }
+        }
+        if (typeof document.createTreeWalker === 'function') {
+          function walkRoot(r) {
+            if (r.shadowRoot) walkRoot(r.shadowRoot);
+            var tw = document.createTreeWalker(r, NodeFilter.SHOW_TEXT, null, false);
+            var t;
+            while ((t = tw.nextNode())) {
+              if (isMethodText(t.textContent) && t.parentNode && t.parentNode.nodeType === 1)
+                t.parentNode.style.setProperty('display', 'none', 'important');
+            }
+            for (var k = 0; k < r.children.length; k++) walkRoot(r.children[k]);
+          }
+          walkRoot(el);
+        }
+      }
+      var HIDE_VERB_CSS = '.http-verb,[class*="http-verb"],[class*="HttpVerb"],[data-method],[class*="Method"],[class*="method"]{display:none!important}';
+      function injectShadowStyles(root) {
+        if (!root) return;
+        if (root.shadowRoot) {
+          if (!root.shadowRoot.querySelector('style[data-mqtt-hide-verb]')) {
+            var s = document.createElement('style');
+            s.setAttribute('data-mqtt-hide-verb', '1');
+            s.textContent = HIDE_VERB_CSS;
+            root.shadowRoot.appendChild(s);
+          }
+          for (var i = 0; i < root.shadowRoot.children.length; i++) injectShadowStyles(root.shadowRoot.children[i]);
+        }
+        for (var i = 0; i < root.children.length; i++) injectShadowStyles(root.children[i]);
+      }
+      function runHide() {
+        hideMethodBadges();
+        injectShadowStyles(el);
+      }
+      Redoc.init('openapi.yaml', {
+        theme: {
+          colors: { primary: { main: '#2563eb' }, success: { main: '#059669' }, warning: { main: '#d97706' }, error: { main: '#dc2626' } },
+          typography: { fontFamily: '"Inter", "Segoe UI", system-ui, sans-serif', headings: { fontFamily: '"Inter", "Segoe UI", system-ui, sans-serif' }, code: { fontFamily: 'Consolas, Monaco, monospace' } },
+          sidebar: { backgroundColor: '#111827', textColor: '#cbd5e1', activeTextColor: '#ffffff', groupItems: { activeBackgroundColor: '#1e293b' } },
+          rightPanel: { backgroundColor: '#1e293b', textColor: '#e2e8f0' }
+        },
+        pathInMiddlePanel: true,
+        hideDownloadButton: false
+      }, el, function() { setTimeout(runHide, 50); });
+      [0, 100, 200, 500, 1200, 2500, 5000].forEach(function(ms) { setTimeout(runHide, ms); });
+      var pollCount = 0;
+      var poll = setInterval(function() {
+        runHide();
+        if (++pollCount >= 20) clearInterval(poll);
+      }, 500);
+      if (typeof MutationObserver !== 'undefined') {
+        var obs = new MutationObserver(function() { setTimeout(runHide, 50); });
+        obs.observe(el, { childList: true, subtree: true });
+      }
+    })();
+  </script>
+</body>
+</html>

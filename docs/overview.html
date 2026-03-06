@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>1. Overview - RFD40/RFD90 IoT Connector API</title>
+  <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/docs.css" />
+</head>
+<body>
+  <div class="layout">
+<div class="sidebar">
+  <div class="nav-title">RFD40 / RFD90 API</div>
+  <a href="index.html">Home</a>
+  <div class="nav-group" data-nav-group>
+    <a href="overview.html" class="nav-group-toggle active">1. Overview</a>
+    <div class="nav-group-children">
+      <a href="overview.html#1-1-purpose-of-this-document" class="nav-sub">1.1. Purpose of This Document</a>
+      <a href="overview.html#1-2-supported-devices" class="nav-sub">1.2. Supported Devices</a>
+      <a href="overview.html#1-3-system-architecture" class="nav-sub">1.3. System Architecture</a>
+      <a href="overview.html#1-4-communication-protocol-mqtt-json" class="nav-sub">1.4. Communication Protocol (MQTT + JSON)</a>
+    </div>
+  </div>
+  <div class="nav-group collapsed" data-nav-group>
+    <a href="getting-started.html" class="nav-group-toggle">2. Getting Started</a>
+    <div class="nav-group-children">
+      <a href="getting-started.html#2-1-prerequisites" class="nav-sub">2.1. Prerequisites</a>
+      <a href="getting-started.html#2-2-initial-device-and-network-configuration" class="nav-sub">2.2. Initial Device and Network Configuration</a>
+      <a href="getting-started.html#2-3-verifying-connectivity-using-get-status" class="nav-sub">2.3. Verifying Connectivity (Using get_status)</a>
+    </div>
+  </div>
+  <div class="nav-group collapsed" data-nav-group>
+    <a href="mqtt-protocol.html" class="nav-group-toggle">3. MQTT Communication Protocol</a>
+    <div class="nav-group-children">
+      <a href="mqtt-protocol.html#3-1-topic-structure-and-naming-conventions" class="nav-sub">3.1. Topic Structure and Naming Conventions</a>
+      <a href="mqtt-protocol.html#publish-topic-commands-to-the-device" class="nav-sub nav-sub-depth2">3.1.1 Publish topic (commands to the device)</a>
+      <a href="mqtt-protocol.html#subscribe-topics-from-the-device" class="nav-sub nav-sub-depth2">3.1.2 Subscribe topics (from the device)</a>
+      <a href="mqtt-protocol.html#3-2-command-and-response-flow" class="nav-sub">3.2. Command and Response Flow</a>
+      <a href="mqtt-protocol.html#3-3-asynchronous-event-and-data-flow" class="nav-sub">3.3. Asynchronous Event and Data Flow</a>
+    </div>
+  </div>
+  <a href="api-reference.html">4. API Reference</a>
+  <div class="nav-group collapsed" data-nav-group>
+    <a href="data-models.html" class="nav-group-toggle">5. Data Models</a>
+    <div class="nav-group-children">
+      <a href="data-models.html#5-1-tag-data-fields-explained" class="nav-sub">5.1. Tag Data Fields Explained</a>
+      <a href="data-models.html#5-2-other-key-data-structures" class="nav-sub">5.2. Other Key Data Structures</a>
+      <a href="data-models.html#command-envelope-request" class="nav-sub nav-sub-depth2">5.2.1 Command envelope (request)</a>
+      <a href="data-models.html#response-envelope" class="nav-sub nav-sub-depth2">5.2.2 Response envelope</a>
+      <a href="data-models.html#alert-event-payloads" class="nav-sub nav-sub-depth2">5.2.3 Alert / event payloads</a>
+      <a href="data-models.html#endpoint-and-configuration-structures" class="nav-sub nav-sub-depth2">5.2.4 Endpoint and configuration structures</a>
+    </div>
+  </div>
+  <div class="nav-group collapsed" data-nav-group>
+    <a href="error-handling.html" class="nav-group-toggle">6. Error Handling</a>
+    <div class="nav-group-children">
+      <a href="error-handling.html#6-1-command-failure-responses" class="nav-sub">6.1. Command Failure Responses</a>
+      <a href="error-handling.html#6-2-troubleshooting-common-issues" class="nav-sub">6.2. Troubleshooting Common Issues</a>
+      <a href="error-handling.html#no-response-from-device" class="nav-sub nav-sub-depth2">6.2.1 No Response from Device</a>
+      <a href="error-handling.html#no-tag-data-received" class="nav-sub nav-sub-depth2">6.2.2 No Tag Data Received</a>
+      <a href="error-handling.html#mqtt-connection-issues" class="nav-sub nav-sub-depth2">6.2.3 MQTT Connection Issues</a>
+    </div>
+  </div>
+</div>
+    <main class="main">
+<h2 id="1-overview">Overview</h2>
+
+<p>
+A high-level introduction to the API, its architecture, and purpose.
+</p>
+
+<h3 id="1-1-purpose-of-this-document">Purpose of This Document</h3>
+
+<p>
+This document describes the <strong>Zebra IoT Connector</strong> API for <strong>RFD40</strong> and <strong>RFD90</strong> handheld RFID readers. It is intended for developers and integrators who need to:
+</p>
+<ul>
+<li>Configure and manage readers over the network (Wi‑Fi or Ethernet).</li>
+<li>Control RFID operations (start/stop inventory, operating modes, filters).</li>
+<li>Receive tag and barcode data and device events (health, alerts, errors) in real time.</li>
+</ul>
+
+<p>
+The API is built on <strong>MQTT</strong> with <strong>JSON</strong>-formatted payloads, so it can be used from cloud or on-premise applications without proprietary protocols.
+</p>
+
+<h3 id="1-2-supported-devices">Supported Devices</h3>
+
+<table>
+<thead><tr>
+<th>Device</th>
+<th>Description</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>RFD40</strong></td>
+<td>Zebra handheld RFID reader (IoT Connector capable).</td>
+</tr>
+<tr>
+<td><strong>RFD90</strong></td>
+<td>Zebra handheld RFID reader (IoT Connector capable).</td>
+</tr>
+</tbody></table>
+<p>
+Both are referred to as <strong>RFD40/90</strong> or <strong>RFD4090</strong> in Zebra materials. Management and Event endpoints can be configured with the <strong>123RFID Desktop</strong> application; Control and Data endpoints use the <strong>IOTC Data & Control utility</strong> or <strong>ZETI commands</strong> (see <a href="getting-started.html">Getting Started</a>).
+</p>
+
+<h3 id="1-3-system-architecture">System Architecture</h3>
+
+<p>
+The IoT Connector exposes <strong>four interfaces</strong>, each configurable to a different MQTT endpoint:
+</p>
+
+<table>
+<thead><tr>
+<th>#</th>
+<th>Endpoint type</th>
+<th>Direction</th>
+<th>Role</th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td><strong>Management</strong></td>
+<td>In/Out</td>
+<td>Device management: firmware, configuration. Synchronous command/response.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Event</strong></td>
+<td>Out</td>
+<td>Asynchronous messages: heartbeats, health, alerts, errors, warnings.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Control</strong></td>
+<td>In/Out</td>
+<td>RFID control: start/stop inventory, operating mode, post-filters. Synchronous command/response.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Data</strong></td>
+<td>Out</td>
+<td>Tag and barcode events (EPC, TID, RSSI, etc.) for inventory and access results.</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>Management</strong> and <strong>Event</strong> are often used with Enterprise Mobility Management (EMM) solutions (e.g. 42gears, SOTI).</li>
+<li><strong>Control</strong> and <strong>Data</strong> are used by your application to run inventories and receive tag data.</li>
+</ul>
+
+<h3 id="1-4-communication-protocol-mqtt-json">Communication Protocol (MQTT + JSON)</h3>
+<ul>
+<li><strong>Protocol:</strong> MQTT (optionally MQTT over TLS on port 8883; unsecured on 1883).</li>
+<li><strong>Payload format:</strong> JSON. All commands and responses use a <code>command</code> (or equivalent) field and a <code>requestId</code> for correlation.</li>
+<li><strong>Topics:</strong>  </li>
+<li><strong>Publish (to device):</strong> <code><Tenant ID>/<Publish Topic>/<Device Serial No></code>  </li>
+<li><strong>Subscribe (from device):</strong> separate topics for command responses, events/alerts, data events, and Last Will and Testament (LWT).</li>
+</ul>
+
+<p>
+Details of topic layout and message flow are in <a href="mqtt-protocol.html">MQTT Communication Protocol</a>.
+</p>
+    </main>
+  </div>
+
+  <script>
+    (function() {
+      document.querySelectorAll('.nav-group-toggle').forEach(function(toggle) {
+        toggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          var group = toggle.closest('.nav-group');
+          if (group) group.classList.toggle('collapsed');
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
