@@ -59,9 +59,9 @@
                     var hasHttpLabelText = /(^|\W)(?:success|ok|responses?)(\W|$)/i.test(txt);
 
                     // Replace OpenAPI key label with reader-friendly wording.
-                    if (node.childElementCount === 0 && /^default$/i.test(txt)) {
-                        node.textContent = 'Response Schema';
-                        txt = 'Response Schema';
+                    if (node.childElementCount === 0 && /default/i.test(txt)) {
+                        node.textContent = txt.replace(/default/gi, 'Response');
+                        txt = node.textContent;
                     }
 
                     // Hide response-related widgets that carry HTTP semantics.
@@ -96,8 +96,8 @@
                                     t.parentNode.style.setProperty('display', 'none', 'important');
                                 }
                             }
-                            if (/^default$/i.test(raw)) {
-                                t.textContent = 'Response Schema';
+                            if (/default/i.test(raw)) {
+                                t.textContent = String(t.textContent || '').replace(/default/gi, 'Response');
                             }
             }
             for (var k = 0; k < r.children.length; k++) walkRoot(r.children[k]);
