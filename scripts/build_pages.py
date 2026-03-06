@@ -873,38 +873,45 @@ def main():
                 var sidebar = el.querySelector('div > div:first-child');
                 if (!sidebar) return;
 
-                function collapseToSidebarChild(node) {
+                function hideNode(node) {
+                    if (!node || node.nodeType !== 1) return;
+                    node.style.setProperty('display', 'none', 'important');
+                    node.style.setProperty('height', '0', 'important');
+                    node.style.setProperty('min-height', '0', 'important');
+                    node.style.setProperty('padding', '0', 'important');
+                    node.style.setProperty('margin', '0', 'important');
+                    node.style.setProperty('overflow', 'hidden', 'important');
+                }
+
+                function collapseAncestors(node) {
                     var cur = node;
-                    while (cur && cur.parentElement && cur.parentElement !== sidebar) {
+                    for (var i = 0; i < 6 && cur; i++) {
+                        if (cur === sidebar) break;
+                        var hasNav = cur.querySelector && cur.querySelector('a, input, button');
+                        if (hasNav && cur !== node) break;
+                        hideNode(cur);
                         cur = cur.parentElement;
                     }
-                    if (cur && cur.parentElement === sidebar) {
-                        cur.style.setProperty('display', 'none', 'important');
-                        cur.style.setProperty('height', '0', 'important');
-                        cur.style.setProperty('min-height', '0', 'important');
-                        cur.style.setProperty('padding', '0', 'important');
-                        cur.style.setProperty('margin', '0', 'important');
-                    }
                 }
 
-                var logos = sidebar.querySelectorAll('img, svg, [class*="logo" i], [class*="brand" i], [aria-label*="logo" i], [title*="logo" i]');
-                for (var i = 0; i < logos.length; i++) {
-                    collapseToSidebarChild(logos[i]);
-                    logos[i].style.setProperty('display', 'none', 'important');
-                }
+                var nodes = collectAll(sidebar);
+                for (var n = 0; n < nodes.length; n++) {
+                    var node = nodes[n];
+                    if (node.nodeType !== 1) continue;
+                    var tag = String(node.tagName || '').toUpperCase();
+                    var cls = String(node.className || '').toLowerCase();
+                    var href = String(node.getAttribute && node.getAttribute('href') || '').toLowerCase();
+                    var src = String(node.getAttribute && node.getAttribute('src') || '').toLowerCase();
+                    var alt = String(node.getAttribute && node.getAttribute('alt') || '').toLowerCase();
+                    var txt = String(node.textContent || '').trim().toLowerCase();
 
-                // Fallback: hide the first top block if it appears to be branding.
-                var first = sidebar.firstElementChild;
-                if (first) {
-                    var firstText = String(first.textContent || '').trim().toLowerCase();
-                    var hasLogoLike = first.querySelector('img, svg, [class*="logo" i], [class*="brand" i]') !== null;
-                    var hasLinks = first.querySelector('a, input, button') !== null;
-                    if (hasLogoLike || (!hasLinks && firstText.indexOf('zebra') !== -1)) {
-                        first.style.setProperty('display', 'none', 'important');
-                        first.style.setProperty('height', '0', 'important');
-                        first.style.setProperty('min-height', '0', 'important');
-                        first.style.setProperty('padding', '0', 'important');
-                        first.style.setProperty('margin', '0', 'important');
+                    var isBrandImage = (tag === 'IMG' || tag === 'SVG') && (src.indexOf('zebra') !== -1 || alt.indexOf('zebra') !== -1 || cls.indexOf('logo') !== -1 || cls.indexOf('brand') !== -1);
+                    var isBrandBlock = cls.indexOf('logo') !== -1 || cls.indexOf('brand') !== -1 || txt === 'zebra';
+                    var isRedoclyLink = (tag === 'A' && (href.indexOf('redocly') !== -1 || txt.indexOf('redocly') !== -1)) || txt.indexOf('api docs by redocly') !== -1;
+
+                    if (isBrandImage || isBrandBlock || isRedoclyLink) {
+                        hideNode(node);
+                        collapseAncestors(node);
                     }
                 }
             }
