@@ -820,11 +820,11 @@ def main():
       try { styleSidebar(); } catch(e) {}
     }
 
-    /* AWS-style tree indentation: inject a <style> tag targeting Redoc's actual DOM.
-       Redoc renders: <ul role="menu"> > <li role="menuitem" depth=N> > <label class="-depthN [active]">
-       Labels use className "-depth0", "-depth1", "-depth2" etc.
-       Arrows are ShelfIcon SVGs inside <label>.
-       Nested groups: <li> contains another <ul> (MenuItemUl) with $expanded toggling display:none. */
+    /* AWS-style tree sidebar — matches Amazon EC2 docs style exactly.
+       Redoc DOM: <ul role="menu"> > <li role="menuitem" aria-expanded="true|false"> > <label class="-depthN [active]">
+       depth 0 = tag groups (like "Amazon Machine Images")
+       depth 1 = tags (like "AMI characteristics")  
+       depth 2 = operations (like "Identify the AMI root volume type") */
     function styleSidebar() {
       if (document.getElementById('tree-sidebar-css')) return;
       var root = el.querySelector('[role="menu"]');
@@ -832,101 +832,49 @@ def main():
 
       var css = [];
 
-      /* ---- Hide Redoc default arrow SVGs (ShelfIcon) inside sidebar labels ---- */
-      css.push('[role="menu"] label svg, [role="menu"] label polygon { display: none !important; visibility: hidden !important; }');
+      /* ---- Reset: hide Redoc default SVG arrows & HTTP method badges ---- */
+      css.push('[role="menu"] label svg { display:none!important; }');
+      css.push('[role="menu"] .operation-type,[role="menu"] [class*="operation-badge"],[role="menu"] [class*="OperationBadge"]{ display:none!important; }');
 
-      /* ---- Hide HTTP method badges (POST, GET, etc.) inside sidebar ---- */
-      css.push('[role="menu"] .operation-type, [role="menu"] [class*="operation-badge"], [role="menu"] [class*="OperationBadge"] { display: none !important; }');
+      /* ---- Base: all menu items ---- */
+      css.push('[role="menu"] li[role="menuitem"] { border:none!important; margin:0!important; padding:0!important; overflow:visible!important; }');
+      css.push('[role="menu"] li[role="menuitem"] > label { display:flex!important; align-items:baseline!important; padding:4px 12px 4px 0!important; margin:0!important; font-family:"Inter","Segoe UI",system-ui,sans-serif!important; font-size:13.5px!important; font-weight:400!important; color:#16191f!important; line-height:1.5!important; text-transform:none!important; letter-spacing:normal!important; opacity:1!important; cursor:pointer!important; text-decoration:none!important; background:transparent!important; border:none!important; }');
 
-      /* ---- Level 0: Group headings (depth=0) like MANAGEMENT INTERFACE ---- */
-      css.push('[role="menu"] > li[role="menuitem"] > label.-depth0 {');
-      css.push('  color: #545b64 !important;');
-      css.push('  text-transform: uppercase !important;');
-      css.push('  font-size: 0.72rem !important;');
-      css.push('  font-weight: 700 !important;');
-      css.push('  letter-spacing: 0.04em !important;');
-      css.push('  padding: 10px 14px 6px 14px !important;');
-      css.push('  cursor: pointer !important;');
-      css.push('}');
-      /* Group heading <li> separator */
-      css.push('[role="menu"] > li[role="menuitem"] { border-bottom: 1px solid #eaeded !important; padding-bottom: 4px !important; margin-bottom: 4px !important; }');
+      /* ---- Depth 0: Group headings — "Management Interface (Device Configuration)" ---- */
+      css.push('[role="menu"] > li > label.-depth0 { padding-left:16px!important; font-weight:400!important; font-size:14px!important; color:#16191f!important; }');
+      /* Triangle: ▼ when expanded, ▶ when collapsed */
+      css.push('[role="menu"] > li > label.-depth0::before { content:"\\\\25B6"!important; font-size:0.6em!important; color:#545b64!important; margin-right:8px!important; display:inline-block!important; width:0.8em!important; flex-shrink:0!important; }');
+      css.push('[role="menu"] > li[aria-expanded="true"] > label.-depth0::before { content:"\\\\25BC"!important; }');
 
-      /* Disclosure triangle for depth-0 (group headings) */
-      css.push('[role="menu"] > li[role="menuitem"] > label.-depth0::before {');
-      css.push('  content: "\\\\25B6" !important;');
-      css.push('  font-size: 0.5rem !important;');
-      css.push('  color: #545b64 !important;');
-      css.push('  margin-right: 6px !important;');
-      css.push('  display: inline-block !important;');
-      css.push('  width: 10px !important;');
-      css.push('  flex-shrink: 0;');
-      css.push('}');
-      /* Expanded group: show downward triangle */
-      css.push('[role="menu"] > li[role="menuitem"][aria-expanded="true"] > label.-depth0::before {');
-      css.push('  content: "\\\\25BC" !important;');
-      css.push('}');
+      /* ---- Depth 1: Tags — "Management - Device Status" etc. ---- */
+      css.push('[role="menu"] li > label.-depth1 { padding-left:36px!important; font-size:13.5px!important; color:#16191f!important; }');
+      /* Triangle for expandable tags */
+      css.push('[role="menu"] li > label.-depth1::before { content:"\\\\25B6"!important; font-size:0.55em!important; color:#545b64!important; margin-right:7px!important; display:inline-block!important; width:0.8em!important; flex-shrink:0!important; }');
+      css.push('[role="menu"] li[aria-expanded="true"] > label.-depth1::before { content:"\\\\25BC"!important; }');
+      /* Tags with no children (no aria-expanded) — no triangle, just indent */
+      css.push('[role="menu"] li:not([aria-expanded]) > label.-depth1::before { content:""!important; width:0!important; margin:0!important; }');
+      css.push('[role="menu"] li:not([aria-expanded]) > label.-depth1 { padding-left:50px!important; }');
 
-      /* ---- Level 1: Tag items (depth=1) like "Management - Device Status" ---- */
-      css.push('[role="menu"] li[role="menuitem"] > label.-depth1 {');
-      css.push('  padding-left: 32px !important;');
-      css.push('  font-size: 0.87rem !important;');
-      css.push('  font-weight: 400 !important;');
-      css.push('  color: #16191f !important;');
-      css.push('  line-height: 1.9 !important;');
-      css.push('  text-transform: none !important;');
-      css.push('  letter-spacing: normal !important;');
-      css.push('  opacity: 1 !important;');
-      css.push('}');
-      /* No border for nested items */
-      css.push('[role="menu"] li li[role="menuitem"] { border-bottom: none !important; padding-bottom: 0 !important; margin-bottom: 0 !important; margin-top: 0 !important; }');
+      /* ---- Depth 2: Operations — "get_status", "get_version" etc. ---- */
+      css.push('[role="menu"] li > label.-depth2 { padding-left:60px!important; font-size:13px!important; color:#16191f!important; }');
+      css.push('[role="menu"] li > label.-depth2::before { content:""!important; display:none!important; }');
 
-      /* Disclosure triangle for depth-1 (tag items that have children) */
-      css.push('[role="menu"] li[role="menuitem"] > label.-depth1::before {');
-      css.push('  content: "\\\\25B6" !important;');
-      css.push('  font-size: 0.45rem !important;');
-      css.push('  color: #545b64 !important;');
-      css.push('  margin-right: 5px !important;');
-      css.push('  display: inline-block !important;');
-      css.push('  width: 9px !important;');
-      css.push('  flex-shrink: 0;');
-      css.push('}');
-      /* Expanded tag: show downward triangle */
-      css.push('[role="menu"] li[role="menuitem"][aria-expanded="true"] > label.-depth1::before {');
-      css.push('  content: "\\\\25BC" !important;');
-      css.push('}');
-      /* Collapsed tag (no children visible): hide triangle for leaf tags */
-      css.push('[role="menu"] li[role="menuitem"][aria-expanded="false"] > label.-depth1::before {');
-      css.push('  content: "\\\\25B6" !important;');
-      css.push('}');
+      /* ---- Hover & active ---- */
+      css.push('[role="menu"] li > label:hover { color:#0073bb!important; background:transparent!important; }');
+      css.push('[role="menu"] li > label.active { color:#0073bb!important; font-weight:600!important; background:transparent!important; }');
 
-      /* ---- Level 2: Operation items (depth=2) like endpoints ---- */
-      css.push('[role="menu"] li[role="menuitem"] > label.-depth2 {');
-      css.push('  padding-left: 56px !important;');
-      css.push('  font-size: 0.84rem !important;');
-      css.push('  font-weight: 400 !important;');
-      css.push('  color: #16191f !important;');
-      css.push('  line-height: 1.9 !important;');
-      css.push('  text-transform: none !important;');
-      css.push('  letter-spacing: normal !important;');
-      css.push('  opacity: 1 !important;');
-      css.push('}');
-      /* No triangle for operation items */
-      css.push('[role="menu"] li[role="menuitem"] > label.-depth2::before { content: "" !important; display: none !important; }');
-
-      /* ---- Hover / active states ---- */
-      css.push('[role="menu"] li[role="menuitem"] > label:hover { background-color: #f2f3f3 !important; color: #0073bb !important; }');
-      css.push('[role="menu"] li[role="menuitem"] > label.active { color: #0073bb !important; background-color: #f2f3f3 !important; }');
-      css.push('[role="menu"] li[role="menuitem"] > label.-depth0.active { color: #0073bb !important; }');
-      css.push('[role="menu"] li[role="menuitem"] > label.-depth0:hover { color: #0073bb !important; }');
+      /* ---- Spacing between depth-0 groups ---- */
+      css.push('[role="menu"] > li { margin-top:6px!important; }');
+      css.push('[role="menu"] > li:first-child { margin-top:0!important; }');
 
       var style = document.createElement('style');
       style.id = 'tree-sidebar-css';
       style.textContent = css.join('\\n');
       document.head.appendChild(style);
 
-      /* --- Add click-to-toggle for group headings (depth-0) --- */
-      /* Redoc depth-0 items don't collapse/expand by default. We add custom handlers. */
+      /* --- Click-to-toggle for group headings (depth-0) AND tag items (depth-1) --- */
       function setupGroupToggle() {
+        /* Depth-0: group headings */
         var groupItems = root.querySelectorAll(':scope > li[role="menuitem"]');
         for (var i = 0; i < groupItems.length; i++) {
           var li = groupItems[i];
@@ -937,23 +885,45 @@ def main():
             if (!label) return;
             label.addEventListener('click', function(e) {
               e.stopPropagation();
-              /* Find the child <ul> inside this <li> */
               var childUl = null;
               var kids = groupLi.children;
               for (var k = 0; k < kids.length; k++) {
                 if (kids[k].tagName === 'UL') { childUl = kids[k]; break; }
               }
               if (!childUl) return;
-              /* Toggle visibility */
               var isVisible = childUl.style.display !== 'none';
               childUl.style.display = isVisible ? 'none' : '';
               groupLi.setAttribute('aria-expanded', isVisible ? 'false' : 'true');
             });
           })(li);
         }
+
+        /* Depth-1: tag items that have child operations */
+        var tagItems = root.querySelectorAll('li[role="menuitem"]');
+        for (var j = 0; j < tagItems.length; j++) {
+          var tli = tagItems[j];
+          var tLabel = tli.querySelector(':scope > label.-depth1');
+          if (!tLabel) continue;
+          if (tli.getAttribute('data-tree-toggle') === '1') continue;
+          /* Check if this tag has a child <ul> (operations) */
+          var tChildUl = null;
+          var tKids = tli.children;
+          for (var m = 0; m < tKids.length; m++) {
+            if (tKids[m].tagName === 'UL') { tChildUl = tKids[m]; break; }
+          }
+          if (!tChildUl) continue;
+          tli.setAttribute('data-tree-toggle', '1');
+          (function(tagLi, tagLabel, tagUl) {
+            tagLabel.addEventListener('click', function(e) {
+              e.stopPropagation();
+              var isVisible = tagUl.style.display !== 'none';
+              tagUl.style.display = isVisible ? 'none' : '';
+              tagLi.setAttribute('aria-expanded', isVisible ? 'false' : 'true');
+            });
+          })(tli, tLabel, tChildUl);
+        }
       }
       setupGroupToggle();
-      /* Re-run after Redoc re-renders */
       setInterval(setupGroupToggle, 800);
     }
 
