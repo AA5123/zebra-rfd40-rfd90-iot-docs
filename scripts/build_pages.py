@@ -245,6 +245,12 @@ def normalize_mqtt_responses(spec: dict) -> None:
                     responses["default"] = responses["200"]
                 del responses["200"]
 
+            # Make response wording reader-friendly for MQTT docs.
+            if "default" in responses and isinstance(responses["default"], dict):
+                desc = str(responses["default"].get("description", "")).strip().lower()
+                if desc in ("", "success", "ok", "successful"):
+                    responses["default"]["description"] = "Example response payload"
+
 
 def generate_api_reference_html(spec: dict) -> str:
     """Generate static HTML for the API Reference from the OpenAPI spec. No Redoc; same layout as other docs."""
@@ -748,6 +754,12 @@ def main():
                     var hasHttpCodeText = /(^|\\W)[1-5][0-9]{2}(\\W|$)/.test(txt);
                     var hasHttpLabelText = /(^|\\W)(?:success|ok|responses?)(\\W|$)/i.test(txt);
 
+                    // Replace OpenAPI key label with reader-friendly wording.
+                    if (node.childElementCount === 0 && /^default$/i.test(txt)) {
+                        node.textContent = 'Example Response';
+                        txt = 'Example Response';
+                    }
+
                     // Hide response-related widgets that carry HTTP semantics.
                     if (looksResponseClass && (hasHttpCodeText || hasHttpLabelText)) {
                         node.style.setProperty('display', 'none', 'important');
@@ -779,6 +791,9 @@ def main():
                                 if (pTag !== 'CODE' && pTag !== 'PRE' && pTag !== 'KBD') {
                                     t.parentNode.style.setProperty('display', 'none', 'important');
                                 }
+                            }
+                            if (/^default$/i.test(raw)) {
+                                t.textContent = 'Example Response';
                             }
             }
             for (var k = 0; k < r.children.length; k++) walkRoot(r.children[k]);
