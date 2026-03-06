@@ -701,258 +701,461 @@ def main():
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>API Reference - RFD40 / RFD90 IOT developer guide</title>
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/redoc@2.2.0/bundles/redoc.standalone.css" />
   <link rel="stylesheet" href="css/redoc-zebra.css" />
-    <style>
-        body { margin: 0; }
-        /* API TOC polish: clearer hierarchy, spacing, and scanability */
-        #redoc-container > div > div:first-child {
-            min-width: 320px !important;
-            width: 320px !important;
-            padding-top: 0 !important;
-        }
-        /* Remove big logo block from API reference sidebar for a cleaner TOC */
-        #redoc-container > div > div:first-child img {
-            display: none !important;
-        }
-        #redoc-container > div > div:first-child [class*="logo"],
-        #redoc-container > div > div:first-child [class*="Logo"] {
-            display: none !important;
-            height: 0 !important;
-            min-height: 0 !important;
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-        #redoc-container > div > div:first-child a {
-            font-size: 0.96rem !important;
-            line-height: 1.4 !important;
-            padding-top: 0.42rem !important;
-            padding-bottom: 0.42rem !important;
-            padding-left: 1rem !important;
-            padding-right: 0.9rem !important;
-            word-break: break-word !important;
-        }
-        #redoc-container > div > div:first-child [class*="group"] {
-            font-size: 0.78rem !important;
-            letter-spacing: 0.04em !important;
-            text-transform: uppercase !important;
-            opacity: 0.92 !important;
-            padding-top: 0.65rem !important;
-            padding-bottom: 0.25rem !important;
-        }
-        #redoc-container > div > div:first-child a[class*="active"],
-        #redoc-container > div > div:first-child [class*="active"] {
-            background: rgba(37, 99, 235, 0.20) !important;
-            border-left: 3px solid #60a5fa !important;
-        }
-    </style>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; }
+    body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: #fff; }
+
+    .page-layout { display: flex; min-height: 100vh; }
+
+    /* Custom sidebar */
+    .custom-sidebar {
+      width: 290px;
+      min-width: 290px;
+      background: #f9fafb;
+      border-right: 1px solid #e5e7eb;
+      overflow-y: auto;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 0;
+      font-size: 14px;
+      z-index: 10;
+    }
+    .sidebar-header {
+      padding: 18px 20px 14px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #111827;
+      border-bottom: 1px solid #e5e7eb;
+      background: #f9fafb;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    .sidebar-back {
+      display: block;
+      padding: 10px 20px;
+      font-size: 13px;
+      color: #2563eb;
+      text-decoration: none;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .sidebar-back:hover { text-decoration: underline; }
+
+    /* Tree navigation */
+    .tree-list { list-style: none; padding: 0; margin: 0; }
+    .tree-list .tree-list { padding-left: 0; }
+    .tree-node { border: none; }
+    .tree-label {
+      display: flex;
+      align-items: flex-start;
+      padding: 7px 16px 7px 0;
+      cursor: pointer;
+      color: #1a1a1a;
+      font-size: 14px;
+      line-height: 1.45;
+      text-decoration: none;
+      user-select: none;
+      transition: background 0.12s;
+      border-left: 3px solid transparent;
+    }
+    .tree-label:hover { background: #f0f0f0; }
+    .tree-label.active {
+      color: #0f6ab4;
+      font-weight: 600;
+      border-left-color: #0f6ab4;
+      background: #eef6ff;
+    }
+    .tree-label.group-header {
+      font-weight: 600;
+      font-size: 14px;
+      color: #111827;
+      padding-top: 12px;
+      padding-bottom: 6px;
+    }
+    .tree-toggle {
+      display: inline-flex;
+      width: 18px;
+      height: 18px;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+      font-size: 10px;
+      color: #555;
+      transition: transform 0.2s ease;
+      cursor: pointer;
+    }
+    .tree-toggle::before {
+      content: '';
+      display: block;
+      width: 0;
+      height: 0;
+      border-left: 5px solid #555;
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+      transition: transform 0.2s ease;
+    }
+    .tree-toggle.expanded::before { transform: rotate(90deg); }
+    .tree-spacer { display: inline-block; width: 18px; flex-shrink: 0; }
+    .tree-children { display: none; overflow: hidden; }
+    .tree-children.open { display: block; }
+    .depth-0 > .tree-label { padding-left: 16px; }
+    .depth-1 > .tree-label { padding-left: 34px; }
+    .depth-2 > .tree-label { padding-left: 52px; }
+
+    /* Redoc content area */
+    .page-content { flex: 1; min-width: 0; }
+    #redoc-container > div > div:first-child {
+      display: none !important;
+      width: 0 !important;
+      min-width: 0 !important;
+      max-width: 0 !important;
+      overflow: hidden !important;
+    }
+    @media (max-width: 768px) {
+      .custom-sidebar { display: none; }
+    }
+  </style>
 </head>
 <body>
-  <div id="redoc-container"></div>
+  <div class="page-layout">
+    <nav class="custom-sidebar" id="custom-sidebar">
+      <div class="sidebar-header">API Reference</div>
+      <a class="sidebar-back" href="index.html">&larr; Back to User Guide</a>
+      <ul class="tree-list" id="nav-tree"></ul>
+    </nav>
+    <main class="page-content">
+      <div id="redoc-container"></div>
+    </main>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/redoc@2.2.0/bundles/redoc.standalone.js"></script>
   <script>
-    (function() {
-      var el = document.getElementById('redoc-container');
-      var methods = ['post', 'get', 'put', 'delete', 'patch', 'options', 'head'];
-      function collectAll(root) {
-        var list = [];
-        function walk(r) {
-          if (r.shadowRoot) walk(r.shadowRoot);
-          list.push(r);
-          for (var i = 0; i < r.children.length; i++) walk(r.children[i]);
+  (function() {
+    var navData = [
+      {
+        label: 'Management Interface',
+        children: [
+          { label: 'Device Status', tag: 'Management - Device Status', children: [
+              { label: 'get_status', op: 'get_status' },
+              { label: 'get_version', op: 'get_version' },
+              { label: 'get_current_region', op: 'get_current_region' }
+          ]},
+          { label: 'Device Configuration', tag: 'Management - Device Configuration', children: [
+              { label: 'get_config', op: 'get_config' },
+              { label: 'set_config', op: 'set_config' }
+          ]},
+          { label: 'Network Configuration', tag: 'Management - Network Configuration', children: [
+              { label: 'get_wifi', op: 'get_wifi' },
+              { label: 'set_wifi', op: 'set_wifi' },
+              { label: 'delete_wifi_profile', op: 'delete_wifi_profile' },
+              { label: 'get_eth', op: 'get_eth' }
+          ]},
+          { label: 'MQTT Endpoint Configuration', tag: 'Management - MQTT Endpoint Configuration', children: [
+              { label: 'config_endpoint', op: 'config_endpoint' },
+              { label: 'get_endpoint_config', op: 'get_endpoint_config' }
+          ]},
+          { label: 'Certificate Management', tag: 'Management - Certificate Management', children: [
+              { label: 'install_certificate', op: 'install_certificate' },
+              { label: 'delete_certificate', op: 'delete_certificate' },
+              { label: 'get_installed_certificate', op: 'get_installed_certificate' }
+          ]},
+          { label: 'System Operations', tag: 'Management - System Operations', children: [
+              { label: 'reboot', op: 'reboot' },
+              { label: 'set_os', op: 'set_os' }
+          ]}
+        ]
+      },
+      {
+        label: 'Control Interface',
+        children: [
+          { label: 'Inventory Control', tag: 'Control - Inventory Control', children: [
+              { label: 'control_operation', op: 'control_operation' }
+          ]},
+          { label: 'Operating Mode', tag: 'Control - Operating Mode', children: [
+              { label: 'set_operating_mode', op: 'set_operating_mode' },
+              { label: 'get_operating_mode', op: 'get_operating_mode' }
+          ]},
+          { label: 'Tag Filtering', tag: 'Control - Tag Filtering', children: [
+              { label: 'set_post_filter', op: 'set_post_filter' },
+              { label: 'get_post_filter', op: 'get_post_filter' }
+          ]}
+        ]
+      },
+      {
+        label: 'Event Interface',
+        children: [
+          { label: 'Device Health', tag: 'Events - Device Health', children: [
+              { label: 'heartBeatEVT', op: 'heartBeatEVT' }
+          ]},
+          { label: 'Alerts', tag: 'Events - Alerts', children: [
+              { label: 'alerts', op: 'alerts' },
+              { label: 'alert_short', op: 'alert_short' }
+          ]},
+          { label: 'Exceptions', tag: 'Events - Exceptions', children: [
+              { label: 'exceptionEVT', op: 'exceptionEVT' }
+          ]},
+          { label: 'MQTT Connectivity', tag: 'Events - MQTT Connectivity', children: [
+              { label: 'mqttConnEVT', op: 'mqttConnEVT' }
+          ]},
+          { label: 'Event Configuration', tag: 'Events - Event Configuration', children: [
+              { label: 'config_events', op: 'config_events' }
+          ]}
+        ]
+      },
+      {
+        label: 'Data Interface',
+        children: [
+          { label: 'Tag & Barcode Data', tag: 'Data - Tag Data Event', children: [
+              { label: 'dataEVT', op: 'dataEVT' }
+          ]}
+        ]
+      }
+    ];
+
+    var treeRoot = document.getElementById('nav-tree');
+
+    function buildTree(items, parentUl, depth) {
+      items.forEach(function(item) {
+        var li = document.createElement('li');
+        li.className = 'tree-node depth-' + depth;
+        var label = document.createElement('div');
+        label.className = 'tree-label' + (depth === 0 ? ' group-header' : '');
+        var hasKids = item.children && item.children.length > 0;
+        if (hasKids) {
+          var toggle = document.createElement('span');
+          toggle.className = 'tree-toggle';
+          label.appendChild(toggle);
+        } else {
+          var spacer = document.createElement('span');
+          spacer.className = 'tree-spacer';
+          label.appendChild(spacer);
         }
-        walk(root);
-        return list;
-      }
-      function isMethodText(text) {
-        return methods.indexOf(String(text || '').trim().toLowerCase()) !== -1;
-      }
-      function hideMethodBadges() {
-        if (!el) return;
-        var sidebar = el.querySelector('div > div:first-child');
-        if (sidebar) {
-          var sideNodes = collectAll(sidebar);
-          for (var s = 0; s < sideNodes.length; s++) {
-            var sideNode = sideNodes[s];
-            if (sideNode.nodeType !== 1) continue;
-            if (isMethodText(sideNode.textContent)) {
-              sideNode.style.setProperty('display', 'none', 'important');
+        var text = document.createElement('span');
+        text.textContent = item.label;
+        label.appendChild(text);
+        li.appendChild(label);
+
+        if (hasKids) {
+          var childUl = document.createElement('ul');
+          childUl.className = 'tree-list tree-children';
+          buildTree(item.children, childUl, depth + 1);
+          li.appendChild(childUl);
+          label.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var tog = label.querySelector('.tree-toggle');
+            var isOpen = childUl.classList.contains('open');
+            if (isOpen) {
+              childUl.classList.remove('open');
+              if (tog) tog.classList.remove('expanded');
+            } else {
+              childUl.classList.add('open');
+              if (tog) tog.classList.add('expanded');
             }
+            if (item.tag) { scrollToTag(item.tag); setActive(label); }
+          });
+        }
+
+        if (item.op) {
+          label.addEventListener('click', function(e) {
+            e.stopPropagation();
+            scrollToOperation(item.op);
+            setActive(label);
+          });
+          label.style.cursor = 'pointer';
+        } else if (item.tag && !hasKids) {
+          label.addEventListener('click', function(e) {
+            e.stopPropagation();
+            scrollToTag(item.tag);
+            setActive(label);
+          });
+          label.style.cursor = 'pointer';
+        }
+        parentUl.appendChild(li);
+      });
+    }
+
+    buildTree(navData, treeRoot, 0);
+
+    function setActive(labelEl) {
+      var all = document.querySelectorAll('.tree-label.active');
+      for (var i = 0; i < all.length; i++) all[i].classList.remove('active');
+      labelEl.classList.add('active');
+    }
+
+    function scrollToTag(tagName) {
+      var encoded = encodeURIComponent(tagName);
+      location.hash = 'tag/' + encoded;
+      setTimeout(function() {
+        var container = document.getElementById('redoc-container');
+        if (!container) return;
+        var headings = container.querySelectorAll('h1, h2, h3, h4, h5');
+        for (var i = 0; i < headings.length; i++) {
+          var txt = (headings[i].textContent || '').trim();
+          if (txt === tagName || txt.indexOf(tagName) !== -1) {
+            headings[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return;
           }
         }
-                var all = collectAll(el);
-                for (var i = 0; i < all.length; i++) {
-                    var node = all[i];
-                    if (node.nodeType !== 1) continue;
-                    var className = String(node.className || '').toLowerCase();
-                    var dataMethod = String(node.getAttribute && node.getAttribute('data-method') || '').toLowerCase();
-                    var txt = String(node.textContent || '').trim();
-                    if (isMethodText(node.textContent) || dataMethod || className.indexOf('http-verb') !== -1 || className.indexOf('method') !== -1) {
-                        node.style.setProperty('display', 'none', 'important');
-                        continue;
-                    }
-
-                    var looksResponseClass = className.indexOf('response') !== -1 || className.indexOf('status') !== -1 || className.indexOf('code') !== -1;
-                    var hasHttpCodeText = /(^|\\W)[1-5][0-9]{2}(\\W|$)/.test(txt);
-                    var hasHttpLabelText = /(^|\\W)(?:success|ok|responses?)(\\W|$)/i.test(txt);
-
-                    // Replace OpenAPI key label with reader-friendly wording.
-                    if (node.childElementCount === 0 && /default/i.test(txt)) {
-                        node.textContent = txt.replace(/default/gi, 'Response');
-                        txt = node.textContent;
-                    }
-
-                    // Hide response-related widgets that carry HTTP semantics.
-                    if (looksResponseClass && (hasHttpCodeText || hasHttpLabelText)) {
-                        node.style.setProperty('display', 'none', 'important');
-                        continue;
-                    }
-
-                    // Fallback: hide small leaf labels that are only HTTP-like markers.
-                    if (node.childElementCount === 0 && /^(?:[1-5][0-9]{2}|success|ok|responses?)$/i.test(txt)) {
-                        var tag = String(node.tagName || '').toUpperCase();
-                        if (tag !== 'CODE' && tag !== 'PRE' && tag !== 'KBD') {
-                            node.style.setProperty('display', 'none', 'important');
-                        }
-                    }
-                }
-        if (typeof document.createTreeWalker === 'function') {
-          function walkRoot(r) {
-            if (r.shadowRoot) walkRoot(r.shadowRoot);
-            var tw = document.createTreeWalker(r, NodeFilter.SHOW_TEXT, null, false);
-            var t;
-            while ((t = tw.nextNode())) {
-                            var raw = String(t.textContent || '').trim();
-                            if (!t.parentNode || t.parentNode.nodeType !== 1) continue;
-                            if (isMethodText(raw)) {
-                                t.parentNode.style.setProperty('display', 'none', 'important');
-                                continue;
-                            }
-                            if (/^(?:[1-5][0-9]{2}|success|ok|responses?)$/i.test(raw)) {
-                                var pTag = String(t.parentNode.tagName || '').toUpperCase();
-                                if (pTag !== 'CODE' && pTag !== 'PRE' && pTag !== 'KBD') {
-                                    t.parentNode.style.setProperty('display', 'none', 'important');
-                                }
-                            }
-                            if (/default/i.test(raw)) {
-                                t.textContent = String(t.textContent || '').replace(/default/gi, 'Response');
-                            }
-                            // Also replace inline occurrences (e.g., icon + label wrappers).
-                            if (/default/i.test(String(t.textContent || ''))) {
-                                t.textContent = String(t.textContent || '').replace(/default/gi, 'Response');
-                            }
-            }
-            for (var k = 0; k < r.children.length; k++) walkRoot(r.children[k]);
+        var allEls = container.querySelectorAll('[id]');
+        for (var j = 0; j < allEls.length; j++) {
+          var id = allEls[j].id || '';
+          if (id.toLowerCase().indexOf(tagName.toLowerCase().replace(/\\s+/g, '-')) !== -1) {
+            allEls[j].scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return;
           }
-          walkRoot(el);
+        }
+      }, 200);
+    }
+
+    function scrollToOperation(opId) {
+      location.hash = 'operation/' + opId;
+      setTimeout(function() {
+        var container = document.getElementById('redoc-container');
+        if (!container) return;
+        var headings = container.querySelectorAll('h1, h2, h3, h4, h5');
+        for (var i = 0; i < headings.length; i++) {
+          var txt = (headings[i].textContent || '').trim();
+          if (txt === opId || txt.indexOf(opId) === 0) {
+            headings[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return;
+          }
+        }
+        var allEls = container.querySelectorAll('[id]');
+        for (var j = 0; j < allEls.length; j++) {
+          var id = allEls[j].id || '';
+          if (id.toLowerCase().indexOf(opId.toLowerCase()) !== -1) {
+            allEls[j].scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return;
+          }
+        }
+      }, 200);
+    }
+
+    var el = document.getElementById('redoc-container');
+    var methods = ['post', 'get', 'put', 'delete', 'patch', 'options', 'head'];
+
+    function collectAll(root) {
+      var list = [];
+      function walk(r) {
+        if (r.shadowRoot) walk(r.shadowRoot);
+        list.push(r);
+        for (var i = 0; i < r.children.length; i++) walk(r.children[i]);
+      }
+      walk(root);
+      return list;
+    }
+
+    function isMethodText(text) {
+      return methods.indexOf(String(text || '').trim().toLowerCase()) !== -1;
+    }
+
+    function hideMethodBadges() {
+      if (!el) return;
+      var all = collectAll(el);
+      for (var i = 0; i < all.length; i++) {
+        var node = all[i];
+        if (node.nodeType !== 1) continue;
+        var className = String(node.className || '').toLowerCase();
+        var dataMethod = String(node.getAttribute && node.getAttribute('data-method') || '').toLowerCase();
+        var txt = String(node.textContent || '').trim();
+        if (isMethodText(node.textContent) || dataMethod || className.indexOf('http-verb') !== -1 || className.indexOf('method') !== -1) {
+          node.style.setProperty('display', 'none', 'important');
+          continue;
+        }
+        var looksResponseClass = className.indexOf('response') !== -1 || className.indexOf('status') !== -1 || className.indexOf('code') !== -1;
+        var hasHttpCodeText = /(^|\\W)[1-5][0-9]{2}(\\W|$)/.test(txt);
+        var hasHttpLabelText = /(^|\\W)(?:success|ok|responses?)(\\W|$)/i.test(txt);
+        if (node.childElementCount === 0 && /default/i.test(txt)) {
+          node.textContent = txt.replace(/default/gi, 'Response');
+          txt = node.textContent;
+        }
+        if (looksResponseClass && (hasHttpCodeText || hasHttpLabelText)) {
+          node.style.setProperty('display', 'none', 'important');
+          continue;
+        }
+        if (node.childElementCount === 0 && /^(?:[1-5][0-9]{2}|success|ok|responses?)$/i.test(txt)) {
+          var tag = String(node.tagName || '').toUpperCase();
+          if (tag !== 'CODE' && tag !== 'PRE' && tag !== 'KBD') {
+            node.style.setProperty('display', 'none', 'important');
+          }
         }
       }
+      if (typeof document.createTreeWalker === 'function') {
+        function walkRoot(r) {
+          if (r.shadowRoot) walkRoot(r.shadowRoot);
+          var tw = document.createTreeWalker(r, NodeFilter.SHOW_TEXT, null, false);
+          var t;
+          while ((t = tw.nextNode())) {
+            var raw = String(t.textContent || '').trim();
+            if (!t.parentNode || t.parentNode.nodeType !== 1) continue;
+            if (isMethodText(raw)) {
+              t.parentNode.style.setProperty('display', 'none', 'important');
+              continue;
+            }
+            if (/^(?:[1-5][0-9]{2}|success|ok|responses?)$/i.test(raw)) {
+              var pTag = String(t.parentNode.tagName || '').toUpperCase();
+              if (pTag !== 'CODE' && pTag !== 'PRE' && pTag !== 'KBD') {
+                t.parentNode.style.setProperty('display', 'none', 'important');
+              }
+            }
+            if (/default/i.test(raw)) {
+              t.textContent = String(t.textContent || '').replace(/default/gi, 'Response');
+            }
+          }
+          for (var k = 0; k < r.children.length; k++) walkRoot(r.children[k]);
+        }
+        walkRoot(el);
+      }
+    }
+
     var HIDE_VERB_CSS = '.http-verb,[class*="http-verb"],[class*="HttpVerb"],[data-method],[class*="Method"],[class*="method"],[class*="response-status"],[class*="ResponseStatus"],[class*="status-code"],[class*="StatusCode"],[class*="response-code"],[class*="ResponseCode"],[class*="http-status"],[class*="ResponseCodeBlock"]{display:none!important}';
-      function injectShadowStyles(root) {
-        if (!root) return;
-        if (root.shadowRoot) {
-          if (!root.shadowRoot.querySelector('style[data-mqtt-hide-verb]')) {
-            var s = document.createElement('style');
-            s.setAttribute('data-mqtt-hide-verb', '1');
-            s.textContent = HIDE_VERB_CSS;
-            root.shadowRoot.appendChild(s);
-          }
-          for (var i = 0; i < root.shadowRoot.children.length; i++) injectShadowStyles(root.shadowRoot.children[i]);
+
+    function injectShadowStyles(root) {
+      if (!root) return;
+      if (root.shadowRoot) {
+        if (!root.shadowRoot.querySelector('style[data-mqtt-hide-verb]')) {
+          var s = document.createElement('style');
+          s.setAttribute('data-mqtt-hide-verb', '1');
+          s.textContent = HIDE_VERB_CSS;
+          root.shadowRoot.appendChild(s);
         }
-        for (var i = 0; i < root.children.length; i++) injectShadowStyles(root.children[i]);
+        for (var i = 0; i < root.shadowRoot.children.length; i++) injectShadowStyles(root.shadowRoot.children[i]);
       }
-      function runHide() {
-        hideMethodBadges();
-                removeSidebarLogoBlocks();
-                simplifySidebarLabels();
-        injectShadowStyles(el);
-      }
+      for (var i = 0; i < root.children.length; i++) injectShadowStyles(root.children[i]);
+    }
 
-            function removeSidebarLogoBlocks() {
-                if (!el) return;
-                var sidebar = el.querySelector('div > div:first-child');
-                if (!sidebar) return;
+    function runHide() {
+      hideMethodBadges();
+      injectShadowStyles(el);
+    }
 
-                function hideNode(node) {
-                    if (!node || node.nodeType !== 1) return;
-                    node.style.setProperty('display', 'none', 'important');
-                    node.style.setProperty('height', '0', 'important');
-                    node.style.setProperty('min-height', '0', 'important');
-                    node.style.setProperty('padding', '0', 'important');
-                    node.style.setProperty('margin', '0', 'important');
-                    node.style.setProperty('overflow', 'hidden', 'important');
-                }
-
-                function collapseAncestors(node) {
-                    var cur = node;
-                    for (var i = 0; i < 6 && cur; i++) {
-                        if (cur === sidebar) break;
-                        var hasNav = cur.querySelector && cur.querySelector('a, input, button');
-                        if (hasNav && cur !== node) break;
-                        hideNode(cur);
-                        cur = cur.parentElement;
-                    }
-                }
-
-                var nodes = collectAll(sidebar);
-                for (var n = 0; n < nodes.length; n++) {
-                    var node = nodes[n];
-                    if (node.nodeType !== 1) continue;
-                    var tag = String(node.tagName || '').toUpperCase();
-                    var cls = String(node.className || '').toLowerCase();
-                    var href = String(node.getAttribute && node.getAttribute('href') || '').toLowerCase();
-                    var src = String(node.getAttribute && node.getAttribute('src') || '').toLowerCase();
-                    var alt = String(node.getAttribute && node.getAttribute('alt') || '').toLowerCase();
-                    var txt = String(node.textContent || '').trim().toLowerCase();
-
-                    var isBrandImage = (tag === 'IMG' || tag === 'SVG') && (src.indexOf('zebra') !== -1 || alt.indexOf('zebra') !== -1 || cls.indexOf('logo') !== -1 || cls.indexOf('brand') !== -1);
-                    var isBrandBlock = cls.indexOf('logo') !== -1 || cls.indexOf('brand') !== -1 || txt === 'zebra';
-                    var isRedoclyLink = (tag === 'A' && (href.indexOf('redocly') !== -1 || txt.indexOf('redocly') !== -1)) || txt.indexOf('api docs by redocly') !== -1;
-
-                    if (isBrandImage || isBrandBlock || isRedoclyLink) {
-                        hideNode(node);
-                        collapseAncestors(node);
-                    }
-                }
-            }
-
-            function simplifySidebarLabels() {
-                if (!el) return;
-                var sidebar = el.querySelector('div > div:first-child');
-                if (!sidebar) return;
-                var links = sidebar.querySelectorAll('a');
-                for (var i = 0; i < links.length; i++) {
-                    var a = links[i];
-                    var t = String(a.textContent || '').trim().replace(/\\s+/g, ' ');
-                    // Keep section headers like "Management - Device Status" as-is.
-                    // Simplify operation labels such as "get_version - Retrieves ...".
-                    if (/^[a-z_][a-z0-9_]*\\s+-\\s+/i.test(t)) {
-                        a.textContent = t.split(/\\s+-\\s+/, 2)[0];
-                    }
-                }
-            }
     var specUrl = 'openapi.yaml?v=' + Date.now();
     Redoc.init(specUrl, {
-        theme: {
-          colors: { primary: { main: '#2563eb' }, success: { main: '#059669' }, warning: { main: '#d97706' }, error: { main: '#dc2626' } },
-          typography: { fontFamily: '"Inter", "Segoe UI", system-ui, sans-serif', headings: { fontFamily: '"Inter", "Segoe UI", system-ui, sans-serif' }, code: { fontFamily: 'Consolas, Monaco, monospace' } },
-          sidebar: { backgroundColor: '#111827', textColor: '#cbd5e1', activeTextColor: '#ffffff', groupItems: { activeBackgroundColor: '#1e293b' } },
-          rightPanel: { backgroundColor: '#1e293b', textColor: '#e2e8f0' }
-        },
-        pathInMiddlePanel: true,
-        hideDownloadButton: false
-      }, el, function() { setTimeout(runHide, 50); });
-      [0, 100, 200, 500, 1200, 2500, 5000].forEach(function(ms) { setTimeout(runHide, ms); });
-      var pollCount = 0;
-      var poll = setInterval(function() {
-        runHide();
-        if (++pollCount >= 20) clearInterval(poll);
-      }, 500);
-      if (typeof MutationObserver !== 'undefined') {
-        var obs = new MutationObserver(function() { setTimeout(runHide, 50); });
-        obs.observe(el, { childList: true, subtree: true });
-      }
-    })();
+      theme: {
+        colors: { primary: { main: '#2563eb' }, success: { main: '#059669' }, warning: { main: '#d97706' }, error: { main: '#dc2626' } },
+        typography: { fontFamily: '"Inter", "Segoe UI", system-ui, sans-serif', headings: { fontFamily: '"Inter", "Segoe UI", system-ui, sans-serif' }, code: { fontFamily: 'Consolas, Monaco, monospace' } },
+        sidebar: { backgroundColor: '#111827', textColor: '#cbd5e1', activeTextColor: '#ffffff', groupItems: { activeBackgroundColor: '#1e293b' } },
+        rightPanel: { backgroundColor: '#1e293b', textColor: '#e2e8f0' }
+      },
+      pathInMiddlePanel: true,
+      hideDownloadButton: false
+    }, el, function() { setTimeout(runHide, 50); });
+
+    [0, 100, 200, 500, 1200, 2500, 5000].forEach(function(ms) { setTimeout(runHide, ms); });
+    var pollCount = 0;
+    var poll = setInterval(function() {
+      runHide();
+      if (++pollCount >= 20) clearInterval(poll);
+    }, 500);
+    if (typeof MutationObserver !== 'undefined') {
+      var obs = new MutationObserver(function() { setTimeout(runHide, 50); });
+      obs.observe(el, { childList: true, subtree: true });
+    }
+  })();
   </script>
 </body>
 </html>"""
