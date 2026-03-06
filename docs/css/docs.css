@@ -741,7 +741,7 @@ body.sidebar-collapsed .sidebar {
 }
 
 .sidebar .nav-label {
-  display: inline-grid;
+  display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   column-gap: 0.4rem;
   align-items: start;
@@ -785,21 +785,29 @@ body.sidebar-collapsed .sidebar {
 }
 
 .sidebar .nav-group-children {
-  padding-left: 0;
+  padding-left: 1.25rem;
 }
 
 .sidebar .nav-group-children a {
-  padding-left: 2.35rem;
+  padding-left: 0.95rem;
   font-size: 0.86rem;
   font-weight: 500;
   color: #2c3a4a;
   padding-right: 0.8rem;
 }
 
+.sidebar .nav-group-children a .nav-label {
+  grid-template-columns: 3.2ch minmax(0, 1fr);
+}
+
 .sidebar .nav-group-children a.nav-sub-depth2 {
-  padding-left: 3.2rem;
+  padding-left: 1.65rem;
   font-size: 0.84rem;
   opacity: 1;
+}
+
+.sidebar .nav-group-children a.nav-sub-depth2 .nav-label {
+  grid-template-columns: 4.6ch minmax(0, 1fr);
 }
 
 .sidebar a.active,
@@ -830,4 +838,27 @@ body.sidebar-collapsed .sidebar {
     width: 300px;
     min-width: 300px;
   }
+}
+
+/* Final TOC indentation overrides (keep at file end) */
+.sidebar .nav-group-children {
+  margin-left: 2rem;
+  padding-left: 0;
+}
+
+.sidebar .nav-group-children a {
+  padding-left: 0.4rem;
+}
+
+.sidebar .nav-group-children a .nav-label {
+  grid-template-columns: 3.25ch minmax(0, 1fr);
+}
+
+.sidebar .nav-group-children a.nav-sub-depth2 {
+  margin-left: 0.95rem;
+  padding-left: 0.2rem;
+}
+
+.sidebar .nav-group-children a.nav-sub-depth2 .nav-label {
+  grid-template-columns: 4.7ch minmax(0, 1fr);
 }
