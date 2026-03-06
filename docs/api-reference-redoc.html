@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>API Reference - RFD40 / RFD90 IOT developer guide</title>
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/redoc-zebra.css?v=5" />
+  <link rel="stylesheet" href="css/redoc-zebra.css?v=6" />
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; height: 100%; }
@@ -131,54 +131,78 @@
       var sidebar = wrap.children[0];
       if (!sidebar) return;
 
+      // Hide ALL Redoc default arrow SVGs in sidebar
+      var allSvgs = sidebar.querySelectorAll('svg');
+      for (var s = 0; s < allSvgs.length; s++) {
+        allSvgs[s].style.setProperty('display', 'none', 'important');
+      }
+
       // Find all <label> with role="menuitem" — these are group headers (Level 1)
       var groupLabels = sidebar.querySelectorAll('label[role="menuitem"]');
       for (var g = 0; g < groupLabels.length; g++) {
         var lbl = groupLabels[g];
-        lbl.style.cssText = 'color:#545b64!important;text-transform:uppercase;font-size:0.72rem;font-weight:700;letter-spacing:0.04em;padding:10px 12px 4px 12px!important;cursor:default;';
+        lbl.style.cssText = 'color:#545b64!important;text-transform:uppercase;font-size:0.72rem;font-weight:700;letter-spacing:0.04em;padding:10px 12px 4px 12px!important;cursor:pointer;display:flex;align-items:center;gap:6px;';
 
-        // The parent <li> of this group label contains a nested <ul> with tag items
+        // Add or update disclosure triangle for group heading
+        var groupTriangle = lbl.querySelector('.tree-triangle');
+        if (!groupTriangle) {
+          groupTriangle = document.createElement('span');
+          groupTriangle.className = 'tree-triangle';
+          groupTriangle.style.cssText = 'font-size:0.6rem;color:#545b64;flex-shrink:0;width:12px;display:inline-block;';
+          lbl.insertBefore(groupTriangle, lbl.firstChild);
+        }
+        // Determine if expanded: check if child <ul> is visible
         var groupLi = lbl.closest('li');
         if (!groupLi) continue;
+        var groupChildUl = groupLi.querySelector('ul');
+        var groupExpanded = groupChildUl && groupChildUl.offsetHeight > 0 && groupChildUl.style.display !== 'none';
+        groupTriangle.textContent = groupExpanded ? '▼' : '▶';
+
         groupLi.style.borderBottom = '1px solid #eaeded';
         groupLi.style.paddingBottom = '6px';
         groupLi.style.marginBottom = '6px';
 
-        // Level 2: tag items inside this group (direct child <ul> > <li>)
-        var tagUl = groupLi.querySelector('ul');
-        if (!tagUl) continue;
-        var tagItems = tagUl.children;
+        // Level 2: tag items inside this group
+        if (!groupChildUl) continue;
+        var tagItems = groupChildUl.children;
         for (var t = 0; t < tagItems.length; t++) {
           var tagLi = tagItems[t];
-          // The clickable element is either a <label> or <a>
           var tagLink = tagLi.querySelector(':scope > label, :scope > a');
-          if (tagLink) {
-            tagLink.style.cssText = 'padding-left:24px!important;font-size:0.87rem;font-weight:400;color:#16191f!important;line-height:1.8;';
-          }
+          if (!tagLink) continue;
 
-          // Hide Redoc default arrow SVGs inside tags
-          var arrows = tagLi.querySelectorAll('svg');
-          for (var a = 0; a < arrows.length; a++) {
-            var cn = String(arrows[a].className && arrows[a].className.baseVal || '').toLowerCase();
-            if (cn.indexOf('arrow') !== -1 || arrows[a].parentElement === tagLink) {
-              // keep it but we'll handle with CSS
-            }
-          }
-
-          // Level 3: operation items inside this tag
+          // Check if this tag has child operations (expandable)
           var opUl = tagLi.querySelector('ul');
+          var hasChildren = opUl && opUl.children.length > 0;
+
+          if (hasChildren) {
+            tagLink.style.cssText = 'padding-left:24px!important;font-size:0.87rem;font-weight:400;color:#16191f!important;line-height:1.8;display:flex;align-items:center;gap:5px;cursor:pointer;';
+            // Add or update triangle for tag item
+            var tagTriangle = tagLink.querySelector('.tree-triangle');
+            if (!tagTriangle) {
+              tagTriangle = document.createElement('span');
+              tagTriangle.className = 'tree-triangle';
+              tagTriangle.style.cssText = 'font-size:0.5rem;color:#545b64;flex-shrink:0;width:12px;display:inline-block;';
+              tagLink.insertBefore(tagTriangle, tagLink.firstChild);
+            }
+            var tagExpanded = opUl.offsetHeight > 0 && opUl.style.display !== 'none';
+            tagTriangle.textContent = tagExpanded ? '▼' : '▶';
+          } else {
+            tagLink.style.cssText = 'padding-left:40px!important;font-size:0.87rem;font-weight:400;color:#16191f!important;line-height:1.8;';
+          }
+
+          // Level 3: operation items
           if (!opUl) continue;
           var opItems = opUl.children;
           for (var o = 0; o < opItems.length; o++) {
             var opLink = opItems[o].querySelector('a');
             if (opLink) {
-              opLink.style.cssText = 'padding-left:48px!important;font-size:0.84rem;font-weight:400;color:#16191f!important;line-height:1.8;';
+              opLink.style.cssText = 'padding-left:56px!important;font-size:0.84rem;font-weight:400;color:#16191f!important;line-height:1.8;';
             }
           }
         }
       }
 
-      // If no group labels found, try alternative: walk all <li> by depth
+      // Fallback: if no group labels found, walk all <li> by depth
       if (groupLabels.length === 0) {
         var navEl = sidebar.querySelector('[role="navigation"]') || sidebar;
         var allLis = navEl.querySelectorAll('li');
@@ -192,20 +216,32 @@
           }
           var link = li.querySelector(':scope > a, :scope > label');
           if (!link) continue;
+          var childUl = li.querySelector('ul');
+          var isExpandable = childUl && childUl.children.length > 0;
+          var isOpen = childUl && childUl.offsetHeight > 0;
+
           if (depth <= 1) {
-            // Group header
-            link.style.cssText = 'color:#545b64!important;text-transform:uppercase;font-size:0.72rem;font-weight:700;letter-spacing:0.04em;padding:10px 12px 4px 12px!important;';
+            link.style.cssText = 'color:#545b64!important;text-transform:uppercase;font-size:0.72rem;font-weight:700;letter-spacing:0.04em;padding:10px 12px 4px 12px!important;display:flex;align-items:center;gap:6px;cursor:pointer;';
             li.style.borderBottom = '1px solid #eaeded';
             li.style.paddingBottom = '6px';
             li.style.marginBottom = '6px';
           } else if (depth === 2) {
-            // Tag item
-            link.style.cssText = 'padding-left:24px!important;font-size:0.87rem;font-weight:400;color:#16191f!important;line-height:1.8;';
+            link.style.cssText = 'padding-left:24px!important;font-size:0.87rem;font-weight:400;color:#16191f!important;line-height:1.8;display:flex;align-items:center;gap:5px;';
             li.style.borderBottom = 'none';
           } else {
-            // Operation item
-            link.style.cssText = 'padding-left:48px!important;font-size:0.84rem;font-weight:400;color:#16191f!important;line-height:1.8;';
+            link.style.cssText = 'padding-left:56px!important;font-size:0.84rem;font-weight:400;color:#16191f!important;line-height:1.8;';
             li.style.borderBottom = 'none';
+          }
+
+          if (isExpandable && depth <= 2) {
+            var tri = link.querySelector('.tree-triangle');
+            if (!tri) {
+              tri = document.createElement('span');
+              tri.className = 'tree-triangle';
+              tri.style.cssText = 'font-size:' + (depth <= 1 ? '0.6' : '0.5') + 'rem;color:#545b64;flex-shrink:0;width:12px;display:inline-block;';
+              link.insertBefore(tri, link.firstChild);
+            }
+            tri.textContent = isOpen ? '▼' : '▶';
           }
         }
       }
