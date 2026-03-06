@@ -191,10 +191,25 @@
                     }
                 }
 
-                var logos = sidebar.querySelectorAll('img, [class*="logo" i], [class*="brand" i]');
+                var logos = sidebar.querySelectorAll('img, svg, [class*="logo" i], [class*="brand" i], [aria-label*="logo" i], [title*="logo" i]');
                 for (var i = 0; i < logos.length; i++) {
                     collapseToSidebarChild(logos[i]);
                     logos[i].style.setProperty('display', 'none', 'important');
+                }
+
+                // Fallback: hide the first top block if it appears to be branding.
+                var first = sidebar.firstElementChild;
+                if (first) {
+                    var firstText = String(first.textContent || '').trim().toLowerCase();
+                    var hasLogoLike = first.querySelector('img, svg, [class*="logo" i], [class*="brand" i]') !== null;
+                    var hasLinks = first.querySelector('a, input, button') !== null;
+                    if (hasLogoLike || (!hasLinks && firstText.indexOf('zebra') !== -1)) {
+                        first.style.setProperty('display', 'none', 'important');
+                        first.style.setProperty('height', '0', 'important');
+                        first.style.setProperty('min-height', '0', 'important');
+                        first.style.setProperty('padding', '0', 'important');
+                        first.style.setProperty('margin', '0', 'important');
+                    }
                 }
             }
 
