@@ -864,6 +864,11 @@ def main():
         var hasChildren = childUl && childUl.children.length > 0;
         var isExpanded = li.getAttribute('aria-expanded') === 'true';
 
+        /* Force child <ul> visibility based on aria-expanded (override styled-components) */
+        if (hasChildren) {
+          childUl.style.setProperty('display', isExpanded ? 'block' : 'none', 'important');
+        }
+
         /* Remove any existing triangle we injected (to avoid duplicates on re-run) */
         var oldTri = label.querySelector('.aws-tri');
         if (oldTri) oldTri.remove();
@@ -928,40 +933,9 @@ def main():
           label.style.setProperty('font-weight', '600', 'important');
         }
       }
-
-      /* Setup click-to-toggle (only once per <li>) */
-      for (var j = 0; j < items.length; j++) {
-        var tli = items[j];
-        if (tli.getAttribute('data-tree-toggle') === '1') continue;
-        var tLabel = tli.querySelector(':scope > label');
-        if (!tLabel) continue;
-        var tUl = null;
-        var tKids = tli.children;
-        for (var m = 0; m < tKids.length; m++) {
-          if (tKids[m].tagName === 'UL') { tUl = tKids[m]; break; }
-        }
-        if (!tUl) continue;
-
-        /* Count depth for this li */
-        var tDepth = 0;
-        var tp = tli.parentElement;
-        while (tp && tp !== root) {
-          if (tp.tagName === 'UL') tDepth++;
-          tp = tp.parentElement;
-        }
-        /* Only depth 0 and 1 get custom toggle */
-        if (tDepth > 1) continue;
-
-        tli.setAttribute('data-tree-toggle', '1');
-        (function(theLi, theLabel, theUl) {
-          theLabel.addEventListener('click', function(e) {
-            e.stopPropagation();
-            var vis = theUl.style.display !== 'none';
-            theUl.style.display = vis ? 'none' : '';
-            theLi.setAttribute('aria-expanded', vis ? 'false' : 'true');
-          });
-        })(tli, tLabel, tUl);
-      }
+      /* No custom click handlers — let Redoc manage expand/collapse natively.
+         This function re-runs on every poll/MutationObserver so triangles
+         and visibility stay in sync with Redoc's aria-expanded state. */
     }
 
     var specUrl = 'openapi.yaml?v=' + Date.now();
@@ -996,7 +970,7 @@ def main():
         f.write(redoc_standalone_html)
     print("Generated docs/api-reference-redoc.html")
 
-    api_ref_body = """<iframe src="api-reference-redoc.html?v=15" title="API Reference" class="api-ref-iframe"></iframe>"""
+    api_ref_body = """<iframe src="api-reference-redoc.html?v=16" title="API Reference" class="api-ref-iframe"></iframe>"""
     api_ref_html = """<!DOCTYPE html>
 <html lang="en" class="layout-api-ref-page">
 <head>
