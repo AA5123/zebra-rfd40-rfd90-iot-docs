@@ -740,6 +740,24 @@ body.sidebar-collapsed .sidebar {
   line-height: 1.35;
 }
 
+.sidebar .nav-label {
+  display: inline-grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 0.4rem;
+  align-items: start;
+  width: 100%;
+}
+
+.sidebar .nav-label-num {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.sidebar .nav-label-text {
+  min-width: 0;
+  word-break: normal;
+}
+
 .sidebar a:hover {
   background: var(--toc-hover-bg);
   color: var(--toc-hover-text);
@@ -775,7 +793,6 @@ body.sidebar-collapsed .sidebar {
   font-size: 0.86rem;
   font-weight: 500;
   color: #2c3a4a;
-  text-indent: -2.05rem;
   padding-right: 0.8rem;
 }
 
@@ -783,7 +800,6 @@ body.sidebar-collapsed .sidebar {
   padding-left: 3.2rem;
   font-size: 0.84rem;
   opacity: 1;
-  text-indent: -2.7rem;
 }
 
 .sidebar a.active,

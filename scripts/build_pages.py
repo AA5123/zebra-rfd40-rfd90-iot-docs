@@ -314,6 +314,17 @@ def _strip_heading_number_for_label(text):
     return m.group(2).strip() if m else text.strip()
 
 
+def _nav_label_html(label: str) -> str:
+    """Render a nav label with number/text split so wrapping aligns consistently."""
+    raw = (label or "").strip()
+    m = re.match(r"^(\d+(?:\.\d+)*\.?)\s+(.+)$", raw)
+    if not m:
+        return f'<span class="nav-label-text">{_html_escape(raw)}</span>'
+    num = _html_escape(m.group(1))
+    text = _html_escape(m.group(2))
+    return f'<span class="nav-label"><span class="nav-label-num">{num}</span><span class="nav-label-text">{text}</span></span>'
+
+
 def build_toc_from_content():
     """Build sidebar items from PAGES: each section gets children from ### and #### headings in its markdown.
     Sidebar labels get consistent numbering: 3.1., 3.2., 3.1.1, 3.1.2, etc.
@@ -394,7 +405,7 @@ def sidebar(current):
                 lines.append(f'{indent}<div class="{group_cls}" data-nav-group>')
                 toggle_classes = "nav-group-toggle" + (" active" if current_base == href else "")
                 toggle_expanded = "true" if expanded else "false"
-                lines.append(f'{indent}  <a href="{href}" class="{toggle_classes}" aria-expanded="{toggle_expanded}" aria-controls="{group_id}">{label}</a>')
+                lines.append(f'{indent}  <a href="{href}" class="{toggle_classes}" aria-expanded="{toggle_expanded}" aria-controls="{group_id}">{_nav_label_html(label)}</a>')
                 lines.append(f'{indent}  <div class="nav-group-children" id="{group_id}">')
                 for c in children:
                     chref = c["href"]
@@ -407,7 +418,7 @@ def sidebar(current):
                     if current == chref:
                         sub_classes.append("active")
                     ccls = ' class="' + " ".join(sub_classes) + '"'
-                    lines.append(f'{indent}    <a href="{chref}"{ccls}>{clabel}</a>')
+                    lines.append(f'{indent}    <a href="{chref}"{ccls}>{_nav_label_html(clabel)}</a>')
                 lines.append(f'{indent}  </div>')
                 lines.append(f'{indent}</div>')
             else:
@@ -418,7 +429,7 @@ def sidebar(current):
                 if current == href:
                     classes.append("active")
                 cls = (' class="' + " ".join(classes) + '"') if classes else ""
-                lines.append(f'{indent}<a href="{href}"{cls}>{label}</a>')
+                lines.append(f'{indent}<a href="{href}"{cls}>{_nav_label_html(label)}</a>')
 
     render_items(nav_items)
     lines.append("</div>")
