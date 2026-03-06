@@ -42,30 +42,48 @@
             }
           }
         }
-        var all = collectAll(el);
-        for (var i = 0; i < all.length; i++) {
-          var node = all[i];
-          if (node.nodeType !== 1) continue;
-          var className = String(node.className || '').toLowerCase();
-          var dataMethod = String(node.getAttribute && node.getAttribute('data-method') || '').toLowerCase();
+                var all = collectAll(el);
+                for (var i = 0; i < all.length; i++) {
+                    var node = all[i];
+                    if (node.nodeType !== 1) continue;
+                    var className = String(node.className || '').toLowerCase();
+                    var dataMethod = String(node.getAttribute && node.getAttribute('data-method') || '').toLowerCase();
                     var txt = String(node.textContent || '').trim();
-          if (isMethodText(node.textContent) || dataMethod || className.indexOf('http-verb') !== -1 || className.indexOf('method') !== -1) {
-            node.style.setProperty('display', 'none', 'important');
+                    if (isMethodText(node.textContent) || dataMethod || className.indexOf('http-verb') !== -1 || className.indexOf('method') !== -1) {
+                        node.style.setProperty('display', 'none', 'important');
                         continue;
                     }
                     // Hide HTTP-like response badges/labels such as 200, 201, Success, OK.
                     if ((className.indexOf('response') !== -1 || className.indexOf('status') !== -1 || className.indexOf('code') !== -1) && /^(?:[1-5][0-9]{2}|success|ok)$/i.test(txt)) {
                         node.style.setProperty('display', 'none', 'important');
-          }
-        }
+                        continue;
+                    }
+                    // Fallback: hide leaf elements that are only HTTP status labels.
+                    if (node.childElementCount === 0 && /^(?:[1-5][0-9]{2}|success|ok)$/i.test(txt)) {
+                        var tag = String(node.tagName || '').toUpperCase();
+                        if (tag !== 'CODE' && tag !== 'PRE' && tag !== 'KBD') {
+                            node.style.setProperty('display', 'none', 'important');
+                        }
+                    }
+                }
         if (typeof document.createTreeWalker === 'function') {
           function walkRoot(r) {
             if (r.shadowRoot) walkRoot(r.shadowRoot);
             var tw = document.createTreeWalker(r, NodeFilter.SHOW_TEXT, null, false);
             var t;
             while ((t = tw.nextNode())) {
-              if (isMethodText(t.textContent) && t.parentNode && t.parentNode.nodeType === 1)
-                t.parentNode.style.setProperty('display', 'none', 'important');
+                            var raw = String(t.textContent || '').trim();
+                            if (!t.parentNode || t.parentNode.nodeType !== 1) continue;
+                            if (isMethodText(raw)) {
+                                t.parentNode.style.setProperty('display', 'none', 'important');
+                                continue;
+                            }
+                            if (/^(?:[1-5][0-9]{2}|success|ok)$/i.test(raw)) {
+                                var pTag = String(t.parentNode.tagName || '').toUpperCase();
+                                if (pTag !== 'CODE' && pTag !== 'PRE' && pTag !== 'KBD') {
+                                    t.parentNode.style.setProperty('display', 'none', 'important');
+                                }
+                            }
             }
             for (var k = 0; k < r.children.length; k++) walkRoot(r.children[k]);
           }
