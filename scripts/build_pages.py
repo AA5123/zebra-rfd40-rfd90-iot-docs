@@ -826,11 +826,13 @@ def main():
       theme: {
         colors: { primary: { main: '#2563eb' }, success: { main: '#059669' }, warning: { main: '#d97706' }, error: { main: '#dc2626' } },
         typography: { fontFamily: '"Inter", "Segoe UI", system-ui, sans-serif', headings: { fontFamily: '"Inter", "Segoe UI", system-ui, sans-serif' }, code: { fontFamily: 'Consolas, Monaco, monospace' } },
-        sidebar: { backgroundColor: '#111827', textColor: '#cbd5e1', activeTextColor: '#ffffff', groupItems: { activeBackgroundColor: '#1e293b' } },
+        sidebar: { width: '0px', backgroundColor: '#111827', textColor: '#cbd5e1', activeTextColor: '#ffffff', groupItems: { activeBackgroundColor: '#1e293b' } },
         rightPanel: { backgroundColor: '#1e293b', textColor: '#e2e8f0' }
       },
       pathInMiddlePanel: true,
-      hideDownloadButton: false
+      hideDownloadButton: false,
+      hideLoading: true,
+      noAutoAuth: true
     }, el, function() { setTimeout(runHide, 50); });
 
     [0, 100, 200, 500, 1200, 2500, 5000].forEach(function(ms) { setTimeout(runHide, ms); });

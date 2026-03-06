@@ -9,11 +9,23 @@
   display: none !important;
 }
 
-/* Clean API TOC: remove logo block in left sidebar */
-#redoc-container > div > div:first-child img,
-#redoc-container > div > div:first-child [class*="logo"],
-#redoc-container > div > div:first-child [class*="Logo"] {
+/* ═══ HIDE Redoc built-in sidebar entirely (navigation provided by outer api-reference.html) ═══ */
+#redoc-container > div > div:first-child,
+#redoc-container [class*="sidebar"],
+#redoc-container [class*="Sidebar"],
+#redoc-container [class*="menu-content"],
+#redoc-container [class*="MenuContent"],
+#redoc-container [role="navigation"] {
   display: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+  position: absolute !important;
+  left: -9999px !important;
 }
 
 /* MQTT API: hide HTTP method badges (POST, GET, etc.) – Redoc uses class "http-verb" + type */
@@ -26,11 +38,7 @@
 }
 
 /* Hide method badge in sidebar menu items (first small badge in each link) */
-#redoc-container > div > div:first-child span[style*="background-color"],
-#redoc-container > div > div:first-child span[style*="background:"],
-#redoc-container > div > div:first-child a > span:first-child {
-  display: none !important;
-}
+/* (sidebar is fully hidden above, these are kept as safety fallback) */
 
 /* Hide method + path line in operation header (POST /get_status) – show only operation name */
 #redoc-container > div > div:nth-child(2) [class*="operation"] > div > div:first-child > span:first-child,
@@ -39,55 +47,7 @@
   display: none !important;
 }
 
-/* Redoc sidebar container (first column) – Zebra dark industrial */
-#redoc-container > div > div:first-child {
-  background-color: #111827 !important;
-  border-right: 1px solid #1f2937 !important;
-}
-
-/* Sidebar text and links */
-#redoc-container > div > div:first-child a,
-#redoc-container > div > div:first-child span {
-  color: #cbd5e1 !important;
-}
-
-/* Section/group titles in sidebar */
-#redoc-container > div > div:first-child [class*="group"] {
-  color: #94a3b8 !important;
-}
-
-/* Active item */
-#redoc-container > div > div:first-child a[class*="active"],
-#redoc-container > div > div:first-child [class*="active"] {
-  background-color: #1e293b !important;
-  color: #ffffff !important;
-  border-left: 3px solid #2563eb !important;
-}
-
-/* Hover */
-#redoc-container > div > div:first-child a:hover {
-  color: #2563eb !important;
-}
-
-/* Separators between sections */
-#redoc-container > div > div:first-child > div {
-  border-bottom: 1px solid #1f2937;
-}
-
-#redoc-container > div > div:first-child > div:last-child {
-  border-bottom: none;
-}
-
-/* Ensure expand/collapse icons remain visible */
-#redoc-container > div > div:first-child [class*="arrow"],
-#redoc-container > div > div:first-child [class*="chevron"] {
-  color: #94a3b8 !important;
-}
-
-#redoc-container > div > div:first-child a:hover [class*="arrow"],
-#redoc-container > div > div:first-child a:hover [class*="chevron"] {
-  color: #2563eb !important;
-}
+/* (Redoc sidebar is fully hidden — no styling needed) */
 
 /* Reduce large blank gaps when response sections are collapsed */
 #redoc-container > div > div:nth-child(2) [class*="operation"],
