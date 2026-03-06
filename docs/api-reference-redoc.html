@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>API Reference - RFD40 / RFD90 IOT developer guide</title>
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/redoc-zebra.css?v=4" />
+  <link rel="stylesheet" href="css/redoc-zebra.css?v=5" />
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; height: 100%; }
@@ -121,6 +121,94 @@
     function runHide() {
       hideMethodBadges();
       injectShadowStyles(el);
+      styleSidebar();
+    }
+
+    /* AWS-style tree indentation applied via JS since Redoc uses hashed class names */
+    function styleSidebar() {
+      var wrap = el.children[0];
+      if (!wrap) return;
+      var sidebar = wrap.children[0];
+      if (!sidebar) return;
+
+      // Find all <label> with role="menuitem" — these are group headers (Level 1)
+      var groupLabels = sidebar.querySelectorAll('label[role="menuitem"]');
+      for (var g = 0; g < groupLabels.length; g++) {
+        var lbl = groupLabels[g];
+        lbl.style.cssText = 'color:#545b64!important;text-transform:uppercase;font-size:0.72rem;font-weight:700;letter-spacing:0.04em;padding:10px 12px 4px 12px!important;cursor:default;';
+
+        // The parent <li> of this group label contains a nested <ul> with tag items
+        var groupLi = lbl.closest('li');
+        if (!groupLi) continue;
+        groupLi.style.borderBottom = '1px solid #eaeded';
+        groupLi.style.paddingBottom = '6px';
+        groupLi.style.marginBottom = '6px';
+
+        // Level 2: tag items inside this group (direct child <ul> > <li>)
+        var tagUl = groupLi.querySelector('ul');
+        if (!tagUl) continue;
+        var tagItems = tagUl.children;
+        for (var t = 0; t < tagItems.length; t++) {
+          var tagLi = tagItems[t];
+          // The clickable element is either a <label> or <a>
+          var tagLink = tagLi.querySelector(':scope > label, :scope > a');
+          if (tagLink) {
+            tagLink.style.cssText = 'padding-left:24px!important;font-size:0.87rem;font-weight:400;color:#16191f!important;line-height:1.8;';
+          }
+
+          // Hide Redoc default arrow SVGs inside tags
+          var arrows = tagLi.querySelectorAll('svg');
+          for (var a = 0; a < arrows.length; a++) {
+            var cn = String(arrows[a].className && arrows[a].className.baseVal || '').toLowerCase();
+            if (cn.indexOf('arrow') !== -1 || arrows[a].parentElement === tagLink) {
+              // keep it but we'll handle with CSS
+            }
+          }
+
+          // Level 3: operation items inside this tag
+          var opUl = tagLi.querySelector('ul');
+          if (!opUl) continue;
+          var opItems = opUl.children;
+          for (var o = 0; o < opItems.length; o++) {
+            var opLink = opItems[o].querySelector('a');
+            if (opLink) {
+              opLink.style.cssText = 'padding-left:48px!important;font-size:0.84rem;font-weight:400;color:#16191f!important;line-height:1.8;';
+            }
+          }
+        }
+      }
+
+      // If no group labels found, try alternative: walk all <li> by depth
+      if (groupLabels.length === 0) {
+        var navEl = sidebar.querySelector('[role="navigation"]') || sidebar;
+        var allLis = navEl.querySelectorAll('li');
+        for (var i = 0; i < allLis.length; i++) {
+          var li = allLis[i];
+          var depth = 0;
+          var p = li.parentElement;
+          while (p && p !== navEl) {
+            if (p.tagName === 'UL' || p.tagName === 'OL') depth++;
+            p = p.parentElement;
+          }
+          var link = li.querySelector(':scope > a, :scope > label');
+          if (!link) continue;
+          if (depth <= 1) {
+            // Group header
+            link.style.cssText = 'color:#545b64!important;text-transform:uppercase;font-size:0.72rem;font-weight:700;letter-spacing:0.04em;padding:10px 12px 4px 12px!important;';
+            li.style.borderBottom = '1px solid #eaeded';
+            li.style.paddingBottom = '6px';
+            li.style.marginBottom = '6px';
+          } else if (depth === 2) {
+            // Tag item
+            link.style.cssText = 'padding-left:24px!important;font-size:0.87rem;font-weight:400;color:#16191f!important;line-height:1.8;';
+            li.style.borderBottom = 'none';
+          } else {
+            // Operation item
+            link.style.cssText = 'padding-left:48px!important;font-size:0.84rem;font-weight:400;color:#16191f!important;line-height:1.8;';
+            li.style.borderBottom = 'none';
+          }
+        }
+      }
     }
 
     var specUrl = 'openapi.yaml?v=' + Date.now();
