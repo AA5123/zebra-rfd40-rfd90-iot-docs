@@ -702,9 +702,9 @@ body.sidebar-collapsed .sidebar {
 
 .sidebar .nav-brand-logo {
   display: block;
-  max-width: 190px;
-  max-height: 64px;
-  width: auto;
+  width: 220px;
+  max-width: 100%;
+  max-height: 68px;
   height: auto;
   object-fit: contain;
 }
