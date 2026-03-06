@@ -701,7 +701,7 @@ def main():
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>API Reference - RFD40 / RFD90 IOT developer guide</title>
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/redoc-zebra.css?v=2" />
+  <link rel="stylesheet" href="css/redoc-zebra.css?v=3" />
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; height: 100%; }

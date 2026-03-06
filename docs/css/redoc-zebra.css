@@ -9,45 +9,105 @@
   display: none !important;
 }
 
-/* ═══ Redoc sidebar styling ═══ */
-#redoc-container [role="navigation"] a:hover {
+/* ═══ Redoc sidebar – AWS-style tree indentation ═══ */
+
+/* --- Level 1: Tag-group headings (MANAGEMENT INTERFACE, CONTROL INTERFACE, …) --- */
+#redoc-container [role="navigation"] ul > li > label[role="menuitem"] {
+  color: #94a3b8 !important;
+  text-transform: uppercase;
+  font-size: 0.70rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 10px 12px 6px 12px !important;
+  cursor: default;
+}
+
+/* --- Level 2: Tag items (Management - Device Status, Control - Inventory Control, …) --- */
+#redoc-container [role="navigation"] ul > li > ul > li > label,
+#redoc-container [role="navigation"] ul > li > ul > li > a {
+  padding-left: 24px !important;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #e2e8f0 !important;
+}
+
+/* Disclosure triangle for expandable tags */
+#redoc-container [role="navigation"] ul > li > ul > li > label::before {
+  content: "▸";
+  display: inline-block;
+  width: 14px;
+  font-size: 0.7rem;
+  color: #94a3b8;
+  transition: transform 0.15s ease;
+  position: relative;
+  top: -1px;
+}
+
+/* Rotate triangle when expanded — Redoc puts aria-expanded or a class on expanded items */
+#redoc-container [role="navigation"] ul > li > ul > li.-expanded > label::before,
+#redoc-container [role="navigation"] ul > li > ul > li[class*="active"] > label::before,
+#redoc-container [role="navigation"] ul > li > ul > li[class*="expanded"] > label::before {
+  content: "▾";
+  color: #cbd5e1;
+}
+
+/* --- Level 3: Operation leaf items (get_status, get_version, …) --- */
+#redoc-container [role="navigation"] ul > li > ul > li > ul a {
+  padding-left: 44px !important;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: #cbd5e1 !important;
+}
+
+/* Active / selected item highlight */
+#redoc-container [role="navigation"] a:hover,
+#redoc-container [role="navigation"] label:hover {
   color: #2563eb !important;
 }
 
 #redoc-container [role="navigation"] li.active > label,
-#redoc-container [role="navigation"] li.active > a {
+#redoc-container [role="navigation"] li.active > a,
+#redoc-container [role="navigation"] a[class*="active"],
+#redoc-container [role="navigation"] li[class*="active"] > a {
   border-left: 3px solid #2563eb;
+  color: #ffffff !important;
+  background-color: #1e293b !important;
 }
 
-#redoc-container [class*="group-title"],
-#redoc-container label[role="menuitem"] {
-  color: #94a3b8 !important;
-  text-transform: uppercase;
-  font-size: 0.7rem;
-  letter-spacing: 0.05em;
+/* Hide Redoc's default > arrow icons (we use CSS triangles instead) */
+#redoc-container [role="navigation"] svg.arrow,
+#redoc-container [role="navigation"] [class*="arrow"],
+#redoc-container [role="navigation"] [class*="Arrow"] {
+  display: none !important;
+}
+
+/* Section separators between groups */
+#redoc-container [role="navigation"] > ul > li {
+  border-bottom: 1px solid #1f2937;
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+}
+
+/* Remove separator from sub-items */
+#redoc-container [role="navigation"] ul ul > li {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
 }
 
 /* MQTT API: hide HTTP method badges in content area only (not sidebar) */
 #redoc-container > div > div:nth-child(2) [class*="HttpVerb"],
-#redoc-container > div > div:nth-child(2) [class*="Method"],
-#redoc-container > div > div:nth-child(2) .http-verb,
 #redoc-container > div > div:nth-child(2) [class*="http-verb"],
+#redoc-container > div > div:nth-child(2) .http-verb,
 #redoc-container > div > div:nth-child(2) [data-method] {
   display: none !important;
 }
-
-/* Hide method badge in sidebar menu items (MQTT API has no HTTP verbs) */
 
 /* Hide method + path line in operation header (POST /get_status) – show only operation name */
 #redoc-container > div > div:nth-child(2) [class*="operation"] > div > div:first-child > span:first-child,
 #redoc-container > div > div:nth-child(2) h2 + div > span:first-child,
 #redoc-container > div > div:nth-child(2) h3 + div > span:first-child {
   display: none !important;
-}
-
-/* Sidebar section separators */
-#redoc-container [role="navigation"] ul > li {
-  border-bottom: 1px solid #1f2937;
 }
 
 /* Reduce large blank gaps when response sections are collapsed */
