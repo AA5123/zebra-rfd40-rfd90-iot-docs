@@ -703,7 +703,26 @@ def main():
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/redoc@2.2.0/bundles/redoc.standalone.css" />
   <link rel="stylesheet" href="css/redoc-zebra.css" />
-  <style>body { margin: 0; }</style>
+    <style>
+        body { margin: 0; }
+        /* API TOC polish: clearer hierarchy, spacing, and scanability */
+        #redoc-container > div > div:first-child {
+            min-width: 320px !important;
+            width: 320px !important;
+        }
+        #redoc-container > div > div:first-child a {
+            font-size: 0.98rem !important;
+            line-height: 1.45 !important;
+            padding-top: 0.45rem !important;
+            padding-bottom: 0.45rem !important;
+            word-break: break-word !important;
+        }
+        #redoc-container > div > div:first-child [class*="group"] {
+            font-size: 0.8rem !important;
+            letter-spacing: 0.04em !important;
+            text-transform: uppercase !important;
+        }
+    </style>
 </head>
 <body>
   <div id="redoc-container"></div>
@@ -821,8 +840,25 @@ def main():
       }
       function runHide() {
         hideMethodBadges();
+                simplifySidebarLabels();
         injectShadowStyles(el);
       }
+
+            function simplifySidebarLabels() {
+                if (!el) return;
+                var sidebar = el.querySelector('div > div:first-child');
+                if (!sidebar) return;
+                var links = sidebar.querySelectorAll('a');
+                for (var i = 0; i < links.length; i++) {
+                    var a = links[i];
+                    var t = String(a.textContent || '').trim().replace(/\s+/g, ' ');
+                    // Keep section headers like "Management - Device Status" as-is.
+                    // Simplify operation labels such as "get_version - Retrieves ...".
+                    if (/^[a-z_][a-z0-9_]*\s+-\s+/i.test(t)) {
+                        a.textContent = t.split(/\s+-\s+/, 2)[0];
+                    }
+                }
+            }
     var specUrl = 'openapi.yaml?v=' + Date.now();
     Redoc.init(specUrl, {
         theme: {
