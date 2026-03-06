@@ -9,69 +9,78 @@
   display: none !important;
 }
 
-/* ═══ Redoc sidebar – AWS-style tree indentation ═══ */
+/* ═══ Redoc sidebar – AWS-style tree indentation (light theme) ═══ */
+
+/* Sidebar container: white background, left border */
+#redoc-container > div > div:first-child {
+  background: #ffffff !important;
+  border-right: 1px solid #d5dbdb !important;
+}
 
 /* --- Level 1: Tag-group headings (MANAGEMENT INTERFACE, CONTROL INTERFACE, …) --- */
 #redoc-container [role="navigation"] ul > li > label[role="menuitem"] {
-  color: #94a3b8 !important;
+  color: #545b64 !important;
   text-transform: uppercase;
   font-size: 0.70rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   padding: 10px 12px 6px 12px !important;
   cursor: default;
 }
 
-/* --- Level 2: Tag items (Management - Device Status, Control - Inventory Control, …) --- */
+/* --- Level 2: Tag items (Management - Device Status, etc.) --- */
 #redoc-container [role="navigation"] ul > li > ul > li > label,
 #redoc-container [role="navigation"] ul > li > ul > li > a {
-  padding-left: 24px !important;
-  font-size: 0.84rem;
-  font-weight: 600;
-  color: #e2e8f0 !important;
+  padding-left: 20px !important;
+  font-size: 0.87rem;
+  font-weight: 400;
+  color: #16191f !important;
+  line-height: 1.6;
 }
 
 /* Disclosure triangle for expandable tags */
 #redoc-container [role="navigation"] ul > li > ul > li > label::before {
-  content: "▸";
+  content: "▶";
   display: inline-block;
-  width: 14px;
-  font-size: 0.7rem;
-  color: #94a3b8;
-  transition: transform 0.15s ease;
+  width: 16px;
+  font-size: 0.55rem;
+  color: #545b64;
+  margin-right: 4px;
   position: relative;
   top: -1px;
 }
 
-/* Rotate triangle when expanded — Redoc puts aria-expanded or a class on expanded items */
+/* Rotate triangle when expanded */
 #redoc-container [role="navigation"] ul > li > ul > li.-expanded > label::before,
 #redoc-container [role="navigation"] ul > li > ul > li[class*="active"] > label::before,
 #redoc-container [role="navigation"] ul > li > ul > li[class*="expanded"] > label::before {
-  content: "▾";
-  color: #cbd5e1;
+  content: "▼";
+  color: #16191f;
 }
 
 /* --- Level 3: Operation leaf items (get_status, get_version, …) --- */
 #redoc-container [role="navigation"] ul > li > ul > li > ul a {
-  padding-left: 44px !important;
-  font-size: 0.8rem;
+  padding-left: 48px !important;
+  font-size: 0.84rem;
   font-weight: 400;
-  color: #cbd5e1 !important;
+  color: #16191f !important;
+  line-height: 1.6;
 }
 
 /* Active / selected item highlight */
 #redoc-container [role="navigation"] a:hover,
 #redoc-container [role="navigation"] label:hover {
-  color: #2563eb !important;
+  color: #0073bb !important;
 }
 
 #redoc-container [role="navigation"] li.active > label,
 #redoc-container [role="navigation"] li.active > a,
 #redoc-container [role="navigation"] a[class*="active"],
 #redoc-container [role="navigation"] li[class*="active"] > a {
-  border-left: 3px solid #2563eb;
-  color: #ffffff !important;
-  background-color: #1e293b !important;
+  color: #0073bb !important;
+  font-weight: 600;
+  border-left: 3px solid #0073bb;
+  background-color: #f2f3f3 !important;
 }
 
 /* Hide Redoc's default > arrow icons (we use CSS triangles instead) */
@@ -83,9 +92,9 @@
 
 /* Section separators between groups */
 #redoc-container [role="navigation"] > ul > li {
-  border-bottom: 1px solid #1f2937;
-  padding-bottom: 4px;
-  margin-bottom: 4px;
+  border-bottom: 1px solid #eaeded;
+  padding-bottom: 6px;
+  margin-bottom: 6px;
 }
 
 /* Remove separator from sub-items */
@@ -93,6 +102,18 @@
   border-bottom: none;
   padding-bottom: 0;
   margin-bottom: 0;
+}
+
+/* Scrollbar styling for sidebar */
+#redoc-container > div > div:first-child::-webkit-scrollbar {
+  width: 6px;
+}
+#redoc-container > div > div:first-child::-webkit-scrollbar-thumb {
+  background: #d5dbdb;
+  border-radius: 3px;
+}
+#redoc-container > div > div:first-child::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 /* MQTT API: hide HTTP method badges in content area only (not sidebar) */
