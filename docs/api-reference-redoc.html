@@ -66,7 +66,7 @@
           walkRoot(el);
         }
       }
-      var HIDE_VERB_CSS = '.http-verb,[class*="http-verb"],[class*="HttpVerb"],[data-method],[class*="Method"],[class*="method"]{display:none!important}';
+    var HIDE_VERB_CSS = '.http-verb,[class*="http-verb"],[class*="HttpVerb"],[data-method],[class*="Method"],[class*="method"],[class*="response-status"],[class*="ResponseStatus"],[class*="status-code"],[class*="StatusCode"],[class*="response-code"],[class*="ResponseCode"],[class*="http-status"]{display:none!important}';
       function injectShadowStyles(root) {
         if (!root) return;
         if (root.shadowRoot) {
@@ -84,7 +84,8 @@
         hideMethodBadges();
         injectShadowStyles(el);
       }
-      Redoc.init('openapi.yaml', {
+    var specUrl = 'openapi.yaml?v=' + Date.now();
+    Redoc.init(specUrl, {
         theme: {
           colors: { primary: { main: '#2563eb' }, success: { main: '#059669' }, warning: { main: '#d97706' }, error: { main: '#dc2626' } },
           typography: { fontFamily: '"Inter", "Segoe UI", system-ui, sans-serif', headings: { fontFamily: '"Inter", "Segoe UI", system-ui, sans-serif' }, code: { fontFamily: 'Consolas, Monaco, monospace' } },

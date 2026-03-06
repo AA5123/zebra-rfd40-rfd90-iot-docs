@@ -138,7 +138,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -482,7 +482,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -538,7 +538,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -640,7 +640,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -723,7 +723,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -809,7 +809,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -856,7 +856,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -948,7 +948,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -1021,7 +1021,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -1170,7 +1170,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -1217,7 +1217,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -1290,7 +1290,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -1422,7 +1422,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -1584,7 +1584,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -1631,7 +1631,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -1894,7 +1894,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -2085,7 +2085,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -2318,7 +2318,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -2579,7 +2579,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -2743,7 +2743,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -3018,7 +3018,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -3309,7 +3309,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success",
                         "content": {
                             "application/json": {
@@ -3403,7 +3403,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success"
                     }
                 }
@@ -3451,7 +3451,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success"
                     }
                 }
@@ -3540,7 +3540,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success"
                     }
                 }
@@ -3587,7 +3587,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success"
                     }
                 }
@@ -3641,7 +3641,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success"
                     }
                 }
@@ -3712,7 +3712,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "default": {
                         "description": "Success"
                     }
                 }

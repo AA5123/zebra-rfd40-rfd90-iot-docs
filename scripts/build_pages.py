@@ -223,6 +223,29 @@ def _html_escape(s: str) -> str:
     )
 
 
+def normalize_mqtt_responses(spec: dict) -> None:
+    """Replace HTTP-like 200 response keys with MQTT-friendly default responses."""
+    paths = spec.get("paths")
+    if not isinstance(paths, dict):
+        return
+
+    for _, path_item in paths.items():
+        if not isinstance(path_item, dict):
+            continue
+        for method in ("get", "post", "put", "delete", "patch", "head", "options"):
+            op = path_item.get(method)
+            if not isinstance(op, dict):
+                continue
+            responses = op.get("responses")
+            if not isinstance(responses, dict):
+                continue
+
+            if "200" in responses:
+                if "default" not in responses:
+                    responses["default"] = responses["200"]
+                del responses["200"]
+
+
 def generate_api_reference_html(spec: dict) -> str:
     """Generate static HTML for the API Reference from the OpenAPI spec. No Redoc; same layout as other docs."""
     paths = spec.get("paths") or {}
@@ -733,7 +756,7 @@ def main():
           walkRoot(el);
         }
       }
-      var HIDE_VERB_CSS = '.http-verb,[class*="http-verb"],[class*="HttpVerb"],[data-method],[class*="Method"],[class*="method"]{display:none!important}';
+    var HIDE_VERB_CSS = '.http-verb,[class*="http-verb"],[class*="HttpVerb"],[data-method],[class*="Method"],[class*="method"],[class*="response-status"],[class*="ResponseStatus"],[class*="status-code"],[class*="StatusCode"],[class*="response-code"],[class*="ResponseCode"],[class*="http-status"]{display:none!important}';
       function injectShadowStyles(root) {
         if (!root) return;
         if (root.shadowRoot) {
@@ -751,7 +774,8 @@ def main():
         hideMethodBadges();
         injectShadowStyles(el);
       }
-      Redoc.init('openapi.yaml', {
+    var specUrl = 'openapi.yaml?v=' + Date.now();
+    Redoc.init(specUrl, {
         theme: {
           colors: { primary: { main: '#2563eb' }, success: { main: '#059669' }, warning: { main: '#d97706' }, error: { main: '#dc2626' } },
           typography: { fontFamily: '"Inter", "Segoe UI", system-ui, sans-serif', headings: { fontFamily: '"Inter", "Segoe UI", system-ui, sans-serif' }, code: { fontFamily: 'Consolas, Monaco, monospace' } },
@@ -820,6 +844,7 @@ def main():
     openapi_path = os.path.join(DOCS_DIR, "openapi.yaml")
     with open(openapi_path, "r", encoding="utf-8") as f:
         spec = json.load(f)
+    normalize_mqtt_responses(spec)
     spec["info"]["description"] = (
         "**This is an MQTT API, not REST.** There are no HTTP endpoints. Each operation below is a **command**: "
         "you **publish** the JSON payload to your MQTT **command topic** (format: `<Tenant ID>/<Publish Topic>/<Device Serial No>`). "
