@@ -418,9 +418,40 @@ def sidebar(current):
     return "\n".join(lines)
 
 
-COLLAPSIBLE_SCRIPT = """
+SHELL_SCRIPT = """
   <script>
     (function() {
+            var tocKey = 'docs.sidebarCollapsed';
+            var tocToggle = document.getElementById('toc-toggle');
+
+            function applyTocState(collapsed) {
+                document.body.classList.toggle('sidebar-collapsed', collapsed);
+                if (tocToggle) {
+                    tocToggle.textContent = collapsed ? 'Show TOC' : 'Hide TOC';
+                    tocToggle.setAttribute('aria-expanded', (!collapsed).toString());
+                }
+            }
+
+            if (tocToggle) {
+                var isCollapsed = false;
+                try {
+                    isCollapsed = window.localStorage.getItem(tocKey) === '1';
+                } catch (e) {
+                    isCollapsed = false;
+                }
+                applyTocState(isCollapsed);
+
+                tocToggle.addEventListener('click', function() {
+                    var nowCollapsed = !document.body.classList.contains('sidebar-collapsed');
+                    applyTocState(nowCollapsed);
+                    try {
+                        window.localStorage.setItem(tocKey, nowCollapsed ? '1' : '0');
+                    } catch (e) {
+                        // Ignore storage errors (private mode/restrictions).
+                    }
+                });
+            }
+
       document.querySelectorAll('.nav-group-toggle').forEach(function(toggle) {
         toggle.addEventListener('click', function(e) {
           e.preventDefault();
@@ -443,13 +474,14 @@ def wrap(title, current_href, body_html):
   <link rel="stylesheet" href="css/docs.css" />
 </head>
 <body>
+    <button id="toc-toggle" class="toc-toggle" type="button" aria-label="Toggle table of contents">Hide TOC</button>
   <div class="layout">
 {sidebar(current_href)}
     <main class="main">
 {body_html}
     </main>
   </div>
-{COLLAPSIBLE_SCRIPT}
+{SHELL_SCRIPT}
 </body>
 </html>"""
 
@@ -619,13 +651,14 @@ def main():
   </style>
 </head>
 <body>
+    <button id="toc-toggle" class="toc-toggle" type="button" aria-label="Toggle table of contents">Hide TOC</button>
   <div class="layout layout-api-ref">
 """ + sidebar("api-reference.html") + """
     <main class="main main-api-ref">
 """ + api_ref_body + """
     </main>
   </div>
-""" + COLLAPSIBLE_SCRIPT + """
+""" + SHELL_SCRIPT + """
 </body>
 </html>"""
     with open(os.path.join(DOCS_DIR, "api-reference.html"), "w", encoding="utf-8") as f:

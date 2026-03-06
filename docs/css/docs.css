@@ -51,6 +51,36 @@ body {
   background: var(--main-bg);
 }
 
+.toc-toggle {
+  position: fixed;
+  top: 12px;
+  left: 326px;
+  z-index: 1200;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111111;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1;
+  border-radius: 999px;
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: left 0.18s ease, background 0.18s ease;
+}
+
+.toc-toggle:hover {
+  background: #f3f4f6;
+}
+
+body.sidebar-collapsed .toc-toggle {
+  left: 12px;
+}
+
+body.sidebar-collapsed .sidebar {
+  display: none;
+}
+
 .layout {
   display: flex;
   min-height: 100vh;
@@ -350,6 +380,10 @@ body {
 }
 
 @media (max-width: 768px) {
+  .toc-toggle {
+    left: 12px;
+    top: 10px;
+  }
   .layout { flex-direction: column; }
   .sidebar {
     width: 100%;
