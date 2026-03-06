@@ -756,8 +756,8 @@ def main():
 
                     // Replace OpenAPI key label with reader-friendly wording.
                     if (node.childElementCount === 0 && /^default$/i.test(txt)) {
-                        node.textContent = 'Example Response';
-                        txt = 'Example Response';
+                        node.textContent = 'Response Schema';
+                        txt = 'Response Schema';
                     }
 
                     // Hide response-related widgets that carry HTTP semantics.
@@ -793,7 +793,7 @@ def main():
                                 }
                             }
                             if (/^default$/i.test(raw)) {
-                                t.textContent = 'Example Response';
+                                t.textContent = 'Response Schema';
                             }
             }
             for (var k = 0; k < r.children.length; k++) walkRoot(r.children[k]);
