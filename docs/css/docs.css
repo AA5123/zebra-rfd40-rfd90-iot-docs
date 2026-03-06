@@ -700,11 +700,13 @@ body.sidebar-collapsed .sidebar {
   background: #f3f4f7;
 }
 
-.sidebar .nav-brand-word {
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: #1f2937;
+.sidebar .nav-brand-logo {
+  display: block;
+  max-width: 108px;
+  max-height: 42px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
 }
 
 .sidebar .nav-title {

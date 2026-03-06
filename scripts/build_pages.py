@@ -381,7 +381,7 @@ def sidebar(current):
     title_text = _html_escape(nav_title)
     lines = [
         '<div class="sidebar">',
-        '  <div class="nav-brand"><span class="nav-brand-word">DOCS</span></div>',
+        '  <div class="nav-brand"><img class="nav-brand-logo" src="https://logowik.com/content/uploads/images/zebra-technologies2902.jpg" alt="Zebra logo" loading="lazy" referrerpolicy="no-referrer" /></div>',
         '  <div class="nav-title"><div class="nav-title-main">' + title_text + '</div><div class="nav-title-sub">User Guide</div></div>',
     ]
 
