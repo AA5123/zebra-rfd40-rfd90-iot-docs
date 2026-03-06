@@ -27,12 +27,12 @@
   letter-spacing: 0.05em;
 }
 
-/* MQTT API: hide HTTP method badges (POST, GET, etc.) – Redoc uses class "http-verb" + type */
-#redoc-container [class*="HttpVerb"],
-#redoc-container [class*="Method"],
-#redoc-container .http-verb,
-#redoc-container [class*="http-verb"],
-#redoc-container [data-method] {
+/* MQTT API: hide HTTP method badges in content area only (not sidebar) */
+#redoc-container > div > div:nth-child(2) [class*="HttpVerb"],
+#redoc-container > div > div:nth-child(2) [class*="Method"],
+#redoc-container > div > div:nth-child(2) .http-verb,
+#redoc-container > div > div:nth-child(2) [class*="http-verb"],
+#redoc-container > div > div:nth-child(2) [data-method] {
   display: none !important;
 }
 

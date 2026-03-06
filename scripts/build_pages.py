@@ -701,7 +701,7 @@ def main():
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>API Reference - RFD40 / RFD90 IOT developer guide</title>
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/redoc-zebra.css" />
+  <link rel="stylesheet" href="css/redoc-zebra.css?v=2" />
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; height: 100%; }
@@ -734,10 +734,15 @@ def main():
 
     function hideMethodBadges() {
       if (!el) return;
+      // Identify the sidebar (first child of Redoc wrapper) so we skip it
+      var wrap = el.children[0];
+      var sidebarEl = wrap && wrap.children.length > 0 ? wrap.children[0] : null;
       var all = collectAll(el);
       for (var i = 0; i < all.length; i++) {
         var node = all[i];
         if (node.nodeType !== 1) continue;
+        // Never hide anything inside the Redoc sidebar/menu
+        if (sidebarEl && sidebarEl.contains(node)) continue;
         var className = String(node.className || '').toLowerCase();
         var dataMethod = String(node.getAttribute && node.getAttribute('data-method') || '').toLowerCase();
         var txt = String(node.textContent || '').trim();
@@ -771,6 +776,8 @@ def main():
           while ((t = tw.nextNode())) {
             var raw = String(t.textContent || '').trim();
             if (!t.parentNode || t.parentNode.nodeType !== 1) continue;
+            // Skip nodes inside the sidebar
+            if (sidebarEl && sidebarEl.contains(t.parentNode)) continue;
             if (isMethodText(raw)) {
               t.parentNode.style.setProperty('display', 'none', 'important');
               continue;
@@ -844,7 +851,7 @@ def main():
         f.write(redoc_standalone_html)
     print("Generated docs/api-reference-redoc.html")
 
-    api_ref_body = """<iframe src="api-reference-redoc.html?v=7" title="API Reference" class="api-ref-iframe"></iframe>"""
+    api_ref_body = """<iframe src="api-reference-redoc.html?v=8" title="API Reference" class="api-ref-iframe"></iframe>"""
     api_ref_html = """<!DOCTYPE html>
 <html lang="en" class="layout-api-ref-page">
 <head>
