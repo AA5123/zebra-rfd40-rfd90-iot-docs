@@ -34,6 +34,19 @@
   --hr: #e5e7eb;
   --strong: #111111;
 
+  /* TOC palette */
+  --toc-bg: #f7f8fa;
+  --toc-bg-header: #f2f3f7;
+  --toc-border: #d5d9e0;
+  --toc-text: #1f2937;
+  --toc-text-muted: #5f6b7a;
+  --toc-hover-bg: #eef2f7;
+  --toc-hover-text: #0972d3;
+  --toc-active-bg: #e6f1fb;
+  --toc-active-text: #0972d3;
+  --toc-active-border: #0972d3;
+  --toc-focus: #2563eb;
+
   /* Content area padding – enterprise-grade spacing (40–60px) */
   --content-padding-x: 52px;
   --content-padding-y: 2.5rem;
@@ -626,43 +639,67 @@ body.sidebar-collapsed .sidebar {
 }
 
 /* ============================================================
-   TOC Skin: light documentation-style navigation
+   TOC Skin: industrial documentation-ready navigation
    ============================================================ */
 
 .doc-header {
   background: #ffffff;
-  border-bottom: 1px solid #d5d9e0;
+  border-bottom: 1px solid var(--toc-border);
 }
 
 .toc-toggle {
   width: 36px;
   height: 36px;
   border-radius: 999px;
-  border: 1px solid #d5d9e0;
-  background: #f8f9fb;
-  color: #1b2838;
+  border: 1px solid var(--toc-border);
+  background: var(--toc-bg);
+  color: var(--toc-text);
 }
 
 .toc-toggle:hover {
-  background: #eef2f7;
+  background: var(--toc-hover-bg);
+}
+
+.toc-toggle:focus-visible,
+.sidebar a:focus-visible {
+  outline: 2px solid var(--toc-focus);
+  outline-offset: 1px;
+}
+
+.toc-backdrop {
+  display: none;
+  position: fixed;
+  top: 56px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.22);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 1100;
+}
+
+.toc-backdrop.visible {
+  display: block;
+  opacity: 1;
 }
 
 .sidebar {
   width: 300px;
   min-width: 300px;
-  background: #f8f9fb;
-  border-right: 1px solid #d5d9e0;
+  background: var(--toc-bg);
+  border-right: 1px solid var(--toc-border);
 }
 
 .sidebar .nav-title {
-  background: #f2f3f7;
-  border-bottom: 1px solid #d5d9e0;
-  padding: 1.15rem 1.25rem;
+  background: var(--toc-bg-header);
+  border-bottom: 1px solid var(--toc-border);
+  padding: 1rem 1.1rem;
 }
 
 .sidebar .nav-title-main {
   color: #16191f;
-  font-size: 1.16rem;
+  font-size: 1.14rem;
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: 0;
@@ -670,24 +707,25 @@ body.sidebar-collapsed .sidebar {
 }
 
 .sidebar .nav-title-sub {
-  margin-top: 0.35rem;
-  color: #5f6b7a;
-  font-size: 0.88rem;
+  margin-top: 0.32rem;
+  color: var(--toc-text-muted);
+  font-size: 0.86rem;
   font-weight: 600;
 }
 
 .sidebar a {
-  color: #1b2838;
+  color: var(--toc-text);
   border-left: 3px solid transparent;
   margin: 0;
-  padding: 0.4rem 1rem;
+  padding: 0.44rem 0.95rem;
   font-size: 0.95rem;
   font-weight: 500;
+  min-height: 2.1rem;
 }
 
 .sidebar a:hover {
-  background: #eef2f7;
-  color: #0972d3;
+  background: var(--toc-hover-bg);
+  color: var(--toc-hover-text);
   border-left-color: #9cc3e5;
 }
 
@@ -696,17 +734,17 @@ body.sidebar-collapsed .sidebar {
 }
 
 .sidebar .nav-group > .nav-group-toggle {
-  color: #1b2838;
+  color: var(--toc-text);
   font-size: 0.96rem;
   font-weight: 600;
-  min-height: 2.1rem;
+  min-height: 2.15rem;
 }
 
 .sidebar .nav-group-toggle::before {
-  width: 1.2rem;
-  height: 1.2rem;
-  font-size: 0.95rem;
-  color: #5f6b7a;
+  width: 1.15rem;
+  height: 1.15rem;
+  font-size: 0.92rem;
+  color: var(--toc-text-muted);
 }
 
 .sidebar .nav-group-children {
@@ -714,28 +752,28 @@ body.sidebar-collapsed .sidebar {
 }
 
 .sidebar .nav-group-children a {
-  padding-left: 2.45rem;
-  font-size: 0.92rem;
+  padding-left: 2.35rem;
+  font-size: 0.91rem;
   font-weight: 500;
   color: #2c3a4a;
 }
 
 .sidebar .nav-group-children a.nav-sub-depth2 {
-  padding-left: 3.25rem;
-  font-size: 0.89rem;
+  padding-left: 3.15rem;
+  font-size: 0.88rem;
   opacity: 1;
 }
 
 .sidebar a.active,
 .sidebar .nav-group-toggle.active {
-  background: #eef5fc;
-  color: #0972d3;
-  border-left-color: #0972d3;
+  background: var(--toc-active-bg);
+  color: var(--toc-active-text);
+  border-left-color: var(--toc-active-border);
   font-weight: 700;
 }
 
 .sidebar a.nav-top-link {
-  padding-left: 2.2rem !important;
+  padding-left: 2.15rem !important;
 }
 
 @media (max-width: 768px) {

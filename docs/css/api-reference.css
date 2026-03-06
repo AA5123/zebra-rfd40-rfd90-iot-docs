@@ -41,16 +41,16 @@ html.layout-api-ref-page body {
    ============================================================ */
 
 .layout-api-ref .sidebar {
-  background: #111827;
-  border-right: 1px solid #1f2937;
+  background: #f7f8fa;
+  border-right: 1px solid #d5d9e0;
 }
 
 /* Nav title – no logo to avoid overlap; Zebra colors only */
 .layout-api-ref .sidebar .nav-title {
-  background: #111827;
-  color: #94a3b8;
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid #1f2937;
+  background: #f2f3f7;
+  color: #1f2937;
+  padding: 1rem 1.1rem;
+  border-bottom: 1px solid #d5d9e0;
   min-height: auto;
   padding-top: 1rem;
   text-align: left;
@@ -58,33 +58,33 @@ html.layout-api-ref-page body {
 
 /* Default menu text */
 .layout-api-ref .sidebar a {
-  color: #cbd5e1;
+  color: #1f2937;
   border-left: 3px solid transparent;
 }
 
 /* Section titles (group toggles) */
 .layout-api-ref .sidebar .nav-group > .nav-group-toggle {
-  color: #94a3b8;
+  color: #1f2937;
 }
 
 /* Active menu item */
 .layout-api-ref .sidebar a.active,
 .layout-api-ref .sidebar .nav-group-toggle.active {
-  background: #1e293b;
-  border-left-color: #2563eb;
+  background: #e6f1fb;
+  border-left-color: #0972d3;
   border-left-width: 3px;
-  color: #ffffff;
+  color: #0972d3;
 }
 
 /* Hover */
 .layout-api-ref .sidebar a:hover {
-  color: #2563eb;
+  color: #0972d3;
 }
 
 /* Section separators */
 .layout-api-ref .sidebar .nav-group {
   border-left: 3px solid transparent;
-  border-bottom: 1px solid #1f2937;
+  border-bottom: 1px solid #d5d9e0;
 }
 
 .layout-api-ref .sidebar .nav-group:last-child {
@@ -93,10 +93,10 @@ html.layout-api-ref-page body {
 
 /* Ensure expand/collapse icons remain visible */
 .layout-api-ref .sidebar .nav-group-toggle::before {
-  color: #94a3b8;
+  color: #5f6b7a;
 }
 
 .layout-api-ref .sidebar .nav-group-toggle:hover::before,
 .layout-api-ref .sidebar .nav-group-toggle.active::before {
-  color: #2563eb;
+  color: #0972d3;
 }

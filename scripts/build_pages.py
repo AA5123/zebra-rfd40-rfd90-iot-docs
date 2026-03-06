@@ -389,10 +389,12 @@ def sidebar(current):
             if children:
                 expanded = is_group_expanded(item)
                 group_cls = "nav-group" + ("" if expanded else " collapsed")
+                group_id = _slugify(href) + "-children"
                 lines.append(f'{indent}<div class="{group_cls}" data-nav-group>')
-                toggle_cls = ' class="nav-group-toggle active"' if current_base == href else ' class="nav-group-toggle"'
-                lines.append(f'{indent}  <a href="{href}"{toggle_cls}>{label}</a>')
-                lines.append(f'{indent}  <div class="nav-group-children">')
+                toggle_classes = "nav-group-toggle" + (" active" if current_base == href else "")
+                toggle_expanded = "true" if expanded else "false"
+                lines.append(f'{indent}  <a href="{href}" class="{toggle_classes}" aria-expanded="{toggle_expanded}" aria-controls="{group_id}">{label}</a>')
+                lines.append(f'{indent}  <div class="nav-group-children" id="{group_id}">')
                 for c in children:
                     chref = c["href"]
                     clabel = c["label"]
@@ -427,9 +429,58 @@ NAV_SCRIPT = """
     (function() {
             var body = document.body;
             var tocToggle = document.getElementById('toc-toggle');
+            var tocBackdrop = document.getElementById('toc-backdrop');
+            var sidebar = document.querySelector('.sidebar');
             var navGroups = Array.prototype.slice.call(document.querySelectorAll('.nav-group'));
             var mobileMedia = window.matchMedia('(max-width: 768px)');
             var storageKey = 'docs.tocCollapsedDesktop';
+
+            function syncExpandedAria() {
+                navGroups.forEach(function(group) {
+                    var toggle = group.querySelector('.nav-group-toggle');
+                    if (!toggle) {
+                        return;
+                    }
+                    toggle.setAttribute('aria-expanded', (!group.classList.contains('collapsed')).toString());
+                });
+            }
+
+            function syncActiveLink() {
+                if (!sidebar) {
+                    return;
+                }
+                var path = window.location.pathname.split('/').pop() || 'index.html';
+                var hash = window.location.hash;
+                var links = Array.prototype.slice.call(sidebar.querySelectorAll('a'));
+                links.forEach(function(link) { link.classList.remove('active'); });
+
+                var target = null;
+                if (hash) {
+                    target = sidebar.querySelector('a[href="' + path + hash + '"]');
+                }
+                if (!target) {
+                    target = sidebar.querySelector('a[href="' + path + '"]');
+                }
+                if (!target) {
+                    return;
+                }
+
+                target.classList.add('active');
+                var parentGroup = target.closest('.nav-group');
+                if (parentGroup) {
+                    navGroups.forEach(function(group) {
+                        if (group !== parentGroup) {
+                            group.classList.add('collapsed');
+                        }
+                    });
+                    parentGroup.classList.remove('collapsed');
+                    var parentToggle = parentGroup.querySelector('.nav-group-toggle');
+                    if (parentToggle) {
+                        parentToggle.classList.add('active');
+                    }
+                }
+                syncExpandedAria();
+            }
 
             function readDesktopPreference() {
                 try {
@@ -449,6 +500,11 @@ NAV_SCRIPT = """
 
             function setCollapsed(collapsed, persistDesktop) {
                 body.classList.toggle('sidebar-collapsed', collapsed);
+                if (tocBackdrop) {
+                    var showBackdrop = mobileMedia.matches && !collapsed;
+                    tocBackdrop.classList.toggle('visible', showBackdrop);
+                    tocBackdrop.setAttribute('aria-hidden', (!showBackdrop).toString());
+                }
                 if (tocToggle) {
                     tocToggle.textContent = collapsed ? '☰' : '◀';
                     tocToggle.setAttribute('aria-label', collapsed ? 'Show navigation' : 'Hide navigation');
@@ -468,6 +524,18 @@ NAV_SCRIPT = """
                     setCollapsed(nowCollapsed, true);
                 });
             }
+
+            if (tocBackdrop) {
+                tocBackdrop.addEventListener('click', function() {
+                    setCollapsed(true, false);
+                });
+            }
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && mobileMedia.matches && !body.classList.contains('sidebar-collapsed')) {
+                    setCollapsed(true, false);
+                }
+            });
 
             if (mobileMedia.addEventListener) {
                 mobileMedia.addEventListener('change', function(e) {
@@ -491,10 +559,20 @@ NAV_SCRIPT = """
                         navGroups.forEach(function(other) {
                             if (other !== group) {
                                 other.classList.add('collapsed');
+                                var otherToggle = other.querySelector('.nav-group-toggle');
+                                if (otherToggle) {
+                                    otherToggle.classList.remove('active');
+                                }
                             }
                         });
                     }
                     group.classList.toggle('collapsed');
+                    if (!group.classList.contains('collapsed')) {
+                        toggle.classList.add('active');
+                    } else {
+                        toggle.classList.remove('active');
+                    }
+                    syncExpandedAria();
         });
       });
 
@@ -505,6 +583,10 @@ NAV_SCRIPT = """
                     }
                 });
             });
+
+            window.addEventListener('hashchange', syncActiveLink);
+            syncExpandedAria();
+            syncActiveLink();
     })();
   </script>
 """
@@ -524,6 +606,7 @@ def wrap(title, current_href, body_html):
         <button id="toc-toggle" class="toc-toggle" type="button" aria-label="Hide navigation" aria-expanded="true">◀</button>
         <div class="doc-header-title">RFD40 / RFD90 IOT developer guide</div>
     </header>
+    <div id="toc-backdrop" class="toc-backdrop" aria-hidden="true"></div>
     <div class="layout-shell">
     <div class="layout">
 {sidebar(current_href)}
@@ -706,6 +789,7 @@ def main():
         <button id="toc-toggle" class="toc-toggle" type="button" aria-label="Hide navigation" aria-expanded="true">◀</button>
         <div class="doc-header-title">RFD40 / RFD90 IOT developer guide</div>
     </header>
+    <div id="toc-backdrop" class="toc-backdrop" aria-hidden="true"></div>
     <div class="layout-shell">
   <div class="layout layout-api-ref">
 """ + sidebar("api-reference.html") + """
