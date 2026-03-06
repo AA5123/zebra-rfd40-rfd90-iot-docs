@@ -3,7 +3,7 @@
     "info": {
         "title": "RFD40 / RFD90 IOT developer guide",
         "version": "v2",
-        "description": "**This is an MQTT API, not REST.** There are no HTTP endpoints. Each operation below is a **command**: you **publish** the JSON payload to your MQTT **command topic** (format: `<Tenant ID>/<Publish Topic>/<Device Serial No>`). Responses are received on the **command response** subscribe topic. The \"POST\" label is only for the spec format; in practice you use MQTT publish/subscribe. See **Getting Started** and **MQTT Communication Protocol** in the sidebar. For full guides, use the sidebar or [documentation home](index.html).",
+        "description": "**This is an MQTT API, not REST.** There are no HTTP endpoints. Each operation is a **command payload**: publish JSON to the MQTT **command topic** (`<Tenant ID>/<Publish Topic>/<Device Serial No>`). Device replies are received on your configured **command response** topic. Use this API reference for payload schemas/examples and see **Getting Started** plus **MQTT Communication Protocol** for end-to-end flow.",
         "x-logo": {
             "url": "https://logowik.com/content/uploads/images/zebra-technologies2902.jpg",
             "backgroundColor": "#FFFFFF",

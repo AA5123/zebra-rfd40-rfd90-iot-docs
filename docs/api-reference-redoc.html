@@ -53,13 +53,19 @@
                         node.style.setProperty('display', 'none', 'important');
                         continue;
                     }
-                    // Hide HTTP-like response badges/labels such as 200, 201, Success, OK.
-                    if ((className.indexOf('response') !== -1 || className.indexOf('status') !== -1 || className.indexOf('code') !== -1) && /^(?:[1-5][0-9]{2}|success|ok)$/i.test(txt)) {
+
+                    var looksResponseClass = className.indexOf('response') !== -1 || className.indexOf('status') !== -1 || className.indexOf('code') !== -1;
+                    var hasHttpCodeText = /(^|\W)[1-5][0-9]{2}(\W|$)/.test(txt);
+                    var hasHttpLabelText = /(^|\W)(?:success|ok|responses?)(\W|$)/i.test(txt);
+
+                    // Hide response-related widgets that carry HTTP semantics.
+                    if (looksResponseClass && (hasHttpCodeText || hasHttpLabelText)) {
                         node.style.setProperty('display', 'none', 'important');
                         continue;
                     }
-                    // Fallback: hide leaf elements that are only HTTP status labels.
-                    if (node.childElementCount === 0 && /^(?:[1-5][0-9]{2}|success|ok)$/i.test(txt)) {
+
+                    // Fallback: hide small leaf labels that are only HTTP-like markers.
+                    if (node.childElementCount === 0 && /^(?:[1-5][0-9]{2}|success|ok|responses?)$/i.test(txt)) {
                         var tag = String(node.tagName || '').toUpperCase();
                         if (tag !== 'CODE' && tag !== 'PRE' && tag !== 'KBD') {
                             node.style.setProperty('display', 'none', 'important');
@@ -78,7 +84,7 @@
                                 t.parentNode.style.setProperty('display', 'none', 'important');
                                 continue;
                             }
-                            if (/^(?:[1-5][0-9]{2}|success|ok)$/i.test(raw)) {
+                            if (/^(?:[1-5][0-9]{2}|success|ok|responses?)$/i.test(raw)) {
                                 var pTag = String(t.parentNode.tagName || '').toUpperCase();
                                 if (pTag !== 'CODE' && pTag !== 'PRE' && pTag !== 'KBD') {
                                     t.parentNode.style.setProperty('display', 'none', 'important');

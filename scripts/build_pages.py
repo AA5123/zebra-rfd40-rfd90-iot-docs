@@ -743,13 +743,19 @@ def main():
                         node.style.setProperty('display', 'none', 'important');
                         continue;
                     }
-                    // Hide HTTP-like response badges/labels such as 200, 201, Success, OK.
-                    if ((className.indexOf('response') !== -1 || className.indexOf('status') !== -1 || className.indexOf('code') !== -1) && /^(?:[1-5][0-9]{2}|success|ok)$/i.test(txt)) {
+
+                    var looksResponseClass = className.indexOf('response') !== -1 || className.indexOf('status') !== -1 || className.indexOf('code') !== -1;
+                    var hasHttpCodeText = /(^|\\W)[1-5][0-9]{2}(\\W|$)/.test(txt);
+                    var hasHttpLabelText = /(^|\\W)(?:success|ok|responses?)(\\W|$)/i.test(txt);
+
+                    // Hide response-related widgets that carry HTTP semantics.
+                    if (looksResponseClass && (hasHttpCodeText || hasHttpLabelText)) {
                         node.style.setProperty('display', 'none', 'important');
                         continue;
                     }
-                    // Fallback: hide leaf elements that are only HTTP status labels.
-                    if (node.childElementCount === 0 && /^(?:[1-5][0-9]{2}|success|ok)$/i.test(txt)) {
+
+                    // Fallback: hide small leaf labels that are only HTTP-like markers.
+                    if (node.childElementCount === 0 && /^(?:[1-5][0-9]{2}|success|ok|responses?)$/i.test(txt)) {
                         var tag = String(node.tagName || '').toUpperCase();
                         if (tag !== 'CODE' && tag !== 'PRE' && tag !== 'KBD') {
                             node.style.setProperty('display', 'none', 'important');
@@ -768,7 +774,7 @@ def main():
                                 t.parentNode.style.setProperty('display', 'none', 'important');
                                 continue;
                             }
-                            if (/^(?:[1-5][0-9]{2}|success|ok)$/i.test(raw)) {
+                            if (/^(?:[1-5][0-9]{2}|success|ok|responses?)$/i.test(raw)) {
                                 var pTag = String(t.parentNode.tagName || '').toUpperCase();
                                 if (pTag !== 'CODE' && pTag !== 'PRE' && pTag !== 'KBD') {
                                     t.parentNode.style.setProperty('display', 'none', 'important');
@@ -827,7 +833,7 @@ def main():
         f.write(redoc_standalone_html)
     print("Generated docs/api-reference-redoc.html")
 
-    api_ref_body = """<iframe src="api-reference-redoc.html?v=4" title="API Reference" class="api-ref-iframe"></iframe>"""
+    api_ref_body = """<iframe src="api-reference-redoc.html?v=5" title="API Reference" class="api-ref-iframe"></iframe>"""
     api_ref_html = """<!DOCTYPE html>
 <html lang="en" class="layout-api-ref-page">
 <head>
@@ -870,11 +876,10 @@ def main():
         spec = json.load(f)
     normalize_mqtt_responses(spec)
     spec["info"]["description"] = (
-        "**This is an MQTT API, not REST.** There are no HTTP endpoints. Each operation below is a **command**: "
-        "you **publish** the JSON payload to your MQTT **command topic** (format: `<Tenant ID>/<Publish Topic>/<Device Serial No>`). "
-        "Responses are received on the **command response** subscribe topic. The \"POST\" label is only for the spec format; "
-        "in practice you use MQTT publish/subscribe. See **Getting Started** and **MQTT Communication Protocol** in the sidebar. "
-        "For full guides, use the sidebar or [documentation home](index.html)."
+        "**This is an MQTT API, not REST.** There are no HTTP endpoints. Each operation is a **command payload**: "
+        "publish JSON to the MQTT **command topic** (`<Tenant ID>/<Publish Topic>/<Device Serial No>`). "
+        "Device replies are received on your configured **command response** topic. "
+        "Use this API reference for payload schemas/examples and see **Getting Started** plus **MQTT Communication Protocol** for end-to-end flow."
     )
     with open(openapi_path, "w", encoding="utf-8") as f:
         json.dump(spec, f, indent=4, ensure_ascii=False)
