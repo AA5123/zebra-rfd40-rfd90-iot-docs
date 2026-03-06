@@ -10,3 +10,4 @@ echo  Press Ctrl+C to stop.
 echo.
 python scripts\serve_docs.py
 pause
+
