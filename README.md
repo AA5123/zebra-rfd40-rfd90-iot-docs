@@ -63,3 +63,20 @@ d:\RFID index\
 - **Hierarchical headings:** Use `##`, `###`, and `####` in Markdown; the main content shows automatic numbering (1., 1.1., 1.1.1.).
 - **Collapsible sidebar:** Section groups expand/collapse; the current section stays expanded.
 - **Dark, enterprise-style theme** for the sidebar and consistent styling for tables, code, and lists.
+
+---
+
+## Share as a public link (GitHub Pages)
+
+This repository is configured with a workflow that deploys `docs/` to GitHub Pages on every push to `main`.
+
+One-time setup in GitHub:
+
+1. Open repository **Settings -> Pages**.
+2. Set **Source** to **GitHub Actions**.
+
+After that, each time you run `push-to-github.bat`, your latest docs are automatically rebuilt, pushed, and published.
+
+Public URL:
+
+`https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/`

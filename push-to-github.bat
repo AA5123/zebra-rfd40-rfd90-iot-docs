@@ -1,22 +1,57 @@
 @echo off
-REM Automated script to push your project to your GitHub repository
+setlocal
+
+REM Automated script to rebuild docs and push changes to GitHub
+
+REM Move to repository root (folder where this .bat file lives)
+cd /d "%~dp0"
+
+echo [1/5] Rebuilding documentation pages...
+python scripts\build_pages.py
+if errorlevel 1 (
+    echo Build failed. Push stopped.
+    exit /b 1
+)
 
 REM Initialize git if not already a repo
 if not exist ".git" (
     git init
 )
 
+echo [2/5] Staging files...
 REM Add all files
 git add .
 
-REM Commit changes
-git commit -m "Automated commit" 
+git diff --cached --quiet
+if %errorlevel%==0 (
+    echo No changes to commit after rebuild.
+    exit /b 0
+)
 
+echo [3/5] Creating commit...
+REM Commit changes
+for /f %%i in ('powershell -NoProfile -Command "Get-Date -Format \"yyyy-MM-dd HH:mm:ss\""') do set "TS=%%i"
+set "COMMIT_MSG=Automated update %TS%"
+git commit -m "%COMMIT_MSG%"
+if errorlevel 1 (
+    echo Commit failed. Push stopped.
+    exit /b 1
+)
+
+echo [4/5] Ensuring main branch...
 REM Set main branch
 git branch -M main
 
 REM Add remote (ignore error if already exists)
 git remote add origin https://github.com/AA5123/zebra-rfd40-rfd90-iot-docs.git 2>nul
 
+echo [5/5] Pushing to GitHub...
 REM Push to GitHub
 git push -u origin main
+if errorlevel 1 (
+    echo Push failed.
+    exit /b 1
+)
+
+echo Push completed successfully.
+echo GitHub Pages (after workflow completes): https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/
