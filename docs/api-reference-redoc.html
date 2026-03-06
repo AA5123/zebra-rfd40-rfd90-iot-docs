@@ -124,111 +124,148 @@
       try { styleSidebar(); } catch(e) {}
     }
 
-    /* AWS-style tree sidebar — matches Amazon EC2 docs style exactly.
-       Redoc DOM: <ul role="menu"> > <li role="menuitem" aria-expanded="true|false"> > <label class="-depthN [active]">
-       depth 0 = tag groups (like "Amazon Machine Images")
-       depth 1 = tags (like "AMI characteristics")  
-       depth 2 = operations (like "Identify the AMI root volume type") */
+    /* AWS EC2-style tree sidebar — pure JS inline styles.
+       Walks every <li role="menuitem"> under <ul role="menu">, counts <ul> ancestors
+       to determine depth, applies inline styles directly. No CSS class dependency. */
     function styleSidebar() {
-      if (document.getElementById('tree-sidebar-css')) return;
       var root = el.querySelector('[role="menu"]');
       if (!root) return;
 
-      var css = [];
-
-      /* ---- Reset: hide Redoc default SVG arrows & HTTP method badges ---- */
-      css.push('[role="menu"] label svg { display:none!important; }');
-      css.push('[role="menu"] .operation-type,[role="menu"] [class*="operation-badge"],[role="menu"] [class*="OperationBadge"]{ display:none!important; }');
-
-      /* ---- Base: all menu items ---- */
-      css.push('[role="menu"] li[role="menuitem"] { border:none!important; margin:0!important; padding:0!important; overflow:visible!important; }');
-      css.push('[role="menu"] li[role="menuitem"] > label { display:flex!important; align-items:baseline!important; padding:4px 12px 4px 0!important; margin:0!important; font-family:"Inter","Segoe UI",system-ui,sans-serif!important; font-size:13.5px!important; font-weight:400!important; color:#16191f!important; line-height:1.5!important; text-transform:none!important; letter-spacing:normal!important; opacity:1!important; cursor:pointer!important; text-decoration:none!important; background:transparent!important; border:none!important; }');
-
-      /* ---- Depth 0: Group headings — "Management Interface (Device Configuration)" ---- */
-      css.push('[role="menu"] > li > label.-depth0 { padding-left:16px!important; font-weight:400!important; font-size:14px!important; color:#16191f!important; }');
-      /* Triangle: ▼ when expanded, ▶ when collapsed */
-      css.push('[role="menu"] > li > label.-depth0::before { content:"\\25B6"!important; font-size:0.6em!important; color:#545b64!important; margin-right:8px!important; display:inline-block!important; width:0.8em!important; flex-shrink:0!important; }');
-      css.push('[role="menu"] > li[aria-expanded="true"] > label.-depth0::before { content:"\\25BC"!important; }');
-
-      /* ---- Depth 1: Tags — "Management - Device Status" etc. ---- */
-      css.push('[role="menu"] li > label.-depth1 { padding-left:36px!important; font-size:13.5px!important; color:#16191f!important; }');
-      /* Triangle for expandable tags */
-      css.push('[role="menu"] li > label.-depth1::before { content:"\\25B6"!important; font-size:0.55em!important; color:#545b64!important; margin-right:7px!important; display:inline-block!important; width:0.8em!important; flex-shrink:0!important; }');
-      css.push('[role="menu"] li[aria-expanded="true"] > label.-depth1::before { content:"\\25BC"!important; }');
-      /* Tags with no children (no aria-expanded) — no triangle, just indent */
-      css.push('[role="menu"] li:not([aria-expanded]) > label.-depth1::before { content:""!important; width:0!important; margin:0!important; }');
-      css.push('[role="menu"] li:not([aria-expanded]) > label.-depth1 { padding-left:50px!important; }');
-
-      /* ---- Depth 2: Operations — "get_status", "get_version" etc. ---- */
-      css.push('[role="menu"] li > label.-depth2 { padding-left:60px!important; font-size:13px!important; color:#16191f!important; }');
-      css.push('[role="menu"] li > label.-depth2::before { content:""!important; display:none!important; }');
-
-      /* ---- Hover & active ---- */
-      css.push('[role="menu"] li > label:hover { color:#0073bb!important; background:transparent!important; }');
-      css.push('[role="menu"] li > label.active { color:#0073bb!important; font-weight:600!important; background:transparent!important; }');
-
-      /* ---- Spacing between depth-0 groups ---- */
-      css.push('[role="menu"] > li { margin-top:6px!important; }');
-      css.push('[role="menu"] > li:first-child { margin-top:0!important; }');
-
-      var style = document.createElement('style');
-      style.id = 'tree-sidebar-css';
-      style.textContent = css.join('\n');
-      document.head.appendChild(style);
-
-      /* --- Click-to-toggle for group headings (depth-0) AND tag items (depth-1) --- */
-      function setupGroupToggle() {
-        /* Depth-0: group headings */
-        var groupItems = root.querySelectorAll(':scope > li[role="menuitem"]');
-        for (var i = 0; i < groupItems.length; i++) {
-          var li = groupItems[i];
-          if (li.getAttribute('data-tree-toggle') === '1') continue;
-          li.setAttribute('data-tree-toggle', '1');
-          (function(groupLi) {
-            var label = groupLi.querySelector('label.-depth0');
-            if (!label) return;
-            label.addEventListener('click', function(e) {
-              e.stopPropagation();
-              var childUl = null;
-              var kids = groupLi.children;
-              for (var k = 0; k < kids.length; k++) {
-                if (kids[k].tagName === 'UL') { childUl = kids[k]; break; }
-              }
-              if (!childUl) return;
-              var isVisible = childUl.style.display !== 'none';
-              childUl.style.display = isVisible ? 'none' : '';
-              groupLi.setAttribute('aria-expanded', isVisible ? 'false' : 'true');
-            });
-          })(li);
+      /* Walk every menuitem <li> */
+      var items = root.querySelectorAll('li[role="menuitem"]');
+      for (var i = 0; i < items.length; i++) {
+        var li = items[i];
+        /* Count <ul> parents up to root to get depth */
+        var depth = 0;
+        var p = li.parentElement;
+        while (p && p !== root) {
+          if (p.tagName === 'UL') depth++;
+          p = p.parentElement;
         }
 
-        /* Depth-1: tag items that have child operations */
-        var tagItems = root.querySelectorAll('li[role="menuitem"]');
-        for (var j = 0; j < tagItems.length; j++) {
-          var tli = tagItems[j];
-          var tLabel = tli.querySelector(':scope > label.-depth1');
-          if (!tLabel) continue;
-          if (tli.getAttribute('data-tree-toggle') === '1') continue;
-          /* Check if this tag has a child <ul> (operations) */
-          var tChildUl = null;
-          var tKids = tli.children;
-          for (var m = 0; m < tKids.length; m++) {
-            if (tKids[m].tagName === 'UL') { tChildUl = tKids[m]; break; }
+        /* Find the <label> child (immediate) */
+        var label = li.querySelector(':scope > label');
+        if (!label) continue;
+
+        /* Hide SVGs (Redoc arrows) inside this label */
+        var svgs = label.querySelectorAll('svg');
+        for (var s = 0; s < svgs.length; s++) {
+          svgs[s].style.setProperty('display', 'none', 'important');
+        }
+
+        /* Hide operation badges (POST, GET etc.) */
+        var badges = label.querySelectorAll('.operation-type, [class*="operation-type"]');
+        for (var b = 0; b < badges.length; b++) {
+          badges[b].style.setProperty('display', 'none', 'important');
+        }
+
+        /* Check if expandable (has child <ul>) */
+        var childUl = null;
+        var kids = li.children;
+        for (var c = 0; c < kids.length; c++) {
+          if (kids[c].tagName === 'UL') { childUl = kids[c]; break; }
+        }
+        var hasChildren = childUl && childUl.children.length > 0;
+        var isExpanded = li.getAttribute('aria-expanded') === 'true';
+
+        /* Remove any existing triangle we injected (to avoid duplicates on re-run) */
+        var oldTri = label.querySelector('.aws-tri');
+        if (oldTri) oldTri.remove();
+
+        /* Base label styles */
+        label.style.setProperty('display', 'flex', 'important');
+        label.style.setProperty('align-items', 'baseline', 'important');
+        label.style.setProperty('font-family', '"Inter","Segoe UI",system-ui,sans-serif', 'important');
+        label.style.setProperty('font-weight', '400', 'important');
+        label.style.setProperty('color', '#16191f', 'important');
+        label.style.setProperty('text-transform', 'none', 'important');
+        label.style.setProperty('letter-spacing', 'normal', 'important');
+        label.style.setProperty('opacity', '1', 'important');
+        label.style.setProperty('cursor', 'pointer', 'important');
+        label.style.setProperty('background', 'transparent', 'important');
+
+        /* Remove borders/margins from li */
+        li.style.setProperty('border', 'none', 'important');
+        li.style.setProperty('overflow', 'visible', 'important');
+
+        if (depth === 0) {
+          /* Depth 0: Group headings */
+          label.style.setProperty('padding', '5px 12px 5px 16px', 'important');
+          label.style.setProperty('font-size', '14px', 'important');
+          li.style.setProperty('margin-top', '8px', 'important');
+          li.style.setProperty('margin-bottom', '0', 'important');
+          li.style.setProperty('padding', '0', 'important');
+          /* Triangle */
+          if (hasChildren) {
+            var tri0 = document.createElement('span');
+            tri0.className = 'aws-tri';
+            tri0.textContent = isExpanded ? '\u25BC' : '\u25B6';
+            tri0.style.cssText = 'font-size:0.55em;color:#545b64;margin-right:8px;flex-shrink:0;width:0.9em;display:inline-block;';
+            label.insertBefore(tri0, label.firstChild);
           }
-          if (!tChildUl) continue;
-          tli.setAttribute('data-tree-toggle', '1');
-          (function(tagLi, tagLabel, tagUl) {
-            tagLabel.addEventListener('click', function(e) {
-              e.stopPropagation();
-              var isVisible = tagUl.style.display !== 'none';
-              tagUl.style.display = isVisible ? 'none' : '';
-              tagLi.setAttribute('aria-expanded', isVisible ? 'false' : 'true');
-            });
-          })(tli, tLabel, tChildUl);
+        } else if (depth === 1) {
+          /* Depth 1: Tags */
+          label.style.setProperty('font-size', '13.5px', 'important');
+          li.style.setProperty('margin', '0', 'important');
+          li.style.setProperty('padding', '0', 'important');
+          if (hasChildren) {
+            label.style.setProperty('padding', '3px 12px 3px 36px', 'important');
+            var tri1 = document.createElement('span');
+            tri1.className = 'aws-tri';
+            tri1.textContent = isExpanded ? '\u25BC' : '\u25B6';
+            tri1.style.cssText = 'font-size:0.5em;color:#545b64;margin-right:7px;flex-shrink:0;width:0.8em;display:inline-block;';
+            label.insertBefore(tri1, label.firstChild);
+          } else {
+            label.style.setProperty('padding', '3px 12px 3px 54px', 'important');
+          }
+        } else {
+          /* Depth 2+: Operations — indented, no triangle */
+          label.style.setProperty('padding', '2px 12px 2px 68px', 'important');
+          label.style.setProperty('font-size', '13px', 'important');
+          li.style.setProperty('margin', '0', 'important');
+          li.style.setProperty('padding', '0', 'important');
+        }
+
+        /* Active state (blue) */
+        if (label.classList.contains('active')) {
+          label.style.setProperty('color', '#0073bb', 'important');
+          label.style.setProperty('font-weight', '600', 'important');
         }
       }
-      setupGroupToggle();
-      setInterval(setupGroupToggle, 800);
+
+      /* Setup click-to-toggle (only once per <li>) */
+      for (var j = 0; j < items.length; j++) {
+        var tli = items[j];
+        if (tli.getAttribute('data-tree-toggle') === '1') continue;
+        var tLabel = tli.querySelector(':scope > label');
+        if (!tLabel) continue;
+        var tUl = null;
+        var tKids = tli.children;
+        for (var m = 0; m < tKids.length; m++) {
+          if (tKids[m].tagName === 'UL') { tUl = tKids[m]; break; }
+        }
+        if (!tUl) continue;
+
+        /* Count depth for this li */
+        var tDepth = 0;
+        var tp = tli.parentElement;
+        while (tp && tp !== root) {
+          if (tp.tagName === 'UL') tDepth++;
+          tp = tp.parentElement;
+        }
+        /* Only depth 0 and 1 get custom toggle */
+        if (tDepth > 1) continue;
+
+        tli.setAttribute('data-tree-toggle', '1');
+        (function(theLi, theLabel, theUl) {
+          theLabel.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var vis = theUl.style.display !== 'none';
+            theUl.style.display = vis ? 'none' : '';
+            theLi.setAttribute('aria-expanded', vis ? 'false' : 'true');
+          });
+        })(tli, tLabel, tUl);
+      }
     }
 
     var specUrl = 'openapi.yaml?v=' + Date.now();
