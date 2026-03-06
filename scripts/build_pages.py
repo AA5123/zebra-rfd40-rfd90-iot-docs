@@ -738,8 +738,14 @@ def main():
           if (node.nodeType !== 1) continue;
           var className = String(node.className || '').toLowerCase();
           var dataMethod = String(node.getAttribute && node.getAttribute('data-method') || '').toLowerCase();
+                    var txt = String(node.textContent || '').trim();
           if (isMethodText(node.textContent) || dataMethod || className.indexOf('http-verb') !== -1 || className.indexOf('method') !== -1) {
             node.style.setProperty('display', 'none', 'important');
+                        continue;
+                    }
+                    // Hide HTTP-like response badges/labels such as 200, 201, Success, OK.
+                    if ((className.indexOf('response') !== -1 || className.indexOf('status') !== -1 || className.indexOf('code') !== -1) && /^(?:[1-5][0-9]{2}|success|ok)$/i.test(txt)) {
+                        node.style.setProperty('display', 'none', 'important');
           }
         }
         if (typeof document.createTreeWalker === 'function') {
@@ -756,7 +762,7 @@ def main():
           walkRoot(el);
         }
       }
-    var HIDE_VERB_CSS = '.http-verb,[class*="http-verb"],[class*="HttpVerb"],[data-method],[class*="Method"],[class*="method"],[class*="response-status"],[class*="ResponseStatus"],[class*="status-code"],[class*="StatusCode"],[class*="response-code"],[class*="ResponseCode"],[class*="http-status"]{display:none!important}';
+    var HIDE_VERB_CSS = '.http-verb,[class*="http-verb"],[class*="HttpVerb"],[data-method],[class*="Method"],[class*="method"],[class*="response-status"],[class*="ResponseStatus"],[class*="status-code"],[class*="StatusCode"],[class*="response-code"],[class*="ResponseCode"],[class*="http-status"],[class*="ResponseCodeBlock"]{display:none!important}';
       function injectShadowStyles(root) {
         if (!root) return;
         if (root.shadowRoot) {
@@ -803,7 +809,7 @@ def main():
         f.write(redoc_standalone_html)
     print("Generated docs/api-reference-redoc.html")
 
-    api_ref_body = """<iframe src="api-reference-redoc.html" title="API Reference" class="api-ref-iframe"></iframe>"""
+    api_ref_body = """<iframe src="api-reference-redoc.html?v=3" title="API Reference" class="api-ref-iframe"></iframe>"""
     api_ref_html = """<!DOCTYPE html>
 <html lang="en" class="layout-api-ref-page">
 <head>
