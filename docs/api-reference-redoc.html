@@ -13,18 +13,41 @@
         #redoc-container > div > div:first-child {
             min-width: 320px !important;
             width: 320px !important;
+            padding-top: 0 !important;
+        }
+        /* Remove big logo block from API reference sidebar for a cleaner TOC */
+        #redoc-container > div > div:first-child img {
+            display: none !important;
+        }
+        #redoc-container > div > div:first-child [class*="logo"],
+        #redoc-container > div > div:first-child [class*="Logo"] {
+            display: none !important;
+            height: 0 !important;
+            min-height: 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
         }
         #redoc-container > div > div:first-child a {
-            font-size: 0.98rem !important;
-            line-height: 1.45 !important;
-            padding-top: 0.45rem !important;
-            padding-bottom: 0.45rem !important;
+            font-size: 0.96rem !important;
+            line-height: 1.4 !important;
+            padding-top: 0.42rem !important;
+            padding-bottom: 0.42rem !important;
+            padding-left: 1rem !important;
+            padding-right: 0.9rem !important;
             word-break: break-word !important;
         }
         #redoc-container > div > div:first-child [class*="group"] {
-            font-size: 0.8rem !important;
+            font-size: 0.78rem !important;
             letter-spacing: 0.04em !important;
             text-transform: uppercase !important;
+            opacity: 0.92 !important;
+            padding-top: 0.65rem !important;
+            padding-bottom: 0.25rem !important;
+        }
+        #redoc-container > div > div:first-child a[class*="active"],
+        #redoc-container > div > div:first-child [class*="active"] {
+            background: rgba(37, 99, 235, 0.20) !important;
+            border-left: 3px solid #60a5fa !important;
         }
     </style>
 </head>
@@ -144,9 +167,36 @@
       }
       function runHide() {
         hideMethodBadges();
+                removeSidebarLogoBlocks();
                 simplifySidebarLabels();
         injectShadowStyles(el);
       }
+
+            function removeSidebarLogoBlocks() {
+                if (!el) return;
+                var sidebar = el.querySelector('div > div:first-child');
+                if (!sidebar) return;
+
+                function collapseToSidebarChild(node) {
+                    var cur = node;
+                    while (cur && cur.parentElement && cur.parentElement !== sidebar) {
+                        cur = cur.parentElement;
+                    }
+                    if (cur && cur.parentElement === sidebar) {
+                        cur.style.setProperty('display', 'none', 'important');
+                        cur.style.setProperty('height', '0', 'important');
+                        cur.style.setProperty('min-height', '0', 'important');
+                        cur.style.setProperty('padding', '0', 'important');
+                        cur.style.setProperty('margin', '0', 'important');
+                    }
+                }
+
+                var logos = sidebar.querySelectorAll('img, [class*="logo" i], [class*="brand" i]');
+                for (var i = 0; i < logos.length; i++) {
+                    collapseToSidebarChild(logos[i]);
+                    logos[i].style.setProperty('display', 'none', 'important');
+                }
+            }
 
             function simplifySidebarLabels() {
                 if (!el) return;

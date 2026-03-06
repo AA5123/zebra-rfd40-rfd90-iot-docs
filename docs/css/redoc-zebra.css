@@ -9,6 +9,13 @@
   display: none !important;
 }
 
+/* Clean API TOC: remove logo block in left sidebar */
+#redoc-container > div > div:first-child img,
+#redoc-container > div > div:first-child [class*="logo"],
+#redoc-container > div > div:first-child [class*="Logo"] {
+  display: none !important;
+}
+
 /* MQTT API: hide HTTP method badges (POST, GET, etc.) – Redoc uses class "http-verb" + type */
 #redoc-container [class*="HttpVerb"],
 #redoc-container [class*="Method"],
