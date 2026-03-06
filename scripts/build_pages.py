@@ -370,7 +370,8 @@ def sidebar(current):
     title_text = _html_escape(nav_title)
     lines = [
         '<div class="sidebar">',
-        '  <div class="nav-title"><div class="nav-title-main">' + title_text + '</div><div class="nav-title-sub">Developer Guide</div></div>',
+        '  <div class="nav-brand"><span class="nav-brand-word">DOCS</span></div>',
+        '  <div class="nav-title"><div class="nav-title-main">' + title_text + '</div><div class="nav-title-sub">User Guide</div></div>',
     ]
 
     def is_group_expanded(item):
