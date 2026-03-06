@@ -835,6 +835,9 @@ def main():
       /* ---- Hide Redoc default arrow SVGs (ShelfIcon) inside sidebar labels ---- */
       css.push('[role="menu"] label svg, [role="menu"] label polygon { display: none !important; visibility: hidden !important; }');
 
+      /* ---- Hide HTTP method badges (POST, GET, etc.) inside sidebar ---- */
+      css.push('[role="menu"] .operation-type, [role="menu"] [class*="operation-badge"], [role="menu"] [class*="OperationBadge"] { display: none !important; }');
+
       /* ---- Level 0: Group headings (depth=0) like MANAGEMENT INTERFACE ---- */
       css.push('[role="menu"] > li[role="menuitem"] > label.-depth0 {');
       css.push('  color: #545b64 !important;');
@@ -850,7 +853,7 @@ def main():
 
       /* Disclosure triangle for depth-0 (group headings) */
       css.push('[role="menu"] > li[role="menuitem"] > label.-depth0::before {');
-      css.push('  content: "\\25B6" !important;');
+      css.push('  content: "\\\\25B6" !important;');
       css.push('  font-size: 0.5rem !important;');
       css.push('  color: #545b64 !important;');
       css.push('  margin-right: 6px !important;');
@@ -860,7 +863,7 @@ def main():
       css.push('}');
       /* Expanded group: show downward triangle */
       css.push('[role="menu"] > li[role="menuitem"][aria-expanded="true"] > label.-depth0::before {');
-      css.push('  content: "\\25BC" !important;');
+      css.push('  content: "\\\\25BC" !important;');
       css.push('}');
 
       /* ---- Level 1: Tag items (depth=1) like "Management - Device Status" ---- */
@@ -879,7 +882,7 @@ def main():
 
       /* Disclosure triangle for depth-1 (tag items that have children) */
       css.push('[role="menu"] li[role="menuitem"] > label.-depth1::before {');
-      css.push('  content: "\\25B6" !important;');
+      css.push('  content: "\\\\25B6" !important;');
       css.push('  font-size: 0.45rem !important;');
       css.push('  color: #545b64 !important;');
       css.push('  margin-right: 5px !important;');
@@ -889,11 +892,11 @@ def main():
       css.push('}');
       /* Expanded tag: show downward triangle */
       css.push('[role="menu"] li[role="menuitem"][aria-expanded="true"] > label.-depth1::before {');
-      css.push('  content: "\\25BC" !important;');
+      css.push('  content: "\\\\25BC" !important;');
       css.push('}');
       /* Collapsed tag (no children visible): hide triangle for leaf tags */
       css.push('[role="menu"] li[role="menuitem"][aria-expanded="false"] > label.-depth1::before {');
-      css.push('  content: "\\25B6" !important;');
+      css.push('  content: "\\\\25B6" !important;');
       css.push('}');
 
       /* ---- Level 2: Operation items (depth=2) like endpoints ---- */
