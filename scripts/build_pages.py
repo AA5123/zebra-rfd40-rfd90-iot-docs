@@ -856,7 +856,7 @@ def main():
       css.push('[role="menu"] li:not([aria-expanded]) > label.-depth1 { padding-left:50px!important; }');
 
       /* ---- Depth 2: Operations — "get_status", "get_version" etc. ---- */
-      css.push('[role="menu"] li > label.-depth2 { padding-left:60px!important; font-size:13px!important; color:#16191f!important; }');
+      css.push('[role="menu"] li > label.-depth2 { padding-left:72px!important; font-size:13px!important; color:#16191f!important; }');
       css.push('[role="menu"] li > label.-depth2::before { content:""!important; display:none!important; }');
 
       /* ---- Hover & active ---- */
