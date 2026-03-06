@@ -418,36 +418,59 @@ def sidebar(current):
     return "\n".join(lines)
 
 
-SHELL_SCRIPT = """
+NAV_SCRIPT = """
   <script>
     (function() {
-            var tocKey = 'docs.sidebarCollapsed';
+            var body = document.body;
             var tocToggle = document.getElementById('toc-toggle');
+            var navGroups = Array.prototype.slice.call(document.querySelectorAll('.nav-group'));
+            var mobileMedia = window.matchMedia('(max-width: 768px)');
+            var storageKey = 'docs.tocCollapsedDesktop';
 
-            function applyTocState(collapsed) {
-                document.body.classList.toggle('sidebar-collapsed', collapsed);
-                if (tocToggle) {
-                    tocToggle.textContent = collapsed ? 'Show TOC' : 'Hide TOC';
-                    tocToggle.setAttribute('aria-expanded', (!collapsed).toString());
+            function readDesktopPreference() {
+                try {
+                    return window.localStorage.getItem(storageKey) === '1';
+                } catch (e) {
+                    return false;
                 }
             }
 
-            if (tocToggle) {
-                var isCollapsed = false;
+            function writeDesktopPreference(collapsed) {
                 try {
-                    isCollapsed = window.localStorage.getItem(tocKey) === '1';
+                    window.localStorage.setItem(storageKey, collapsed ? '1' : '0');
                 } catch (e) {
-                    isCollapsed = false;
+                    // Ignore storage errors.
                 }
-                applyTocState(isCollapsed);
+            }
 
+            function setCollapsed(collapsed, persistDesktop) {
+                body.classList.toggle('sidebar-collapsed', collapsed);
+                if (tocToggle) {
+                    tocToggle.textContent = collapsed ? '☰' : '◀';
+                    tocToggle.setAttribute('aria-label', collapsed ? 'Show navigation' : 'Hide navigation');
+                    tocToggle.setAttribute('aria-expanded', (!collapsed).toString());
+                }
+                if (persistDesktop && !mobileMedia.matches) {
+                    writeDesktopPreference(collapsed);
+                }
+            }
+
+            var startCollapsed = mobileMedia.matches ? true : readDesktopPreference();
+            setCollapsed(startCollapsed, false);
+
+            if (tocToggle) {
                 tocToggle.addEventListener('click', function() {
-                    var nowCollapsed = !document.body.classList.contains('sidebar-collapsed');
-                    applyTocState(nowCollapsed);
-                    try {
-                        window.localStorage.setItem(tocKey, nowCollapsed ? '1' : '0');
-                    } catch (e) {
-                        // Ignore storage errors (private mode/restrictions).
+                    var nowCollapsed = !body.classList.contains('sidebar-collapsed');
+                    setCollapsed(nowCollapsed, true);
+                });
+            }
+
+            if (mobileMedia.addEventListener) {
+                mobileMedia.addEventListener('change', function(e) {
+                    if (e.matches) {
+                        setCollapsed(true, false);
+                    } else {
+                        setCollapsed(readDesktopPreference(), false);
                     }
                 });
             }
@@ -456,9 +479,28 @@ SHELL_SCRIPT = """
         toggle.addEventListener('click', function(e) {
           e.preventDefault();
           var group = toggle.closest('.nav-group');
-          if (group) group.classList.toggle('collapsed');
+                    if (!group) {
+                        return;
+                    }
+                    var willExpand = group.classList.contains('collapsed');
+                    if (willExpand) {
+                        navGroups.forEach(function(other) {
+                            if (other !== group) {
+                                other.classList.add('collapsed');
+                            }
+                        });
+                    }
+                    group.classList.toggle('collapsed');
         });
       });
+
+            document.querySelectorAll('.sidebar a').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    if (mobileMedia.matches) {
+                        setCollapsed(true, false);
+                    }
+                });
+            });
     })();
   </script>
 """
@@ -474,14 +516,19 @@ def wrap(title, current_href, body_html):
   <link rel="stylesheet" href="css/docs.css" />
 </head>
 <body>
-    <button id="toc-toggle" class="toc-toggle" type="button" aria-label="Toggle table of contents">Hide TOC</button>
-  <div class="layout">
+    <header class="doc-header">
+        <button id="toc-toggle" class="toc-toggle" type="button" aria-label="Hide navigation" aria-expanded="true">◀</button>
+        <div class="doc-header-title">RFD40 / RFD90 IOT developer guide</div>
+    </header>
+    <div class="layout-shell">
+    <div class="layout">
 {sidebar(current_href)}
     <main class="main">
 {body_html}
     </main>
   </div>
-{SHELL_SCRIPT}
+    </div>
+{NAV_SCRIPT}
 </body>
 </html>"""
 
@@ -645,20 +692,25 @@ def main():
   <link rel="stylesheet" href="css/api-reference.css" />
   <style>
     html, body { height: 100%; margin: 0; }
-    .layout-api-ref { height: 100%; min-height: 100vh; overflow: hidden; display: flex; flex-direction: row; }
+        .layout-api-ref { height: 100%; min-height: 100%; overflow: hidden; display: flex; flex-direction: row; }
     .layout-api-ref .main-api-ref { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; padding: 0; }
     .layout-api-ref .api-ref-iframe { flex: 1; min-height: 0; width: 100%; border: none; display: block; }
   </style>
 </head>
 <body>
-    <button id="toc-toggle" class="toc-toggle" type="button" aria-label="Toggle table of contents">Hide TOC</button>
+    <header class="doc-header">
+        <button id="toc-toggle" class="toc-toggle" type="button" aria-label="Hide navigation" aria-expanded="true">◀</button>
+        <div class="doc-header-title">RFD40 / RFD90 IOT developer guide</div>
+    </header>
+    <div class="layout-shell">
   <div class="layout layout-api-ref">
 """ + sidebar("api-reference.html") + """
     <main class="main main-api-ref">
 """ + api_ref_body + """
     </main>
   </div>
-""" + SHELL_SCRIPT + """
+    </div>
+""" + NAV_SCRIPT + """
 </body>
 </html>"""
     with open(os.path.join(DOCS_DIR, "api-reference.html"), "w", encoding="utf-8") as f:
