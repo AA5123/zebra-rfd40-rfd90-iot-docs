@@ -995,6 +995,9 @@ def main():
     with open(openapi_path, "r", encoding="utf-8") as f:
         spec = json.load(f)
     normalize_mqtt_responses(spec)
+    # Remove branding metadata so Redoc does not render a logo block in API sidebar/header.
+    if isinstance(spec.get("info"), dict) and "x-logo" in spec["info"]:
+        del spec["info"]["x-logo"]
     spec["info"]["description"] = (
         "**This is an MQTT API, not REST.** There are no HTTP endpoints. Each operation is a **command payload**: "
         "publish JSON to the MQTT **command topic** (`<Tenant ID>/<Publish Topic>/<Device Serial No>`). "
