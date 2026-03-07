@@ -38,24 +38,14 @@
   line-height: 1.6;
 }
 
-/* Disclosure triangle for expandable tags */
-#redoc-container [role="navigation"] ul > li > ul > li > label::before {
-  content: "▶";
-  display: inline-block;
-  width: 16px;
-  font-size: 0.55rem;
-  color: #545b64;
-  margin-right: 4px;
-  position: relative;
-  top: -1px;
-}
-
-/* Rotate triangle when expanded */
-#redoc-container [role="navigation"] ul > li > ul > li.-expanded > label::before,
-#redoc-container [role="navigation"] ul > li > ul > li[class*="active"] > label::before,
-#redoc-container [role="navigation"] ul > li > ul > li[class*="expanded"] > label::before {
-  content: "▼";
-  color: #16191f;
+/* Disclosure triangles are handled exclusively by JS (styleSidebar).
+   Suppress all CSS pseudo-element arrows to avoid doubled / stuck arrows. */
+#redoc-container [role="navigation"] label::before,
+#redoc-container [role="navigation"] label::after,
+#redoc-container [role="navigation"] a::before,
+#redoc-container [role="navigation"] a::after {
+  content: none !important;
+  display: none !important;
 }
 
 /* --- Level 3: Operation leaf items (get_status, get_version, …) --- */
@@ -83,10 +73,14 @@
   background-color: #f2f3f3 !important;
 }
 
-/* Hide Redoc's default > arrow icons (we use CSS triangles instead) */
-#redoc-container [role="navigation"] svg.arrow,
+/* Hide ALL Redoc native arrow icons in navigation (SVGs, styled-components, etc.) */
+#redoc-container [role="navigation"] svg,
 #redoc-container [role="navigation"] [class*="arrow"],
-#redoc-container [role="navigation"] [class*="Arrow"] {
+#redoc-container [role="navigation"] [class*="Arrow"],
+#redoc-container [role="navigation"] [class*="Caret"],
+#redoc-container [role="navigation"] [class*="caret"],
+#redoc-container [role="navigation"] [class*="expand"],
+#redoc-container [role="navigation"] [class*="Expand"] {
   display: none !important;
 }
 
@@ -150,4 +144,16 @@
 #redoc-container > div > div:nth-child(2) [class*="Response"] {
   margin-bottom: 0 !important;
   padding-bottom: 0 !important;
+}
+
+/* Hide Redocly / Redoc branding */
+#redoc-container a[href*="redoc"],
+#redoc-container a[href*="Redoc"],
+#redoc-container [class*="powered" i],
+#redoc-container [class*="Powered"],
+#redoc-container img[alt*="Redoc"],
+#redoc-container img[alt*="redoc"],
+a[href*="redocly"],
+a[href*="redoc.ly"] {
+  display: none !important;
 }

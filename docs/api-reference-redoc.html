@@ -131,9 +131,14 @@
       if (window._awsLock) return;
       window._awsLock = true;
       try {
-        var root = el.querySelector('[role="menu"]');
+        var root = el.querySelector('[role="menu"]') || el.querySelector('ul[role="menu"]');
+        if (!root) {
+          var nav = el.querySelector('[role="navigation"]') || el.querySelector('nav');
+          root = nav ? (nav.querySelector('ul') || nav) : null;
+        }
         if (!root) return;
-        var items = root.querySelectorAll('li[role="menuitem"]');
+        var items = root.querySelectorAll('li[role="menuitem"]') || root.querySelectorAll('li');
+        if (!items || items.length === 0) items = root.querySelectorAll('li');
         for (var i = 0; i < items.length; i++) {
           var li = items[i];
           var depth = 0;
@@ -142,7 +147,7 @@
             if (p.tagName === 'UL') depth++;
             p = p.parentElement;
           }
-          var label = li.querySelector(':scope > label');
+          var label = li.querySelector(':scope > label') || li.querySelector(':scope > a');
           if (!label) continue;
 
           /* Hide SVGs (Redoc arrows) */
@@ -233,7 +238,7 @@
           }
         }
       } finally {
-        setTimeout(function() { window._awsLock = false; }, 60);
+        setTimeout(function() { window._awsLock = false; }, 20);
       }
     }
 
