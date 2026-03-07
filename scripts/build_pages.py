@@ -701,7 +701,7 @@ def main():
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>API Reference - RFD40 / RFD90 IOT developer guide</title>
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/redoc-zebra.css?v=8" />
+  <link rel="stylesheet" href="css/redoc-zebra.css?v=9" />
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; height: 100%; }
@@ -820,79 +820,27 @@ def main():
       try { styleSidebar(); } catch(e) {}
       try { cleanSidebarLabels(); } catch(e) {}
       try { forceIndentation(); } catch(e) {}
-      try { injectIndentCSS(); } catch(e) {}
     }
 
-    /* Inject a <style> tag directly into the Redoc container as CSS fallback.
-       In Redoc, operations are always <a> tags; tags/groups are <label> tags.
-       This works regardless of which role attributes Redoc adds. */
-    function injectIndentCSS() {
-      if (document.getElementById('force-indent-css')) return;
-      var sidebar = el.querySelector('[role="navigation"]')
-                 || el.querySelector('nav')
-                 || (el.children[0] && el.children[0].children[0]);
-      if (!sidebar) return;
-      var s = document.createElement('style');
-      s.id = 'force-indent-css';
-      s.textContent =
-        /* All <a> inside the sidebar are operations — indent them */
-        '#redoc-container > div > div:first-child a[href] { padding-left: 52px !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; display: block !important; font-size: 13px !important; }' +
-        /* All <label> that are NOT the top-level group headers get tag-level indent */
-        '#redoc-container > div > div:first-child ul ul label { padding-left: 28px !important; }' +
-        /* Top-level labels (group headers) keep minimal indent */
-        '#redoc-container > div > div:first-child > ul > li > label,' +
-        '#redoc-container > div > div:first-child > div > ul > li > label,' +
-        '#redoc-container > div > div:first-child [role="menu"] > li > label { padding-left: 16px !important; text-transform: uppercase !important; font-weight: 700 !important; font-size: 11.5px !important; color: #545b64 !important; letter-spacing: 0.04em !important; }';
-      document.head.appendChild(s);
-    }
-
-    /* Brute-force indentation using element type (not depth counting).
-       In Redoc:  <a> = operation (leaf), <label> = group or tag (parent).
-       Operations get 52px indent, tags get 28px, groups get 16px. */
+    /* Physical spacer approach: Redoc styled-components override all CSS padding.
+       Instead, prepend an invisible spacer <span> to each operation <a> tag.
+       This physically pushes the text to the right and CAN'T be overridden. */
     function forceIndentation() {
       var sidebar = el.querySelector('[role="navigation"]')
                  || el.querySelector('nav')
                  || (el.children[0] && el.children[0].children[0]);
       if (!sidebar) return;
 
-      /* Find all clickable elements in sidebar */
+      /* All <a> in sidebar = operations.  Add a spacer if not already present. */
       var allLinks = sidebar.querySelectorAll('a');
-      var allLabels = sidebar.querySelectorAll('label');
-
-      /* Operations = <a> tags (they link to content).  Always indent. */
       for (var i = 0; i < allLinks.length; i++) {
         var a = allLinks[i];
-        a.style.setProperty('padding-left', '52px', 'important');
-        a.style.setProperty('white-space', 'nowrap', 'important');
-        a.style.setProperty('overflow', 'hidden', 'important');
-        a.style.setProperty('text-overflow', 'ellipsis', 'important');
-        a.style.setProperty('display', 'block', 'important');
-        a.style.setProperty('font-size', '13px', 'important');
-        if (a.parentElement) a.parentElement.style.setProperty('overflow', 'hidden', 'important');
-      }
-
-      /* Labels = groups or tags.  Determine which by checking nesting level. */
-      for (var j = 0; j < allLabels.length; j++) {
-        var lbl = allLabels[j];
-        var li = lbl.closest('li');
-        if (!li) continue;
-        /* Is this label's <li> a direct child of the root <ul>?
-           If so, it's a group header.  Otherwise it's a tag. */
-        var parentUl = li.parentElement;
-        var isTopLevel = false;
-        if (parentUl) {
-          var grandparent = parentUl.parentElement;
-          /* Top-level if parent UL's parent is the sidebar/nav itself, or is the container */
-          isTopLevel = (grandparent === sidebar || !grandparent ||
-                        grandparent.tagName === 'DIV' || grandparent.tagName === 'NAV');
-        }
-        if (isTopLevel) {
-          /* Group header — uppercase, minimal indent */
-          lbl.style.setProperty('padding-left', '16px', 'important');
-        } else {
-          /* Tag — moderate indent */
-          lbl.style.setProperty('padding-left', '28px', 'important');
-        }
+        /* Skip if spacer already added */
+        if (a.querySelector('.indent-spacer')) continue;
+        var spacer = document.createElement('span');
+        spacer.className = 'indent-spacer';
+        spacer.style.cssText = 'display:inline-block;min-width:32px;width:32px;flex-shrink:0;pointer-events:none;';
+        a.insertBefore(spacer, a.firstChild);
       }
     }
 
@@ -1089,7 +1037,7 @@ def main():
         f.write(redoc_standalone_html)
     print("Generated docs/api-reference-redoc.html")
 
-    api_ref_body = """<iframe src="api-reference-redoc.html?v=20" title="API Reference" class="api-ref-iframe"></iframe>"""
+    api_ref_body = """<iframe src="api-reference-redoc.html?v=21" title="API Reference" class="api-ref-iframe"></iframe>"""
     api_ref_html = """<!DOCTYPE html>
 <html lang="en" class="layout-api-ref-page">
 <head>
