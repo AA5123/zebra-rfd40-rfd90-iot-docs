@@ -820,147 +820,116 @@ def main():
       try { styleSidebar(); } catch(e) {}
     }
 
-    /* AWS EC2-style tree sidebar — pure JS inline styles.
-       Walks every <li role="menuitem"> under <ul role="menu">, counts <ul> ancestors
-       to determine depth, applies inline styles directly. No CSS class dependency. */
+    /* AWS EC2-style tree sidebar — visual styling only.
+       Redoc handles all expand/collapse and navigation natively.
+       We only add: triangles, indentation padding, hide badges/SVGs. */
     function styleSidebar() {
-      var root = el.querySelector('[role="menu"]');
-      if (!root) return;
-
-      /* Walk every menuitem <li> */
-      var items = root.querySelectorAll('li[role="menuitem"]');
-      for (var i = 0; i < items.length; i++) {
-        var li = items[i];
-        /* Count <ul> parents up to root to get depth */
-        var depth = 0;
-        var p = li.parentElement;
-        while (p && p !== root) {
-          if (p.tagName === 'UL') depth++;
-          p = p.parentElement;
-        }
-
-        /* Find the <label> child (immediate) */
-        var label = li.querySelector(':scope > label');
-        if (!label) continue;
-
-        /* Hide SVGs (Redoc arrows) inside this label */
-        var svgs = label.querySelectorAll('svg');
-        for (var s = 0; s < svgs.length; s++) {
-          svgs[s].style.setProperty('display', 'none', 'important');
-        }
-
-        /* Hide operation badges (POST, GET etc.) */
-        var badges = label.querySelectorAll('.operation-type, [class*="operation-type"]');
-        for (var b = 0; b < badges.length; b++) {
-          badges[b].style.setProperty('display', 'none', 'important');
-        }
-
-        /* Check if expandable (has child <ul>) */
-        var childUl = null;
-        var kids = li.children;
-        for (var c = 0; c < kids.length; c++) {
-          if (kids[c].tagName === 'UL') { childUl = kids[c]; break; }
-        }
-        var hasChildren = childUl && childUl.children.length > 0;
-        var isExpanded = li.getAttribute('aria-expanded') === 'true';
-
-        /* Force child <ul> visibility based on aria-expanded (override styled-components) */
-        if (hasChildren) {
-          childUl.style.setProperty('display', isExpanded ? 'block' : 'none', 'important');
-        }
-
-        /* Remove any existing triangle we injected (to avoid duplicates on re-run) */
-        var oldTri = label.querySelector('.aws-tri');
-        if (oldTri) oldTri.remove();
-
-        /* Base label styles */
-        label.style.setProperty('display', 'flex', 'important');
-        label.style.setProperty('align-items', 'baseline', 'important');
-        label.style.setProperty('font-family', '"Inter","Segoe UI",system-ui,sans-serif', 'important');
-        label.style.setProperty('font-weight', '400', 'important');
-        label.style.setProperty('color', '#16191f', 'important');
-        label.style.setProperty('text-transform', 'none', 'important');
-        label.style.setProperty('letter-spacing', 'normal', 'important');
-        label.style.setProperty('opacity', '1', 'important');
-        label.style.setProperty('cursor', 'pointer', 'important');
-        label.style.setProperty('background', 'transparent', 'important');
-
-        /* Remove borders/margins from li */
-        li.style.setProperty('border', 'none', 'important');
-        li.style.setProperty('overflow', 'visible', 'important');
-
-        if (depth === 0) {
-          /* Depth 0: Group headings */
-          label.style.setProperty('padding', '5px 12px 5px 16px', 'important');
-          label.style.setProperty('font-size', '14px', 'important');
-          li.style.setProperty('margin-top', '8px', 'important');
-          li.style.setProperty('margin-bottom', '0', 'important');
-          li.style.setProperty('padding', '0', 'important');
-          /* Triangle */
-          if (hasChildren) {
-            var tri0 = document.createElement('span');
-            tri0.className = 'aws-tri';
-            tri0.textContent = isExpanded ? '\\u25BC' : '\\u25B6';
-            tri0.style.cssText = 'font-size:0.55em;color:#545b64;margin-right:8px;flex-shrink:0;width:0.9em;display:inline-block;';
-            label.insertBefore(tri0, label.firstChild);
+      if (window._awsLock) return;
+      window._awsLock = true;
+      try {
+        var root = el.querySelector('[role="menu"]');
+        if (!root) return;
+        var items = root.querySelectorAll('li[role="menuitem"]');
+        for (var i = 0; i < items.length; i++) {
+          var li = items[i];
+          var depth = 0;
+          var p = li.parentElement;
+          while (p && p !== root) {
+            if (p.tagName === 'UL') depth++;
+            p = p.parentElement;
           }
-        } else if (depth === 1) {
-          /* Depth 1: Tags */
-          label.style.setProperty('font-size', '13.5px', 'important');
-          li.style.setProperty('margin', '0', 'important');
-          li.style.setProperty('padding', '0', 'important');
-          if (hasChildren) {
-            label.style.setProperty('padding', '3px 12px 3px 36px', 'important');
-            var tri1 = document.createElement('span');
-            tri1.className = 'aws-tri';
-            tri1.textContent = isExpanded ? '\\u25BC' : '\\u25B6';
-            tri1.style.cssText = 'font-size:0.5em;color:#545b64;margin-right:7px;flex-shrink:0;width:0.8em;display:inline-block;';
-            label.insertBefore(tri1, label.firstChild);
-          } else {
-            label.style.setProperty('padding', '3px 12px 3px 54px', 'important');
-          }
-        } else {
-          /* Depth 2+: Operations — indented, no triangle */
-          label.style.setProperty('padding', '2px 12px 2px 68px', 'important');
-          label.style.setProperty('font-size', '13px', 'important');
-          li.style.setProperty('margin', '0', 'important');
-          li.style.setProperty('padding', '0', 'important');
-        }
-
-        /* Active state (blue) */
-        if (label.classList.contains('active')) {
-          label.style.setProperty('color', '#0073bb', 'important');
-          label.style.setProperty('font-weight', '600', 'important');
-        }
-      }
-
-      /* Click-to-toggle handlers (only attach once per <li>) */
-      for (var j = 0; j < items.length; j++) {
-        (function(li) {
-          if (li.getAttribute('data-tree-bound') === '1') return;
           var label = li.querySelector(':scope > label');
-          if (!label) return;
-          var childUl = null;
-          var ch = li.children;
-          for (var m = 0; m < ch.length; m++) {
-            if (ch[m].tagName === 'UL') { childUl = ch[m]; break; }
-          }
-          if (!childUl || childUl.children.length === 0) return;
+          if (!label) continue;
 
-          li.setAttribute('data-tree-bound', '1');
-          label.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            /* Use aria-expanded as the source of truth */
-            var wasExpanded = li.getAttribute('aria-expanded') === 'true';
-            var nowExpanded = !wasExpanded;
-            li.setAttribute('aria-expanded', nowExpanded ? 'true' : 'false');
-            childUl.style.setProperty('display', nowExpanded ? 'block' : 'none', 'important');
-            /* Update triangle immediately */
-            var tri = label.querySelector('.aws-tri');
-            if (tri) tri.textContent = nowExpanded ? '\\u25BC' : '\\u25B6';
-          });
-        })(items[j]);
+          /* Hide SVGs (Redoc arrows) */
+          var svgs = label.querySelectorAll('svg');
+          for (var s = 0; s < svgs.length; s++) {
+            svgs[s].style.setProperty('display', 'none', 'important');
+          }
+          /* Hide operation badges */
+          var badges = label.querySelectorAll('.operation-type, [class*="operation-type"]');
+          for (var b = 0; b < badges.length; b++) {
+            badges[b].style.setProperty('display', 'none', 'important');
+          }
+
+          /* Child UL check */
+          var childUl = null;
+          for (var c = 0; c < li.children.length; c++) {
+            if (li.children[c].tagName === 'UL') { childUl = li.children[c]; break; }
+          }
+          var hasKids = childUl && childUl.children.length > 0;
+          var expanded = li.getAttribute('aria-expanded') === 'true';
+
+          /* Base label styles */
+          label.style.setProperty('display', 'flex', 'important');
+          label.style.setProperty('align-items', 'baseline', 'important');
+          label.style.setProperty('font-family', '"Inter","Segoe UI",system-ui,sans-serif', 'important');
+          label.style.setProperty('font-weight', '400', 'important');
+          label.style.setProperty('color', '#16191f', 'important');
+          label.style.setProperty('text-transform', 'none', 'important');
+          label.style.setProperty('letter-spacing', 'normal', 'important');
+          label.style.setProperty('opacity', '1', 'important');
+          label.style.setProperty('cursor', 'pointer', 'important');
+          label.style.setProperty('background', 'transparent', 'important');
+          li.style.setProperty('border', 'none', 'important');
+          li.style.setProperty('overflow', 'visible', 'important');
+
+          /* Triangle — reuse existing, only create if missing */
+          var tri = label.querySelector('.aws-tri');
+
+          if (depth === 0) {
+            label.style.setProperty('padding', '5px 12px 5px 16px', 'important');
+            label.style.setProperty('font-size', '14px', 'important');
+            li.style.setProperty('margin-top', '8px', 'important');
+            li.style.setProperty('margin-bottom', '0', 'important');
+            li.style.setProperty('padding', '0', 'important');
+            if (hasKids) {
+              var w0 = expanded ? '\\u25BC' : '\\u25B6';
+              if (!tri) {
+                tri = document.createElement('span');
+                tri.className = 'aws-tri';
+                tri.style.cssText = 'font-size:0.55em;color:#545b64;margin-right:8px;flex-shrink:0;width:0.9em;display:inline-block;pointer-events:none;';
+                label.insertBefore(tri, label.firstChild);
+              }
+              if (tri.textContent !== w0) tri.textContent = w0;
+            } else if (tri) { tri.remove(); }
+
+          } else if (depth === 1) {
+            label.style.setProperty('font-size', '13.5px', 'important');
+            li.style.setProperty('margin', '0', 'important');
+            li.style.setProperty('padding', '0', 'important');
+            if (hasKids) {
+              label.style.setProperty('padding', '3px 12px 3px 36px', 'important');
+              var w1 = expanded ? '\\u25BC' : '\\u25B6';
+              if (!tri) {
+                tri = document.createElement('span');
+                tri.className = 'aws-tri';
+                tri.style.cssText = 'font-size:0.5em;color:#545b64;margin-right:7px;flex-shrink:0;width:0.8em;display:inline-block;pointer-events:none;';
+                label.insertBefore(tri, label.firstChild);
+              }
+              if (tri.textContent !== w1) tri.textContent = w1;
+            } else {
+              label.style.setProperty('padding', '3px 12px 3px 54px', 'important');
+              if (tri) tri.remove();
+            }
+
+          } else {
+            /* Depth 2+: Operations — indented, no triangle */
+            label.style.setProperty('padding', '2px 12px 2px 68px', 'important');
+            label.style.setProperty('font-size', '13px', 'important');
+            li.style.setProperty('margin', '0', 'important');
+            li.style.setProperty('padding', '0', 'important');
+            if (tri) tri.remove();
+          }
+
+          /* Active state */
+          if (label.classList.contains('active')) {
+            label.style.setProperty('color', '#0073bb', 'important');
+            label.style.setProperty('font-weight', '600', 'important');
+          }
+        }
+      } finally {
+        setTimeout(function() { window._awsLock = false; }, 60);
       }
     }
 
@@ -996,7 +965,7 @@ def main():
         f.write(redoc_standalone_html)
     print("Generated docs/api-reference-redoc.html")
 
-    api_ref_body = """<iframe src="api-reference-redoc.html?v=17" title="API Reference" class="api-ref-iframe"></iframe>"""
+    api_ref_body = """<iframe src="api-reference-redoc.html?v=18" title="API Reference" class="api-ref-iframe"></iframe>"""
     api_ref_html = """<!DOCTYPE html>
 <html lang="en" class="layout-api-ref-page">
 <head>
