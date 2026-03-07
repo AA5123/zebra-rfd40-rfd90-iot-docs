@@ -933,9 +933,35 @@ def main():
           label.style.setProperty('font-weight', '600', 'important');
         }
       }
-      /* No custom click handlers — let Redoc manage expand/collapse natively.
-         This function re-runs on every poll/MutationObserver so triangles
-         and visibility stay in sync with Redoc's aria-expanded state. */
+
+      /* Click-to-toggle handlers (only attach once per <li>) */
+      for (var j = 0; j < items.length; j++) {
+        (function(li) {
+          if (li.getAttribute('data-tree-bound') === '1') return;
+          var label = li.querySelector(':scope > label');
+          if (!label) return;
+          var childUl = null;
+          var ch = li.children;
+          for (var m = 0; m < ch.length; m++) {
+            if (ch[m].tagName === 'UL') { childUl = ch[m]; break; }
+          }
+          if (!childUl || childUl.children.length === 0) return;
+
+          li.setAttribute('data-tree-bound', '1');
+          label.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            /* Use aria-expanded as the source of truth */
+            var wasExpanded = li.getAttribute('aria-expanded') === 'true';
+            var nowExpanded = !wasExpanded;
+            li.setAttribute('aria-expanded', nowExpanded ? 'true' : 'false');
+            childUl.style.setProperty('display', nowExpanded ? 'block' : 'none', 'important');
+            /* Update triangle immediately */
+            var tri = label.querySelector('.aws-tri');
+            if (tri) tri.textContent = nowExpanded ? '\\u25BC' : '\\u25B6';
+          });
+        })(items[j]);
+      }
     }
 
     var specUrl = 'openapi.yaml?v=' + Date.now();
@@ -970,7 +996,7 @@ def main():
         f.write(redoc_standalone_html)
     print("Generated docs/api-reference-redoc.html")
 
-    api_ref_body = """<iframe src="api-reference-redoc.html?v=16" title="API Reference" class="api-ref-iframe"></iframe>"""
+    api_ref_body = """<iframe src="api-reference-redoc.html?v=17" title="API Reference" class="api-ref-iframe"></iframe>"""
     api_ref_html = """<!DOCTYPE html>
 <html lang="en" class="layout-api-ref-page">
 <head>
