@@ -701,7 +701,7 @@ def main():
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>API Reference - RFD40 / RFD90 IOT developer guide</title>
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/redoc-zebra.css?v=6" />
+  <link rel="stylesheet" href="css/redoc-zebra.css?v=7" />
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; height: 100%; }
@@ -819,6 +819,45 @@ def main():
       try { injectShadowStyles(el); } catch(e) {}
       try { styleSidebar(); } catch(e) {}
       try { cleanSidebarLabels(); } catch(e) {}
+      try { forceIndentation(); } catch(e) {}
+    }
+
+    /* Brute-force indentation: walk every <li> in sidebar, count parent <ul> depth,
+       apply inline padding. This works even if role selectors fail. */
+    function forceIndentation() {
+      var sidebar = el.querySelector('[role="navigation"]')
+                 || el.querySelector('nav')
+                 || (el.children[0] && el.children[0].children[0]);
+      if (!sidebar) return;
+      var allLi = sidebar.querySelectorAll('li');
+      for (var i = 0; i < allLi.length; i++) {
+        var li = allLi[i];
+        var depth = 0;
+        var p = li.parentElement;
+        while (p && p !== sidebar) {
+          if (p.tagName === 'UL') depth++;
+          p = p.parentElement;
+        }
+        var lbl = li.querySelector(':scope > label') || li.querySelector(':scope > a');
+        if (!lbl) continue;
+
+        if (depth <= 1) {
+          /* Tag group headings — already handled by styleSidebar */
+          continue;
+        } else if (depth === 2) {
+          /* Tag items (Management - Device Status) */
+          lbl.style.setProperty('padding-left', '28px', 'important');
+        } else if (depth >= 3) {
+          /* Operations (get_status, get_version, ...) */
+          lbl.style.setProperty('padding-left', '52px', 'important');
+          lbl.style.setProperty('white-space', 'nowrap', 'important');
+          lbl.style.setProperty('overflow', 'hidden', 'important');
+          lbl.style.setProperty('text-overflow', 'ellipsis', 'important');
+          lbl.style.setProperty('display', 'block', 'important');
+          lbl.style.setProperty('font-size', '13px', 'important');
+          li.style.setProperty('overflow', 'hidden', 'important');
+        }
+      }
     }
 
     /* Trim sidebar operation labels to just the command name (e.g. "get_version - Retrieves..." → "get_version") */
@@ -1014,7 +1053,7 @@ def main():
         f.write(redoc_standalone_html)
     print("Generated docs/api-reference-redoc.html")
 
-    api_ref_body = """<iframe src="api-reference-redoc.html?v=18" title="API Reference" class="api-ref-iframe"></iframe>"""
+    api_ref_body = """<iframe src="api-reference-redoc.html?v=19" title="API Reference" class="api-ref-iframe"></iframe>"""
     api_ref_html = """<!DOCTYPE html>
 <html lang="en" class="layout-api-ref-page">
 <head>
