@@ -57,14 +57,20 @@
   display: none !important;
 }
 
-/* --- Level 3: Operation leaf items (get_status, get_version, …) --- */
+/* --- Level 3: Operation leaf items (get_status, get_version, …) ---
+   In Redoc, operations are ALWAYS <a> tags; tags/groups are <label> tags.
+   Target by element type + sidebar position for maximum reliability. */
 #redoc-container [role="navigation"] ul > li > ul > li > ul a,
 #redoc-container [role="navigation"] ul > li > ul > li > ul label,
 #redoc-container [role="navigation"] ul > li > ul > li > ul > li > label,
 #redoc-container [role="navigation"] ul > li > ul > li > ul > li > a,
 #redoc-container [role="navigation"] ul ul ul a,
 #redoc-container [role="navigation"] ul ul ul label,
-/* Fallback selectors without [role="navigation"] for Redoc versions that omit it */
+/* Fallback: target ALL <a> tags inside sidebar (operations are always <a>) */
+#redoc-container > div > div:first-child a[href],
+#redoc-container > div > div:first-child [role="navigation"] a,
+#redoc-container > div > div:first-child nav a,
+/* Fallback selectors via role="menu" */
 #redoc-container ul[role="menu"] ul[role="menu"] ul[role="menu"] a,
 #redoc-container ul[role="menu"] ul[role="menu"] ul[role="menu"] label,
 #redoc-container ul[role="menu"] li ul li ul li > a,
