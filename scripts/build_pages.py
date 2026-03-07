@@ -863,7 +863,18 @@ def main():
             if (li.children[c].tagName === 'UL') { childUl = li.children[c]; break; }
           }
           var hasKids = childUl && childUl.children.length > 0;
-          var expanded = li.getAttribute('aria-expanded') === 'true';
+
+          /* Detect expanded state: check aria-expanded, class names, AND child UL visibility */
+          var expanded = false;
+          if (li.getAttribute('aria-expanded') === 'true') {
+            expanded = true;
+          } else if (li.classList.contains('-expanded') || li.className.indexOf('expanded') !== -1 || li.className.indexOf('open') !== -1) {
+            expanded = true;
+          } else if (hasKids) {
+            /* Fallback: check if child UL is actually visible */
+            var ulStyle = window.getComputedStyle(childUl);
+            expanded = ulStyle.display !== 'none' && ulStyle.visibility !== 'hidden' && ulStyle.height !== '0px';
+          }
 
           /* Base label styles */
           label.style.setProperty('display', 'flex', 'important');
@@ -874,7 +885,6 @@ def main():
           label.style.setProperty('text-transform', 'none', 'important');
           label.style.setProperty('letter-spacing', 'normal', 'important');
           label.style.setProperty('opacity', '1', 'important');
-          label.style.setProperty('cursor', 'pointer', 'important');
           label.style.setProperty('background', 'transparent', 'important');
           li.style.setProperty('border', 'none', 'important');
           li.style.setProperty('overflow', 'visible', 'important');
@@ -883,28 +893,30 @@ def main():
           var tri = label.querySelector('.aws-tri');
 
           if (depth === 0) {
-            label.style.setProperty('padding', '5px 12px 5px 16px', 'important');
-            label.style.setProperty('font-size', '14px', 'important');
-            li.style.setProperty('margin-top', '8px', 'important');
+            /* Tag groups (Management Interface, Control Interface, etc.)
+               These are NOT collapsible in Redoc — they are always-open section headers.
+               Style as uppercase section labels with NO triangle and NO pointer cursor. */
+            label.style.setProperty('padding', '10px 12px 4px 16px', 'important');
+            label.style.setProperty('font-size', '11.5px', 'important');
+            label.style.setProperty('font-weight', '700', 'important');
+            label.style.setProperty('color', '#545b64', 'important');
+            label.style.setProperty('text-transform', 'uppercase', 'important');
+            label.style.setProperty('letter-spacing', '0.04em', 'important');
+            label.style.setProperty('cursor', 'default', 'important');
+            li.style.setProperty('margin-top', '10px', 'important');
             li.style.setProperty('margin-bottom', '0', 'important');
             li.style.setProperty('padding', '0', 'important');
-            if (hasKids) {
-              var w0 = expanded ? '\\u25BC' : '\\u25B6';
-              if (!tri) {
-                tri = document.createElement('span');
-                tri.className = 'aws-tri';
-                tri.style.cssText = 'font-size:0.55em;color:#545b64;margin-right:8px;flex-shrink:0;width:0.9em;display:inline-block;pointer-events:none;';
-                label.insertBefore(tri, label.firstChild);
-              }
-              if (tri.textContent !== w0) tri.textContent = w0;
-            } else if (tri) { tri.remove(); }
+            /* Remove any triangle from group headings */
+            if (tri) tri.remove();
 
           } else if (depth === 1) {
+            /* Tags (Management - Device Status, etc.) — these ARE collapsible in Redoc */
             label.style.setProperty('font-size', '13.5px', 'important');
+            label.style.setProperty('cursor', 'pointer', 'important');
             li.style.setProperty('margin', '0', 'important');
             li.style.setProperty('padding', '0', 'important');
             if (hasKids) {
-              label.style.setProperty('padding', '3px 12px 3px 36px', 'important');
+              label.style.setProperty('padding', '3px 12px 3px 28px', 'important');
               var w1 = expanded ? '\\u25BC' : '\\u25B6';
               if (!tri) {
                 tri = document.createElement('span');
@@ -914,14 +926,15 @@ def main():
               }
               if (tri.textContent !== w1) tri.textContent = w1;
             } else {
-              label.style.setProperty('padding', '3px 12px 3px 54px', 'important');
+              label.style.setProperty('padding', '3px 12px 3px 44px', 'important');
               if (tri) tri.remove();
             }
 
           } else {
             /* Depth 2+: Operations — indented, no triangle */
-            label.style.setProperty('padding', '2px 12px 2px 68px', 'important');
+            label.style.setProperty('padding', '2px 12px 2px 56px', 'important');
             label.style.setProperty('font-size', '13px', 'important');
+            label.style.setProperty('cursor', 'pointer', 'important');
             li.style.setProperty('margin', '0', 'important');
             li.style.setProperty('padding', '0', 'important');
             if (tri) tri.remove();
