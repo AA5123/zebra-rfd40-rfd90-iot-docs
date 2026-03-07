@@ -818,6 +818,32 @@ def main():
       try { hideMethodBadges(); } catch(e) {}
       try { injectShadowStyles(el); } catch(e) {}
       try { styleSidebar(); } catch(e) {}
+      try { cleanSidebarLabels(); } catch(e) {}
+    }
+
+    /* Trim sidebar operation labels to just the command name (e.g. "get_version - Retrieves..." → "get_version") */
+    function cleanSidebarLabels() {
+      var nav = el.querySelector('[role="navigation"]') || el.querySelector('nav');
+      if (!nav) return;
+      var links = nav.querySelectorAll('a, label');
+      for (var i = 0; i < links.length; i++) {
+        var node = links[i];
+        var text = (node.textContent || '').trim();
+        /* Only clean items that look like "command_name - description" */
+        var dashIdx = text.indexOf(' - ');
+        if (dashIdx > 0 && dashIdx < 40 && /^[a-z_]+$/.test(text.substring(0, dashIdx).trim())) {
+          /* Find the text node and truncate it */
+          var walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT, null, false);
+          var t;
+          while ((t = walker.nextNode())) {
+            var raw = (t.textContent || '').trim();
+            var idx = raw.indexOf(' - ');
+            if (idx > 0 && idx < 40) {
+              t.textContent = raw.substring(0, idx);
+            }
+          }
+        }
+      }
     }
 
     /* AWS EC2-style tree sidebar — visual styling only.
@@ -931,12 +957,17 @@ def main():
             }
 
           } else {
-            /* Depth 2+: Operations — indented, no triangle */
-            label.style.setProperty('padding', '2px 12px 2px 56px', 'important');
+            /* Depth 2+: Operations — indented, single-line truncated, no triangle */
+            label.style.setProperty('padding', '2px 12px 2px 48px', 'important');
             label.style.setProperty('font-size', '13px', 'important');
             label.style.setProperty('cursor', 'pointer', 'important');
+            label.style.setProperty('white-space', 'nowrap', 'important');
+            label.style.setProperty('overflow', 'hidden', 'important');
+            label.style.setProperty('text-overflow', 'ellipsis', 'important');
+            label.style.setProperty('display', 'block', 'important');
             li.style.setProperty('margin', '0', 'important');
             li.style.setProperty('padding', '0', 'important');
+            li.style.setProperty('overflow', 'hidden', 'important');
             if (tri) tri.remove();
           }
 

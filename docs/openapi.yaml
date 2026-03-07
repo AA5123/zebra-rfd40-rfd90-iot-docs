@@ -976,7 +976,7 @@
                 "tags": [
                     "Management - Device Status"
                 ],
-                "summary": "get_version - Retrieves reader identity and version information.",
+                "summary": "get_version",
                 "description": "The `get_version` command retrieves detailed reader identity and version information, including:\n\n- Device serial number\n- Model number\n- SKU\n- Firmware version\n- Detailed component versions (scanner, radio, IoT Connector)\n- API version\n\nThis command answers the question:\n\n**\"Which reader is this, and what firmware is it running?\"**",
                 "requestBody": {
                     "required": true,
