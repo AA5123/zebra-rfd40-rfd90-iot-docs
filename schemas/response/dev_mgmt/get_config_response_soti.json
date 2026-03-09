@@ -1,0 +1,34 @@
+{
+  "title": "getConfigResponse",
+  "x-stoplight": {
+    "id": "4s4d96pdmy790"
+  },
+  "type": "object",
+  "examples": [],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "get_config"
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123"
+    },
+    "apiVersion": {
+      "type": "string",
+      "example": "V1.1"
+    },
+    "currentConfig": {
+      "$ref": "../../refrence/response/getConfigResponse.yaml"
+    },
+    "response": {
+      "$ref": "../../refrence/response/response.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId",
+    "apiVersion"
+  ],
+  "description": ""
+}

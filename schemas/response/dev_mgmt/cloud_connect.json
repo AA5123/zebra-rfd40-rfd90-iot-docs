@@ -1,0 +1,32 @@
+{
+  "title": "cfgAlertResponse",
+  "x-stoplight": {
+    "id": "lgyjwi0keqccu"
+  },
+  "type": "object",
+  "examples": [],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "cloud_connect",
+      "description": "The type of command being executed or responded to. For MQTT, this specifies the operation type."
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier for the request, used for tracking the request and its corresponding response in the MQTT protocol."
+    },
+    "apiVersion": {
+      "type": "string",
+      "example": "V1.1",
+      "enum": [
+        "V1.0",
+        "V1.1"
+      ],
+      "description": "The version of the API being used in this MQTT response message."
+    },
+    "response": {
+      "$ref": "../../refrence/response/response.yaml"
+    }
+  }
+}

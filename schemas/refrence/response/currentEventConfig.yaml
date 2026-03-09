@@ -1,0 +1,80 @@
+title: currentEventConfig
+x-stoplight:
+  id: ybdvjj3a86pb4
+type: object
+properties:
+  antenna:
+    type: boolean
+    description: set to true to enable antenna events
+  connection:
+    type: boolean
+    description: set to true to enable connection events
+  firmwareUpdate:
+    type: boolean
+    description: set to true to enable fw update events
+  gpi:
+    type: boolean
+    description: set to true to enable gpi events
+  network:
+    type: boolean
+    description: set to true to enable network events
+  exceptions:
+    type: boolean
+    description: set to true to enable exception events
+  alert:
+    type: boolean
+  heartbeat:
+    type: boolean
+  power:
+    type: boolean
+  heartConfiguration:
+    type: object
+    properties:
+      interval:
+        type: number
+        example: 100
+        description: heart beat interval in seconds
+      inventoryStatus:
+        type: boolean
+        description: set to true to enable inventory status as part of heartbeat message
+      scanStatus:
+        type: boolean
+        description: set to true to enable scan status status as part of heartbeat message
+      batteryStatus:
+        type: boolean
+        description: set to true to enable battery status as part of heartbeat message
+      userApps:
+        type: boolean
+        description: set to true to enable user app status as part of heartbeat message
+    required:
+      - interval
+      - inventoryStatus
+      - scanStatus
+      - batteryStatus
+      - userApps
+  exceptionConfiguration:
+    type: object
+    properties:
+      radio:
+        type: boolean
+        description: set to true to enable radio exception events
+      system:
+        type: boolean
+        description: set to true to enable system exception events
+      scanner:
+        type: boolean
+        description: set to true to enable scanner exception events
+    required:
+      - radio
+      - system
+      - scanner
+required:
+  - antenna
+  - connection
+  - firmwareUpdate
+  - gpi
+  - network
+  - exceptions
+  - alert
+  - heartbeat
+  - power

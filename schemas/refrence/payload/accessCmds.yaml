@@ -1,0 +1,75 @@
+title: access_cmds
+type: array
+description: |-
+  Supports read, write, lock and kill operations on tag memory banks (EPC, TID, USER, etc.). 
+examples: []
+items:
+  type: object
+  properties:
+    operationType:
+      type: string
+      enum:
+        - READ
+        - WRITE
+        - ACCESS
+        - LOCK
+        - KILL
+      description: >
+        Specifies the type of access operation to perform on the tag. 
+        - `READ`: Reads data from the specified memory bank.
+        - `WRITE`: Writes data to the specified memory bank.
+        - `ACCESS`: Performs access operations using a password.
+        - `LOCK`: Locks or unlocks specified memory banks.
+        - `KILL`: Permanently disables the tag using the kill password.
+    config:
+      type: object
+      properties:
+        memoryBank:
+          type: string
+          enum:
+            - EPC
+            - TID
+            - USER
+            - RESERVED
+          description: >
+            Specifies the memory bank to be accessed. 
+        offset:
+          type: integer
+          description: >
+            Indicates the starting word position within the specified memory bank 
+            where the operation will be applied. Offset is measured in 16-bit words.
+        length:
+          type: integer
+          description: >
+            Specifies the number of 16-bit words to be read or written. 
+            This determines the size of the data block for the operation.
+        data:
+          type: string
+          description: >
+            A hex string indicating the words to be written. 
+            The length of the data field can exceed a single 16-bit word, but it must be a multiple of 16-bit words(see EPC Gen2 Spec).
+        password:
+          type: string
+          description: >
+            A hex string with exactly 8 hex characters 
+            (32 bits) used for access, lock, or kill operations(see EPC Gen2 Spec).
+        lockMemBank:
+          type: string
+          enum:
+            - EPC
+            - ACCESS_PWD
+            - KILL_PWD
+            - TID
+            - USER
+            - ALL
+          description: >
+            Specifies the memory bank to be locked or unlocked. 
+        lockAction:
+          type: string
+          enum:
+            - READ_AND_WRITE
+            - PERMANENT_LOCK
+            - PERMANENT_UNLOCK
+            - UNLOCK
+          description: >
+            Specifies the lock operation to perform on the memory bank with password if given.

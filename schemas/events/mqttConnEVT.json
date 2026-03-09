@@ -1,0 +1,66 @@
+{
+  "title": "epConnection",
+  "x-stoplight": {
+    "id": "ey6vjtuwborhz"
+  },
+  "type": "object",
+  "examples": [
+    {
+      "connectionState": "CONNECTED",
+      "timestamp": "12:17:56",
+      "deviceModel": "RFD40",
+      "deviceSerialNo": "RFD40-24190525100354",
+      "apiVersion": "1.0",
+      "mqttVersion": "3.1.1"
+    },
+    {
+      "connectionState": "DISCONNECTED",
+      "deviceModel": "RFD40",
+      "deviceSerialNo": "RFD40-24190525100354",
+      "apiVersion": 1.2,
+      "mqttVersion": 3.0999999
+    }
+  ],
+  "description": "This event provides details about the connection state of a device, including its metadata and protocol versions.",
+  "properties": {
+    "connectionState": {
+      "type": "string",
+      "example": "CONNECTED",
+      "enum": [
+        "CONNECTED",
+        "DISCONNECTED"
+      ],
+      "description": "Indicates the connection status of the device. Possible values are 'CONNECTED' or 'DISCONNECTED'."
+    },
+    "timestamp": {
+      "type": "string",
+      "example": "12:17:56",
+      "format": "time",
+      "description": "The time at which the MQTT connection event occurred, formatted as HH:MM:SS."
+    },
+    "deviceModel": {
+      "type": "string",
+      "example": "RFD40",
+      "enum": [
+        "RFD40",
+        "RFD90"
+      ],
+      "description": "Specifies the model of the device involved in the MQTT connection event. Supported models are 'RFD40' and 'RFD90'."
+    },
+    "deviceSerialNo": {
+      "type": "string",
+      "example": "RFD40-24190525100354",
+      "description": "The unique serial number of the device involved in the MQTT connection event."
+    },
+    "apiVersion": {
+      "type": "number",
+      "example": "1.0",
+      "description": "The version of the API in use during the MQTT connection event."
+    },
+    "mqttVersion": {
+      "type": "number",
+      "example": "3.1.1",
+      "description": "The version of the MQTT protocol being used for the connection."
+    }
+  }
+}

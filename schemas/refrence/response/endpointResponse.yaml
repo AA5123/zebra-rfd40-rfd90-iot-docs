@@ -1,0 +1,11 @@
+title: endpointResponse
+x-stoplight:
+  id: u0em8h8xb0dul
+type: object
+properties:
+  activeEndpoints:
+    $ref: ./getepCfgResponse.yaml
+    description: A reference to the configuration details of currently active endpoints.
+  savedEndpoints:
+    $ref: ./savedEpconfigs.yaml
+    description: A reference to the configuration details of saved endpoint configurations.

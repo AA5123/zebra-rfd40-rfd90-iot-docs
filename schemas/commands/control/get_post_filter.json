@@ -1,0 +1,26 @@
+{
+  "title": "get_post_filter",
+  "description": "This operation is used to fetch the post filter applied to filter tag data in RFID devices. The post filter ensures that only relevant tag data is processed based on specified criteria.",
+  "x-stoplight": {
+    "id": "1meg5nwox19b8"
+  },
+  "type": "object",
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "get_post_filter",
+      "description": "Specifies the name of the command executed. In this case, it is get_post_filter to fetch the current post filter information of the device."
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier assigned to the request, used to track and correlate responses with their corresponding requests."
+    }
+  },
+  "examples": [
+    {
+      "command": "get_post_filter",
+      "requestId": "abc123"
+    }
+  ]
+}

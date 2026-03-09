@@ -1,0 +1,61 @@
+{
+  "title": "get_version",
+  "x-stoplight": {
+    "id": "zmsjigwcxuj38"
+  },
+  "type": "object",
+  "examples": [
+    {
+  "command": "get_version",
+  "requestId": "abc123",
+  "apiVersion": "V1.1",
+  "readerVersion": {
+    "firmwareVersion": "PAAFKS00-007-D03",
+    "model": "RFD40",
+    "serialNumber": "22326520100477",
+    "sku": "RFD4031-G10B700-US",
+    "detailedVersions": {
+      "scannerFirmware": "PAAEOC20-003-R01",
+      "radioFirmware": "2.0.42.0",
+      "iotcVersion": "V1.1"
+    }
+  },
+  "response": {
+    "code": 0,
+    "description": "Success"
+  }
+}
+
+  ],
+  "description": "command to get the reader version details",
+  "properties": {
+    "command": {
+      "type": "string",
+      "default": "get_version"
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abcd123"
+    },
+    "apiVersion": {
+      "type": "string",
+      "enum": [
+        "V1.1",
+        "V1.0"
+      ],
+      "example": "V1.1"
+    },
+    "readerVersion": {
+      "$ref": "../../refrence/response/readerVersionResponse.yaml"
+    },
+    "response": {
+      "$ref": "../../refrence/response/response.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId",
+    "apiVersion",
+    "response"
+  ]
+}

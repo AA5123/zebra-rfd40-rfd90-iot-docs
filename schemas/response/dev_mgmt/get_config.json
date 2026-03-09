@@ -1,0 +1,230 @@
+{
+  "title": "get_config",
+  "x-stoplight": {
+    "id": "p27qq8ptz3k7b"
+  },
+  "type": "object",
+  "examples": [
+    {
+      "command": "get_config",
+      "requestId": "abc123",
+      "apiVersion": "V1.1",
+      "currentConfig": {
+        "readerVersion": {
+          "firmwareVersion": "PAAFKS00-007-D03",
+          "model": "RFD40",
+          "serialNumber": "212735201D0053",
+          "sku": "RFD4031-G10B700-US",
+          "detailedVersions": {
+            "scannerFirmware": "PAAEOC20-003-R01",
+            "radioFirmware": "2.0.42.0",
+            "iotcVersion": "V1.1"
+          }
+        },
+        "deviceStatus": {
+          "powerSource": "USB",
+          "radioActivity": "INACTIVE",
+          "radioConnection": "CONNECTED",
+          "systemTime": "2024-02-26T17:46:06.138Z",
+          "temperature": 32,
+          "ntp": {
+            "offset": 0,
+            "reach": 0
+          },
+          "terminalConnection": {
+            "status": "CONNECTED",
+            "type": "USB"
+          },
+          "batteryStatus": {
+            "capacity": 6400,
+            "stateOfHealth": "GOOD",
+            "chargePercentage": 100,
+            "chargeStatus": 1
+          }
+        },
+        "currentRegion": {
+          "frequencyHopping": true,
+          "channelData": [
+            "91575",
+            "91525",
+            "90325",
+            "92675",
+            "92625",
+            "90425",
+            "92725",
+            "92025",
+            "91925",
+            "90925",
+            "91875",
+            "91775",
+            "90525",
+            "90475",
+            "92525",
+            "92175",
+            "91475",
+            "90675",
+            "91375",
+            "92225",
+            "91125",
+            "91175",
+            "90375",
+            "90875",
+            "90575",
+            "91225",
+            "90625",
+            "91725",
+            "91425",
+            "90725",
+            "91825",
+            "91625",
+            "91025",
+            "91075",
+            "90775",
+            "92475",
+            "90975",
+            "91975",
+            "91675",
+            "91325",
+            "92375",
+            "90825",
+            "92575",
+            "91275",
+            "92425",
+            "92125",
+            "92075",
+            "92275",
+            "90275",
+            "92325"
+          ],
+          "country": "United States",
+          "lbtEnabled": false,
+          "maxTxPowerSupported": 300,
+          "minTxPowerSupported": 0,
+          "regulatoryStandard": "FCC"
+        },
+        "ethConfig": {
+          "interfaceDetails": {
+            "interfaceName": "eth0",
+            "status": "Disabled"
+          }
+        },
+        "wifiConfig": {
+          "interfaceDetails": {
+            "interfaceName": "wlan0",
+            "status": "Enabled",
+            "hostname": "RFD40-212735201D0053",
+            "macAddress": "48:A4:93:00:0B:9F",
+            "accessPoint": {
+              "essid": "Samhitha_2.4G",
+              "status": "Connected",
+              "securityType": "Pending"
+            },
+            "ipv4Configuration": {
+              "ipAddress": "192.168.0.52",
+              "subnetMask": "255.255.255.0",
+              "gateway": "192.168.0.1",
+              "enableDhcp": true,
+              "dnsServer": "1.0.168.192",
+              "domainName": "zebra.com"
+            }
+          }
+        },
+        "installedCerts": {},
+        "epConfig": {
+          "configuration": {
+            "epType": "SOTI",
+            "protocol": "MQTT_TLS",
+            "activate": true,
+            "url": "17L11-GG6663-1",
+            "verificationType": "VERIFY_NONE",
+            "port": 8883,
+            "qosCommon": 0,
+            "tenantId": "zebra",
+            "mqttParams": {
+              "keepAlive": 65520,
+              "cleanSession": false,
+              "reconnectDelayMin": 5,
+              "reconnectDelayMax": 512,
+              "username": "username_1",
+              "password": "password_1",
+              "publishTopics": [
+                {
+                  "topic": "MGMT/clients/cmnd",
+                  "qos": 0,
+                  "retain": false
+                }
+              ],
+              "subscribeTopics": [
+                {
+                  "topic": "MGMT/clients/resp",
+                  "qos": 1,
+                  "retain": false
+                },
+                {
+                  "topic": "MGMT/clients/event",
+                  "qos": 1,
+                  "retain": false
+                },
+                {
+                  "topic": "MGMT/clients/rfid",
+                  "qos": 2,
+                  "retain": true
+                }
+              ]
+            },
+            "securityParams": {
+              "format": "PEM",
+              "algorithm": "ToDo"
+            },
+            "eventConfiguration": {
+              "terminalConnection": true,
+              "firmwareUpdate": true,
+              "network": true,
+              "ntp": true,
+              "heartbeat": true,
+              "power": true,
+              "battery": true,
+              "temperature": true,
+              "fileDownload": true,
+              "heartbeatConfiguration": {
+                "interval": 100,
+                "inventoryStatus": true,
+                "batteryStatus": true
+              }
+            }
+          }
+        }
+      },
+      "response": {
+        "code": 0,
+        "description": "Success"
+      }
+    }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "get_config"
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123"
+    },
+    "apiVersion": {
+      "type": "string",
+      "example": "V1.1"
+    },
+    "currentConfig": {
+      "$ref": "../../refrence/response/getConfigResponse.yaml"
+    },
+    "response": {
+      "$ref": "../../refrence/response/response.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId",
+    "apiVersion",
+    "payload"
+  ]
+}

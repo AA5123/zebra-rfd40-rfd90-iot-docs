@@ -1,0 +1,69 @@
+title: installedCerts
+x-stoplight:
+  id: svr3iljexdwdi
+type: object
+properties:
+  certInfo:
+    type: array
+    description: A list of installed certificates with their details.
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the certificate.
+          example: Reader Main Certificate
+        type:
+          type: string
+          description: The type of the certificate, such as client, server, or other specified types.
+          example: server
+          enum:
+            - client
+            - server
+            - ' mqtt'
+            - ' wifi'
+            - filestore
+        installTime:
+          type: string
+          description: The date and time when the certificate was installed.
+          example: '2022-07-01T03:01:31.464Z'
+          format: date-time
+        issuerName:
+          type: string
+          description: The name of the issuer of the certificate.
+          example: FX9600EE5729
+        publicKeyAlg:
+          type: string
+          description: The algorithm used for the public key.
+          enum:
+            - RSA256
+            - RSA512
+        publicKey:
+          type: string
+          description: The public key of the certificate in string format.
+          example: 091234acgbe12
+        serial:
+          type: string
+          description: The serial number of the certificate.
+          example: '410835777'
+        subjectName:
+          type: string
+          description: The name of the subject to whom the certificate belongs.
+          example: FX9600EE572
+        validFrom:
+          type: string
+          description: The start date from which the certificate is valid.
+          example: '2022-07-01'
+          format: date
+        validTill:
+          type: string
+          description: The end date until which the certificate is valid.
+          example: '2023-07-01'
+          format: date
+      required:
+        - type
+        - installTime
+        - issuerName
+        - subjectName
+        - validFrom
+        - validTill

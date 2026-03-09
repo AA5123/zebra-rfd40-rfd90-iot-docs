@@ -1,0 +1,55 @@
+{
+  "title": "set_post_filter",
+  "x-stoplight": {
+    "id": "ba1ssdmsqq3dq"
+  },
+  "description": "This operation is used to set a post-filter for RFID device, enabling the filtering of tags scanned by the device based on specific criteria.",
+  "type": "object",
+  "properties": {
+    "command": {
+      "type": "string",
+      "description": "Specifies the name of the command to be executed. In this case, it is set_post_filter."
+    },
+    "requestId": {
+      "type": "string",
+      "description": "A unique identifier for the request. This ensures traceability and prevents duplicate processing of the same request."
+    },
+    "postFilterPayload": {
+      "$ref": "../../refrence/payload/postFilterPayload.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ],
+  "examples": [
+    {
+      "command": "set_post_filter",
+      "requestId": "abc123",
+      "postFilterPayload": {
+        "operation": "ADD",
+        "dataEpType": "DATA_EP1",
+        "matchPattern": "FFFFBBBBA500",
+        "matchPatternMethod": "PREFIX",
+        "reportOperation": "INCLUDE",
+        "reportDuration": 0,
+        "seenCount": 0,
+        "rssiThreshold": -88
+      }
+    },
+    {
+      "command": "set_post_filter",
+      "requestId": "abc123",
+      "postFilterPayload": {
+        "operation": "ADD",
+        "dataEpType": "DATA_EP1",
+        "matchPattern": "E280",
+        "matchPatternMethod": "REGEX",
+        "reportOperation": "EXCLUDE",
+        "reportDuration": 0,
+        "seenCount": 0,
+        "rssiThreshold": -88
+      }
+    }
+  ]
+}

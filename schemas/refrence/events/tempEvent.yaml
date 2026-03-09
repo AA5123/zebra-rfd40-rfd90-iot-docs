@@ -1,0 +1,18 @@
+title: tempEvent
+x-stoplight:
+  id: f47vu5sqfdlx9
+type: object
+properties:
+  nge:
+    type: number
+    description: Represents the numeric value for the Next Generation Event (specific context needed).
+  pa:
+    type: number
+    description: Indicates the pressure altitude value in numeric format.
+  ambient:
+    type: number
+    description: Refers to the ambient temperature in numeric format.
+required:
+  - nge
+  - pa
+  - ambient

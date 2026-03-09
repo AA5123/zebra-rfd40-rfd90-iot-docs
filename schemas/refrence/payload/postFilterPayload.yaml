@@ -1,0 +1,90 @@
+title: postFilterPayload
+x-stoplight:
+  id: y5oysu0o0kuvb
+type: object
+properties:
+  operation:
+    type: string
+    enum:
+      - ADD
+      - DELETE
+      - MODIFY
+    description: >
+      Specifies the operation to perform on the filter such as add a new filter, remove and update an existing filter.
+  dataEpType:
+    type: string
+    description: >
+      Specifies the data endpoint to which the filter should be applied. 
+      Two data endpoints are supported for reporting filtered tag data.
+    enum:
+      - DATA_EP1
+      - DATA_EP2
+  matchPattern:
+    type: string
+    description: >
+      Defines the value to match for the filter. 
+      For prefix and suffix filters, only hexadecimal digits are allowed, and the number of digits must be even.
+      When a prefix filter is used, select filters cannot be applied.
+  matchPatternMethod:
+    type: string
+    enum:
+      - PREFIX
+      - SUFIX
+      - REGEX
+    example: REGEX
+    description: >
+      Specifies the method used to match the tag ID. 
+      `PREFIX`: Matches the beginning of the tag ID.
+      `SUFIX`: Matches the end of the tag ID.
+      `REGEX`: Matches the tag ID using a regular expression.
+  reportOperation:
+    type: string
+    enum:
+      - INCLUDE
+      - EXCLUDE
+    description: >
+      Specifies the filter operation to apply. 
+      `INCLUDE`: Only tags matching the filter criteria will be reported.
+      `EXCLUDE`: Tags matching the filter criteria will be excluded from reporting.
+  reportDuration:
+    type: integer
+    description: >
+      Specifies the duration (in seconds) to wait before reporting a tag again after it has already been reported. 
+      The filter ensures that as long as the tag is being read by the reader, it will not be reported again until the specified duration has elapsed.
+    minimum: 0
+  seenCount:
+    type: integer
+    description: >
+      Specifies the number of times a tag must be detected before its data is sent out. 
+      This helps in filtering out tags that are inconsistently read.
+    minimum: 0
+  tagList:
+    type: object
+    properties:
+      operation:
+        type: string
+        enum:
+          - BLACKLIST
+          - WHITELIST
+        example: BLACKLIST
+        description: >
+          Specifies whether the tag should be blacklisted or whitelisted. 
+          `BLACKLIST`: Excludes tags matching the patterns from reporting.
+          `WHITELIST`: Includes only tags matching the patterns for reporting.
+      tagPatterns:
+        type: array
+        description: >
+          An array of tag patterns to be used for whitelisting or blacklisting. 
+          Multiple patterns can be provided to define the filter criteria.
+        items:
+          type: string
+          maxLength: 100
+  rssiThreshold:
+    type: integer
+    format: int32
+    description: >
+      Specifies the RSSI threshold (in dBm). 
+      Tags with an RSSI below this threshold will be ignored by the reader. 
+      The value must be between -88 dBm (minimum sensitivity) and -26 dBm (maximum sensitivity).
+    minimum: -88
+    maximum: -26

@@ -1,0 +1,103 @@
+title: networkEvent
+x-stoplight:
+  id: tdp0o2i33nrul
+type: object
+examples: []
+properties:
+  networkInterface:
+    type: object
+    description: Details of the network interfaces on the device.
+    properties:
+      ethStatus:
+        type: array
+        description: List of Ethernet interface statuses.
+        items:
+          type: object
+          properties:
+            interface:
+              type: string
+              description: Name of the Ethernet interface.
+              example: eth0
+            status:
+              type: string
+              description: Connection status of the Ethernet interface.
+              enum:
+                - CONNECTED
+                - DISCONNECTED
+              example: CONNECTED
+            linkStatus:
+              type: string
+              description: Link status of the Ethernet interface.
+              enum:
+                - UP
+                - DOWN
+              example: UP
+            linkSpeed:
+              type: string
+              description: Speed of the Ethernet link.
+            ipV4Address:
+              type: string
+              description: IPv4 address assigned to the Ethernet interface.
+              example: 192.168.0.165
+            ipV6Address:
+              type: string
+              description: IPv6 address assigned to the Ethernet interface.
+              example: 'fe80::f299:9d51:864c:cff'
+          required:
+            - interface
+            - status
+            - linkStatus
+            - linkSpeed
+            - ipV4Address
+            - ipV6Address
+      wifiStatus:
+        type: array
+        description: List of WiFi interface statuses.
+        items:
+          type: object
+          properties:
+            interface:
+              type: string
+              description: Name of the WiFi interface.
+              example: wlan0
+            status:
+              type: string
+              description: Connection status of the WiFi interface.
+              enum:
+                - CONNECTED
+                - DISCONNECTED
+              example: CONNECTED
+            ssid:
+              type: string
+              description: SSID of the connected WiFi network.
+            ipV4Address:
+              type: string
+              description: IPv4 address assigned to the WiFi interface.
+              example: 192.168.0.145
+            ipV6Address:
+              type: string
+              description: IPv6 address assigned to the WiFi interface.
+              example: 'fe80::f299:9d51:86c:cff14'
+          required:
+            - interface
+            - status
+            - ssid
+            - ipV4Address
+            - ipV6Address
+  btRemoteDevice:
+    type: object
+    description: Details of connected Bluetooth remote devices.
+    required:
+      - deviceName
+      - deviceMac
+    properties:
+      deviceName:
+        type: string
+        description: Name of the Bluetooth remote device.
+        default: TestLaptop
+      deviceMac:
+        type: string
+        description: MAC address of the Bluetooth remote device.
+        example: '00:11:22:A3:B1:D2'
+required:
+  - networkInterface

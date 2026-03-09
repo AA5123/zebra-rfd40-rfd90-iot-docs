@@ -1,0 +1,33 @@
+{
+  "title": "get_operating_mode",
+  "x-stoplight": {
+    "id": "bfmkzfpkuc5h1"
+  },
+  "type": "object",
+  "description": "This command is designed to fetch the current operating mode information of RFID device within the IOTC system",
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "get_operating_mode",
+      "enum": [
+        "get_operating_mode"
+      ],
+      "description": "Specifies the name of the command executed. In this case, it is get_operating_mode to fetch the current operating mode information of the device."
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier assigned to the request, used to track and correlate responses with their corresponding requests."
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ],
+  "examples": [
+    {
+      "command": "get_operating_mode",
+      "requestId": "abc123"
+    }
+  ]
+}

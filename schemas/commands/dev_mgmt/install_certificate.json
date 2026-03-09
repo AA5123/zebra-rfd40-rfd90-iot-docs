@@ -1,0 +1,130 @@
+{
+  "title": "install_certificate",
+  "type": "object",
+  "x-stoplight": {
+    "id": "8ji89je0bi6sq"
+  },
+  "description": "This API is used to install certificates. ",
+  "examples": [
+    { 
+  "command": "install_certificate", 
+  "requestId": "abc123", 
+  "certDetails": { 
+    "name": "sotiAgent", 
+    "type": "wifi", 
+    "authenticationType": "CERTIFICATE", 
+    "url": [ 
+      { 
+        "key": "ca_cert", 
+        "value": "http://localhost/ca_cert.pem" 
+      }, 
+      { 
+        "key": "client_key", 
+        "value": "http://localhost/client_key.pem" 
+      }, 
+      { 
+        "key": "client_cert", 
+        "value": "http://localhost/client_cert.pem" 
+      }, 
+      { "key": "cert_key_password",
+        "value": "amnin@123" 
+      } 
+    ], 
+    "pfxPassword": "pass@123", 
+    "verificationType": "VERIFY_HOST", 
+    "caCertificateFileContent": "----BEGIN---- cert content ----END---" 
+
+  } 
+} ,
+    {
+      "command": "install_certificate",
+      "requestId": "18996",
+      "certDetails": {
+        "type": "filestore",
+        "authenticationType": "CERTIFICATE",
+        "url": [
+          {
+            "key": "ca_cert",
+            "value": "http://scp000555.soticonnect.cloud:4650/cm/api/root-download"
+          }
+        ],
+        "verificationType": "VERIFY_HOST"
+      }
+    },
+    {
+      "command": "install_certificate",
+      "requestId": "19001",
+      "certDetails": {
+        "name": "mqtt_client",
+        "type": "mqtt",
+        "authenticationType": "CERTIFICATE",
+        "url": [
+          {
+            "key": "client_cert",
+            "value": "https://certserver.company.com/api/client-cert"
+          },
+          {
+            "key": "client_key",
+            "value": "https://certserver.company.com/api/client-key"
+          },
+          {
+            "key": "ca_cert",
+            "value": "https://certserver.company.com/api/ca-cert"
+          }
+        ],
+        "verificationType": "VERIFY_HOST_PEER"
+      }
+    },
+    {
+      "command": "install_certificate",
+      "requestId": "19002",
+      "certDetails": {
+        "name": "secure_server",
+        "type": "server",
+        "authenticationType": "BASIC",
+        "url": [
+          {
+            "key": "client_cert",
+            "value": "https://pki.enterprise.com/download/server.crt"
+          },
+          {
+            "key": "client_key",
+            "value": "https://pki.enterprise.com/download/server.key"
+          },
+          {
+            "key": "ca_cert",
+            "value": "https://pki.enterprise.com/download/root-ca.crt"
+          },
+          {
+            "key": "cert_key_password",
+            "value": "encryptedKeyPassword123"
+          }
+        ],
+        "authenticateOptions": {
+          "username": "certadmin",
+          "password": "securePass456"
+        },
+        "verificationType": "VERIFY_PEER"
+      }
+    }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "install_certificate",
+      "description": "Command issued to install new certificate"
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+    },
+    "certDetails": {
+      "$ref": "../../refrence/payload/installCertPayload.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ]
+}

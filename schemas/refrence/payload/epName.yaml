@@ -1,0 +1,7 @@
+title: endpointDetails
+x-stoplight:
+  id: o28vdd695rdr6
+type: object
+properties:
+  endpointName:
+    type: string

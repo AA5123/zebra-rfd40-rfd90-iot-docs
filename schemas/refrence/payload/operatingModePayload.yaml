@@ -1,0 +1,237 @@
+title: operatingMode
+x-stoplight:
+  id: n6w85laru1or5
+type: object
+description: Represents the reader operating mode.
+examples:
+  - operatingModes:
+      profiles: FAST_READ
+      advancedConfigurations:
+        transmitPower: 27
+        linkProfile: string
+        session: S0
+        dynamicPower: true
+      accessOperations:
+        - type: READ
+          config:
+            memoryBank: EPC
+            offset: 0
+            length: 0
+      radioStartConditions:
+        trigger: PRESSED
+        startDelay: 3
+        periodicDuration: 0
+        repeat: true
+      radioStopConditions:
+        trigger: PRESSED
+        tagCount: 0
+        stopTimeout: 0
+        inventoryCount: 0
+      query:
+        tagPopulation: 0
+        sel: ALL
+        session: S0
+        target: A
+      select:
+        - target: SL
+          action: ASSERTSL_DEASSERTSL
+          membank: EPC
+          offset: 0
+          length: 0
+          mask: string
+          truncate: 0
+          delayAfterSelects: 0
+      tagMetaDataToEnable:
+        RSSI: true
+        PHASE: true
+        SEEN_COUNT: true
+        ANTENNA: true
+        CHANNEL: true
+        PC: true
+        XPC: true
+        CRC: true
+        EPC: true
+        TID: true
+        USER: true
+        MAC: true
+        HOSTNAME: true
+  - operatingModes:
+      profiles: FAST_READ
+      advancedConfigurations:
+        transmitPower: 27
+        linkProfile: string
+        session: S0
+        dynamicPower: true
+      accessOperations:
+        - type: READ
+          config:
+            memoryBank: EPC
+            offset: 0
+            length: 0
+      radioStartConditions:
+        trigger: PRESSED
+        startDelay: 3
+        periodicDuration: 0
+        repeat: true
+      radioStopConditions:
+        trigger: PRESSED
+        tagCount: 0
+        stopTimeout: 0
+        inventoryCount: 0
+      query:
+        tagPopulation: 0
+        sel: ALL
+        session: S0
+        target: A
+      select:
+        - target: SL
+          action: ASSERTSL_DEASSERTSL
+          membank: EPC
+          offset: 0
+          length: 0
+          mask: string
+          truncate: 0
+          delayAfterSelects: 0
+      tagMetaDataToEnable:
+        RSSI: true
+        PHASE: true
+        SEEN_COUNT: true
+        ANTENNA: true
+        CHANNEL: true
+        PC: true
+        XPC: true
+        CRC: true
+        EPC: true
+        TID: true
+        USER: true
+        MAC: true
+        HOSTNAME: true
+properties:
+  operatingModes:
+    title: operatingMode
+    type: object
+    description: Represents the reader operating mode.
+    properties:
+      profiles:
+        type: string
+        enum:
+          - FAST_READ
+          - CYCLE_COUNT
+          - DENSE_READERS
+          - OPTIMAL_BATTERY
+          - BALANCED_PERFORMANCE
+          - ADVANCED
+        default: BALANCED_PERFORMANCE
+        description: |-
+          The type of mode of operation 
+
+          FAST_READ: Configures the radio for maximum read speed within short range. (Currently not supported)
+
+          CYCLE_COUNT: Configures the radio to read as many unique tags as possible.
+
+          DENSE_READERS: Used when multiple readers in proximity.
+
+          OPTIMAL_BATTERY: Gives best battery life.
+
+          BALANCED_PERFORMANCE: Maintains balance between performance and battery life.
+
+          ADVANCED: Allows custom link profile settings in the advancedConfigurations.In this case, advancedConfigurations must be configured.
+      advancedConfigurations:
+        type: object
+        description: 'To be set when profiles is ADVANCED. In other cases, link profile will be mapped internally.'
+        properties:
+          transmitPower:
+            type: number
+            example: 27
+          linkProfile:
+            type: string
+            enum:
+              - M4_256K
+              - M2_240K
+              - M2_256K
+              - M2_320K
+              - M4_240K
+              - M4_320K
+              - FM0_0K
+              - FM0_320K
+              - M8_240K
+              - M8_256K
+              - M8_320K
+          session:
+            type: string
+            enum:
+              - SESSION_0
+              - SESSION_1
+              - SESSION_2
+              - SESSION_3
+          dynamicPower:
+            type: boolean
+      accessOperations:
+        $ref: ./accessCmds.yaml
+      radioStartConditions:
+        $ref: ./radioStartCondPayload.yaml
+      radioStopConditions:
+        $ref: ./radioStopCondPayload.yaml
+      query:
+        $ref: ./queryPayload.yaml
+      select:
+        type: array
+        description: |-
+          Configures the pre-filtering of tags during inventory operations. 
+          This allows for selective reading of tags based on specific criteria, optimizing inventory performance.
+          Supports up to 32 select filters.
+        items:
+          $ref: ./selectPayload.yaml
+      tagMetaDataToEnable:
+        type: object
+        description: |
+          Specifies which metadata fields of the tag should be reported when it is read. Each field can be enabled or disabled based on the application's requirements. Note: For RFD4090 devices, XPC and CRC metadata fields are not supported.
+        properties:
+          RSSI:
+            type: boolean
+            description: |
+              Indicates whether to report the RSSI.  RSSI provides the strength of the signal received from the tag, which can be useful for determining tag proximity.
+          PHASE:
+            type: boolean
+            description: |
+              Indicates whether to report the phase angle of the tag's signal.  Phase information is often used for advanced applications like tag localization or movement tracking.
+          SEENCOUNT:
+            type: boolean
+            description: |
+              Indicates whether to report the number of times the tag was detected during inventory.  This helps in understanding tag visibility and read consistency over multiple scans.
+          CHANNEL:
+            type: boolean
+            description: |
+              Indicates whether to report the communication channel used to read the tag.  This is useful in environments with multiple channels or frequency hopping to identify the channel of operation.
+          PC:
+            type: boolean
+            description: |
+              Indicates whether to report the Protocol Control (PC) word.  The PC word contains information about the tag's memory structure and encoding, such as the length of the EPC.
+          XPC:
+            type: boolean
+            description: |
+              Indicates whether to report the Extended Protocol Control (XPC) word.  XPC provides additional protocol-related information for advanced tags, such as custom memory configurations.
+          CRC:
+            type: boolean
+            description: |
+              Indicates whether to report the CRC value.  CRC is used to verify the integrity of the tag's data and ensure error-free communication.
+          EPC:
+            type: boolean
+            description: |
+              Indicates whether to report the EPC.  EPC is the unique identifier stored in the tag's memory, typically used for item identification.
+          TID:
+            type: boolean
+            description: |
+              Indicates whether to report the TID.  TID is a factory-programmed, unique identifier for the tag, often used for authentication or anti-counterfeiting.
+          USER:
+            type: boolean
+            description: |
+              Indicates whether to report the User memory bank data.  The User memory bank can store custom data defined by the application, such as additional product information.
+          MAC:
+            type: boolean
+            description: |
+              Indicates whether to report the MAC address of the reader.  This is useful for identifying the specific reader that performed the tag read in networked environments.
+          HOSTNAME:
+            type: boolean
+            description: |
+              Indicates whether to report the hostname of the reader.  Hostnames are helpful in networked environments where readers are identified by their assigned names.

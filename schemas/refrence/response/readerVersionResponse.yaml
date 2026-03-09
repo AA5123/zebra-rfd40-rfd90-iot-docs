@@ -1,0 +1,48 @@
+title: readerVersion
+x-stoplight:
+  id: e2effa15ae429
+type: object
+examples: []
+properties:
+  firmwareVersion:
+    type: string
+    example: SAAFKS00-006-R02
+    description: The firmware version of the reader.
+  model:
+    type: string
+    example: RFD40
+    enum:
+      - RFD40
+      - RFD90
+    description: The model of the reader, such as RFD40 or RFD90.
+  serialNumber:
+    type: string
+    example: '23053520102096'
+    description: The serial number of the reader.
+  sku:
+    type: string
+    example: RFD4031-G10B700-US
+    description: The stock keeping unit (SKU) identifier for the reader.
+  detailedVersions:
+    type: object
+    description: Detailed version information for the reader.
+    properties:
+      scannerFirmware:
+        type: string
+        example: PAAEOC20-003-R01
+        description: The firmware version of the scanner component.
+      radioFirmware:
+        type: string
+        example: 2.0.42.0
+        description: The firmware version of the radio component.
+      iotcVersion:
+        type: string
+        example: V1.1
+        enum:
+          - V1.1
+        description: The version of the IoT Connector (IoTC) software.
+required:
+  - firmwareVersion
+  - model
+  - serialNumber
+  - sku

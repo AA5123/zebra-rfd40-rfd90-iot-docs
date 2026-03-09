@@ -1,0 +1,41 @@
+{
+  "title": "get_endpoint_config",
+  "x-stoplight": {
+    "id": "n4h9ertlb1qn8"
+  },
+  "type": "object",
+  "description": "Command to get configured endpoints.If API does not included endpointName argument, then  response includes all active endpoints detailed configuration & list of all saved endpoint names otherwise response includes interested endpoints configuration only",
+  "x-internal": false,
+  "properties": {
+    "command": {
+      "type": "string",
+      "default": "get_endpoint_config",
+      "description": "Specifies the operation being performed, in this case, retrieving the endpoint configuration."
+    },
+    "requestId": {
+      "type": "string",
+      "example": "123",
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+    },
+    "endpointDetails": {
+      "$ref": "../../refrence/payload/epName.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ],
+  "examples": [
+    {
+      "command": "get_endpoint_config",
+      "requestId": "abc123"
+    },
+    {
+      "command": "get_endpoint_config",
+      "requestId": "def456",
+      "endpointDetails": {
+        "endpointName": "ctrl"
+      }
+    }
+  ]
+}

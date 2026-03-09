@@ -1,0 +1,86 @@
+anyOf:
+  - properties:
+      tagData:
+        title: Tag Data Events
+        type: object
+        description: Tag Data Events
+        properties:
+          CRC:
+            type: string
+            description: '"CRC" will report the CRC bits of the inventoried tag as a hex string.'
+            example: b06a
+          PC:
+            type: string
+            description: '"PC" will report the PC bits of the inventoried tag as a hex string.'
+            example: '3000'
+          TID:
+            type: string
+            description: '"TID" will report the entire contents of the TID bank as a hex string.'
+            example: e20060030178529d
+          USER:
+            type: string
+            description: '"USER" will report the entire contents of the USER bank as a hex string.'
+            example: '12343333123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678'
+          antenna:
+            type: integer
+            description: “ANTENNA” will report the antenna port upon which the tag was inventoried.
+            example: 1
+          channel:
+            type: number
+            description: '"CHANNEL” will report the channel (in MHz) the reader was using when the tag was inventoried. This value will only be reported if each individual tag read is reported (in other words, if reportFilter duration is set to 0). Otherwise, it will not be reported.'
+            example: 911.75
+          eventNum:
+            type: number
+            description: Event Number
+            example: 1
+          format:
+            type: string
+            description: The format of idHex is EPC
+            example: epc
+          idHex:
+            type: string
+            description: '"EPC" will report the entire contents of the EPC bank as a hex string.'
+            example: 3005fb63ac1f3681ec880468
+          peakRssi:
+            type: number
+            description: '“RSSI” will report the rssi (in dbm) of the inventoried tag. If the tag is only reported occasionally (see reportFilter), this tag will be the peak rssi since the last reported read.'
+            example: -39
+          phase:
+            type: number
+            description: '"PHASE” will report the phase (in degrees) of the inventoried tag. This value will only be reported if each individual tag read is reported (in other words, if reportFilter duration is set to 0). Otherwise, it will not be reported.'
+            example: 0
+          reads:
+            type: number
+            description: '“SEEN_COUNT” will report the number of times the tag has been inventoried since the previous report. This value will always be 1 if each individual tag read is reported (in other words, if reportFilter duration is set to 0).'
+            example: 1
+          XPC:
+            type: string
+            description: '"XPC" will report the XPC bits of the inventoried tag, if present, as a hex string.'
+          accessResults:
+            type: array
+            description: |
+              accessResults contains an array of strings, with each element in the array containing the result of the access operation specified in the operating mode. For read operations, the string contains the data read from the tag and for write operations, it contains "SUCCESS" for successfull operations or an error message.
+            items:
+              type: string
+              example: SUCCESS
+          userDefined:
+            type: string
+            description: userdefined string value to be included on every event
+        required:
+          - eventNum
+          - format
+          - idHex
+      barcodeData:
+        title: Barcode Data Events
+        type: object
+        description: Scanned barcode Data Events
+        properties:
+          symbology:
+            type: string
+            enum:
+              - CODE_39
+          decodedBarcode:
+            type: string
+        required:
+          - decodedBarcode
+type: object

@@ -1,0 +1,22 @@
+title: gpiEvent
+x-stoplight:
+  id: gwp7v6rmh04cf
+type: object
+properties:
+  pin:
+    type: number
+    example: 51
+    description: The pin number associated with the General-Purpose Input (GPI) event.
+  state:
+    type: string
+    enum:
+      - HIGH
+      - LOW
+    example: HIGH
+    description: The state of the GPI pin, either HIGH or LOW.
+  event:
+    type: string
+    enum:
+      - EDGE
+      - LEVEL
+    description: The type of event detected, either an EDGE transition or a LEVEL change.

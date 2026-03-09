@@ -1,0 +1,113 @@
+title: tagData
+type: object
+description: Tag Data Events
+properties:
+  EPCid:
+    description: |-
+      EPCID refers to the Electronic Product Code Identifier, a unique identifier encoded on an RFID tag to identify a specific physical object.
+
+      The EPCID is a critical component in RFID systems, as it provides a globally unique identifier for items in the supply chain. It is encoded in the RFID tag's memory and is used to distinguish one item from another, even if they are of the same type or category.
+
+      The EPCID is typically represented as a hexadecimal string and follows the EPCglobal standard, which ensures interoperability across different RFID systems and organizations. This identifier can be used for tracking, inventory management, and authentication purposes.
+
+      EPCID will be reported as a hex string.
+    example: b06a
+    type: string
+  EPC:
+    description: |-
+      The EPC (Electronic Product Code) memory bank is a section of memory on an RFID tag that stores the unique identifier for the tagged object. This identifier is used to distinguish one item from another in a supply chain or inventory system.
+
+      The EPC memory bank typically contains a globally unique identifier encoded as a hexadecimal string, following the EPCglobal standard. This standard ensures interoperability across different RFID systems and organizations. The EPC memory bank is critical for tracking, inventory management, and authentication purposes.
+
+      The data in the EPC memory bank is often used in conjunction with other memory banks, such as TID and USER, to provide comprehensive information about the tagged object. The EPC memory bank is read during the inventory process and is essential for identifying and managing items in real-time.
+
+      EPC will be reported as hex string.
+    example: b06a
+    type: string
+  TID:
+    type: string
+    description: |-
+      The TID (Tag Identifier) memory bank is a section of memory on an RFID tag that contains a unique identifier assigned by the tag manufacturer. This identifier is typically immutable and is used to uniquely identify the tag regardless of the data stored in other memory banks. The TID memory bank may also include additional information about the tag, such as the manufacturer ID and model number. The data in this bank is encoded as a hexadecimal string and is often used for authentication or anti-counterfeiting purposes.
+
+      TID will be reported as hex string.
+    example: e20060030178529d
+  USER:
+    description: |-
+      The "USER" memory bank in RFID tags is a user-defined memory area that can store custom data.
+      This memory bank is typically used for application-specific purposes, allowing users to write
+      and read data relevant to their use case. The data is represented as a hexadecimal string,
+      providing a compact and efficient format for storage and transmission. The size and structure
+      of the USER memory bank may vary depending on the RFID tag's specifications. It is commonly
+      used in scenarios such as asset tracking, inventory management, and custom identification
+      systems. Ensure proper handling of the data to maintain data integrity and security.
+
+      USER will be reported as hex string.
+    example: '12343333123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678'
+    type: string
+  RESERVED:
+    type: string
+    description: |-
+      The RESERVED memory bank is a section of memory on an RFID tag that is typically used for storing passwords or other security-related data. It may include the kill password and access password, which are used to control access to the tag and to permanently disable it, respectively. The data in this bank is encoded as a hexadecimal string and is often protected or restricted based on the tag's configuration.
+
+      RESERVED will be reported as hex string.
+    example: '12343333123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678'
+  PC:
+    type: string
+    description: '"PC" will report the PC bits of the inventoried tag as a hex string.'
+    example: '3000'
+  CRC:
+    type: string
+    description: '"CRC" will report the CRC bits of the inventoried tag as a hex string.'
+    example: b06a
+  channel:
+    type: number
+    description: '"CHANNEL” will report the channel (in MHz) the reader was using when the tag was inventoried. This value will only be reported if each individual tag read is reported (in other words, if reportFilter duration is set to 0). Otherwise, it will not be reported.'
+    example: 911.75
+  eventNum:
+    type: number
+    description: Event Number
+    example: 1
+  format:
+    type: string
+    description: The format of idHex is EPC
+    example: epc
+  peakRssi:
+    type: number
+    description: '“RSSI” will report the rssi (in dbm) of the inventoried tag. If the tag is only reported occasionally (see set_tag_filter), this tag will be the peak rssi since the last reported read.'
+    example: -39
+  phase:
+    type: number
+    description: '"PHASE” will report the phase (in degrees) of the inventoried tag. This value will only be reported if each individual tag read is reported (in other words, if reportFilter duration is set to 0). Otherwise, it will not be reported.'
+    example: 0
+  seenCount:
+    type: number
+    description: '“SEEN_COUNT” will report the number of times the tag has been inventoried since the previous report. This value will always be 1 if each individual tag read is reported (in other words, if reportFilter duration is set to 0).'
+    example: 1
+  XPC:
+    type: string
+    description: '"XPC" will report the XPC bits of the inventoried tag, if present, as a hex string.'
+  accessResults:
+    type: array
+    description: |
+      accessResults contains an array of strings, with each element in the array containing the result of the access operation specified in the operating mode. For read operations, the string contains the data read from the tag and for write operations, it contains "SUCCESS" for successfull operations or an error message.
+    items:
+      type: string
+      example: SUCCESS
+  userDefined:
+    type: string
+    description: userdefined string value to be included on every event
+  firstSeenTime:
+    type: number
+    description: '"FIRST_SEEN_TIME" will report the timestamp (in milliseconds since epoch) when the RFID tag was first seen by the reader.'
+  lastSeenTime:
+    description: '"LAST_SEEN_TIME" will report the timestamp (in milliseconds since epoch) when the RFID tag was last seen by the reader.'
+    type: number
+  MAC:
+    description: The MAC address of the reader that inventoried the tag. This will be reported only if the MAC address is enabled in the operating mode.
+    type: string
+  HOSTNAME:
+    description: The hostname of the reader that inventoried the tag. This will be reported only if the hostname is enabled in the operating mode.
+    type: string
+required:
+  - eventNum
+  - format

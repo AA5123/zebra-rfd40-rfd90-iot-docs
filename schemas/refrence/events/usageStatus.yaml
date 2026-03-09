@@ -1,0 +1,20 @@
+title: usageEvent
+x-stoplight:
+  id: 670q4pj0exx46
+type: object
+properties:
+  type:
+    type: string
+    enum:
+      - CPU
+      - FLASH
+      - RAM
+      - TEMPERATURE
+    description: 'The type of resource being monitored (e.g., CPU, FLASH, RAM, or TEMPERATURE).'
+  value:
+    type: number
+    description: 'can be one of CPU, FLASH, RAM usage in %'
+    example: 10
+    maximum: 100
+required:
+  - value

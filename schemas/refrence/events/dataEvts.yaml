@@ -1,0 +1,12 @@
+type: object
+properties:
+  tagData:
+    type: array
+    description: Contains a collection of tag data events.
+    items:
+      $ref: ./tagDataEVTs.yaml
+  barcodeData:
+    type: array
+    description: Contains a collection of barcode data events.
+    items:
+      $ref: ./barcodeDataEVTs.yaml

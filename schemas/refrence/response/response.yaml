@@ -1,0 +1,18 @@
+title: response
+x-stoplight:
+  id: 1uzw0wye4si2y
+type: object
+properties:
+  code:
+    type: integer
+    example: '0'
+    description: "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n"
+    minimum: 0
+    maximum: 24
+  description:
+    type: string
+    description: response description in detail
+    example: Success
+required:
+  - code
+  - description

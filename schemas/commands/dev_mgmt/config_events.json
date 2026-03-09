@@ -1,0 +1,83 @@
+{
+  "title": "config_events",
+  "x-stoplight": {
+    "id": "puyt4jkcelxao"
+  },
+  "description": "Enables or disables specific device events. To apply the changes, a device reboot is required. For RFD4090 devices, only the following events are supported: terminalConnection, firmwareUpdate, network, exceptions, ntp, heartbeat, power, battery, and fileDownload.",
+  "type": "object",
+  "examples": [
+    {
+      "command": "config_events",
+      "requestId": "abc123",
+      "eventConfiguration": {
+        "antenna": true,
+        "terminalConnection": true,
+        "firmwareUpdate": true,
+        "gpi": true,
+        "network": true,
+        "exceptions": true,
+        "ntp": true,
+        "userApp": true,
+        "heartbeat": true,
+        "power": true,
+        "battery": true,
+        "temperature": true,
+        "fileDownload": true,
+        "cpuUsage": true,
+        "flashUsage": true,
+        "ramUsage": true,
+        "heartbeatConfiguration": {
+          "interval": 100,
+          "inventoryStatus": true,
+          "batteryStatus": true,
+          "userApps": true
+        },
+        "cpuThreshold": 80,
+        "ramThreshold": 80,
+        "flashThreshold": 80,
+        "temperatureThreshold": 55
+      }
+    },
+    {
+      "command": "config_events",
+      "requestId": "abc123",
+      "eventConfiguration": {
+        "antenna": false,
+        "terminalConnection": true,
+        "firmwareUpdate": true,
+        "gpi": false,
+        "network": true,
+        "exceptions": false,
+        "ntp": false,
+        "userApp": false,
+        "heartbeat": false,
+        "power": true,
+        "battery": true,
+        "temperature": true,
+        "fileDownload": true,
+        "cpuUsage": false,
+        "flashUsage": false,
+        "ramUsage": false
+      }
+    }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "config_events",
+      "description": "Command issued to configure events & alert threshold values"
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+    },
+    "eventConfiguration": {
+      "$ref": "../../refrence/payload/cfgEventPayload.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ]
+}

@@ -1,0 +1,14 @@
+title: barcodeData
+type: object
+description: Scanned barcode Data Events
+properties:
+  symbology:
+    type: string
+    description: The type of barcode symbology used in the scanned barcode (e.g., CODE_39).
+    enum:
+      - CODE_39
+  decodedBarcode:
+    type: string
+    description: The decoded string value from the scanned barcode.
+required:
+  - decodedBarcode

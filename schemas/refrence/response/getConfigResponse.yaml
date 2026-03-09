@@ -1,0 +1,29 @@
+title: currentConfig
+x-stoplight:
+  id: n6n85i7x12eoh
+type: object
+properties:
+  readerVersion:
+    $ref: ./readerVersionResponse.yaml
+    description: Information about the version of the reader device.
+  deviceStatus:
+    $ref: ./deviceStatusResponse.yaml
+    description: Current status details of the device.
+  currentRegion:
+    $ref: ./currentRegionResponse.yaml
+    description: Region information to which the device is currently configured.
+  ethConfig:
+    $ref: ./ethResponseSoti.yaml
+    description: Configuration details for the Ethernet settings of the device.
+  wifiConfig:
+    $ref: ./wifiResponseSoti.yaml
+    description: Configuration details for the Wi-Fi settings of the device.
+  installedCerts:
+    $ref: ./installedCertResponse.yaml
+    description: List of certificates installed on the device.
+  epConfig:
+    $ref: ./epConfigurationSoti.yaml
+    description: Configuration details for the endpoint settings of the device.
+  deviceCapabilities:
+    $ref: ./capablites_soti.yaml
+    description: Information about the capabilities and features supported by the device.

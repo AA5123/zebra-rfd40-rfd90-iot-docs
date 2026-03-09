@@ -1,0 +1,81 @@
+title: eventConfiguration
+x-stoplight:
+  id: jcezrdndi0i9w
+type: object
+properties:
+  antenna:
+    type: boolean
+    description: set to true to enable antenna events
+  terminalConnection:
+    type: boolean
+    description: set to true to enable terminal connection/disconnection events
+  firmwareUpdate:
+    type: boolean
+    description: set to true to enable fw update events
+  gpi:
+    type: boolean
+    description: set to true to enable gpi events
+  network:
+    type: boolean
+    description: set to true to enable network events
+  exceptions:
+    type: boolean
+    description: set to true to enable exception events
+  ntp:
+    type: boolean
+    description: set to true to enable battery alerts
+  userApp:
+    type: boolean
+    description: set to true to enable user app events
+  heartbeat:
+    type: boolean
+    description: set to true to enable heart beat
+  power:
+    type: boolean
+    description: set to true to enable power source alerts
+  battery:
+    type: boolean
+    description: set to true to enable battery alerts
+  temperature:
+    type: boolean
+    description: set to true to enable temperature alerts
+  fileDownload:
+    type: boolean
+    description: set to true to enable file download alerts
+  cpuUsage:
+    type: boolean
+    description: set to true to enable cpu usage alerts
+  flashUsage:
+    type: boolean
+    description: set to true to enable flash usage alerts
+  ramUsage:
+    type: boolean
+    description: set to true to enable ram usage alerts
+  heartbeatConfiguration:
+    type: object
+    properties:
+      interval:
+        type: integer
+        example: 100
+        description: heart beat interval in seconds
+      inventoryStatus:
+        type: boolean
+        description: set to true to enable inventory status as part of heartbeat message
+      batteryStatus:
+        type: boolean
+        description: set to true to enable battery status as part of heartbeat message
+      userApps:
+        type: boolean
+        description: set to true to enable user app status as part of heartbeat message
+  cpuThreshold:
+    type: integer
+    description: cpu usage value(%) above which alert will be triggered
+  ramThreshold:
+    type: integer
+    description: ram usage value(%) above which alert will be triggered
+  flashThreshold:
+    type: integer
+    description: flash usage value(%) above which alert will be triggered
+  temperatureThreshold:
+    type: integer
+    description: temperature treshold value above which alert will be triggered

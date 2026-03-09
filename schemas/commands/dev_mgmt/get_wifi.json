@@ -1,0 +1,24 @@
+{
+  "title": "get_wifi",
+  "x-stoplight": {
+    "id": "67cwfou98hctb"
+  },
+  "description": "This command is used to retrieve wifi configuration details ",
+  "type": "object",
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "get_wifi",
+      "description": "Command issued to get all the wifi profiles saved in device  "
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ]
+}

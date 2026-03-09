@@ -1,0 +1,58 @@
+{
+  "title": "exceptions",
+  "description": "This event captures details about exception events in the IOTC system, including metadata and component-specific errors.",
+  "x-stoplight": {
+    "id": "ey6vjtuwborhz"
+  },
+  "type": "object",
+  "examples": [
+    {
+      "eventName": "exception",
+      "timestamp": "2019-08-24T14:15:22Z",
+      "eventNumber": 120,
+      "upTime": "5 days 4hr 3min",
+      "details": {
+        "exceptions": {
+          "radio": {
+            "code": 51,
+            "message": "radio is not responsive"
+          },
+          "scanner": {
+            "code": 0,
+            "message": "scanner is connected and scanning in progress "
+          },
+          "system": {
+            "code": 12,
+            "message": "running out of memory "
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "eventName": {
+      "type": "string",
+      "example": "exception",
+      "description": "The name of the event indicating an exception occurred."
+    },
+    "timestamp": {
+      "type": "string",
+      "example": "2019-08-24T14:15:22Z",
+      "description": "The ISO 8601 formatted timestamp of when the event occurred."
+    },
+    "eventNumber": {
+      "type": "number",
+      "example": 120,
+      "description": "A unique numerical identifier for the event."
+    },
+    "upTime": {
+      "type": "string",
+      "example": "5 days 4hr 3min",
+      "description": "The duration for which the system has been running since the last restart."
+    },
+    "details": {
+      "$ref": "../refrence/events/exceptionEvents.yaml",
+      "description": "A reference to detailed information about the exceptions that occurred, categorized by components such as 'radio', 'scanner', and 'system'."
+    }
+  }
+}

@@ -1,0 +1,148 @@
+title: epConfiguration
+x-stoplight:
+  id: l9v7iab36nd84
+type: object
+examples: []
+properties:
+  configuration:
+    type: object
+    properties:
+      epType:
+        type: string
+        example: MGMT
+        enum:
+          - MGMT
+          - MGMT_EVT
+          - CONTROL
+          - DATA
+          - COMMON
+          - SOTI
+      protocol:
+        type: string
+        enum:
+          - MQTT
+          - MQTTWS
+          - MQT-TLS
+          - MQTT-WSS
+          - TCPIP
+          - WS
+          - WSS
+          - HID
+          - HTTPS
+          - HTTP
+          - AWS
+          - AZURE
+        example: MQTT
+      activate:
+        type: boolean
+        default: false
+      url:
+        type: string
+        example: soti.example.com
+      verifyPeer:
+        type: boolean
+        default: false
+      verifyHost:
+        type: boolean
+      port:
+        type: number
+        example: 1883
+      qosCommon:
+        type: number
+        example: 1
+        maximum: 2
+      tenant_id:
+        type: string
+        example: ZEBRA
+      mqttParams:
+        type: object
+        properties:
+          keepAlive:
+            type: integer
+            maximum: 65535
+            example: 300
+          cleanSession:
+            type: boolean
+            default: true
+          reconnectDelayMin:
+            type: number
+          reconnectDelayMax:
+            type: number
+          clientId:
+            type: string
+            example: zebra-rfd40-01
+          userName:
+            type: string
+          password:
+            type: string
+          publishTopics:
+            type: array
+            items:
+              type: object
+              properties:
+                topic:
+                  type: string
+                  example: SOTICONNECT/clients/resp/RFD400124FA
+                qos:
+                  type: number
+                  example: 1
+                retain:
+                  type: boolean
+              required:
+                - topic
+                - qos
+                - retain
+          subscribeTopics:
+            type: array
+            items:
+              type: object
+              properties:
+                topic:
+                  type: string
+                qos:
+                  type: number
+                retain:
+                  type: boolean
+              required:
+                - topic
+                - qos
+                - retain
+      securityParams:
+        type: object
+        properties:
+          format:
+            type: string
+            enum:
+              - PEM
+              - PFX
+            example: PEM
+          algorithm:
+            type: string
+            enum:
+              - RSA256
+              - RSA512
+            example: RSA256
+          caCertificateFile:
+            type: string
+            example: cloud-trusted-ca-certs.crt
+          publicKey:
+            type: string
+            example: server.key
+          privateKey:
+            type: string
+            example: server.key
+        required:
+          - format
+          - algorithm
+          - caCertificateFile
+          - publicKey
+          - privateKey
+      eventConfiguration:
+        $ref: ../payload/cfgEventPayload.yaml
+    required:
+      - epType
+      - protocol
+      - activate
+      - url
+      - verifyHost
+      - port

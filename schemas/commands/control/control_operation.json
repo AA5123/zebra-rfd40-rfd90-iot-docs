@@ -1,0 +1,43 @@
+{
+  "title": "control_operation",
+  "x-stoplight": {
+    "id": "y06se8in4n2n4"
+  },
+  "type": "object",
+  "description": "This command controls device functionality, including RFID operations and scan operations.",
+  "properties": {
+    "command": {
+      "type": "string",
+      "enum": [
+        "control_operation"
+      ],
+      "description":"Specifies the name of the command to be executed. In this case, it is control_operation."
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier for the request. This ensures traceability and prevents duplicate processing of the same request."
+    },
+    "ctrlOprPayload": {
+      "$ref": "../../refrence/payload/ctrlOprPayload.yaml"
+    }
+  },
+  "examples": [
+    {
+      "command": "control_operation",
+      "requestId": "abcd1432",
+      "ctrlOprPayload": {
+        "controlType": "RFID",
+        "operation": "START"
+      }
+    },
+    {
+      "command": "control_operation",
+      "requestId": "abcd1432",
+      "ctrlOprPayload": {
+        "controlType": "RFID",
+        "operation": "STOP"
+      }
+    }
+  ]
+}

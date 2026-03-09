@@ -1,0 +1,96 @@
+title: certDetails
+x-stoplight:
+  id: 0114c36cfa592
+type: object
+examples: []
+properties:
+  name:
+    type: string
+    example: sotiAgent
+    description: The name of the certificate, typically representing the application or agent.
+  type:
+    type: string
+    example: client
+    enum:
+      - client
+      - server
+      - mqtt
+      - wifi
+      - filestore
+    description: The type of the certificate, indicating its purpose or usage (e.g., client, server, etc.).
+  authenticationType:
+    type: string
+    enum:
+      - NONE
+      - BASIC
+      - TOKEN
+      - CERTIFICATE
+    example: BASIC
+    description: Specifies the authentication method required. If BASIC, username and password are required. If NONE, no authentication credentials are needed.
+  url:
+    type: array
+    items:
+      type: object
+      properties:
+        key:
+          type: string
+          description: The key for the URL parameter.
+        value:
+          type: string
+          description: The value associated with the URL parameter.
+    description: A list of key-value pairs representing URL parameters.
+  authenticateOptions:
+    type: object
+    properties:
+      username:
+        type: string
+        example: rfid
+        description: The username for authentication when required.
+      password:
+        type: string
+        example: rfid
+        description: The password for authentication when required.
+    description: Options for authentication, including username and password.
+  pfxPassword:
+    type: string
+    example: pass@123
+    description: The password for the PFX (Personal Information Exchange) file used in secure communications.
+  headerParams:
+    type: array
+    items:
+      type: object
+      properties:
+        key:
+          type: string
+          description: The key for the HTTP header parameter.
+        value:
+          type: string
+          description: The value associated with the HTTP header parameter.
+    description: A list of key-value pairs representing HTTP header parameters.
+  queryParams:
+    type: array
+    items:
+      type: object
+      properties:
+        key:
+          type: string
+          description: The key for the query parameter.
+        value:
+          type: string
+          description: The value associated with the query parameter.
+    description: A list of key-value pairs representing query parameters.
+  verificationType:
+    type: string
+    enum:
+      - NONE
+      - VERIFY_PEER
+      - VERIFY_HOST
+      - VERIFY_HOST_PEER
+    example: NONE
+    description: Specifies the type of verification to perform, such as peer verification or host verification.
+  caCertificateFileContent:
+    type: string
+    description: The content of the CA (Certificate Authority) certificate file, used for verifying identities.
+required:
+  - type
+  - authenticationType

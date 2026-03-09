@@ -1,0 +1,35 @@
+{
+  "title": "delete_wifi_profile",
+  "x-stoplight": {
+    "id": "upvt1oh35f4zg"
+  },
+  "description": "Command issued to delete saved wifi profile ",
+  "type": "object",
+  "examples": [
+    {
+    "command": "delete_wifi_profile",
+    "requestId": "abc123",
+    "wifiProfileInfo": {
+      "essid": "TestAP2"
+      }
+    }
+],
+  "properties": {
+    "command": {
+      "type": "string",
+      "default": "delete_wifi_profile",
+      "description": "Specifies the operation being performed, in this case, deleting wifi profile."
+    },
+    "requestId": {
+      "type": "string",
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+    },
+    "wifiProfileInfo": {
+      "$ref": "../../refrence/payload/delWifiProfile.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ]
+}

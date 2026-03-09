@@ -1,0 +1,106 @@
+title: deviceStatus
+x-stoplight:
+  id: remoc4mkht8l3
+type: object
+properties:
+  powerSource:
+    type: string
+    description: The source of power for the device (e.g., DC, Wall Charger, USB, or Cradle).
+    example: CRADLE
+    enum:
+      - DC
+      - WALLCHARGER
+      - USB
+      - CRADLE
+  radioActivity:
+    type: string
+    description: The activity status of the device's radio (e.g., Active or Inactive).
+    example: ACTIVE
+    enum:
+      - INACTIVE
+      - ACTIVE
+  radioConnection:
+    type: string
+    description: The connection status of the device's radio (e.g., Connected or Disconnected).
+    example: CONNECTED
+    enum:
+      - CONNECTED
+      - DISCONNECTED
+  hostname:
+    type: string
+    description: The hostname of the device on the network.
+    example: RFD40-212735201D0053.local
+  'systemTime ':
+    type: string
+    description: The system time of the device in ISO 8601 format.
+    example: '2022-07-01T03:01:31.464Z'
+    format: time
+  temperature:
+    type: integer
+    description: The current temperature of the device in degrees Celsius.
+    example: 32
+  ntp:
+    type: object
+    description: Details about the Network Time Protocol (NTP) synchronization.
+    properties:
+      offset:
+        type: integer
+        description: The offset in milliseconds between the device's clock and the NTP server.
+        example: 120
+      reach:
+        type: integer
+        description: The reachability score of the NTP server.
+        example: 321
+  terminalConnection:
+    type: object
+    description: Details about the terminal connection to the device.
+    properties:
+      status:
+        type: string
+        description: The connection status of the terminal (e.g., Connected or Disconnected).
+        enum:
+          - connected
+          - disconnected
+        example: connected
+      type:
+        type: string
+        description: The type of terminal connection (e.g., Bluetooth, CIO, or USB).
+        enum:
+          - BLUETOOTH
+          - CIO
+          - USB
+  batteryStatus:
+    type: object
+    description: Information about the battery status of the device.
+    properties:
+      capacity:
+        type: integer
+        description: The battery capacity remaining in mAh.
+        example: 21
+      stateOfHealth:
+        type: string
+        description: The overall health of the battery (e.g., Good, Average, or Poor).
+        example: GOOD
+        enum:
+          - GOOD
+          - AVERAGE
+          - POOR
+      chargePercentage:
+        type: integer
+        description: The percentage of battery charge remaining.
+        example: 23
+      chargeStatus:
+        type: integer
+        description: |-
+          The charging status of the device battery:
+          0 - Charger not connected,
+          1 - Charger connected and charging in progress,
+          2 - Charger connected and battery is 100%.
+        example: 1
+required:
+  - powerSource
+  - radioActivity
+  - radioConnection
+  - hostname
+  - 'systemTime '
+  - temperature

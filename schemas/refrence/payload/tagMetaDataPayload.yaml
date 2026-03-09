@@ -1,0 +1,69 @@
+title: tagMetaData
+type: array
+description: |
+  Controls the metadata that is sent when a tag is reported
+
+    “ANTENNA” will report the antenna port upon which the tag was inventoried.
+
+    “RSSI” will report the rssi (in dbm) of the inventoried tag. If the tag is only reported occasionally (see reportFilter), this tag will be the peak rssi since the last reported read.
+
+     “PHASE” will report the phase (in degrees) of the inventoried tag. This value will only be reported if each individual tag read is reported (in other words, if reportFilter duration is set to 0). Otherwise, it will not be reported.
+
+    “CHANNEL” will report the channel (in MHz) the reader was using when the tag was inventoried. This value will only be reported if each individual tag read is reported (in other words, if reportFilter duration is set to 0). Otherwise, it will not be reported.
+
+    “SEEN_COUNT” will report the number of times the tag has been inventoried since the previous report. This value will always be 1 if each individual tag read is reported (in other words, if reportFilter duration is set to 0). 
+
+    “PC” will report the PC bits of the inventoried tag as a hex string. 
+
+    “XPC” will report the XPC bits of the inventoried tag, if present, as a hex string. 
+
+    “CRC” will report the CRC bits of the inventoried tag as a hex string.
+
+    “EPC” will report the entire contents of the EPC bank as a hex string. If only a portion of the memory bank is desired, this can be requested by appending a [] to the string and placing the words requested. For instance, if only the first word is desired, the value can be set as “EPC[1]”. If the first word and the 3-5 word are desired, the value can be set to “EPC[1,3-5]”.
+
+    “TID” will report the entire contents of the TID bank as a hex string. If only a portion of the memory bank is desired, this can be requested by appending a [] to the string and placing the words requested. For instance, if only the first word is desired, the value can be set as “TID[1]”. If the first word and the 3-5 word are desired, the value can be set to “TID[1,3-5]”.
+
+    “USER” will report the entire contents of the USER bank as a hex string. If only a portion of the memory bank is desired, this can be requested by appending a [] to the string and placing the words requested. For instance, if only the first word is desired, the value can be set as “TID[1]”. If the first word and the 3-5 word are desired, the value can be set to “TID[1,3-5]”.
+
+    “MAC” will report the MAC Address of the reader reporting the tag.
+
+    “HOSTNAME” will report the hostname of the reader reporting the tag.
+    
+    “TAGURI” will report the GS1 TDS decoded “EPC Tag URI”. See GS1 TDS documentation for details.
+
+    “EPCURI” will report the GS1 TDS decoded “Pure Identity EPC URI”. See GS1 TDS documentation for details. 
+
+  The array may also contain an object or objects. The object must contain a single name value pair with the name being set to “userDefined” or “antennaNames”
+
+
+  If absent,
+  “SIMPLE” mode does not report any additional meta data, “PORTAL” and “CONVEYOR” modes reports “ANTENNA”, and “INVENTORY” mode reports “ANTENNA”, “RSSI”, and “SEEN_COUNT”.
+items:
+  type:
+    - string
+    - object
+  enum:
+    - RSSI
+    - PHASE
+    - SEEN_COUNT
+    - ANTENNA
+    - CHANNEL
+    - PC
+    - XPC
+    - CRC
+    - EPC
+    - TID
+    - USER
+    - MAC
+    - HOSTNAME
+  properties:
+    userDefined:
+      type: string
+      description: A user defined field to report each time a tag is reported
+    antennaNames:
+      type: array
+      description: |-
+        Used to give antenna ports descriptive names
+        Length of Array much match the number of antenna ports on the device
+      items:
+        type: string

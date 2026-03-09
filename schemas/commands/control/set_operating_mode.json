@@ -1,0 +1,291 @@
+{
+  "title": "set_operating_mode",
+  "x-stoplight": {
+    "id": "gbvskajt37tpy"
+  },
+  "description": "This operation is used to configure the operating mode of RFID devices. Note: When RFD40/90 sled is configured to FAST_READ profile, data events are not currently supported.",
+  "type": "object",
+  "x-extension-1": null,
+  "properties": {
+    "command": {
+      "type": "string",
+      "default": "set_operating_mode",
+      "enum": [
+        "set_operating_mode"
+      ],
+      "description": "Specifies the name of the command to be executed. In this case, it is set_operating_mode."
+    },
+    "requestId": {
+      "type": "string",
+      "example": "1286",
+      "description": "A unique identifier for the request. This ensures traceability and prevents duplicate processing of the same request."
+    },
+    "operatingMode": {
+      "$ref": "../../refrence/payload/operatingModePayload.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ],
+  "examples": [
+    {
+      "command": "set_operating_mode",
+      "requestId": "1286",
+      "operatingMode": {
+        "operatingModes": {
+          "profiles": "ADVANCED",
+          "advancedConfigurations": {
+            "transmitPower": 300,
+            "linkProfile": "M2_240K",
+            "session": "SESSION_1",
+            "dynamicPower": true
+          },
+          "accessOperations": [
+            {
+              "operationType": "READ",
+              "config": {
+                "memoryBank": "EPC",
+                "offset": 1,
+                "length": 2
+              }
+            },
+            {
+              "operationType": "READ",
+              "config": {
+                "memoryBank": "TID",
+                "offset": 2,
+                "length": 2
+              }
+            },
+            {
+              "operationType": "WRITE",
+              "config": {
+                "memoryBank": "USER",
+                "offset": 2,
+                "length": 2,
+                "data": "FFFFEEEE",
+                "password": "0000"
+              }
+            },
+            {
+              "operationType": "ACCESS",
+              "config": {
+                "password": "0000"
+              }
+            },
+            {
+              "operationType": "LOCK",
+              "config": {
+                "password": "0000",
+                "lockMemBank": "TID",
+                "lockAction": "UNLOCK"
+              }
+            }
+          ],
+          "radioStartConditions": {
+            "trigger": "IMMEDIATE",
+            "startDelay": 3000,
+            "repeat": false
+          },
+          "radioStopConditions": {
+            "trigger": "IMMEDIATE",
+            "tagCount": 10,
+            "stopTimeout": 10000,
+            "inventoryCount": 0
+          },
+          "query": {
+            "session": "SESSION_1",
+            "inventoryState": "STATE_B",
+            "slFlag": "ALL",
+            "tagPopulation": 30
+          },
+          "select": [
+            {
+              "enable": true,
+              "tagPattern": "2222EEEEFFFF1111AAAABBBB",
+              "memoryBank": "EPC",
+              "offset": 32,
+              "action": "INV_B_NOT_INV_A_OR_DSRT_SL_NOT_ASRT_SL",
+              "target": "SESSION_1",
+              "length": 16
+            }
+          ],
+          "tagMetaDataToEnable": {
+            "RSSI": false,
+            "PHASE": false,
+            "SEENCOUNT": false,
+            "CHANNEL": false,
+            "PC": false,
+            "XPC": true,
+            "CRC": true,
+            "EPC": true,
+            "TID": true,
+            "USER": true,
+            "MAC": true,
+            "HOSTNAME": true
+          }
+        }
+      }
+    },
+    {
+      "command": "set_operating_mode",
+      "requestId": "1286",
+      "operatingMode": {
+        "operatingModes": {
+          "profiles": "BALANCED_PERFORMANCE"
+        }
+      }
+    },
+    {
+      "command": "set_operating_mode",
+      "requestId": "1286",
+      "operatingMode": {
+        "operatingModes": {
+          "accessOperations": [
+            {
+              "operationType": "READ",
+              "config": {
+                "memoryBank": "EPC",
+                "offset": 2,
+                "length": 3
+              }
+            },
+            {
+              "operationType": "READ",
+              "config": {
+                "memoryBank": "TID",
+                "offset": 1,
+                "length": 2
+              }
+            },
+            {
+              "operationType": "WRITE",
+              "config": {
+                "memoryBank": "USER",
+                "offset": 2,
+                "length": 2,
+                "data": "FFFFEEEE",
+                "password": "0000"
+              }
+            },
+            {
+              "operationType": "ACCESS",
+              "config": {
+                "password": "0000"
+              }
+            },
+            {
+              "operationType": "LOCK",
+              "config": {
+                "password": "0000",
+                "lockMemBank": "EPC",
+                "lockAction": "UNLOCK"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "command": "set_operating_mode",
+      "requestId": "1286",
+      "operatingMode": {
+        "operatingModes": {
+          "radioStartConditions": {
+            "trigger": "IMMEDIATE",
+            "startDelay": 5000,
+            "repeat": false
+          },
+          "radioStopConditions": {
+            "trigger": "IMMEDIATE",
+            "tagCount": 10,
+            "stopTimeout": 10000,
+            "inventoryCount": 0
+          }
+        }
+      }
+    },
+    {
+      "command": "set_operating_mode",
+      "requestId": "1286",
+      "operatingMode": {
+        "operatingModes": {
+          "query": {
+            "session": "SESSION_1",
+            "inventoryState": "STATE_B",
+            "slFlag": "ALL",
+            "tagPopulation": 30
+          }
+        }
+      }
+    },
+    {
+      "command": "set_operating_mode",
+      "requestId": "1286",
+      "operatingMode": {
+        "operatingModes": {
+          "select": [
+            {
+              "enable": true,
+              "tagPattern": "2222EEEEFFFF1111AAAABBBB",
+              "memoryBank": "EPC",
+              "offset": 32,
+              "action": "INV_B_NOT_INV_A_OR_DSRT_SL_NOT_ASRT_SL",
+              "target": "SESSION_SL",
+              "length": 16
+            }
+          ]
+        }
+      }
+    },
+    {
+      "command": "set_operating_mode",
+      "requestId": "8f07804c-4af1-41c8-9959-417b0aa8047d",
+      "operatingMode": {
+        "operatingModes": {
+          "profiles": "BALANCED_PERFORMANCE",
+          "query": {
+            "session": "SESSION_1",
+            "inventoryState": "STATE_B",
+            "slFlag": "ALL",
+            "tagPopulation": 40
+          },
+          "select": [
+            {
+              "enable": true,
+              "tagPattern": "FFFFEEEE3435363742426666",
+              "memoryBank": "EPC",
+              "offset": 32,
+              "action": "INV_B_NOT_INV_A_OR_DSRT_SL_NOT_ASRT_SL",
+              "target": "SESSION_1",
+              "length": 96
+            }
+          ]
+        }
+      }
+    },
+    {
+      "command": "set_operating_mode",
+      "requestId": "1286",
+      "operatingMode": {
+        "operatingModes": {
+          "tagMetaDataToEnable": {
+            "RSSI": true,
+            "PHASE": true,
+            "SEENCOUNT": true,
+            "CHANNEL": true,
+            "PC": false,
+            "XPC": false,
+            "CRC": true,
+            "EPC": true,
+            "TID": false,
+            "USER": false,
+            "MAC": false,
+            "HOSTNAME": false
+          }
+        }
+      }
+    }
+  ]
+}

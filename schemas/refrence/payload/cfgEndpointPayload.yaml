@@ -1,0 +1,196 @@
+title: epConfig
+x-stoplight:
+  id: l9v7iab36nd84
+type: object
+examples: []
+properties:
+  operation:
+    type: string
+    enum:
+      - add
+      - delete
+    example: add
+    description: Specifies the type of operation to perform, either adding or deleting a configuration.
+  configuration:
+    type: object
+    required:
+      - endpointName
+      - epType
+      - protocol
+      - activate
+      - url
+      - verificationType
+      - port
+      - qosCommon
+      - tenantId
+    properties:
+      endpointName:
+        type: string
+        example: mgmt
+        description: Identifies the name of the endpoint, which determines its purpose or function.
+      epType:
+        type: string
+        example: MGMT
+        enum:
+          - MGMT
+          - MGMT_EVT
+          - CTRL
+          - DATA1
+          - DATA2
+          - SOTI
+          - MDM
+        description: Specifies the type of the endpoint.
+      protocol:
+        type: string
+        enum:
+          - MQTT
+          - MQTT_WS
+          - MQTT_WSS
+          - MQTT_TLS
+          - TCP
+          - HTTP
+          - HTTPS
+          - WS
+          - WSS
+          - AWS
+          - AZURE
+          - HID
+        example: MQTT
+        description: Defines the communication protocol used by the endpoint.
+      activate:
+        type: boolean
+        default: false
+        description: Indicates whether the endpoint is active or inactive.
+      url:
+        type: string
+        example: soti.example.com
+        description: Specifies the URL associated with the endpoint.
+      verificationType:
+        type: string
+        enum:
+          - NONE
+          - VERIFY_PEER
+          - VERIFY_HOST
+          - VERIFY_HOST_PEER
+        example: VERIFY_PEER
+        description: Specifies the type of verification used for establishing secure connections.
+      port:
+        type: integer
+        example: 1883
+        description: Specifies the port number used for communication.
+      qosCommon:
+        type: integer
+        example: 1
+        description: Defines the Quality of Service (QoS) level for the endpoint.
+      tenantId:
+        type: string
+        example: ZEBRA
+        description: Identifies the tenantID associated with the configuration.
+      mqttParams:
+        type: object
+        properties:
+          keepAlive:
+            type: integer
+            maximum: 65535
+            example: 300
+            description: Specifies the keep-alive interval in seconds for MQTT connections.
+          cleanSession:
+            type: boolean
+            default: true
+            description: Indicates whether to start a clean session for the MQTT client.
+          reconnectDelayMin:
+            type: integer
+            description: Specifies the minimum delay in seconds before reconnecting.
+          reconnectDelayMax:
+            type: integer
+            description: Specifies the maximum delay in seconds before reconnecting.
+          clientId:
+            type: string
+            example: zebra-rfd40-01
+            description: Specifies the client ID used for MQTT connections.
+          username:
+            type: string
+            description: The username for authentication in MQTT connections.
+          password:
+            type: string
+            description: The password for authentication in MQTT connections.
+          publishTopics:
+            type: array
+            items:
+              type: object
+              properties:
+                topic:
+                  type: string
+                  example: SOTICONNECT/clients/resp/RFD400124FA
+                  description: Specifies the topic to publish messages to. Supports up to 3 publish topics.
+                qos:
+                  type: integer
+                  example: 1
+                  description: Defines the QoS level for publishing messages.
+                retain:
+                  type: boolean
+                  description: Indicates whether the message should be retained by the broker.
+              required:
+                - topic
+                - qos
+                - retain
+          subscribeTopics:
+            type: array
+            items:
+              type: object
+              properties:
+                topic:
+                  type: string
+                  description: Specifies the topic to subscribe to. Supports up to 1 subscribe topic.
+                qos:
+                  type: integer
+                  description: Defines the QoS level for subscribing to messages.
+                retain:
+                  type: boolean
+                  description: Indicates whether the subscription retains messages.
+              required:
+                - topic
+                - qos
+                - retain
+      securityParams:
+        type: object
+        description: Defines the security parameters for the endpoint.
+        properties:
+          format:
+            type: string
+            enum:
+              - PEM
+              - PFX
+            example: PEM
+            description: Specifies the format of the security certificates. Currently, only PEM is supported.
+          algorithm:
+            type: string
+            enum:
+              - RSA256
+              - RSA512
+            example: RSA256
+            description: Specifies the algorithm used for encryption.
+          caCertificateFile:
+            type: string
+            example: cloud-trusted-ca-certs.crt
+            description: Specifies the file containing the CA certificates.
+          clientCert:
+            type: string
+            example: client_cert.pem
+            description: Specifies the file containing the client certificate.
+          clientKey:
+            type: string
+            example: client_key.pem
+            description: Specifies the file containing the client private key.
+        required:
+          - format
+          - algorithm
+          - caCertificateFile
+          - clientCert
+          - clientKey
+      eventConfiguration:
+        $ref: ./cfgEventPayload.yaml
+        description: Reference to the event configuration schema.
+required:
+  - operation
+  - configuration

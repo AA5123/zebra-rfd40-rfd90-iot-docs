@@ -1,0 +1,132 @@
+{
+  "title": "set_wifi",
+  "x-stoplight": {
+    "id": "wk91qymmt9ye2"
+  },
+  "description": "This API is used to set wifi configuration. It currently supports IPv4 addressing with DHCP-based IP assignment only; static IP configuration and IPv6 support is not available in the current API version.",
+  "type": "object",
+  "examples": [
+    {
+      "command": "set_wifi",
+      "requestId": "abc123",
+      "wifiConfig": {
+        "interfaceName": "wlan0",
+        "enableInterface": true,
+        "operation": "CREATE",
+        "accessPoint": {
+          "connect": false,
+          "isPreferred": false,
+          "autoConn": true,
+          "essid": "TestAP1",
+          "enableSecurity": true,
+          "security": {
+            "securityType": "WPA2Personal",
+            "securityDetails": {
+              "WPA2Personal": {
+                "password": "test@123"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": "set_wifi",
+      "requestId": "abc123",
+      "wifiConfig": {
+        "interfaceName": "wlan0",
+        "enableInterface": true,
+        "operation": "MODIFY",
+        "accessPoint": {
+          "connect": false,
+          "isPreferred": false,
+          "autoConn": true,
+          "essid": "TestAP1",
+          "enableSecurity": true,
+          "security": {
+            "securityType": "WPA2Personal",
+            "securityDetails": {
+              "WPA2Personal": {
+                "password": "test@12345678"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": "set_wifi",
+      "requestId": "abc123",
+      "wifiConfig": {
+        "operation": "MODIFY",
+        "accessPoint": {
+          "isPreferred": true,
+          "essid": "TestAP1"
+        }
+      }
+    },
+    {
+      "command": "set_wifi",
+      "requestId": "abc123",
+      "wifiConfig": {
+        "interfaceName": "wlan0",
+        "enableInterface": true,
+        "operation": "CREATE",
+        "accessPoint": {
+          "connect": false,
+          "isPreferred": false,
+          "autoConn": true,
+          "essid": "TestAP2",
+          "enableSecurity": true,
+          "security": {
+            "securityType": "WPA2Enterprise",
+            "securityDetails": {
+              "WPA2Enterprise": {
+                "authentication": "tls",
+                "innerAuthentication": "tls",
+                "identity": "test",
+                "anonymousIdentity": "test",
+                "password": "test@123",
+                "passphrase": "test@123",
+                "certificate": [
+                  {
+                    "key": "ca_cert",
+                    "value": "gen_cert"
+                  },
+                  {
+                    "key": "client_key",
+                    "value": "gen_cl_key"
+                  },
+                  {
+                    "key": "client_cert",
+                    "value": "gen_cl_cert"
+                  }
+                ],
+                "protocol": "WPA2_Enterprise_CCMP"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "set_wifi",
+      "description": "Specifies the operation being performed, in this case, setting the wifi configuration."
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",      
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+    },
+    "wifiConfig": {
+      "$ref": "../../refrence/payload/cfgWifiPayload.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ]
+}

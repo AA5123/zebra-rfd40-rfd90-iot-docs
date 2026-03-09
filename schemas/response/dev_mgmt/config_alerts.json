@@ -1,0 +1,29 @@
+{
+  "title": "cfgAlertResponse",
+  "x-stoplight": {
+    "id": "bor2oqnmv18bq"
+  },
+  "type": "object",
+  "examples": [],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "config_alerts"
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123"
+    },
+    "apiVersion": {
+      "type": "string",
+      "example": "V1.1",
+      "enum": [
+        "V1.0",
+        "V1.1"
+      ]
+    },
+    "response": {
+      "$ref": "../../refrence/response/response.yaml"
+    }
+  }
+}

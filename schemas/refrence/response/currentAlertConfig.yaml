@@ -1,0 +1,84 @@
+title: alertConfig
+x-stoplight:
+  id: 8muxxmcyfjcoh
+type: object
+properties:
+  ntp:
+    type: boolean
+    description: set True to enable NTP alerts
+    default: false
+  userApp:
+    type: boolean
+    description: set True to enable userApp alerts
+    default: false
+  cpuUsage:
+    type: object
+    required:
+      - treshold
+      - status
+    properties:
+      treshold:
+        type: number
+        description: 'maximum CPU usage %, if cpu usage is more than the threshold value then cpu alert will be sent out'
+        minimum: 20
+        maximum: 100
+      status:
+        type: boolean
+        description: |-
+          true - cpu alert enabled
+          false - cpu alert disabled
+        default: false
+  ramUsage:
+    type: object
+    required:
+      - treshold
+      - status
+    properties:
+      treshold:
+        type: number
+        description: 'maximum RAM usage , if RAM usage is more than the hreshold value then ramUsage alert will be sent out'
+        minimum: 50
+        maximum: 100
+      status:
+        type: boolean
+        description: |-
+          true - ram alert enabled 
+          false - ram alert disabled
+        default: false
+  flashUsage:
+    type: object
+    required:
+      - treshold
+      - status
+    properties:
+      treshold:
+        type: number
+        description: 'maximum Flash usage limit, if flash usage is more than the threshold value then flashUsage alert will be sent out'
+        minimum: 40
+        maximum: 100
+      status:
+        type: boolean
+        description: |-
+          true - flashUsage alert enabled
+          false - flashUsage alert disabled
+        default: false
+  temperature:
+    type: object
+    required:
+      - treshold
+      - status
+    properties:
+      treshold:
+        type: number
+        description: 'maximum temperature  limit, if temperature is more than the threshold value then temperature alert will be sent out'
+        minimum: 50
+        maximum: 100
+      status:
+        type: boolean
+        description: |-
+          true - temperature alert enabled
+          false - temperature alert disabled        
+        default: false
+required:
+  - ntp
+  - userApp

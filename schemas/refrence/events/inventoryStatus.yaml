@@ -1,0 +1,17 @@
+title: inventoryStatus
+x-stoplight:
+  id: 11cnw8c73npra
+type: object
+properties:
+  rfidStatus:
+    type: string
+    enum:
+      - INPROGRESS  
+      - STOPPED     
+    description: The current status of the RFID scanning process.
+  tagCount:
+    type: integer
+    description: The total number of RFID tags scanned in the current operation.
+  scanCount:
+    type: integer
+    description: The total number of scan attempts made during the operation.

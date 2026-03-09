@@ -1,0 +1,60 @@
+{
+  "title": "heartBeatEvent",
+  "description": "This event represents a heartbeat signal sent periodically from a device or system to indicate its active status and provide essential metadata like uptime and event details.",
+  "x-stoplight": {
+    "id": "ey6vjtuwborhz"
+  },
+  "type": "object",
+  "examples": [
+    {
+      "eventName": "heartbeat",
+      "timestamp": "2019-08-24T14:15:22Z",
+      "eventNumber": 120,
+      "data": {
+        "inventoryStatus": {
+          "rfidStatus": "INPROGRESS",
+          "tagCount": 45,
+          "scanCount": 128
+        },
+        "batteryAlert": {
+          "status": "HIGH",
+          "stateOfHealth": "FULL",
+          "chargePercentage": 85
+        }
+      }
+    }
+  ],
+  "properties": {
+    "eventName": {
+      "type": "string",
+      "example": "heartbeat",
+      "description": "Name of the event, indicating it is a heartbeat signal."
+    },
+    "timestamp": {
+      "type": "string",
+      "example": "2019-08-24T14:15:22Z",
+      "description": "The timestamp when the event was generated, in ISO 8601 format."
+    },
+    "eventNumber": {
+      "type": "integer",
+      "example": 120,
+      "description": "A unique identifier or sequence number for the event."
+    },
+    "upTime": {
+      "type": "string",
+      "example": "5 days 4hr 3min",
+      "description": "The uptime duration of the system when the event was generated."
+    },
+    "data": {
+      "anyOf": [
+        {
+          "$ref": "../refrence/events/inventoryStatus.yaml"
+        },
+        {
+          "$ref": "../refrence/events/batteryAlert.yaml"
+        }
+      ],
+      "description": "Additional data associated with the heartbeat event, referencing different event types."
+    }
+  }
+}

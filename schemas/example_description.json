@@ -1,0 +1,107 @@
+{
+    "control_operation": {
+        "Start inventory": "Payload to start inventory",
+        "Stop inventory": "Payload to stop inventory"
+    },
+    "get_operating_mode": {
+        "Get operating mode": "Payload to get operating mode configurations"
+    },
+    "get_post_filter": {
+        "Get post filter": "Payload to get post filter configurations"
+    },
+    "set_operating_mode": {
+        "Set operating mode": "Payload to set operating mode configurations",
+        "Profile setting": "Payload to set operating mode profile type",
+        "Access operations": "Payload to set the required access operations",
+        "Radio start/stop conditions": "Payload to set inventory start and stop conditions",
+        "Query settings": "Payload to set query parameters",
+        "Select settings": "Payload to set select pre-filters parameters",
+        "Query and select settings": "Payload to set query and select parameters",
+        "Tag metadata settings": "Payload to enable/disable tag metadata to be reported"
+    },
+    "set_post_filter": {
+        "Set post filter 1": "Payload to filter tags using prefix",
+        "Set post filter 2": "Payload to filter tags based on regex"
+    },
+    "set_os": {
+        "Firmware update 1": "Payload to initiate firmware update with CA certificate content",
+        "Firmware update 2": "Payload to initiate firmware update without CA certificate content",
+        "Firmware update 3": "Payload to initiate firmware update with no authentication"
+    },
+    "reboot": {
+        "Reboot device": "Payload to perform a device reboot"
+    },
+    "get_endpoint_config": {
+        "Active endpoint config": "Payload to get active endpoint configuration details with all saved endpoint names",
+        "Specific endpoint config": "Payload to get the specified endpoint configurations"
+    },
+    "set_wifi": {
+        "Create WPA2 personal": "Payload to create a new WiFi profile with WPA2 Personal security",
+        "Modify WPA2 personal": "Payload to modify an existing WiFi profile password",
+        "Set preferred AP": "Payload to set an access point as preferred",
+        "Create WPA2 enterprise": "Payload to create a WiFi profile with WPA2 Enterprise security and certificates"
+    },
+    "config_endpoint": {
+        "Add MDM endpoint": "Payload to add a new MDM endpoint configuration",
+        "Delete endpoint": "Payload to delete an existing endpoint configuration",
+        "Add data endpoint": "Payload to add a new data endpoint configuration",
+        "Add control endpoint": "Payload to add a new control endpoint with publish/subscribe topics"
+    },
+    "config_events": {
+        "Enable all events": "Payload to enable all event types with threshold configuration",
+        "Selective events": "Payload to selectively enable/disable specific event types"
+    },
+    "delete_wifi_profile": {
+        "Delete wifi profile": "Payload to delete a saved WiFi profile"
+    },
+    "set_config": {
+        "Create wifi profile": "Payload to create a new WiFi profile with WPA2 Personal security",
+        "Modify wifi profile": "Payload to modify an existing WiFi profile and set as preferred",
+        "Add mdm endpoint": "Payload to add a new MDM endpoint configuration with reboot setting",
+        "Add data endpoint": "Payload to add a data endpoint configuration with MQTT parameters",
+        "Add control endpoint": "Payload to add a control endpoint with publish/subscribe topics",
+        "Complete config setup": "Payload to set complete configuration with WiFi and management endpoint"
+    },
+    "delete_certificate": {
+        "Delete client cert": "Payload to delete a client certificate from the device",
+        "Delete filestore cert": "Payload to delete a filestore certificate from the device"
+    },
+    "install_certificate": {
+        "WiFi certificate install": "Payload to install WiFi certificates with CA, client cert and key",
+        "Filestore certificate": "Payload to install filestore CA certificate",
+        "MQTT client certificate": "Payload to install MQTT client certificates",
+        "Server certificate": "Payload to install server certificates with authentication"
+    },
+    "get_wifi": {
+        "WPA2 Personal connection": "Response with WiFi connected to WPA2 Personal network",
+        "WPA2 Enterprise connection": "Response with WiFi connected to WPA2 Enterprise network with certificates", 
+        "WPA3 Enterprise connection": "Response with WiFi connected to WPA3 Enterprise network with advanced security",
+        "Open network connection": "Response with WiFi connected to open/unsecured network",
+        "WiFi interface disabled": "Response when WiFi interface is disabled on the device"
+    },
+    "get_version": {
+        "Device version info": "Response with device serial, model, SKU and firmware version details"
+    },
+    "get_status": {
+        "Device status info": "Response with current device status including battery and connection details"
+    },
+    "get_config": {
+        "Complete device config": "Response with complete device configuration including all settings"
+    },
+    "get_current_region": {
+        "Current region info": "Response with current device region configuration"
+    },
+    "get_installed_certificates": {
+        "Installed certificates list": "Response with list of all installed certificates"
+    },
+    "get_eth": {
+        "Ethernet config info": "Response with ethernet interface configuration details"
+    },
+    "alert_short": {
+        "Firmware download success": "Alert indicating successful firmware download",
+        "Battery critical set": "Alert indicating battery level is critically low",
+        "WiFi config fail": "Notification indicating WiFi configuration failure",
+        "MQTT install certificate success": "Notification indicating successful MQTT certificate installation"
+
+    }
+}

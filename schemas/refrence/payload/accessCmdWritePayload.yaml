@@ -1,0 +1,37 @@
+title: write
+type: object
+examples:
+  - type: WRITE
+    config:
+      memoryBank: EPC
+      offset: 0
+      data: '11112222'
+      length: 0
+properties:
+  config:
+    type: object
+    required:
+      - memoryBank
+      - offset
+      - data
+    properties:
+      memoryBank:
+        type: string
+        enum:
+          - EPC
+          - TID
+          - USER
+          - RESERVED
+        description: Membank Field (see EPC Gen2 Spec)
+      offset:
+        type: integer
+        description: Memory bank offset Field in words (see EPC Gen2 Spec)
+      data:
+        type: string
+        description: 'Data Field (see EPC Gen2 Spec) Hex string indicating the word(s) to be written. Unlike the Gen2 Spec, the length of the data field can be more than a single 16 bit word. However, the length of the string must be a multiple of 16 bit words'
+        example: '11112222'
+      length:
+        type: integer
+        description: 'If set to non-zero value, the reader will use the BlockWrite command set write the data (and not the simple Write command). The value indicates the number of 16-bit words to use for each block'
+required:
+  - config

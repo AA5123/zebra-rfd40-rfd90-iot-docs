@@ -1,0 +1,55 @@
+anyOf:
+  - properties:
+      inventoryStatus:
+        type: object
+        properties:
+          status:
+            type: string
+            enum:
+              - INPROGRESS
+              - WAITING
+              - STOPPED
+            example: INPROGRESS
+          tagsRed:
+            type: integer
+      scanStatus:
+        type: object
+        properties:
+          status:
+            type: string
+            enum:
+              - INPROGRESS
+              - STOPPED
+            example: INPROGRESS
+          scanCount:
+            type: integer
+            example: 120
+      batteryStatus:
+        type: object
+        properties:
+          health:
+            type: string
+            example: good
+          level:
+            type: integer
+            default: 92
+          chargeStatus:
+            type: integer
+      userApps:
+        type: array
+        items:
+          type: object
+          properties:
+            appName:
+              type: string
+            status:
+              type: string
+            cpu:
+              type: string
+            ram:
+              type: string
+            uptime:
+              type: string
+x-stoplight:
+  id: knq4zksute27h
+type: object

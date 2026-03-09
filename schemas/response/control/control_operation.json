@@ -1,0 +1,48 @@
+{
+  "title": "control_operation_response",
+  "x-stoplight": {
+    "id": "rp32fizym3650"
+  },
+  "type": "object",
+  "examples": [
+    {
+      "command": "control_operation",
+      "requestId": "abc123",
+      "apiVersion": "V1.1",
+      "response": {
+        "code": 0,
+        "description": "Success"
+      }
+    }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "control_operation",
+      "description": "The type of command being executed or responded to. For MQTT, this specifies the operation type."
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier for the request, used for tracking the request and its corresponding response in the MQTT protocol."
+    },
+    "apiVersion": {
+      "type": "string",
+      "enum": [
+        "V1.0",
+        "V1.1"
+      ],
+      "example": "V1.1",
+      "description": "The version of the API being used in this MQTT response message."
+    },
+    "response": {
+      "$ref": "../../refrence/response/response.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId",
+    "apiVersion",
+    "response"
+  ]
+}

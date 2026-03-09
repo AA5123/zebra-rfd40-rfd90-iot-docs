@@ -1,0 +1,147 @@
+{
+  "title": "get_capablity_response",
+  "x-stoplight": {
+    "id": "9cbh9nhrs0mlr"
+  },
+  "type": "object",
+  "examples": [
+    {
+      "command": "get_capablity",
+      "requestId": "abc123",
+      "apiVersion": "V1.1",
+      "payload": {
+        "deviceClass": "handheld",
+        "deviceCapablity": {
+          "rtcSupported": true,
+          "keypadSupported": true,
+          "isHIDSupported": true,
+          "supportedPowerSource": [
+            "DC"
+          ]
+        },
+        "iotcCapablity": {
+          "asyncManagementEventsSupported": true,
+          "dataEndpointSupported": true,
+          "controlEndpointSupported": true,
+          "daAppsSupported": true,
+          "maxDataEndpoints": 2,
+          "endPointCapablity": [
+            {
+              "batchingSupported": true,
+              "supportedInterfaces": [
+                "DATA"
+              ],
+              "retentionSupported": true,
+              "SSLSupported": true,
+              "authenticationTypesSupported": [
+                "BASIC"
+              ],
+              "type": [
+                "MQTT"
+              ]
+            }
+          ]
+        },
+        "scannerCapablity": {
+          "scannerType": "string",
+          "scanEngine": "string"
+        },
+        "radioCapablity": {
+          "rssiFilterSupported": true,
+          "directionalitySupported": true,
+          "tagLocationingSupported": true,
+          "maxNumPreFilters": 32,
+          "maxNumOperationsInAccessSequence": 32,
+          "supportedTagDataFormat": [
+            "TDS1.0"
+          ],
+          "antennaCapablity": {
+            "antenna": [
+              {
+                "port": 1,
+                "type": "external"
+              }
+            ]
+          }
+        },
+        "uifCapablity": {
+          "beepersSupported": true,
+          "appLEDColors": [
+            "RED"
+          ]
+        },
+        "generalIoCapablity": {
+          "maxNumOfGPIs": 4,
+          "maxNumOfGPOs": 4
+        },
+        "daAppsCapablity": {
+          "daAppPackageFormat": [
+            "debian"
+          ],
+          "daLanguageBindings": [
+            "python"
+          ]
+        },
+        "networkCapablity": {
+          "interfaceDetails": [
+            {
+              "type": "eth",
+              "auth802_1x": true,
+              "internal": true,
+              "ipv4Supported": true,
+              "ipv6Supported": true,
+              "ipAssignment": [
+                "static"
+              ]
+            }
+          ]
+        },
+        "bluetoothCapablity": {
+          "supportedProfiles": [
+            "SPP"
+          ]
+        },
+        "llrpCapablity": {
+          "llrpVersion": "string",
+          "mode": "string"
+        }
+      },
+      "response": {
+        "code": 0,
+        "description": "success"
+      }
+    }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "get_capablity",
+      "description": "Specifies the command name."
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "Unique identifier for the request."
+    },
+    "apiVersion": {
+      "type": "string",
+      "enum": [
+        "V1.0",
+        "V1.1"
+      ],
+      "example": "V1.1",
+      "description": "Specifies the version of the API."
+    },
+    "payload": {
+      "$ref": "../../refrence/response/deviceCapablity.yaml"
+    },
+    "response": {
+      "$ref": "../../refrence/response/response.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId",
+    "apiVersion"
+  ]
+}

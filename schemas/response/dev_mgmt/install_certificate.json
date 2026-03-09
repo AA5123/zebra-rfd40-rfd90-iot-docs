@@ -1,0 +1,44 @@
+{
+  "title": "installCertificate",
+  "x-stoplight": {
+    "id": "pyaqnm42or6o5"
+  },
+  "type": "object",
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "install_certificate"
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123"
+    },
+    "apiVersion": {
+      "type": "string",
+      "enum": [
+        "V1.0",
+        "V1.1"
+      ]
+    },
+    "response": {
+      "$ref": "../../refrence/response/response.yaml"
+    }
+  },
+  "examples": [
+     {
+       "command": "install_certificate",
+       "requestId": "18996",
+       "apiVersion": "V1.1",
+       "response": {
+           "code": 1,
+            "description": "Command payload is accepted"
+        }
+     }
+  ],
+  "required": [
+    "command",
+    "requestId",
+    "apiVersion",
+    "response"
+  ]
+}

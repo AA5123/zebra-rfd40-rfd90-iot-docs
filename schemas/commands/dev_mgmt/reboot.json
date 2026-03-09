@@ -1,0 +1,24 @@
+{
+  "title": "reboot",
+  "x-stoplight": {
+    "id": "7nvqt0o1pfqja"
+  },
+  "description": "Reboot command is used to perform warm reset of device. After successful reboot, device will reinitiate the connection to previously connected SOTI server. Upon failure notification will be sent",
+  "type": "object",
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "reboot",
+      "description": "Command issued to reboot the reader "
+    },
+    "requestId": {
+      "type": "string",
+      "example": "123abcd",
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ]
+}

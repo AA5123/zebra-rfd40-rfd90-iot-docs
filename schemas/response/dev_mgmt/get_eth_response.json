@@ -1,0 +1,62 @@
+{
+  "title": "get_eth_response",
+  "x-stoplight": {
+    "id": "fqc2z8f4q1jov"
+  },
+  "type": "object",
+  "examples": [
+    {
+  "command": "get_eth",
+  "requestId": "abc123",
+  "apiVersion": "V1.1",
+  "ethConfig": {
+    "interfaceDetails": {
+      "interfaceName": "eth0",
+      "status": "enabled",
+      "hostname": "RFD40-24190525100354",
+      "macAddress": "E0-D0-45-3D-38-1D",
+      "linkStatus": {
+        "status": "up",
+        "linkSpeed": "100Mbps"
+      },
+      "ipv4Configuration": {
+        "ipAddress": "192.168.1.101",
+        "subnetMask": "255.255.255.0",
+        "gateway": "192.168.1.144",
+        "enableDhcp": "enabled",
+        "dnsServer": "192.168.1.78",
+        "domainName": "test.soti.com"
+      }
+    }
+  },
+  "response": {
+    "code": "0",
+    "description": "Success"
+  }
+}
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "get_eth"
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123"
+    },
+    "apiVersion": {
+      "type": "string",
+      "example": "V1.1",
+      "enum": [
+        "V1.0",
+        "V1.1"
+      ]
+    },
+    "rspPpayload": {
+      "$ref": "../../refrence/response/ethResponse.yaml"
+    },
+    "response": {
+      "$ref": "../../refrence/response/response.yaml"
+    }
+  }
+}

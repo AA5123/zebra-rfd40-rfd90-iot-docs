@@ -1,0 +1,138 @@
+{
+  "title": "alert",
+  "x-stoplight": {
+    "id": "8nsxjhzgto2vp"
+  },
+  "type": "object",
+  "description": "Represents a system-generated alert or notification event. Note: Some event types such as antenna, temperature, usage, GPI, and user app info are not supported.",
+  "examples": [
+  {
+  "type": "EVENT",
+  "timestamp": "22:54:25",
+  "state": "SET",
+  "id": "BATTERY_LOW",
+  "priority": "CRITICAL",
+  "alertDetails": {
+    "fwUpdateStatus": {
+      "updateStatus": "updating",
+      "overallProgress": 20,
+      "stage": "updating scanner fw"
+    },
+    "downloadInfo": {
+      "fileType": "FILE_TYPE_FW",
+      "fileName": "string",
+      "status": "DOWNLOAD SUCCESS"
+    },
+    "antennaEvent": [
+      {
+        "antenna": {
+          "status": "connected",
+          "port": 3
+        }
+      }
+    ],
+    "networkInfo": {
+      "networkInterface": {
+        "ethStatus": [
+          {
+            "interface": "eth0",
+            "status": "CONNECTED",
+            "linkStatus": "UP",
+            "linkSpeed": "string",
+            "ipV4Address": "192.168.0.165",
+            "ipV6Address": "fe80::f299:9d51:864c:cff"
+          }
+        ],
+        "wifiStatus": [
+          {
+            "interface": "wlan0",
+            "status": "CONNECTED",
+            "ssid": "string",
+            "ipV4Address": "192.168.0.145",
+            "ipV6Address": "fe80::f299:9d51:86c:cff14"
+          }
+        ]
+      },
+      "btRemoteDevice": {
+        "deviceName": "TestLaptop",
+        "deviceMac": "00:11:22:A3:B1:D2"
+      }
+    },
+    "batteryAlert": {
+      "status": "LOW",
+      "stateOfHealth": "LOW",
+      "chargePercentage": 100
+    }
+  }
+}
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "EVENT",
+        "NOTIFICATION",
+        "EXCEPTION",
+        "ALERT"
+      ],
+      "description": "Specifies the type of alert or message being generated, such as an event, notification, exception, or alert."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "time",
+      "example": "22:54:25",
+      "description": "Indicates the time at which the alert was generated, formatted as a time string."
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "SET",
+        "CLEAR",
+        "ONESHOT"
+      ],
+      "description": "Represents the state of the alert. 'SET' indicates an active alert, 'CLEAR' indicates the alert has been resolved, and 'ONESHOT' is a one-time alert."
+    },
+    "id": {
+      "type": "string",
+      "enum": [
+        "BATTERY_LOW",
+        "BATTERY_CRIT",
+        "BATTERY_FULL",
+        "FIRMWARE_UPDATE",
+        "FILE_DOWNLOAD",
+        "GPI_EVENT",
+        "NETWORK_EVENT",
+        "ANTENNA_EVENT",
+        "TEMPERATURE"
+      ],
+      "example": "BATTERY_LOW",
+      "description": "A unique identifier for the alert type, such as a low battery warning or a temperature event."
+    },
+    "priority": {
+      "type": "string",
+      "example": "CRITICAL",
+      "enum": [
+        "CRITICAL",
+        "HIGH",
+        "MEDIUM",
+        "LOW"
+      ],
+      "description": "Defines the priority level of the alert, ranging from critical to low."
+    },
+    "alertDetails": {
+      "anyOf": [
+        {
+          "$ref": "../refrence/response/alertDetails.yaml"
+        }
+      ],
+      "description": "Contains additional details about the alert, which may vary depending on the specific alert type."
+    }
+  },
+  "required": [
+    "type",
+    "timestamp",
+    "state",
+    "id",
+    "priority"
+  ]
+}

@@ -1,0 +1,13 @@
+title: cfgResponse
+x-stoplight:
+  id: nmjdhs4gawcqj
+type: object
+properties:
+  ethConfig:
+    $ref: ../payload/ethConfigPayload.yaml
+  wifiConfigResp:
+    $ref: ../payload/cfgWifiPayload.yaml
+  epConfig:
+    $ref: ../payload/cfgEndpointPayload.yaml
+  wifiProfiles:
+    $ref: ./getWifiResponse.yaml

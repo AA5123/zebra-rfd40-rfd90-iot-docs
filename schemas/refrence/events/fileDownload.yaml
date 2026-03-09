@@ -1,0 +1,27 @@
+title: downloadInfo
+x-stoplight:
+  id: qwygdhcgpch4h
+type: object
+properties:
+  fileType:
+    type: string
+    enum:
+      - FILE_TYPE_FW
+      - FILE_TYPE_CERT
+    example: FILE_TYPE_FW
+    description: Specifies the type of file being downloaded. Options include firmware files (FILE_TYPE_FW) and certificate files (FILE_TYPE_CERT).
+  fileName:
+    type: string
+    description: The name of the file being downloaded.
+  status:
+    type: string
+    enum:
+      - DOWNLOAD SUCCESS
+      - DOWNLOAD FAIL
+      - SAVE FAIL
+      - SAVE SUCCESS
+    description: Indicates the status of the file download or save operation.
+required:
+  - fileType
+  - fileName
+  - status

@@ -1,0 +1,31 @@
+title: wifiStatusResponse
+x-stoplight:
+  id: cjkaab7rhrch6
+type: object
+properties:
+  wifiStatus:
+    type: object
+    properties:
+      hostName:
+        type: string
+        example: RDD90F004
+      ipAddress:
+        type: string
+        example: 192.168.0.1
+      gatewayAddress:
+        type: string
+        example: 192.168.1.1
+      subnetMask:
+        type: string
+        example: 255.255.255.0
+      dnsAddress:
+        type: string
+        example: 8.8.8.8
+      dhcp:
+        type: boolean
+      macAddress:
+        type: string
+        example: '84:24:8D:F0:F4:B5'
+      ssid:
+        type: string
+        example: ZWireless

@@ -1,0 +1,9 @@
+title: ntpAlert
+x-stoplight:
+  id: bqyqfmu9p4334
+type: object
+properties:
+  offset:
+    type: number
+  reach:
+    type: number

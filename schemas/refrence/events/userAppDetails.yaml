@@ -1,0 +1,24 @@
+title: userAppDetails
+x-stoplight:
+  id: g0fh89gflqopm
+type: object
+properties:
+  userApps:
+    type: array
+    description: List of applications used by the user.
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the application.
+        message:
+          type: string
+          description: A message or status related to the application.
+        ramUsage:
+          type: integer
+          description: The amount of RAM (in MB) the application is using.
+        cpuUsage:
+          type: integer
+          description: The percentage of CPU usage by the application.
+description: Details about user applications, including resource usage and status.

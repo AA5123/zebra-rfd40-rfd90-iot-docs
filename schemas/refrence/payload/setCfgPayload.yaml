@@ -1,0 +1,12 @@
+title: configData
+x-stoplight:
+  id: uq4x24ym4hs58
+type: object
+properties:
+  applyAfterReboot:
+    type: boolean
+    description: 'if set to true, configuration changes will be applied after reboot'
+  wifiConfig:
+    $ref: ./cfgWifiPayload.yaml
+  epConfig:
+    $ref: ./cfgEndpointPayload.yaml

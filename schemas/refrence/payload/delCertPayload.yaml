@@ -1,0 +1,22 @@
+title: certificateInfo
+x-stoplight:
+  id: d98c7f20315ac
+type: object
+properties:
+  name:
+    type: string
+    example: test_soti
+    description: Name of the certificate, If certificate name not provided, then we will delete all the previously installed certificate of matching type. 
+  type:
+    type: string
+    example: client
+    description: Different types of supported certificate.
+    enum:
+      - server
+      - client
+      - mqtt
+      - wifi
+      - filestore
+required:
+  - type
+

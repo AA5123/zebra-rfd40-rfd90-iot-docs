@@ -1,0 +1,9 @@
+title: wifiProfiles
+x-stoplight:
+  id: d1gjzrdjhbos9
+type: object
+properties:
+  wifiConfig:
+    type: array
+    items:
+      $ref: ./wifiResponseSoti.yaml

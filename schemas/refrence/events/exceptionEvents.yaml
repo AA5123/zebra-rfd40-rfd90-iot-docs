@@ -1,0 +1,57 @@
+type: object
+x-stoplight:
+  id: df25a86e1061a
+title: exceptions
+examples:
+  - exceptions:
+      radio:
+        code: 51
+        message: "radio is not responsive"
+      scanner:
+        code: 0
+        message: "scanner is connected and scanning in progress"
+      system:
+        code: 12
+        message: "running out of memory"
+properties:
+  exceptions:
+    anyOf:
+      - description: A collection of diagnostic, error, or warning events.
+        properties:
+          radio:
+            type: object
+            description: Represents diagnostic, error, or warning events related to the radio module.
+            properties:
+              code:
+                type: number
+                example: 51
+                description: A numeric code representing a specific radio-related issue or state.
+              message:
+                type: string
+                example: radio is not responsive
+                description: A human-readable message describing the radio issue or state.
+          scanner:
+            type: object
+            description: Represents diagnostic, error, or warning events related to the scanner module.
+            properties:
+              code:
+                type: number
+                example: 0
+                description: A numeric code representing a specific scanner-related issue or state.
+              message:
+                type: string
+                example: 'scanner is connected and scanning in progress'
+                description: A human-readable message describing the scanner issue or state.
+          system:
+            type: object
+            description: Represents diagnostic, error, or warning events related to the system.
+            properties:
+              code:
+                type: number
+                example: 12
+                description: A numeric code representing a specific system-related issue or state.
+              message:
+                type: string
+                example: 'running out of memory'
+                description: A human-readable message describing the system issue or state.
+    type: object

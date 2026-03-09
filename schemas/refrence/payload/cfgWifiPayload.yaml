@@ -1,0 +1,282 @@
+title: wifiConfig
+x-stoplight:
+  id: 9x3bxuxkt84ag
+type: object
+examples: []
+properties:
+  interfaceName:
+    type: string
+    description: The name of the network interface for which the Wi-Fi configuration is being set.
+  enableInterface:
+    type: boolean
+    description: Specifies whether the network interface should be enabled or disabled.
+  operation:
+    type: string
+    enum:
+      - CREATE
+      - MODIFY
+    example: CREATE
+    description: The operation to be performed on the Wi-Fi configuration. It can either create a new configuration or modify an existing one.
+  accessPoint:
+    type: object
+    required:
+      - connect
+      - isPreferred
+      - essid
+      - enableSecurity
+    properties:
+      connect:
+        type: boolean
+        description: Indicates whether to connect to this profile. If true, disconnects the currently connected profile and connects to the specified one; if false, just saves the profile.
+      isPreferred:
+        type: boolean
+        description: Marks this profile as the preferred one to always connect to when available.
+      autoConn:
+        type: boolean
+        description: Reserved for backward compatibility. It will be removed in the future.
+      essid:
+        type: string
+        example: ZWireless
+        description: The ESSID (network name) of the access point.
+      enableSecurity:
+        type: boolean
+        description: Indicates whether security is enabled for this access point.
+      ipv4Configuration:
+        type: object
+        properties:
+          ipAddress:
+            type: string
+            example: 192.168.1.81
+            format: ipv4
+            description: The IPv4 address to assign to the interface.
+          subnetMask:
+            type: string
+            format: ipv4
+            example: 255.255.255.0
+            description: The IPv4 subnet mask.
+          gateway:
+            type: string
+            example: 192.168.1.144
+            format: ipv4
+            description: The IPv4 gateway address.
+          enableDhcp:
+            type: boolean
+            description: Specifies whether DHCP is enabled for automatic IP address assignment.
+          dnsServer:
+            type: string
+            example: 192.168.1.78
+            format: ipv4
+            description: The IPv4 address of the DNS server.
+          domainName:
+            type: string
+            example: example.test.com
+            description: The domain name for the network.
+      ipv6Configuration:
+        type: object
+        properties:
+          ipAddress:
+            type: string
+            example: '2a02:1234:420a:100b::99'
+            format: ipv6
+            description: The IPv6 address to assign to the interface.
+          prefix:
+            type: integer
+            example: '65'
+            description: The IPv6 address prefix length.
+          gateway:
+            type: string
+            example: 192.168.1.144
+            format: ipv4
+            description: The IPv6 gateway address.
+          enableAuto:
+            type: boolean
+            description: Specifies whether automatic IPv6 address assignment (e.g., SLAAC) is enabled.
+          dnsServer:
+            type: string
+            example: '2001:4860:4860::9999'
+            format: ipv6
+            description: The IPv6 address of the DNS server.
+          domainName:
+            type: string
+            example: example.com
+            description: The domain name for the IPv6 network.
+      security:
+        type: object
+        properties:
+          securityType:
+            type: string
+            example: WPA2personal
+            enum:
+              - WPA2Personal
+              - WPA3Personal
+              - WPA2Enterprise
+              - WPA3Enterprise
+              - OWEPublic
+              - Open
+            description: The security type for the access point, specifying the authentication and encryption method.
+          securityDetails:
+            type: object
+            properties:
+              WPA2Personal:
+                type: object
+                properties:
+                  password:
+                    type: string
+                    example: test@123
+                    description: The password for WPA2-Personal authentication.
+                required:
+                  - password
+              WPA3Personal:
+                type: object
+                properties:
+                  password:
+                    type: string
+                    description: The password for WPA3-Personal authentication.
+                required:
+                  - password
+              WPA2Enterprise:
+                type: object
+                description: WPA2-Enterprise security configuration with optional certificate parameters.
+                properties:
+                  authentication:
+                    type: string
+                    enum:
+                      - tls
+                      - ttls
+                      - peap
+                    example: peap
+                    description: Authentication protocol for WPA2-Enterprise.
+                  innerAuthentication:
+                    type: string
+                    enum:
+                      - none
+                      - tls
+                      - mschapv2
+                    example: tls
+                    description: Inner authentication method to be used within the outer authentication protocol.
+                  identity:
+                    type: string
+                    example: test
+                    description: The identity (username) for WPA2-Enterprise authentication.
+                  anonymousIdentity:
+                    type: string
+                    example: test
+                    description: The anonymous identity for WPA2-Enterprise authentication.
+                  password:
+                    type: string
+                    example: test@123
+                    description: The password for WPA2-Enterprise authentication.
+                  passphrase:
+                    type: string
+                    example: test@123
+                    description: The passphrase for WPA2-Enterprise.
+                  certificate:
+                    type: array
+                    example: ap1wpa2e
+                    items:
+                      type: object
+                      maxProperties: 4
+                      properties:
+                        key:
+                          type: string
+                          enum:
+                            - ca_cert
+                            - client_key
+                            - client_cert
+                            - cert_key_password
+                          example: ca_cert
+                          description: The type of certificate to be used.
+                        value:
+                          type: string
+                          example: wifi_ca_cert
+                          description: The value of the specific certificate.
+                  protocol:
+                    type: string
+                    enum:
+                      - WPA2_Enterprise_CCMP
+                    example: WPA2_Enterprise_CCMP
+                    description: The encryption protocol for WPA2-Enterprise.
+                required:
+                  - authentication
+              WPA3Enterprise:
+                type: object
+                description: WPA3-Enterprise security configuration with optional certificate parameters.
+                properties:
+                  authentication:
+                    type: string
+                    enum:
+                      - tls
+                      - ttls
+                      - peap
+                    example: peap
+                    description: Authentication protocol for WPA3-Enterprise.
+                  innerAuthentication:
+                    type: string
+                    enum:
+                      - none
+                      - tls
+                      - mschapv2
+                    example: tls
+                    description: Inner authentication method to be used within the outer authentication protocol.
+                  identity:
+                    type: string
+                    example: test
+                    description: The identity (username) for WPA3-Enterprise authentication.
+                  anonymousIdentity:
+                    type: string
+                    example: test
+                    description: The anonymous identity for WPA3-Enterprise authentication.
+                  password:
+                    type: string
+                    example: test@123
+                    description: The password for WPA3-Enterprise authentication.
+                  passphrase:
+                    type: string
+                    example: test@123
+                    description: The passphrase for WPA3-Enterprise.
+                  certificate:
+                    type: array
+                    example: ap1wpa2e
+                    items:
+                      type: object
+                      maxProperties: 4
+                      properties:
+                        key:
+                          type: string
+                          enum:
+                            - ca_cert
+                            - client_key
+                            - client_cert
+                            - cert_key_password
+                          description: The type of certificate to be used.
+                        value:
+                          type: string
+                          description: The value of the specific certificate.
+                  protocol:
+                    type: string
+                    enum:
+                      - WPA3_Enterprise_CCMP
+                      - WPA3_Enterprise_CCMP_256
+                      - WPA3_Enterprise_GCMP_128
+                      - WPA3_Enterprise_GCMP_256_SHA256
+                      - WPA3_Enterprise_GCMP_256_SUITEB_192
+                    example: WPA3_Enterprise_CCMP
+                    description: The encryption protocol for WPA3-Enterprise.
+                required:
+                  - authentication
+              OWEPublic:
+                type: object
+                properties:
+                  authentication:
+                    type: string
+                    description: Authentication protocol for OWE-Public.
+                required:
+                  - authentication
+        required:
+          - securityType
+          - securityDetails
+required:
+  - interfaceName
+  - enableInterface
+  - operation
+  - accessPoint

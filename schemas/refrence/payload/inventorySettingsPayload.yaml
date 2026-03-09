@@ -1,0 +1,17 @@
+title: inventorySettings
+type: object
+description: 'Reader settings for inventory mode. If absent, the reader will report each tag on each antenna once per minute.'
+properties:
+  interval:
+    type: object
+    description: The time interval (how often) to report each tag
+    properties:
+      unit:
+        type: string
+        enum:
+          - seconds
+          - minutes
+          - hours
+          - days
+      value:
+        type: integer

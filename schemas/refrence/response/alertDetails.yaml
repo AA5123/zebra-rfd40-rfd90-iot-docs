@@ -1,0 +1,23 @@
+type: object
+x-stoplight:
+  id: a15e9b2d754c2
+title: alertDetails
+properties:
+  fwUpdateStatus:
+    $ref: ../events/fwUpdateEvents.yaml
+    description: 'Details about the status of firmware updates, including progress and results.'
+  downloadInfo:
+    $ref: ../events/fileDownload.yaml
+    description: 'Information regarding file download events, such as source, destination, and status.'
+  temperatueInfo:
+    $ref: ../events/tempEvent.yaml
+    description: 'Details about temperature-related events, including thresholds and alerts.'
+  networkInfo:
+    $ref: ../events/networkEvent.yaml
+    description: 'Data related to network events, including connectivity and performance metrics.'
+  exception:
+    $ref: ../events/errorAlert.yaml
+    description: 'Information about exceptions or error alerts, including error codes and messages.'
+  batteryAlert:
+    $ref: ../events/batteryAlert.yaml
+    description: 'Details about battery-related alerts, such as low charge or health status.'

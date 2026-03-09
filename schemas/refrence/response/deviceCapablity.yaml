@@ -1,0 +1,297 @@
+title: deviceCapablity
+x-stoplight:
+  id: 0iwbo2tlsrsrz
+type: object
+examples: []
+properties:
+  deviceClass:
+    type: string
+    enum:
+      - handheld
+      - fixed-reader
+      - scanner
+      - overhead-readers
+    example: handheld
+    description: Specifies the class of the device (e.g., handheld, fixed-reader, etc.).
+  deviceCapablity:
+    type: object
+    required:
+      - rtcSupported
+      - keypadSupported
+      - isHIDSupported
+      - supportedPowerSource
+    properties:
+      rtcSupported:
+        type: boolean
+        description: Indicates if Real-Time Clock (RTC) is supported.
+      keypadSupported:
+        type: boolean
+        description: Indicates if a keypad is supported.
+      isHIDSupported:
+        type: boolean
+        description: Indicates if Human Interface Device (HID) support is available.
+      supportedPowerSource:
+        type: array
+        items:
+          type: string
+          enum:
+            - DC
+            - POE
+            - POE+
+            - CRADLE
+            - USB
+            - BATTERY
+            - WALLCHARGER
+        description: Lists the supported power sources for the device.
+  iotcCapablity:
+    type: object
+    properties:
+      asyncManagementEventsSupported:
+        type: boolean
+        description: Indicates if asynchronous management events are supported.
+      dataEndpointSupported:
+        type: boolean
+        description: Indicates if data endpoints are supported.
+      controlEndpointSupported:
+        type: boolean
+        description: Indicates if control endpoints are supported.
+      daAppsSupported:
+        type: boolean
+        description: Indicates if DA Apps are supported.
+      maxDataEndpoints:
+        type: number
+        default: 2
+        maximum: 2
+        description: Specifies the maximum number of data endpoints supported.
+      endPointCapablity:
+        type: array
+        items:
+          type: object
+          properties:
+            batchingSupported:
+              type: boolean
+              description: Indicates if batching is supported on endpoints.
+            supportedInterfaces:
+              type: array
+              items:
+                type: string
+                enum:
+                  - DATA
+                  - MGMT
+                  - CTRL
+                  - MGMT-EVT
+              description: Lists the supported interfaces for the endpoint.
+            retentionSupported:
+              type: boolean
+              description: Indicates if data retention is supported.
+            SSLSupported:
+              type: boolean
+              description: Indicates if SSL is supported.
+            authenticationTypesSupported:
+              type: array
+              items:
+                type: string
+                enum:
+                  - BASIC
+                  - DIGEST
+                  - NTLM
+                  - MTLS
+                  - TLS
+                  - ONLY
+                  - DIGEST_IE
+                  - NTLM_WB
+                  - ANY
+                  - ANYSAFE
+              description: Lists the supported authentication types.
+            type:
+              type: array
+              items:
+                type: string
+                enum:
+                  - MQTT
+                  - MQTT_WS
+                  - TCPIP
+                  - WEBSOCKET
+                  - AWS_IOT_CORE
+                  - HTTP
+                  - AZURE_IOT_HUB
+                  - HTTPS
+                  - HID
+                  - REST
+              description: Lists the supported communication protocols.
+    required:
+      - asyncManagementEventsSupported
+      - dataEndpointSupported
+      - controlEndpointSupported
+      - daAppsSupported
+      - maxDataEndpoints
+  scannerCapablity:
+    type: object
+    properties:
+      scannerType:
+        type: string
+        description: Specifies the type of scanner.
+      scanEngine:
+        type: string
+        description: Specifies the scan engine used in the device.
+  radioCapablity:
+    type: object
+    properties:
+      rssiFilterSupported:
+        type: boolean
+        description: Indicates if RSSI filtering is supported.
+      directionalitySupported:
+        type: boolean
+        description: Indicates if directionality is supported.
+      tagLocationingSupported:
+        type: boolean
+        description: Indicates if tag locationing is supported.
+      maxNumPreFilters:
+        type: number
+        default: 32
+        description: Specifies the maximum number of pre-filters supported.
+      maxNumOperationsInAccessSequence:
+        type: number
+        default: 32
+        description: Specifies the maximum number of operations in an access sequence.
+      supportedTagDataFormat:
+        type: array
+        items:
+          type: string
+          enum:
+            - TDS1.0
+            - HEX
+        description: Lists the supported tag data formats.
+      antennaCapablity:
+        type: object
+        properties:
+          antenna:
+            type: array
+            items:
+              type: object
+              properties:
+                port:
+                  type: number
+                  maximum: 8
+                  minimum: 1
+                  description: Specifies the port number for the antenna.
+                type:
+                  type: string
+                  example: external
+                  enum:
+                    - external
+                    - internal
+                  description: Specifies the type of antenna (e.g., external, internal).
+    required:
+      - rssiFilterSupported
+      - directionalitySupported
+      - tagLocationingSupported
+      - maxNumPreFilters
+      - maxNumOperationsInAccessSequence
+      - supportedTagDataFormat
+  uifCapablity:
+    type: object
+    properties:
+      beepersSupported:
+        type: boolean
+        description: Indicates if beepers are supported.
+      appLEDColors:
+        type: array
+        items:
+          type: string
+          enum:
+            - RED
+            - GREEN
+            - AMBER
+        description: Lists the supported LED colors for applications.
+    required:
+      - beepersSupported
+  generalIoCapablity:
+    type: object
+    properties:
+      maxNumOfGPIs:
+        type: integer
+        default: 4
+        description: Specifies the maximum number of General Purpose Inputs (GPIs).
+      maxNumOfGPOs:
+        type: integer
+        default: 4
+        description: Specifies the maximum number of General Purpose Outputs (GPOs).
+  daAppsCapablity:
+    type: object
+    properties:
+      daAppPackageFormat:
+        type: array
+        items:
+          type: string
+          enum:
+            - debian
+        description: Lists the supported DA App package formats.
+      daLanguageBindings:
+        type: array
+        items:
+          type: string
+          enum:
+            - python
+            - nodejs
+        description: Lists the supported language bindings for DA Apps.
+  networkCapablity:
+    type: object
+    properties:
+      interfaceDetails:
+        type: array
+        items:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - eth
+                - wifi
+                - bluetooth
+                - wan
+              description: Specifies the type of network interface.
+            auth802_1x:
+              type: boolean
+              description: Indicates if 802.1x authentication is supported.
+            internal:
+              type: boolean
+              description: Indicates if the interface is internal.
+            ipv4Supported:
+              type: boolean
+              description: Indicates if IPv4 is supported.
+            ipv6Supported:
+              type: boolean
+              description: Indicates if IPv6 is supported.
+            ipAssignment:
+              type: array
+              items:
+                type: string
+                enum:
+                  - static
+                  - dhcp
+              description: Lists the supported IP assignment methods.
+  bluetoothCapablity:
+    type: object
+    properties:
+      supportedProfiles:
+        type: array
+        items:
+          type: string
+          enum:
+            - SPP
+            - PAN
+            - HID
+        description: Lists the supported Bluetooth profiles.
+  llrpCapablity:
+    type: object
+    properties:
+      llrpVersion:
+        type: string
+        description: Specifies the version of LLRP supported.
+      mode:
+        type: string
+        description: Specifies the mode of LLRP operation.
+required:
+  - deviceClass
+  - deviceCapablity

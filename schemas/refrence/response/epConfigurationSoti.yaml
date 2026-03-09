@@ -1,0 +1,184 @@
+title: epConfig
+x-stoplight:
+  id: 7g3esr6v8nm8y
+type: object
+examples: []
+properties:
+  configuration:
+    type: object
+    properties:
+      endpointName:
+        type: string
+        example: MDM
+        description: The name of the endpoint, e.g., "MDM" for Mobile Device Management.
+      epType:
+        type: string
+        example: MGMT
+        enum:
+          - MGMT
+          - MGMT_EVT
+          - CONTROL
+          - DATA
+          - COMMON
+          - SOTI
+        description: The type of endpoint, specifying its functionality (e.g., Management, Control, etc.).
+      protocol:
+        type: string
+        enum:
+          - MQTT
+          - MQTTWS
+          - MQT-TLS
+          - MQTT-WSS
+          - TCPIP
+          - WS
+          - WSS
+          - HID
+          - HTTPS
+          - HTTP
+          - AWS
+          - AZURE
+        example: MQTT
+        description: The communication protocol used by the endpoint, such as MQTT or HTTP.
+      activate:
+        type: boolean
+        default: false
+        description: Indicates whether the endpoint is activated (true or false).
+      url:
+        type: string
+        example: soti.example.com
+        description: The URL of the endpoint, specifying its address.
+      verificationType:
+        type: string
+        example: VERIFY_HOST_PEER
+        enum:
+          - NONE
+          - VERIFY_PEER
+          - VERIFY_HOST
+          - VERIFY_HOST_PEER
+        description: The type of verification to be used for the endpoint connection.
+      port:
+        type: integer
+        example: 1883
+        description: The port number used for the connection.
+      qosCommon:
+        type: integer
+        example: 1
+        description: The Quality of Service (QoS) level for message delivery.
+      tenantId:
+        type: string
+        example: ZEBRA
+        description: The tenant's unique identifier.
+      mqttParams:
+        type: object
+        properties:
+          keepAlive:
+            type: integer
+            maximum: 65535
+            example: 300
+            description: The keep-alive interval for the MQTT connection.
+          cleanSession:
+            type: boolean
+            default: true
+            description: Indicates whether the MQTT session should be clean (true or false).
+          reconnectDelayMin:
+            type: integer
+            description: Minimum delay before reconnecting in case of disconnection.
+          reconnectDelayMax:
+            type: integer
+            description: Maximum delay before reconnecting in case of disconnection.
+          clientId:
+            type: string
+            example: zebra-rfd40-01
+            description: The client ID used for the MQTT connection.
+          username:
+            type: string
+            description: The username for authenticating the MQTT connection.
+          password:
+            type: string
+            description: The password for authenticating the MQTT connection.
+          publishTopics:
+            type: array
+            items:
+              type: object
+              properties:
+                topic:
+                  type: string
+                  example: SOTICONNECT/clients/resp/RFD400124FA
+                  description: The topic to publish messages to.
+                qos:
+                  type: integer
+                  example: 1
+                  description: The QoS level for the published topic.
+                retain:
+                  type: boolean
+                  description: Indicates whether the message should be retained on the broker.
+              required:
+                - topic
+                - qos
+                - retain
+            description: A list of topics to which messages will be published.
+          subscribeTopics:
+            type: array
+            items:
+              type: object
+              properties:
+                topic:
+                  type: string
+                  description: The topic to which the client will subscribe.
+                qos:
+                  type: integer
+                  description: The QoS level for the subscription.
+                retain:
+                  type: boolean
+                  description: Indicates whether the message should be retained.
+              required:
+                - topic
+                - qos
+                - retain
+            description: A list of topics to which the client will subscribe.
+      securityParams:
+        type: object
+        properties:
+          format:
+            type: string
+            enum:
+              - PEM
+              - PFX
+            example: PEM
+            description: The format of the security certificate (e.g., PEM or PFX).
+          algorithm:
+            type: string
+            enum:
+              - RSA256
+              - RSA512
+            example: RSA256
+            description: The encryption algorithm used (e.g., RSA256).
+          caCertificateFile:
+            type: string
+            example: cloud-trusted-ca-certs.crt
+            description: The CA certificate file for establishing trust.
+          clientCert:
+            type: string
+            example: client_cert.pem
+            description: The client certificate file for authentication.
+          clientKey:
+            type: string
+            example: client_key.pem
+            description: The client key file for authentication.
+        required:
+          - format
+          - algorithm
+          - caCertificateFile
+          - clientCert
+          - clientKey
+        description: Security parameters for the endpoint connection.
+      eventConfiguration:
+        $ref: ../payload/cfgEventPayload.yaml
+        description: Reference to the event configuration payload.
+    required:
+      - epType
+      - protocol
+      - activate
+      - url
+      - verificationType
+      - port

@@ -1,0 +1,57 @@
+{
+  "title": "set_os",
+  "x-stoplight": {
+    "id": "1s73b15iifdn3"
+  },
+  "description": "Command issued to set new firmware & initiate firmware update ",
+  "type": "object",
+  "examples": [
+    {
+      "command": "set_os",
+      "requestId": "abc123",
+      "OSUpdateDetails": {
+        "url": "https://192.168.29.39:8000/Build-3.10.27/Firmware",
+        "authenticationType": "CERTIFICATE",
+        "verificationType": "VERIFY_HOST",
+        "caCertificateFileContent": "-----BEGIN CERTIFICATE-----\\\\r\\\\nPUdg=\\\\r\\\\n-----END CERTIFICATE-----"
+      }
+    },
+    {
+      "command": "set_os",
+      "requestId": "abc123",
+      "OSUpdateDetails": {
+      "url": "https://192.168.29.39:8000/Build-3.10.27/Firmware",
+      "authenticationType": "CERTIFICATE",
+      "verificationType": "VERIFY_HOST"
+      }
+    },
+    {
+      "command": "set_os",
+      "requestId": "abc123",
+      "OSUpdateDetails": {
+      "url": "https://192.168.29.39:8000/Build-3.10.27/Firmware",
+      "authenticationType": "NONE",
+      "verificationType": "NONE"
+      }
+    }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "set_os",
+      "description": "Specifies the operation being performed, in this case, setting the reader operating system."
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+    },
+    "OSUpdateDetails": {
+      "$ref": "../../refrence/payload/osUpdatePayload.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "title": "alert_short",
+  "x-stoplight": {
+    "id": "ps4oql8nfry5a"
+  },
+  "type": "object",
+  "examples": [
+    {
+      "id": "FIRMWARE_DOWNLOAD_SUCCESS",
+      "timestamp": "22:54:25",
+      "type": "ALERT",
+      "priority": "LOW",
+      "messageID": "ZEBRA_RFID_HH_ALERTS",
+      "description": "firmware download completed successfully"
+    },
+    {
+      "id": "BATTERY_CRITICAL_SET",
+      "timestamp": "14:30:15",
+      "type": "ALERT",
+      "priority": "CRITICAL",
+      "messageID": "ZEBRA_RFID_HH_ALERTS",
+      "description": "battery level is critically low"
+    },
+    {
+      "id": "WIFI_CONFIG_FAIL",
+      "timestamp": "09:15:42",
+      "type": "NOTIFICATION",
+      "priority": "HIGH",
+      "messageID": "ZEBRA_RFID_HH_ALERTS",
+      "description": "WiFi configuration failed"
+    },
+    {
+      "id": "MQTT_INSTALL_CERTIFICATE_SUCCESS",
+      "timestamp": "11:45:18",
+      "type": "NOTIFICATION",
+      "priority": "LOW",
+      "messageID": "ZEBRA_RFID_HH_ALERTS",
+      "description": "MQTT certificate installed successfully"
+    }
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "enum": [
+        "FIRMWARE_DOWNLOAD_FAIL",
+        "FIRMWARE_DOWNLOAD_SUCCESS",
+        "BATTERY_LOW_SET",
+        "BATTERY_LOW_CLEAR",
+        "BATTERY_CRITICAL_SET",
+        "BATTERY_FULL",
+        "TEMPERATURE_HIGH_SET",
+        "TEMPERATURE_HIGH_CLEAR",
+        "TEMPERATURE_CRITICAL_SET",
+        "TEMPERATURE_CRITICAL_CLEAR",
+        "NETWORK_INTERFACE_CHANGE",
+        "FIRMWARE_UPDATE_FAIL",
+        "FIRMWARE_UPDATE_SUCCESS",
+        "WIFI_CONFIG_SUCCESS",
+        "WIFI_CONFIG_FAIL",
+        "ETH_CONFIG_SUCCESS",
+        "ETH_CONFIG_FAIL",
+        "POWER_SOURCE_UPDATE",
+        "MQTT_INSTALL_CERTIFICATE_SUCCESS",
+        "MQTT_INSTALL_CERTIFICATE_FAIL",
+        "MQTT_CLIENT_CERT_DOWNLOAD_FAIL",
+        "MQTT_CLIENT_CERT_DOWNLOAD_SUCCESS",
+        "MQTT_ROOT_CERT_DOWNLOAD_FAIL",
+        "MQTT_ROOT_CERT_DOWNLOAD_SUCCESS",
+        "WIFI_INSTALL_CERTIFICATE_SUCCESS",
+        "WIFI_INSTALL_CERTIFICATE_FAIL",
+        "WIFI_CLIENT_CERT_DOWNLOAD_FAIL",
+        "WIFI_CLIENT_CERT_DOWNLOAD_SUCCESS",
+        "WIFI_ROOT_CERT_DOWNLOAD_FAIL",
+        "WIFI_ROOT_CERT_DOWNLOAD_SUCCESS",
+        "FILESTORE_INSTALL_CERTIFICATE_SUCCESS",
+        "FILESTORE_INSTALL_CERTIFICATE_FAIL",
+        "FILESTORE_CLIENT_CERT_DOWNLOAD_FAIL",
+        "FILESTORE_CLIENT_CERT_DOWNLOAD_SUCCESS",
+        "FILESTORE_ROOT_CERT_DOWNLOAD_FAIL",
+        "FILESTORE_ROOT_CERT_DOWNLOAD_SUCCESS"
+      ],
+      "example": "FIRMWARE_DOWNLOAD_SUCCESS",
+      "description": "The unique identifier for the alert, representing the specific type of event or notification."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "time",
+      "description": "The time when the alert was generated, formatted as a string."
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "NOTIFICATION",
+        "ALERT"
+      ],
+      "description": "The category of the message, indicating whether it is a notification or an alert."
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "HIGH",
+        "LOW",
+        "CRITICAL"
+      ],
+      "description": "The urgency level of the alert, specifying its priority as HIGH, LOW, or CRITICAL."
+    },
+    "messageID": {
+      "type": "string",
+      "example": "ZEBRA_RFID_HH_ALERTS",
+      "enum": [
+        "ZEBRA_RFID_HH_ALERTS"
+      ],
+      "description": "The identifier for the message type, used to categorize the source or purpose of the alert."
+    },
+    "description": {
+      "type": "string",
+      "example": "firmware download started",
+      "description": "A brief human-readable text describing the alert or notification."
+    }
+  },
+  "required": [
+    "id",
+    "timestamp",
+    "type",
+    "priority",
+    "messageID",
+    "description"
+  ],
+  "description": "Short form of alerts, does not contain details about the alert. This is mainly meant for SOTI."
+}

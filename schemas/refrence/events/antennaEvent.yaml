@@ -1,0 +1,22 @@
+title: antennaEvent
+x-stoplight:
+  id: aqw5xmnoocpk6
+type: array
+examples: []
+items:
+  type: object
+  properties:
+    antenna:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - connected
+            - disconnected
+          example: connected
+          description: Indicates whether the antenna is connected or disconnected.
+        port:
+          type: number
+          example: 3
+          description: Specifies the port number where the antenna is connected.

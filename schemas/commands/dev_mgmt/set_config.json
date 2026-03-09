@@ -1,0 +1,237 @@
+{
+  "title": "set_config",
+  "x-stoplight": {
+    "id": "zzhmsbj9vbslf"
+  },
+  "description": "Command issued to set the complete device configuration such as current region details, ethernet & wifi configuration, end point configuration,  event and alert configuration  ",
+  "type": "object",
+  "examples": [
+    {
+      "command": "set_config",
+      "requestId": "209543",
+      "configData": {
+        "wifiConfig": {
+          "operation": "CREATE",
+          "accessPoint": {
+            "essid": "TEST_5G",
+            "connect": true,
+            "autoConn": true,
+            "enableSecurity": true,
+            "isPreferred": false,
+            "security": {
+              "securityType": "WPA2Personal",
+              "securityDetails": {
+                "WPA2Personal": {
+                  "password": "nov211985"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": "set_config",
+      "requestId": "209543",
+      "configData": {
+        "wifiConfig": {
+          "operation": "MODIFY",
+          "accessPoint": {
+            "essid": "TEST_5G",
+            "connect": true,
+            "autoConn": true,
+            "enableSecurity": true,
+            "isPreferred": true,
+            "security": {
+              "securityType": "WPA2Personal",
+              "securityDetails": {
+                "WPA2Personal": {
+                  "password": "nov211985"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": "set_config",
+      "requestId": "209543",
+      "configData": {
+        "applyAfterReboot": true,
+        "epConfig": {
+          "operation": "add",
+          "configuration": {
+            "endpointName": "gmdm",
+            "epType": "MDM",
+            "mqttParams": {
+              "keepAlive": 300
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": "set_config",
+      "requestId": "1233",
+      "configData": {
+        "epConfig": {
+          "operation": "add",
+          "configuration": {
+            "endpointName": "dataEP",
+            "epType": "DATA1",
+            "protocol": "MQTT",
+            "activate": true,
+            "url": "17L11-GG6663-1",
+            "verificationType": "NONE",
+            "port": 1883,
+            "qosCommon": 1,
+            "tenantId": "ZEBRA",
+            "mqttParams": {
+              "keepAlive": 300,
+              "cleanSession": true,
+              "reconnectDelayMin": 50,
+              "reconnectDelayMax": 500,
+              "clientId": "zebra-rfd40-01",
+              "username": "username",
+              "password": "password"
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": "set_config",
+      "requestId": "1234",
+      "configData": {
+        "epConfig": {
+          "operation": "add",
+          "configuration": {
+            "endpointName": "ctrlEP",
+            "epType": "CTRL",
+            "protocol": "MQTT",
+            "activate": true,
+            "url": "17L11-GG6663-1",
+            "verificationType": "NONE",
+            "port": 1883,
+            "qosCommon": 1,
+            "tenantId": "zebra",
+            "mqttParams": {
+              "keepAlive": 300,
+              "cleanSession": true,
+              "reconnectDelayMin": 50,
+              "reconnectDelayMax": 500,
+              "clientId": "zebra-rfd40-01",
+              "username": "mqttuser",
+                "password": "password",
+                "publishTopics": [
+                {
+                  "topic": "MDM/clients/resp",
+                  "qos": 1,
+                  "retain": false
+                },
+                {
+                  "topic": "MDM/clients/event",
+                  "qos": 1,
+                  "retain": false
+                },
+                {
+                  "topic": "MDM/clients/rfid",
+                  "qos": 0,
+                  "retain": true
+                }
+                ],
+                "subscribeTopics": [
+                {
+                  "topic": "MDM/clients/cmnd",
+                  "qos": 0,
+                  "retain": false
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": "set_config",
+      "requestId": "5678",
+      "configData": {
+        "wifiConfig": {
+          "operation": "CREATE",
+          "accessPoint": {
+            "essid": "CORP_WIFI",
+            "connect": true,
+            "autoConn": false,
+            "enableSecurity": true,
+            "isPreferred": true,
+            "security": {
+              "securityType": "WPA2Personal",
+              "securityDetails": {
+                "WPA2Personal": {
+                  "password": "corp_pass_2024"
+                }
+              }
+            }
+          }
+        },
+        "epConfig": {
+          "operation": "add",
+          "configuration": {
+            "endpointName": "mgmtEp",
+            "epType": "MGMT",
+            "protocol": "MQTT",
+            "activate": true,
+            "url": "iot-broker.company.com",
+            "verificationType": "NONE",
+            "port": 8883,
+            "qosCommon": 1,
+            "tenantId": "ZEBRA",
+            "mqttParams": {
+              "keepAlive": 60,
+              "cleanSession": true,
+              "reconnectDelayMin": 10,
+              "reconnectDelayMax": 120,
+              "clientId": "iot",
+              "username": "iotuser",
+              "password": "iotpassword",
+              "publishTopics": [
+                {
+                  "topic": "IOT/data/resp",
+                  "qos": 1,
+                  "retain": false
+                }
+              ],
+              "subscribeTopics": [
+                {
+                  "topic": "IOT/data/cmnd",
+                  "qos": 1,
+                  "retain": false
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "set_config",
+      "description": "Specifies the operation being performed, in this case, setting the reader configuration."
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+    },
+    "configData": {
+      "$ref": "../../refrence/payload/setCfgPayload.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ]
+}

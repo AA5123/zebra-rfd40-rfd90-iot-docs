@@ -1,0 +1,178 @@
+{
+  "title": "config_endpoint",
+  "x-stoplight": {
+    "id": "d2649azhemdh6"
+  },
+  "type": "object",
+  "description": "Using config_endpoint user can add/delete/modify the end point configuration",
+  "examples": [
+    {
+      "command": "config_endpoint",
+      "requestId": "1233",
+      "epConfig": {
+        "operation": "add",
+        "configuration": {
+          "endpointName": "mgmt_tst",
+          "epType": "MGMT",
+          "protocol": "MQTT",
+          "activate": true,
+          "url": "test.example.com",
+          "verificationType": "NONE",
+          "port": 1883,
+          "qosCommon": 1,
+          "tenantId": "ZEBRA",
+          "mqttParams": {
+            "keepAlive": 300,
+            "cleanSession": true,
+            "reconnectDelayMin": 50,
+            "reconnectDelayMax": 500,
+            "clientId": "zebra-rfd40-01",
+            "username": "username",
+            "password": "pass@1234",
+            "publishTopics": [
+              {
+              "topic": "MDM/clients/resp",
+              "qos": 1,
+              "retain": false
+              },
+              {
+              "topic": "MDM/clients/event",
+              "qos": 1,
+              "retain": false
+              },
+              {
+              "topic": "MDM/clients/rfid",
+              "qos": 0,
+              "retain": true
+              }
+            ],
+            "subscribeTopics": [
+              {
+              "topic": "MDM/clients/cmnd",
+              "qos": 0,
+              "retain": false
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "command": "config_endpoint",
+      "requestId": "1233",
+      "epConfig": {
+        "operation": "delete",
+        "configuration": {
+          "endpointName": "mgmt_tst",
+          "epType": "MGMT"
+        }
+      }
+    },
+    {
+      "command": "config_endpoint",
+      "requestId": "1233",
+      "epConfig": {
+        "operation": "add",
+        "configuration": {
+          "endpointName": "dataEP",
+          "epType": "DATA1",
+          "protocol": "MQTT",
+          "activate": true,
+          "url": "17L11-GG6663-1",
+          "verificationType": "NONE",
+          "port": 1883,
+          "qosCommon": 1,
+          "tenantId": "ZEBRA",
+          "mqttParams": {
+            "keepAlive": 300,
+            "cleanSession": true,
+            "reconnectDelayMin": 50,
+            "reconnectDelayMax": 500,
+            "clientId": "zebra-rfd40-01",
+            "username": "username",
+            "password": "password"
+          }
+        }
+      }
+    },
+    {
+      "command": "config_endpoint",
+      "requestId": "1233",
+      "epConfig": {
+        "operation": "add",
+        "configuration": {
+          "endpointName": "ctrlEP",
+          "epType": "CTRL",
+          "protocol": "MQTT",
+          "activate": false,
+          "url": "17L11-GG6663-1",
+          "verificationType": "NONE",
+          "port": 1883,
+          "qosCommon": 1,
+          "tenantId": "zebra",
+          "mqttParams": {
+            "keepAlive": 300,
+            "cleanSession": true,
+            "reconnectDelayMin": 50,
+            "reconnectDelayMax": 500,
+            "clientId": "zebra-rfd40-01",
+            "username": "mqttuser",
+            "password": "password",
+            "publishTopics": [
+              {
+                "topic": "MDM/clients/resp",
+                "qos": 1,
+                "retain": false
+              },
+              {
+                "topic": "MDM/clients/event",
+                "qos": 1,
+                "retain": false
+              },
+              {
+                "topic": "MDM/clients/rfid",
+                "qos": 0,
+                "retain": true
+              }
+            ],
+            "subscribeTopics": [
+              {
+                "topic": "MDM/clients/cmnd",
+                "qos": 0,
+                "retain": false
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "config_endpoint",
+      "description": "Command issued to configure active endpoint ",
+      "x-stoplight": {
+        "id": "mzr6mezam1jna"
+      }
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation.",
+      "x-stoplight": {
+        "id": "2jdxi6msukeny"
+      }
+    },
+    "epConfig": {
+      "$ref": "../../refrence/payload/cfgEndpointPayload.yaml",
+      "x-stoplight": {
+        "id": "83jczha1cflzh"
+      }
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ]
+}

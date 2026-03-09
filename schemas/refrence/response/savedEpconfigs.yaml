@@ -1,0 +1,10 @@
+title: savedEpconfigs
+x-stoplight:
+  id: 2ady007bo7b6l
+type: object
+properties:
+  epNames:
+    type: array
+    description: An array containing endpoint configurations.
+    items:
+      type: string

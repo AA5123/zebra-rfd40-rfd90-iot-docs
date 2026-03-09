@@ -1,0 +1,40 @@
+title: alertEvent
+x-stoplight:
+  id: o0nu0f04g6d2y
+type: object
+properties:
+  evtData:
+    anyOf:
+      - properties:
+          ntp:
+            type: object
+            properties:
+              offset:
+                type: number
+              reach:
+                type: number
+          cpuUsage:
+            type: number
+          flashUsage:
+            type: number
+          ramUsage:
+            type: number
+          userApp:
+            type: object
+            properties:
+              appName:
+                type: string
+              message:
+                type: string
+          temperature:
+            type: object
+            properties:
+              nge:
+                type: number
+                description: NGE radio temperature
+              pa:
+                type: number
+                description: 'Power amp emperature '
+              ambient:
+                type: number
+    type: object

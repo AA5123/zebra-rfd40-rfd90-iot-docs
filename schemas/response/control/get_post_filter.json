@@ -1,0 +1,57 @@
+{
+  "title": "get_post_filter_response",
+  "x-stoplight": {
+    "id": "msvo8jjn199v7"
+  },
+  "type": "object",
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "get_post_filter",
+      "description": "The type of command being executed or responded to. For MQTT, this specifies the operation type."
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier for the request, used for tracking the request and its corresponding response in the MQTT protocol."
+    },
+    "apiVersion": {
+      "type": "string",
+      "enum": [
+        "V1.1",
+        "V1.0"
+      ],
+      "example": "V1.1"
+    },
+    "postFilterPayload": {
+      "$ref": "../../refrence/response/postFilterResponse.yaml"
+    },
+    "response": {
+      "$ref": "../../refrence/response/response.yaml"
+    }
+  },
+  "examples": [
+    {
+      "command": "get_post_filter",
+      "requestId": "abc123",
+      "apiVersion": "V1.1",
+      "postFilterPayload": {
+        "postFilter": [
+          {
+            "dataEpType": "DATA_EP1",
+            "matchPattern": "FFFF",
+            "matchPatternMethod": "REGEX",
+            "reportOperation": "INCLUDE",
+            "reportDuration": 0,
+            "seenCount": 0,
+            "rssiThreshold": -88
+          }
+        ]
+      },
+      "response": {
+        "code": 0,
+        "description": "Success"
+      }
+    }
+  ]
+}

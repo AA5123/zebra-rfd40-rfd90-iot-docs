@@ -1,0 +1,32 @@
+title: powerEvent
+x-stoplight:
+  id: zo9rfssxbwg10
+type: object
+properties:
+  powerSource:
+    type: string
+    enum:
+      - DC        
+      - POE       
+      - POE+      
+      - BATTERY   
+      - CRADLE    
+    description: Specifies the source of power for the device.
+  lldp:
+    type: string
+    enum:
+      - success       
+      - failed        
+      - negotiating   
+    description: Represents the status of Link Layer Discovery Protocol (LLDP) negotiation.
+  powerMode:
+    type: string
+    enum:
+      - ACTIVE        
+      - LOWPOWER      
+    example: LOWPOWER
+    description: Indicates the current power mode of the device.
+required:
+  - powerSource
+  - lldp
+  - powerMode

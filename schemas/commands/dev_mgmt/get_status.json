@@ -1,0 +1,24 @@
+{
+  "title": "get_status",
+  "x-stoplight": {
+    "id": "2a0e5dee1bcgq"
+  },
+  "description": "This command used to retrieve the reader status information.",
+  "type": "object",
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "get_status",
+      "description": "Command used to get the reader status information "
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abcd123",
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ]
+}

@@ -1,0 +1,1032 @@
+{
+  "title": "config_endpoint",
+  "x-stoplight": {
+    "id": "d2649azhemdh6"
+  },
+  "type": "object",
+  "description": "Using config_endpoint user can add/delete/modify the end point configuration",
+  "examples": [
+    {
+      "command": "config_endpoint",
+      "requestId": "1233",
+      "epConfig": {
+        "operation": "add",
+        "configuration": {
+          "endpointName": "mgmt_tst",
+          "epType": "MGMT",
+          "protocol": "MQTT",
+          "activate": true,
+          "url": "test.example.com",
+          "verificationType": "NONE",
+          "port": 1883,
+          "qosCommon": 1,
+          "tenantId": "ZEBRA",
+          "mqttParams": {
+            "keepAlive": 300,
+            "cleanSession": true,
+            "reconnectDelayMin": 50,
+            "reconnectDelayMax": 500,
+            "clientId": "zebra-rfd40-01",
+            "username": "username",
+            "password": "pass@1234",
+            "publishTopics": [
+              {
+              "topic": "MDM/clients/resp",
+              "qos": 1,
+              "retain": false
+              },
+              {
+              "topic": "MDM/clients/event",
+              "qos": 1,
+              "retain": false
+              },
+              {
+              "topic": "MDM/clients/rfid",
+              "qos": 0,
+              "retain": true
+              }
+            ],
+            "subscribeTopics": [
+              {
+              "topic": "MDM/clients/cmnd",
+              "qos": 0,
+              "retain": false
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "command": "config_endpoint",
+      "requestId": "1233",
+      "epConfig": {
+        "operation": "delete",
+        "configuration": {
+          "endpointName": "mgmt_tst",
+          "epType": "MGMT"
+        }
+      }
+    },
+    {
+      "command": "config_endpoint",
+      "requestId": "1233",
+      "epConfig": {
+        "operation": "add",
+        "configuration": {
+          "endpointName": "dataEP",
+          "epType": "DATA1",
+          "protocol": "MQTT",
+          "activate": true,
+          "url": "17L11-GG6663-1",
+          "verificationType": "NONE",
+          "port": 1883,
+          "qosCommon": 1,
+          "tenantId": "ZEBRA",
+          "mqttParams": {
+            "keepAlive": 300,
+            "cleanSession": true,
+            "reconnectDelayMin": 50,
+            "reconnectDelayMax": 500,
+            "clientId": "zebra-rfd40-01",
+            "username": "username",
+            "password": "password"
+          }
+        }
+      }
+    },
+    {
+      "command": "config_endpoint",
+      "requestId": "1233",
+      "epConfig": {
+        "operation": "add",
+        "configuration": {
+          "endpointName": "ctrlEP",
+          "epType": "CTRL",
+          "protocol": "MQTT",
+          "activate": false,
+          "url": "17L11-GG6663-1",
+          "verificationType": "NONE",
+          "port": 1883,
+          "qosCommon": 1,
+          "tenantId": "zebra",
+          "mqttParams": {
+            "keepAlive": 300,
+            "cleanSession": true,
+            "reconnectDelayMin": 50,
+            "reconnectDelayMax": 500,
+            "clientId": "zebra-rfd40-01",
+            "username": "mqttuser",
+            "password": "password",
+            "publishTopics": [
+              {
+                "topic": "MDM/clients/resp",
+                "qos": 1,
+                "retain": false
+              },
+              {
+                "topic": "MDM/clients/event",
+                "qos": 1,
+                "retain": false
+              },
+              {
+                "topic": "MDM/clients/rfid",
+                "qos": 0,
+                "retain": true
+              }
+            ],
+            "subscribeTopics": [
+              {
+                "topic": "MDM/clients/cmnd",
+                "qos": 0,
+                "retain": false
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "config_endpoint",
+      "description": "Command issued to configure active endpoint ",
+      "x-stoplight": {
+        "id": "mzr6mezam1jna"
+      }
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation.",
+      "x-stoplight": {
+        "id": "2jdxi6msukeny"
+      }
+    },
+    "epConfig": {
+      "$ref": "../../refrence/payload/cfgEndpointPayload.yaml",
+      "x-stoplight": {
+        "id": "83jczha1cflzh"
+      }
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ]
+}
+
+
+{
+  "title": "config_events",
+  "x-stoplight": {
+    "id": "puyt4jkcelxao"
+  },
+  "description": "Enables or disables specific device events. To apply the changes, a device reboot is required. For RFD4090 devices, only the following events are supported: terminalConnection, firmwareUpdate, network, exceptions, ntp, heartbeat, power, battery, and fileDownload.",
+  "type": "object",
+  "examples": [
+    {
+      "command": "config_events",
+      "requestId": "abc123",
+      "eventConfiguration": {
+        "antenna": true,
+        "terminalConnection": true,
+        "firmwareUpdate": true,
+        "gpi": true,
+        "network": true,
+        "exceptions": true,
+        "ntp": true,
+        "userApp": true,
+        "heartbeat": true,
+        "power": true,
+        "battery": true,
+        "temperature": true,
+        "fileDownload": true,
+        "cpuUsage": true,
+        "flashUsage": true,
+        "ramUsage": true,
+        "heartbeatConfiguration": {
+          "interval": 100,
+          "inventoryStatus": true,
+          "batteryStatus": true,
+          "userApps": true
+        },
+        "cpuThreshold": 80,
+        "ramThreshold": 80,
+        "flashThreshold": 80,
+        "temperatureThreshold": 55
+      }
+    },
+    {
+      "command": "config_events",
+      "requestId": "abc123",
+      "eventConfiguration": {
+        "antenna": false,
+        "terminalConnection": true,
+        "firmwareUpdate": true,
+        "gpi": false,
+        "network": true,
+        "exceptions": false,
+        "ntp": false,
+        "userApp": false,
+        "heartbeat": false,
+        "power": true,
+        "battery": true,
+        "temperature": true,
+        "fileDownload": true,
+        "cpuUsage": false,
+        "flashUsage": false,
+        "ramUsage": false
+      }
+    }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "config_events",
+      "description": "Command issued to configure events & alert threshold values"
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+    },
+    "eventConfiguration": {
+      "$ref": "../../refrence/payload/cfgEventPayload.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ]
+}
+
+
+{
+  "title": "get_config",
+  "x-stoplight": {
+    "id": "tzc9hszry476y"
+  },
+  "description": "Command issued to retrieve the complete device configuration such as version details, device status, current region details, ethernet & wifi configuration, end point configuration, details of installed certificates, event and alert configuration   ",
+  "type": "object",
+  "examples":[],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "get_config",
+      "description": "Specifies the operation being performed, in this case, retrieving the complete device configuration."
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+    }
+  }
+}
+
+
+{
+  "title": "get_status",
+  "x-stoplight": {
+    "id": "2a0e5dee1bcgq"
+  },
+  "description": "This command used to retrieve the reader status information.",
+  "type": "object",
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "get_status",
+      "description": "Command used to get the reader status information "
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abcd123",
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ]
+}
+
+{
+  "title": "get_version",
+  "x-stoplight": {
+    "id": "6t1zk44tshzm1"
+  },
+  "description": "This command is used to retrieve the reader information like device serial no, model no, sku, and firmware version information. ",
+  "type": "object",
+  "examples": [],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "get_version",
+      "description": "Used to get the reader information "
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ]
+}
+
+{
+  "title": "set_os",
+  "x-stoplight": {
+    "id": "1s73b15iifdn3"
+  },
+  "description": "Command issued to set new firmware & initiate firmware update ",
+  "type": "object",
+  "examples": [
+    {
+      "command": "set_os",
+      "requestId": "abc123",
+      "OSUpdateDetails": {
+        "url": "https://192.168.29.39:8000/Build-3.10.27/Firmware",
+        "authenticationType": "CERTIFICATE",
+        "verificationType": "VERIFY_HOST",
+        "caCertificateFileContent": "-----BEGIN CERTIFICATE-----\\\\r\\\\nPUdg=\\\\r\\\\n-----END CERTIFICATE-----"
+      }
+    },
+    {
+      "command": "set_os",
+      "requestId": "abc123",
+      "OSUpdateDetails": {
+      "url": "https://192.168.29.39:8000/Build-3.10.27/Firmware",
+      "authenticationType": "CERTIFICATE",
+      "verificationType": "VERIFY_HOST"
+      }
+    },
+    {
+      "command": "set_os",
+      "requestId": "abc123",
+      "OSUpdateDetails": {
+      "url": "https://192.168.29.39:8000/Build-3.10.27/Firmware",
+      "authenticationType": "NONE",
+      "verificationType": "NONE"
+      }
+    }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "set_os",
+      "description": "Specifies the operation being performed, in this case, setting the reader operating system."
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+    },
+    "OSUpdateDetails": {
+      "$ref": "../../refrence/payload/osUpdatePayload.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ]
+}
+
+{
+  "title": "set_wifi",
+  "x-stoplight": {
+    "id": "wk91qymmt9ye2"
+  },
+  "description": "This API is used to set wifi configuration. It currently supports IPv4 addressing with DHCP-based IP assignment only; static IP configuration and IPv6 support is not available in the current API version.",
+  "type": "object",
+  "examples": [
+    {
+      "command": "set_wifi",
+      "requestId": "abc123",
+      "wifiConfig": {
+        "interfaceName": "wlan0",
+        "enableInterface": true,
+        "operation": "CREATE",
+        "accessPoint": {
+          "connect": false,
+          "isPreferred": false,
+          "autoConn": true,
+          "essid": "TestAP1",
+          "enableSecurity": true,
+          "security": {
+            "securityType": "WPA2Personal",
+            "securityDetails": {
+              "WPA2Personal": {
+                "password": "test@123"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": "set_wifi",
+      "requestId": "abc123",
+      "wifiConfig": {
+        "interfaceName": "wlan0",
+        "enableInterface": true,
+        "operation": "MODIFY",
+        "accessPoint": {
+          "connect": false,
+          "isPreferred": false,
+          "autoConn": true,
+          "essid": "TestAP1",
+          "enableSecurity": true,
+          "security": {
+            "securityType": "WPA2Personal",
+            "securityDetails": {
+              "WPA2Personal": {
+                "password": "test@12345678"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": "set_wifi",
+      "requestId": "abc123",
+      "wifiConfig": {
+        "operation": "MODIFY",
+        "accessPoint": {
+          "isPreferred": true,
+          "essid": "TestAP1"
+        }
+      }
+    },
+    {
+      "command": "set_wifi",
+      "requestId": "abc123",
+      "wifiConfig": {
+        "interfaceName": "wlan0",
+        "enableInterface": true,
+        "operation": "CREATE",
+        "accessPoint": {
+          "connect": false,
+          "isPreferred": false,
+          "autoConn": true,
+          "essid": "TestAP2",
+          "enableSecurity": true,
+          "security": {
+            "securityType": "WPA2Enterprise",
+            "securityDetails": {
+              "WPA2Enterprise": {
+                "authentication": "tls",
+                "innerAuthentication": "tls",
+                "identity": "test",
+                "anonymousIdentity": "test",
+                "password": "test@123",
+                "passphrase": "test@123",
+                "certificate": [
+                  {
+                    "key": "ca_cert",
+                    "value": "gen_cert"
+                  },
+                  {
+                    "key": "client_key",
+                    "value": "gen_cl_key"
+                  },
+                  {
+                    "key": "client_cert",
+                    "value": "gen_cl_cert"
+                  }
+                ],
+                "protocol": "WPA2_Enterprise_CCMP"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "set_wifi",
+      "description": "Specifies the operation being performed, in this case, setting the wifi configuration."
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",      
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+    },
+    "wifiConfig": {
+      "$ref": "../../refrence/payload/cfgWifiPayload.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ]
+}
+
+
+{
+  "title": "install_certificate",
+  "type": "object",
+  "x-stoplight": {
+    "id": "8ji89je0bi6sq"
+  },
+  "description": "This API is used to install certificates. ",
+  "examples": [
+    { 
+  "command": "install_certificate", 
+  "requestId": "abc123", 
+  "certDetails": { 
+    "name": "sotiAgent", 
+    "type": "wifi", 
+    "authenticationType": "CERTIFICATE", 
+    "url": [ 
+      { 
+        "key": "ca_cert", 
+        "value": "http://localhost/ca_cert.pem" 
+      }, 
+      { 
+        "key": "client_key", 
+        "value": "http://localhost/client_key.pem" 
+      }, 
+      { 
+        "key": "client_cert", 
+        "value": "http://localhost/client_cert.pem" 
+      }, 
+      { "key": "cert_key_password",
+        "value": "amnin@123" 
+      } 
+    ], 
+    "pfxPassword": "pass@123", 
+    "verificationType": "VERIFY_HOST", 
+    "caCertificateFileContent": "----BEGIN---- cert content ----END---" 
+
+  } 
+} ,
+    {
+      "command": "install_certificate",
+      "requestId": "18996",
+      "certDetails": {
+        "type": "filestore",
+        "authenticationType": "CERTIFICATE",
+        "url": [
+          {
+            "key": "ca_cert",
+            "value": "http://scp000555.soticonnect.cloud:4650/cm/api/root-download"
+          }
+        ],
+        "verificationType": "VERIFY_HOST"
+      }
+    },
+    {
+      "command": "install_certificate",
+      "requestId": "19001",
+      "certDetails": {
+        "name": "mqtt_client",
+        "type": "mqtt",
+        "authenticationType": "CERTIFICATE",
+        "url": [
+          {
+            "key": "client_cert",
+            "value": "https://certserver.company.com/api/client-cert"
+          },
+          {
+            "key": "client_key",
+            "value": "https://certserver.company.com/api/client-key"
+          },
+          {
+            "key": "ca_cert",
+            "value": "https://certserver.company.com/api/ca-cert"
+          }
+        ],
+        "verificationType": "VERIFY_HOST_PEER"
+      }
+    },
+    {
+      "command": "install_certificate",
+      "requestId": "19002",
+      "certDetails": {
+        "name": "secure_server",
+        "type": "server",
+        "authenticationType": "BASIC",
+        "url": [
+          {
+            "key": "client_cert",
+            "value": "https://pki.enterprise.com/download/server.crt"
+          },
+          {
+            "key": "client_key",
+            "value": "https://pki.enterprise.com/download/server.key"
+          },
+          {
+            "key": "ca_cert",
+            "value": "https://pki.enterprise.com/download/root-ca.crt"
+          },
+          {
+            "key": "cert_key_password",
+            "value": "encryptedKeyPassword123"
+          }
+        ],
+        "authenticateOptions": {
+          "username": "certadmin",
+          "password": "securePass456"
+        },
+        "verificationType": "VERIFY_PEER"
+      }
+    }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "install_certificate",
+      "description": "Command issued to install new certificate"
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+    },
+    "certDetails": {
+      "$ref": "../../refrence/payload/installCertPayload.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ]
+}
+
+{
+  "title": "set_config",
+  "x-stoplight": {
+    "id": "zzhmsbj9vbslf"
+  },
+  "description": "Command issued to set the complete device configuration such as current region details, ethernet & wifi configuration, end point configuration,  event and alert configuration  ",
+  "type": "object",
+  "examples": [
+    {
+      "command": "set_config",
+      "requestId": "209543",
+      "configData": {
+        "wifiConfig": {
+          "operation": "CREATE",
+          "accessPoint": {
+            "essid": "TEST_5G",
+            "connect": true,
+            "autoConn": true,
+            "enableSecurity": true,
+            "isPreferred": false,
+            "security": {
+              "securityType": "WPA2Personal",
+              "securityDetails": {
+                "WPA2Personal": {
+                  "password": "nov211985"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": "set_config",
+      "requestId": "209543",
+      "configData": {
+        "wifiConfig": {
+          "operation": "MODIFY",
+          "accessPoint": {
+            "essid": "TEST_5G",
+            "connect": true,
+            "autoConn": true,
+            "enableSecurity": true,
+            "isPreferred": true,
+            "security": {
+              "securityType": "WPA2Personal",
+              "securityDetails": {
+                "WPA2Personal": {
+                  "password": "nov211985"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": "set_config",
+      "requestId": "209543",
+      "configData": {
+        "applyAfterReboot": true,
+        "epConfig": {
+          "operation": "add",
+          "configuration": {
+            "endpointName": "gmdm",
+            "epType": "MDM",
+            "mqttParams": {
+              "keepAlive": 300
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": "set_config",
+      "requestId": "1233",
+      "configData": {
+        "epConfig": {
+          "operation": "add",
+          "configuration": {
+            "endpointName": "dataEP",
+            "epType": "DATA1",
+            "protocol": "MQTT",
+            "activate": true,
+            "url": "17L11-GG6663-1",
+            "verificationType": "NONE",
+            "port": 1883,
+            "qosCommon": 1,
+            "tenantId": "ZEBRA",
+            "mqttParams": {
+              "keepAlive": 300,
+              "cleanSession": true,
+              "reconnectDelayMin": 50,
+              "reconnectDelayMax": 500,
+              "clientId": "zebra-rfd40-01",
+              "username": "username",
+              "password": "password"
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": "set_config",
+      "requestId": "1234",
+      "configData": {
+        "epConfig": {
+          "operation": "add",
+          "configuration": {
+            "endpointName": "ctrlEP",
+            "epType": "CTRL",
+            "protocol": "MQTT",
+            "activate": true,
+            "url": "17L11-GG6663-1",
+            "verificationType": "NONE",
+            "port": 1883,
+            "qosCommon": 1,
+            "tenantId": "zebra",
+            "mqttParams": {
+              "keepAlive": 300,
+              "cleanSession": true,
+              "reconnectDelayMin": 50,
+              "reconnectDelayMax": 500,
+              "clientId": "zebra-rfd40-01",
+              "username": "mqttuser",
+                "password": "password",
+                "publishTopics": [
+                {
+                  "topic": "MDM/clients/resp",
+                  "qos": 1,
+                  "retain": false
+                },
+                {
+                  "topic": "MDM/clients/event",
+                  "qos": 1,
+                  "retain": false
+                },
+                {
+                  "topic": "MDM/clients/rfid",
+                  "qos": 0,
+                  "retain": true
+                }
+                ],
+                "subscribeTopics": [
+                {
+                  "topic": "MDM/clients/cmnd",
+                  "qos": 0,
+                  "retain": false
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": "set_config",
+      "requestId": "5678",
+      "configData": {
+        "wifiConfig": {
+          "operation": "CREATE",
+          "accessPoint": {
+            "essid": "CORP_WIFI",
+            "connect": true,
+            "autoConn": false,
+            "enableSecurity": true,
+            "isPreferred": true,
+            "security": {
+              "securityType": "WPA2Personal",
+              "securityDetails": {
+                "WPA2Personal": {
+                  "password": "corp_pass_2024"
+                }
+              }
+            }
+          }
+        },
+        "epConfig": {
+          "operation": "add",
+          "configuration": {
+            "endpointName": "mgmtEp",
+            "epType": "MGMT",
+            "protocol": "MQTT",
+            "activate": true,
+            "url": "iot-broker.company.com",
+            "verificationType": "NONE",
+            "port": 8883,
+            "qosCommon": 1,
+            "tenantId": "ZEBRA",
+            "mqttParams": {
+              "keepAlive": 60,
+              "cleanSession": true,
+              "reconnectDelayMin": 10,
+              "reconnectDelayMax": 120,
+              "clientId": "iot",
+              "username": "iotuser",
+              "password": "iotpassword",
+              "publishTopics": [
+                {
+                  "topic": "IOT/data/resp",
+                  "qos": 1,
+                  "retain": false
+                }
+              ],
+              "subscribeTopics": [
+                {
+                  "topic": "IOT/data/cmnd",
+                  "qos": 1,
+                  "retain": false
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "set_config",
+      "description": "Specifies the operation being performed, in this case, setting the reader configuration."
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+    },
+    "configData": {
+      "$ref": "../../refrence/payload/setCfgPayload.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ]
+}
+
+{
+  "title": "set_wifi",
+  "x-stoplight": {
+    "id": "wk91qymmt9ye2"
+  },
+  "description": "This API is used to set wifi configuration. It currently supports IPv4 addressing with DHCP-based IP assignment only; static IP configuration and IPv6 support is not available in the current API version.",
+  "type": "object",
+  "examples": [
+    {
+      "command": "set_wifi",
+      "requestId": "abc123",
+      "wifiConfig": {
+        "interfaceName": "wlan0",
+        "enableInterface": true,
+        "operation": "CREATE",
+        "accessPoint": {
+          "connect": false,
+          "isPreferred": false,
+          "autoConn": true,
+          "essid": "TestAP1",
+          "enableSecurity": true,
+          "security": {
+            "securityType": "WPA2Personal",
+            "securityDetails": {
+              "WPA2Personal": {
+                "password": "test@123"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": "set_wifi",
+      "requestId": "abc123",
+      "wifiConfig": {
+        "interfaceName": "wlan0",
+        "enableInterface": true,
+        "operation": "MODIFY",
+        "accessPoint": {
+          "connect": false,
+          "isPreferred": false,
+          "autoConn": true,
+          "essid": "TestAP1",
+          "enableSecurity": true,
+          "security": {
+            "securityType": "WPA2Personal",
+            "securityDetails": {
+              "WPA2Personal": {
+                "password": "test@12345678"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "command": "set_wifi",
+      "requestId": "abc123",
+      "wifiConfig": {
+        "operation": "MODIFY",
+        "accessPoint": {
+          "isPreferred": true,
+          "essid": "TestAP1"
+        }
+      }
+    },
+    {
+      "command": "set_wifi",
+      "requestId": "abc123",
+      "wifiConfig": {
+        "interfaceName": "wlan0",
+        "enableInterface": true,
+        "operation": "CREATE",
+        "accessPoint": {
+          "connect": false,
+          "isPreferred": false,
+          "autoConn": true,
+          "essid": "TestAP2",
+          "enableSecurity": true,
+          "security": {
+            "securityType": "WPA2Enterprise",
+            "securityDetails": {
+              "WPA2Enterprise": {
+                "authentication": "tls",
+                "innerAuthentication": "tls",
+                "identity": "test",
+                "anonymousIdentity": "test",
+                "password": "test@123",
+                "passphrase": "test@123",
+                "certificate": [
+                  {
+                    "key": "ca_cert",
+                    "value": "gen_cert"
+                  },
+                  {
+                    "key": "client_key",
+                    "value": "gen_cl_key"
+                  },
+                  {
+                    "key": "client_cert",
+                    "value": "gen_cl_cert"
+                  }
+                ],
+                "protocol": "WPA2_Enterprise_CCMP"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "set_wifi",
+      "description": "Specifies the operation being performed, in this case, setting the wifi configuration."
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",      
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+    },
+    "wifiConfig": {
+      "$ref": "../../refrence/payload/cfgWifiPayload.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ]
+}

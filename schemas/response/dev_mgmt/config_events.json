@@ -1,0 +1,45 @@
+{
+  "title": "cfgAlertResponse",
+  "x-stoplight": {
+    "id": "sa8l4xwwr2xws"
+  },
+  "type": "object",
+  "examples": [
+    {
+      "command": "config_events",
+      "requestId": "abc123",
+      "apiVersion": "V1.1",
+      "response": {
+        "code": 0,
+        "description": "Success"
+      }
+    }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "config_events"
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123"
+    },
+    "apiVersion": {
+      "type": "string",
+      "example": "V1.1",
+      "enum": [
+        "V1.0",
+        "V1.1"
+      ]
+    },
+    "response": {
+      "$ref": "../../refrence/response/response.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId",
+    "apiVersion",
+    "response"
+  ]
+}

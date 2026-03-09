@@ -1,0 +1,277 @@
+{
+  "title": "configRespone",
+  "x-stoplight": {
+    "id": "b2gtuk9hv3kc1"
+  },
+  "type": "object",
+  "examples": [
+    {
+      "command": "set_config",
+      "requestId": "209543",
+      "apiVersion": "V1.1",
+      "cfgResponse": {
+        "wifiConfig": {
+          "operation": "CREATE",
+          "accessPoint": {
+            "essid": "TEST_5G",
+            "connect": true,
+            "autoConn": true,
+            "enableSecurity": true,
+            "isPreferred": false,
+            "security": {
+              "securityType": "WPA2Personal",
+              "securityDetails": {
+                "WPA2Personal": {
+                  "password": "XXXXXXXX"
+                }
+              }
+            }
+          }
+        }
+      },
+      "response": {
+        "code": 0,
+        "description": "Success"
+      }
+    },
+    {
+      "command": "set_config",
+      "requestId": "209543",
+      "apiVersion": "V1.1",
+      "cfgResponse": {
+        "wifiConfig": {
+          "operation": "MODIFY",
+          "accessPoint": {
+            "essid": "TEST_5G",
+            "connect": true,
+            "autoConn": true,
+            "enableSecurity": true,
+            "isPreferred": true,
+            "security": {
+              "securityType": "WPA2Personal",
+              "securityDetails": {
+                "WPA2Personal": {
+                  "password": "XXXXXXXX"
+                }
+              }
+            }
+          }
+        }
+      },
+      "response": {
+        "code": 0,
+        "description": "Success"
+      }
+    },
+    {
+      "command": "set_config",
+      "requestId": "209543",
+      "apiVersion": "V1.1",
+      "cfgResponse": {
+        "applyAfterReboot": true,
+        "epConfig": {
+          "operation": "add",
+          "configuration": {
+            "endpointName": "gmdm",
+            "epType": "MDM",
+            "mqttParams": {
+              "keepAlive": 300
+            }
+          }
+        }
+      },
+      "response": {
+        "code": 0,
+        "description": "Success"
+      }
+    },
+    {
+      "command": "set_config",
+      "requestId": "1233",
+      "apiVersion": "V1.1",
+      "cfgResponse": {
+        "epConfig": {
+          "operation": "add",
+          "configuration": {
+            "endpointName": "dataEP",
+            "epType": "DATA1",
+            "protocol": "MQTT",
+            "activate": true,
+            "url": "17L11-GG6663-1",
+            "verificationType": "NONE",
+            "port": 1883,
+            "qosCommon": 1,
+            "tenantId": "ZEBRA",
+            "mqttParams": {
+              "keepAlive": 300,
+              "cleanSession": true,
+              "reconnectDelayMin": 50,
+              "reconnectDelayMax": 500,
+              "clientId": "zebra-rfd40-01",
+              "username": "XXXXXXXX",
+              "password": "XXXXXXXX"
+            }
+          }
+        }
+      },
+      "response": {
+        "code": 0,
+        "description": "Success"
+      }
+    },
+    {
+      "command": "set_config",
+      "requestId": "1234",
+      "apiVersion": "V1.1",
+      "cfgResponse": {
+        "epConfig": {
+          "operation": "add",
+          "configuration": {
+            "endpointName": "ctrlEP",
+            "epType": "CTRL",
+            "protocol": "MQTT",
+            "activate": true,
+            "url": "17L11-GG6663-1",
+            "verificationType": "NONE",
+            "port": 1883,
+            "qosCommon": 1,
+            "tenantId": "zebra",
+            "mqttParams": {
+              "keepAlive": 300,
+              "cleanSession": true,
+              "reconnectDelayMin": 50,
+              "reconnectDelayMax": 500,
+              "clientId": "zebra-rfd40-01",
+              "username": "XXXXXXXX",
+              "password": "XXXXXXXX",
+              "publishTopics": [
+                {
+                  "topic": "MGMT/clients/cmnd",
+                  "qos": 0,
+                  "retain": false
+                }
+              ],
+              "subscribeTopics": [
+                {
+                  "topic": "MGMT/clients/resp",
+                  "qos": 1,
+                  "retain": false
+                },
+                {
+                  "topic": "MGMT/clients/event",
+                  "qos": 1,
+                  "retain": false
+                },
+                {
+                  "topic": "MGMT/clients/rfid",
+                  "qos": 2,
+                  "retain": true
+                }
+              ]
+            }
+          }
+        }
+      },
+      "response": {
+        "code": 0,
+        "description": "Success"
+      }
+    },
+    {
+      "command": "set_config",
+      "requestId": "5678",
+      "apiVersion": "V1.1",
+      "cfgResponse": {
+        "wifiConfig": {
+          "operation": "CREATE",
+          "accessPoint": {
+            "essid": "CORP_WIFI",
+            "connect": true,
+            "autoConn": false,
+            "enableSecurity": true,
+            "isPreferred": true,
+            "security": {
+              "securityType": "WPA2Personal",
+              "securityDetails": {
+                "WPA2Personal": {
+                  "password": "XXXXXXXX"
+                }
+              }
+            }
+          }
+        },
+        "epConfig": {
+          "operation": "add",
+          "configuration": {
+            "endpointName": "mgmtEp",
+            "epType": "MGMT",
+            "protocol": "MQTT",
+            "activate": true,
+            "url": "iot-broker.company.com",
+            "verificationType": "NONE",
+            "port": 8883,
+            "qosCommon": 1,
+            "tenantId": "ZEBRA",
+            "mqttParams": {
+              "keepAlive": 60,
+              "cleanSession": true,
+              "reconnectDelayMin": 10,
+              "reconnectDelayMax": 120,
+              "clientId": "iot",
+              "username": "XXXXXXXX",
+              "password": "XXXXXXXX",
+              "publishTopics": [
+                {
+                  "topic": "IOT/data/cmnd",
+                  "qos": 1,
+                  "retain": false
+                }
+              ],
+              "subscribeTopics": [
+                {
+                  "topic": "IOT/data/resp",
+                  "qos": 1,
+                  "retain": false
+                }
+              ]
+            }
+          }
+        }
+      },
+      "response": {
+        "code": 0,
+        "description": "Success"
+      }
+    }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "set_config"
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123"
+    },
+    "apiVersion": {
+      "type": "string",
+      "enum": [
+        "V1.0",
+        "V1.1"
+      ],
+      "example": "V1.1"
+    },
+    "cfgResponse": {
+      "$ref": "../../refrence/response/setConfigResponse.yaml"
+    },
+    "response": {
+      "$ref": "../../refrence/response/response.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId",
+    "apiVersion",
+    "response"
+  ]
+}

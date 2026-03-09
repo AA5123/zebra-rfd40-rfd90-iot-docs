@@ -1,0 +1,35 @@
+{
+    "title": "setethResponse",
+    "x-stoplight": {
+      "id": "vdmaqk96eai0f"
+    },
+    "type": "object",
+    "examples": [],
+    "properties": {
+      "command": {
+        "type": "string",
+        "example": "set_eth"
+      },
+      "requestId": {
+        "type": "string",
+        "example": "123abcd"
+      },
+      "apiVersion": {
+        "type": "string",
+        "enum": [
+          "V1.0",
+          "V1.1"
+        ],
+        "example": "V1.1"
+      },
+      "response": {
+        "$ref": "../../refrence/response/response.yaml"
+      }
+    },
+    "required": [
+      "command",
+      "requestId",
+      "apiVersion",
+      "response"
+    ]
+  }

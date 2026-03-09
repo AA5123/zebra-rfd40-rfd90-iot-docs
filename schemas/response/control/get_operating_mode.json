@@ -1,0 +1,97 @@
+{
+  "title": "get_operating_mode_response",
+  "x-stoplight": {
+    "id": "gmklnshp7siw3"
+  },
+  "type": "object",
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "get_operating_mode",
+      "description": "The type of command being executed or responded to. For MQTT, this specifies the operation type.",
+      "x-stoplight": {
+        "id": "i35qtqsq8emxm"
+      }
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "x-stoplight": {
+        "id": "ozyqw9bx2zxps"
+      },
+      "description": "A unique identifier for the request, used for tracking the request and its corresponding response in the MQTT protocol."
+    },
+    "apiVersion": {
+      "type": "string",
+      "enum": [
+        "V1.0",
+        "V1.1"
+      ],
+      "example": "V1.1",
+      "x-stoplight": {
+        "id": "upiudaa00opi5"
+      },
+      "description": "The version of the API being used in this MQTT response message."
+    },
+    "operatingMode": {
+      "$ref": "../../refrence/payload/operatingModePayload.yaml",
+      "x-stoplight": {
+        "id": "vmmn2ju2w2bhp"
+      }
+    },
+    "response": {
+      "$ref": "../../refrence/response/response.yaml",
+      "x-stoplight": {
+        "id": "nd5i7f91ono2u"
+      }
+    }
+  },
+  "required": [
+    "command",
+    "requestId",
+    "apiVersion",
+    "response"
+  ],
+  "examples": [
+    {
+      "command": "get_operating_mode",
+      "requestId": "abc123",
+      "apiVersion": "V1.1",
+      "operatingMode": {
+        "operatingModes": {
+          "profiles": "BALANCED_PERFORMANCE",
+          "radioStartConditions": {
+            "trigger": "IMMEDIATE",
+            "startDelay": 0,
+            "periodicDuration": 0,
+            "repeat": false
+          },
+          "radioStopConditions": {
+            "trigger": "IMMEDIATE"
+          },
+          "query": {
+            "session": "SESSION_1",
+            "inventoryState": "STATE_A",
+            "slFlag": "ALL",
+            "tagPopulation": 30
+          },
+          "tagMetaDataToEnable": {
+            "RSSI": true,
+            "SEENCOUNT": true,
+            "XPC": false,
+            "CRC": false,
+            "EPC": false,
+            "TID": false,
+            "USER": false,
+            "MAC": false,
+            "HOSTNAME": false
+          }
+        }
+      },
+      "response": {
+        "code": 0,
+        "description": "Success"
+      }
+    }
+  ]
+}

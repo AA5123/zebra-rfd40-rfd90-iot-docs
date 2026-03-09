@@ -1,0 +1,32 @@
+title: radioStartConditions
+type: object
+description: |-
+  Configures how and at what time intervals inventory of tags should be started. 
+
+  If this configuration is absent, by default radio will immediately begin inventorying tags upon receiving a "start" command.
+properties:
+  trigger:
+    type: string
+    enum:
+      - PRESSED
+      - RELEASED
+      - IMMEDIATE
+    description: >
+      Represents the trigger configuration to start the inventory operation. 
+      - `PRESSED`: Inventory starts when the trigger is pressed.
+      - `RELEASED`: Inventory starts when the trigger is released.
+      - `IMMEDIATE`: Inventory starts immediately without requiring a trigger action.
+  startDelay:
+    type: integer
+    example: 3000
+    description: >
+      Specifies the delay (in milliseconds) before starting the inventory operation. 
+      This delay applies to any trigger configuration when set to a value greater than 0. 
+      For example, if set to 3000 milliseconds, the inventory will start 3 seconds after the trigger action.
+  repeat:
+    type: boolean
+    description: >
+      Determines whether the inventory operation can be repeated using the trigger. 
+      If enabled, pressing the trigger will start reading tags, and releasing it will stop the read operation (not abort). 
+      Pressing the trigger again will restart the inventory operation.
+      If disabled, pressing the trigger after stopping the inventory will not restart the operation.

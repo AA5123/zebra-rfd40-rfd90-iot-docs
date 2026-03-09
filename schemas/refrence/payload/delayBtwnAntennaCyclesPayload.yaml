@@ -1,0 +1,22 @@
+title: delayBetweenAntennaCycles
+type: object
+description: |-
+  This introduces a delay between antenna cycles if no tags are read or if no unique tags are read. This allows the reader to share the spectrum if there are no tags to be read. 
+
+  If absent, 
+  on the ATR7000 and the FX9600, delayBetweenAntennas cycles is set to wait for 75 mS if no unique tags are read during a antenna cycle.  
+  on the FX7500, delayBetweenAntennas cycles is set to wait for 75 mS if no tags are read during a antenna cycle. 
+properties:
+  type:
+    type: string
+    enum:
+      - DISABLED
+      - NO_TAGS
+      - NO_UNIQUE_TAGS
+    description: Condition under which to delay between antenna cycles
+  duration:
+    type: integer
+    description: 'Delay between antennas cycles in milliseconds to wait. Will only wait if the type (no tags or no unique tags) is met. If the type is DISABLED, duration must to be set to 0. IF the type is no DISABLED< the value must be set to a non-zero value. '
+required:
+  - type
+  - duration

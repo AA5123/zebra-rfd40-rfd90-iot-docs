@@ -1,0 +1,55 @@
+{
+  "title": "get_installed_certificate",
+  "x-stoplight": {
+    "id": "2sjnogoidh0ik"
+  },
+  "type": "object",
+  "examples": [
+    {
+      "command": "get_installed_certificates",
+      "requestId": "abc123",
+      "apiVersion": "V1.1",
+      "installedCerts": {
+      "certInfo": [
+        {
+          "name": "MQTT_ca_cert",
+          "type": "server",
+          "installTime": "2022-07-01T03:01:31.464Z",
+          "publicKeyAlg": "RSA256",
+          "publicKey": "091234acgbe12",
+          "serial": "410835777",
+          "validFrom": "2022-07-01",
+          "validTill": "2023-07-01"
+        }
+      ]
+    },
+    "response": {
+      "code": 0,
+      "description": "Success"
+    }
+  }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "get_installed_certificates"
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123"
+    },
+    "apiVersion": {
+      "type": "string",
+      "enum": [
+        "V1.0",
+        "V1.1"
+      ]
+    },
+    "installedCerts": {
+      "$ref": "../../refrence/response/installedCertResponse.yaml"
+    },
+    "response": {
+      "$ref": "../../refrence/response/response.yaml"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+title: batteryAlert
+x-stoplight:
+  id: gcmvpvvellk4h
+type: object
+properties:
+  status:
+    type: string
+    enum:
+      - LOW
+      - CRITICAL
+      - CHARGING
+      - FULL
+      - HIGH
+    example: LOW
+    description: The current status of the battery, which indicates its operational state.
+  stateOfHealth:
+    type: string
+    enum:
+      - LOW
+      - FULL
+      - CRITICAL
+      - HIGH
+      - CHARGING
+    description: The overall health of the battery, which reflects its long-term capacity and performance.
+  chargePercentage:
+    type: integer
+    maximum: 100
+    description: The current charge level of the battery, represented as a percentage.

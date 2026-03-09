@@ -1,0 +1,27 @@
+title: fwUpdateStatus
+x-stoplight:
+  id: 21xypho3gasa6
+type: object
+properties:
+  updateStatus:
+    type: string
+    enum:
+      - started
+      - updating
+      - successfull
+      - failed
+      - skipped
+    example: in progress
+    description: Current status of the firmware update process.
+  overallProgress:
+    type: number
+    example: 20
+    description: Percent of update completed.
+  stage:
+    type: string
+    description: Individual image update steps or description.
+    example: updating scanner fw
+required:
+  - updateStatus
+  - overallProgress
+  - stage

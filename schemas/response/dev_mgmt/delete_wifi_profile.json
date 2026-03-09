@@ -1,0 +1,48 @@
+{
+  "title": "delete_wifi_profile_response",
+  "x-stoplight": {
+    "id": "ixk2xwnhv8xlg"
+  },
+  "type": "object",
+  "properties": {
+    "command": {
+      "type": "string",
+      "default": "delete_wifi_profile"
+    },
+    "requestId": {
+      "type": "string",
+      "default": 1235
+    },
+    "response": {
+      "$ref": "../../refrence/response/response.yaml"
+    }
+  },
+  "examples": [
+    {
+      "command": "delete_wifi_profile",
+      "requestId": "abc345",
+      "response": {
+        "code": 0,
+        "description": "Success"
+      }
+    },
+    {
+      "command": "delete_wifi_profile",
+      "requestId": "1235",
+      "apiVersion": "V1.1",
+      "response": {
+        "code": 16,
+        "description": "WIFI Error - Cannot delete active SSID"
+      }
+    },
+    {
+      "command": "delete_wifi_profile",
+      "requestId": "1235",
+      "apiVersion": "V1.1",
+      "response": {
+        "code": 15,
+        "description": "WIFI Error - SSID not found"
+      }
+    }
+  ]
+}

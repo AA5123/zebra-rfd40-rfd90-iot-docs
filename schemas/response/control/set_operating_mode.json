@@ -1,0 +1,45 @@
+{
+  "title": "set_operating_mode_response",
+  "x-stoplight": {
+    "id": "wd93lnaewrnan"
+  },
+  "type": "object",
+  "examples": [
+    {
+      "command": "set_operating_mode",
+      "requestId": "abc123",
+      "apiVersion": "V1.1",
+      "response": {
+        "code": 0,
+        "description": "Success"
+      }
+    }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "set_operating_mode"
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123"
+    },
+    "apiVersion": {
+      "type": "string",
+      "example": "V1.1",
+      "enum": [
+        "V1.0",
+        "V1.1"
+      ]
+    },
+    "response": {
+      "$ref": "../../refrence/response/response.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId",
+    "apiVersion",
+    "response"
+  ]
+}

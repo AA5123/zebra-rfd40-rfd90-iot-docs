@@ -1,0 +1,45 @@
+{
+  "title": "set_post_filter_response",
+  "x-stoplight": {
+    "id": "i3l9dq2e1oh1w"
+  },
+  "type": "object",
+  "examples": [
+    {
+      "command": "set_post_filter",
+      "requestId": "abc123",
+      "apiVersion": "V1.1",
+      "response": {
+        "code": 0,
+        "description": "Success"
+      }
+    }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "set_post_filter"
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123"
+    },
+    "apiVersion": {
+      "type": "string",
+      "enum": [
+        "V1.0",
+        "V1.1"
+      ],
+      "example": "V1.1"
+    },
+    "response": {
+      "$ref": "../../refrence/response/response.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId",
+    "apiVersion",
+    "response"
+  ]
+}

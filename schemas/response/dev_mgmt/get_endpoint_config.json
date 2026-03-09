@@ -1,0 +1,182 @@
+{
+  "title": "get_endpoint_config",
+  "x-stoplight": {
+    "id": "a66bm23k148jr"
+  },
+  "type": "object",
+  "properties": {
+    "command": {
+      "type": "string",
+      "default": "get_endpoint_config",
+      "description": "The command indicating the type of operation or request being performed."
+    },
+    "requestId": {
+      "type": "string",
+      "example": "123",
+      "description": "A unique identifier for the request, used for tracking and correlation purposes."
+    },
+    "apiVersion": {
+      "type": "string",
+      "example": "V1.1",
+      "description": "The version of the API being used for the request."
+    },
+    "epDetails": {
+      "$ref": "../../refrence/response/endpointResponse.yaml"
+    },
+    "response": {
+      "$ref": "../../refrence/response/response.yaml"
+    }
+  },
+  "examples": [
+    {
+      "command": "get_endpoint_config",
+      "requestId": "abc123",
+      "apiVersion": "V1.1",
+      "endpointResponse": {
+      "activeEndpoints": {
+        "epConfig": [
+        {
+          "configuration": {
+          "endpointName": "mgmt3",
+          "epType": "MGMT",
+          "protocol": "MQTT",
+          "activate": true,
+          "url": "10.231.145.104",
+          "verificationType": "VERIFY_NONE",
+          "port": 1883,
+          "qosCommon": 0,
+          "tenantId": "zebra",
+          "mqttParams": {
+            "keepAlive": 96,
+            "cleanSession": false,
+            "reconnectDelayMin": 5,
+            "reconnectDelayMax": 512,
+            "username": "mqttuser",
+            "password": "xxxxxx",
+            "publishTopics": [
+            {
+              "topic": "MGMT/clients/resp",
+              "qos": 0,
+              "retain": false
+            },
+            {
+              "topic": "MGMT/clients/rfid",
+              "qos": 0,
+              "retain": true
+            }
+            ],
+            "subscribeTopics": [
+            {
+              "topic": "MGMT/clients/cmnd",
+              "qos": 0,
+              "retain": false
+            }
+            ]
+          },
+          "securityParams": {
+            "format": "PEM"
+          },
+          "eventConfiguration": {
+            "terminalConnection": false,
+            "firmwareUpdate": true,
+            "network": true,
+            "ntp": true,
+            "heartbeat": false,
+            "power": true,
+            "battery": true,
+            "fileDownload": true
+          }
+          }
+        }
+        ]
+      },
+      "savedEndpoints": {
+        "epNames": [
+        "ctrlEP",
+        "ctrl",
+        "gmdm",
+        "dataEP",
+        "mgmt3"
+        ]
+      }
+      },
+      "response": {
+      "code": 0,
+      "description": "Success"
+      }
+    },
+    {
+      "command": "get_endpoint_config",
+      "requestId": "abc123",
+      "apiVersion": "V1.1",
+      "endpointResponse": {
+      "activeEndpoints": {
+        "epConfig": [
+        {
+          "configuration": {
+          "endpointName": "ctrl",
+          "epType": "CTRL",
+          "protocol": "MQTT",
+          "activate": true,
+          "url": "10.209.240.104",
+          "verificationType": "VERIFY_NONE",
+          "port": 1883,
+          "qosCommon": 0,
+          "tenantId": "zebra",
+          "mqttParams": {
+            "keepAlive": 96,
+            "cleanSession": false,
+            "reconnectDelayMin": 5,
+            "reconnectDelayMax": 512,
+            "username": "mqttuser",
+            "password": "xxxxxx",
+            "publishTopics": [
+            {
+              "topic": "CTRL/clients/resp",
+              "qos": 0,
+              "retain": false
+            },
+            {
+              "topic": "CTRL/clients/event",
+              "qos": 0,
+              "retain": false
+            },
+            {
+              "topic": "CTRL/clients/rfid",
+              "qos": 0,
+              "retain": true
+            }
+            ],
+            "subscribeTopics": [
+            {
+              "topic": "CTRL/clients/cmnd",
+              "qos": 0,
+              "retain": false
+            }
+            ]
+          },
+          "securityParams": {
+            "format": "PEM"
+          },
+          "eventConfiguration": {
+            "terminalConnection": false,
+            "firmwareUpdate": true,
+            "network": true,
+            "ntp": true,
+            "heartbeat": false,
+            "power": true,
+            "battery": true,
+            "fileDownload": true
+          }
+          }
+        }
+        ]
+      }
+      },
+      "response": {
+      "code": 0,
+      "description": "Success"
+      }
+    }
+  ]
+}

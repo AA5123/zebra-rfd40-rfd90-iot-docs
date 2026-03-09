@@ -1,0 +1,116 @@
+title: ethConfig
+x-stoplight:
+  id: 74admn3fzfijc
+type: object
+examples: []
+properties:
+  interfaceName:
+    type: string
+    description: Name of the network interface (e.g., eth0).
+    example: eth0
+  enableInterface:
+    type: boolean
+    description: Indicates whether the network interface is enabled.
+  lldp:
+    type: boolean
+    description: Specifies if Link Layer Discovery Protocol (LLDP) is enabled.
+  ipv4Configuration:
+    type: object
+    description: Configuration settings for IPv4.
+    properties:
+      ipAddress:
+        type: string
+        format: ipv4
+        description: The IPv4 address assigned to the interface.
+        example: 192.168.1.81
+      subnetMask:
+        type: string
+        format: ipv4
+        description: The subnet mask associated with the IPv4 address.
+        example: 255.255.255.0
+      gateway:
+        type: string
+        format: ipv4
+        description: The default gateway for the IPv4 network.
+        example: 192.168.1.144
+      enableDhcp:
+        type: boolean
+        description: Indicates whether DHCP is enabled for IPv4.
+      dnsServer:
+        type: string
+        format: ipv4
+        description: The IPv4 address of the DNS server.
+        example: 192.168.1.78
+      domainName:
+        type: string
+        description: The domain name associated with the network.
+        example: example.test.com
+  ipv6Configuration:
+    type: object
+    description: Configuration settings for IPv6.
+    properties:
+      ipAddress:
+        type: string
+        format: ipv6
+        description: The IPv6 address assigned to the interface.
+        example: '2a02:1234:420a:100b::99'
+      prefix:
+        type: integer
+        description: The prefix length for the IPv6 address.
+        example: '64'
+      gateway:
+        type: string
+        format: ipv6
+        description: The default gateway for the IPv6 network.
+        example: 'fe80::1643:8376:b32:4a16'
+      enableAuto:
+        type: boolean
+        description: Indicates whether auto-configuration is enabled for IPv6.
+      dnsServer:
+        type: string
+        format: ipv6
+        description: The IPv6 address of the DNS server.
+        example: '2001:4860:4860::9999'
+      domainName:
+        type: string
+        description: The domain name associated with the IPv6 network.
+        example: example.com
+  security:
+    type: object
+    description: Security configuration for the network interface.
+    properties:
+      enableSecurity:
+        type: boolean
+        description: Indicates if security is enabled. If enabled, 802.X parameters must be provided.
+      EAP802_1X:
+        type: object
+        description: Extensible Authentication Protocol (EAP) 802.1X settings.
+        properties:
+          authentication:
+            type: string
+            description: The authentication method used for EAP 802.1X.
+            enum:
+              - EAP-MD5
+              - LEAP
+              - PEAP
+              - EAP-SIM
+              - EAP-AKA
+              - EAP-TLS
+              - EAP-TTLS
+              - EAP-FAST
+            example: PEAP
+          innerAuthentication:
+            type: string
+            description: The inner authentication method used within the EAP tunnel.
+            enum:
+              - EAP-MS-CHAPv2
+              - EAP-TLS
+              - EAP-GTC
+          certificate:
+            type: string
+            description: The certificate used for EAP authentication.
+            example: ethCert
+required:
+  - interfaceName
+  - enableInterface
+  - lldp

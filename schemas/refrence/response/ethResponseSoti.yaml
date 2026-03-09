@@ -1,0 +1,149 @@
+title: ethConfig
+x-stoplight:
+  id: jo5vgcsotp2jr
+type: object
+properties:
+  interfaceDetails:
+    type: object
+    properties:
+      interfaceName:
+        type: string
+        example: eth0
+        description: Name of the network interface.
+      status:
+        type: string
+        example: enabled
+        enum:
+          - enabled
+          - disabled
+        description: Status of the network interface.
+      hostname:
+        type: string
+        example: RFD40AB03
+        description: Hostname assigned to the device.
+      macAddress:
+        type: string
+        example: E0-D0-45-3D-38-1D
+        description: MAC address of the network interface.
+      linkStatus:
+        type: object
+        properties:
+          status:
+            type: string
+            enum:
+              - up
+              - down
+            example: up
+            description: Current status of the network link.
+          linkSpeed:
+            type: string
+            example: 100Mbps
+            description: Speed of the network link.
+        required:
+          - status
+          - linkSpeed
+      ipv4Configuration:
+        type: object
+        properties:
+          ipAddress:
+            type: string
+            example: 192.168.1.81
+            format: ipv4
+            description: IPv4 address of the network interface.
+          subnetMask:
+            type: string
+            example: 255.255.255.0
+            format: ipv4
+            description: Subnet mask for the IPv4 configuration.
+          gateway:
+            type: string
+            example: 192.168.1.144
+            format: ipv4
+            description: Gateway address for the IPv4 configuration.
+          enableDhcp:
+            type: boolean
+            enum:
+              - enabled
+              - disabled
+            example: enabled
+            description: Indicates if DHCP is enabled for IPv4 configuration.
+          dnsServer:
+            type: string
+            format: ipv4
+            example: 192.168.1.78
+            description: DNS server address for the IPv4 configuration.
+          domainName:
+            type: string
+            example: test.soti.com
+            description: Domain name for the IPv4 configuration.
+      ipv6Configuration:
+        type: object
+        properties:
+          ipAddress:
+            type: string
+            example: 'fe80::1643:8376:b32:4a16'
+            format: ipv6
+            description: IPv6 address of the network interface.
+          prefix:
+            type: integer
+            example: '64'
+            description: Prefix length for the IPv6 configuration.
+          gateway:
+            type: string
+            example: '2a02:1234:420a:100b::99'
+            format: ipv6
+            description: Gateway address for the IPv6 configuration.
+          enableAuto:
+            type: boolean
+            example: true
+            description: Indicates if auto-configuration is enabled for IPv6.
+          dnsServer:
+            type: string
+            example: '2001:4860:4860::9999'
+            format: ipv6
+            description: DNS server address for the IPv6 configuration.
+          domainName:
+            type: string
+            example: test.soti.com
+            description: Domain name for the IPv6 configuration.
+      security:
+        type: object
+        properties:
+          securityStatus:
+            type: boolean
+            example: true
+            description: Indicates if security features are enabled.
+          EAP802_1X:
+            type: object
+            properties:
+              authentication:
+                type: string
+                enum:
+                  - EAP-MD5
+                  - LEAP
+                  - PEAP
+                  - EAP-SIM
+                  - EAP-AKA
+                  - EAP-TLS
+                  - EAP-TTLS
+                  - EAP-FAST
+                example: PEAP
+                description: Authentication method for 802.1X security.
+              innerAuthentication:
+                type: string
+                example: EAP-MS-CHAPv2
+                enum:
+                  - EAP-MS-CHAPv2
+                  - ' EAP-TLS'
+                  - EAP-GTC
+                description: Inner authentication method for 802.1X security.
+              certificate:
+                type: string
+                example: client45
+                description: Certificate used for 802.1X authentication.
+    required:
+      - interfaceName
+      - status
+      - hostname
+      - macAddress
+description: Detailed schema for Ethernet configuration.

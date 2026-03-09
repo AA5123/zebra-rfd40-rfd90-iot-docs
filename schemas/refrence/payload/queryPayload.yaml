@@ -1,0 +1,43 @@
+title: query
+type: object
+description: |-
+  Configures the query parameters for inventory operations including session, target, and tag population to optimize tag selection and reading. 
+properties:
+  session:
+    type: string
+    description: >
+      Session field (see EPC Gen2 Spec). Determines the session used for inventory operations. 
+      Sessions are used to manage tag states and collisions during inventory. 
+      SESSION_0 is typically used for single inventory rounds, while SESSION_1, SESSION_2, and SESSION_3 
+      are used for multi-round inventories with varying persistence levels.
+    enum:
+      - SESSION_0
+      - SESSION_1
+      - SESSION_2
+      - SESSION_3
+  inventoryState:
+    type: string
+    description: >
+      Target field (see EPC Gen2 Spec). Specifies the inventory state of tags to be selected. 
+      'STATE_A' and 'STATE_B' represent the two possible states of a tag's inventory flag. 
+      'STATE_AB' flips between states to optimize tag selection during inventory rounds.
+    enum:
+      - STATE_A
+      - STATE_B
+      - STATE_AB
+  slFlag:
+    type: string
+    description: >
+      Sel field (see EPC Gen2 Spec). Indicates the SL (Select) flag used to filter tags. 
+      'ALL' selects all tags regardless of SL flag state. 
+      'ASSERTED' selects only tags with an asserted SL flag, while 'DEASSERTED' selects tags with a deasserted SL flag.
+    enum:
+      - ALL
+      - ASSERTED
+      - DEASSERTED
+  tagPopulation:
+    type: integer
+    minimum: 0
+    description: >
+      Estimates tag count to optimize reading. This value helps the reader adjust its settings 
+      (e.g., Q parameter) to improve inventory performance for the expected number of tags in the field.

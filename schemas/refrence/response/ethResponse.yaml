@@ -1,0 +1,116 @@
+title: ethResponse
+x-stoplight:
+  id: m3kxui97rkljt
+type: array
+examples: []
+items:
+  type: object
+  properties:
+    InterfaceDetails:
+      type: object
+      properties:
+        interfaceName:
+          type: string
+          example: eth0
+        status:
+          type: string
+          example: enabled
+          enum:
+            - enabled
+            - disabled
+        hostName:
+          type: string
+          example: RFD40AB03
+        macAddress:
+          type: string
+          example: E0-D0-45-3D-38-1D
+        linkStatus:
+          type: object
+          properties:
+            status:
+              type: string
+              enum:
+                - up
+                - down
+              example: up
+            linkSpeed:
+              type: string
+              example: 100Mbps
+        ipv4Configuration:
+          type: object
+          properties:
+            ipAddress:
+              type: string
+              example: 192.168.1.81
+              format: ipv4
+            subnetMask:
+              type: string
+              example: 255.255.255.0
+              format: ipv4
+            gateway:
+              type: string
+              example: 192.168.1.144
+              format: ipv4
+            dhcpStatus:
+              type: string
+              enum:
+                - enabled
+                - disabled
+              example: enabled
+            dnsServer:
+              type: string
+              format: ipv4
+              example: 192.168.1.78
+            domainName:
+              type: string
+              example: test.soti.com
+        ipv6Configuration:
+          type: object
+          properties:
+            ipAddress:
+              type: string
+              example: 'fe80::1643:8376:b32:4a16'
+              format: ipv6
+            prefix:
+              type: string
+              example: '64'
+            gateway:
+              type: string
+              example: '2a02:1234:420a:100b::99'
+              format: ipv6
+            enableAuto:
+              type: boolean
+              example: true
+            dnsServer:
+              type: string
+              example: '2001:4860:4860::9999'
+              format: ipv6
+            domainName:
+              type: string
+              example: test.soti.com
+        security:
+          type: object
+          properties:
+            securityStatus:
+              type: boolean
+              example: true
+            EAP802_1X:
+              type: object
+              properties:
+                authentication:
+                  type: string
+                  example: tls
+                  enum:
+                    - LEAP
+                    - PEAP
+                    - EAP-SIM
+                    - EAP-AKA
+                    - EAP-TLS
+                    - EAP-TTLS
+                    - EAP-FAST
+                innerAuthentication:
+                  type: string
+                  example: none
+                certificate:
+                  type: string
+                  example: client45

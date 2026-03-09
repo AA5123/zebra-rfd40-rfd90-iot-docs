@@ -1,0 +1,31 @@
+title: radioStopConditions
+type: object
+description: |-
+  Configures how and under what conditions the inventory of tags should stop. 
+
+  If this configuration is absent, the radio will continue inventorying tags until a "stop" command is issued.
+properties:
+  trigger:
+    type: string
+    enum:
+      - PRESSED
+      - RELEASED
+      - IMMEDIATE
+    description: >
+      Represents the trigger configuration to stop the inventory operation. 
+      - `PRESSED`: Inventory stops when the trigger is pressed.
+      - `RELEASED`: Inventory stops when the trigger is released.
+      - `IMMEDIATE`: Inventory stops immediately without requiring a trigger action.
+  tagCount:
+    type: integer
+    description: >
+      Specifies the number of unique tags to be read before stopping the inventory. 
+  stopTimeout:
+    type: integer
+    description: >
+      Specifies the duration (in milliseconds) after which the inventory operation will stop. 
+  inventoryCount:
+    type: integer
+    description: >
+      Specifies the number of inventory cycles to complete before stopping. 
+      Each cycle represents a full scan for tags in the field.

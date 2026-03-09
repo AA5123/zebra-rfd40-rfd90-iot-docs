@@ -1,0 +1,69 @@
+{
+  "title": "get_current_region",
+  "x-stoplight": {
+    "id": "seamkz959jnmb"
+  },
+  "type": "object",
+  "examples": [
+    {
+  "command": "get_current_region",
+  "requestId": "abc123",
+  "apiVersion": "V1.1",
+  "currentRegion": {
+    "frequencyHopping": true,
+    "channelData": [
+      "91575", "91525", "90325", "92675", "92625", "90425", "92725", "92025", "91925", "90925",
+      "91875", "91775", "90525", "90475", "92525", "92175", "91475", "90675", "91375", "92225",
+      "91125", "91175", "90375", "90875", "90575", "91225", "90625", "91725", "91425", "90725",
+      "91825", "91625", "91025", "91075", "90775", "92475", "90975", "91975", "91675", "91325",
+      "92375", "90825", "92575", "91275", "92425", "92125", "92075", "92275", "90275", "92325"
+    ],
+    "country": "United States",
+    "lbtEnabled": false,
+    "maxTxPowerSupported": 300,
+    "minTxPowerSupported": 0,
+    "regulatoryStandard": "FCC"
+  },
+  "response": {
+    "code": 0,
+    "description": "Success"
+  }
+}
+
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "get_current_region",
+      "description": "The command issued by the client, indicating the operation to retrieve the current region."
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier for tracking the request."
+    },
+    "apiVersion": {
+      "type": "string",
+      "enum": [
+        "V1.0",
+        "V1.1"
+      ],
+      "example": "V1.1",
+      "description": "The version of the API being called, allowing for version-specific processing."
+    },
+    "currentRegion": {
+      "$ref": "../../refrence/response/currentRegionResponse.yaml",
+      "description": "A reference to the detailed payload structure containing region-specific information."
+    },
+    "response": {
+      "$ref": "../../refrence/response/response.yaml",
+      "description": "A reference to the standard response schema used for this API."
+    }
+  },
+  "required": [
+    "command",
+    "requestId",
+    "apiVersion",
+    "response"
+  ]
+}

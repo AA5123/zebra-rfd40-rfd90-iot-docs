@@ -1,0 +1,44 @@
+{
+  "title": "setOSResponse",
+  "x-stoplight": {
+    "id": "esbrwfwavpx3o"
+  },
+  "type": "object",
+  "examples": [
+     {
+       "command": "set_os",
+       "requestId": "18996",
+       "apiVersion": "V1.1",
+       "response": {
+           "code": 1,
+            "description": "Command payload is accepted"
+        }
+     }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "set_os"
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123"
+    },
+    "apiVersion": {
+      "type": "string",
+      "enum": [
+        "V1.0",
+        "V1.1"
+      ],
+      "example": "V1.1"
+    },
+    "response": {
+      "$ref": "../../refrence/response/response.yaml"
+    }
+  },
+  "required": [
+    "command",
+    "requestId",
+    "apiVersion"
+  ]
+}

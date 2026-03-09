@@ -1,0 +1,63 @@
+{
+  "title": "get_eth",
+  "x-stoplight": {
+    "id": "0w0vybwwfkw0u"
+  },
+  "type": "object",
+  "examples": [
+    {
+  "command": "get_eth",
+  "requestId": "abc123",
+  "apiVersion": "V1.1",
+  "ethconfig": {
+    "InterfaceDetails": {
+      "interfaceName": "eth0",
+      "status": "Enabled",
+      "hostName": "RFD40-211545201D0020",
+      "macAddress": "AC:3F:A4:00:2C:89",
+      "linkStatus": {
+        "status": "Connected",
+        "linkSpeed": "100Mbps"
+      },
+      "ipv4Configuration": {
+        "ipAddress": "192.168.0.101",
+        "subnetMask": "255.255.255.0",
+        "gateway": "192.168.0.1",
+        "enableDhcp": true,
+        "dnsServer": "0.0.0.0",
+        "domainName": "zebra.com"
+      }
+    }
+  },
+  "response": {
+    "code": 0,
+    "description": "Success"
+  }
+}
+
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "get_eth"
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123"
+    },
+    "apiVersion": {
+      "type": "string",
+      "example": "V1.1",
+      "enum": [
+        "V1.0",
+        "V1.1"
+      ]
+    },
+    "ethConfig": {
+      "$ref": "../../refrence/response/ethResponseSoti.yaml"
+    },
+    "response": {
+      "$ref": "../../refrence/response/response.yaml"
+    }
+  }
+}

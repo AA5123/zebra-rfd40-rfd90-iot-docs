@@ -1,0 +1,64 @@
+title: select
+type: object
+properties:
+  enable:
+    type: boolean
+    description: >
+      Used to enable and disable the pre-filter. Set to true to enable the pre-filter, 
+      allowing the reader to apply specific filtering criteria to tags before inventory operations.
+  tagPattern:
+    type: string
+    description: >
+      Specifies the bit pattern to match against the tag's memory content. 
+      The value must be a hex string (only values 0-9, a-f or A-F) and must have an even number of characters, max 64 characters. 
+      This is used to filter tags based on specific data stored in their memory(see EPC Gen2 Spec).
+  memoryBank:
+    type: string
+    enum:
+      - EPC
+      - TID
+      - USER
+    description: >
+      Membank field (see EPC Gen2 Spec). Specifies the memory bank to be accessed for filtering. 
+  offset:
+    type: integer
+    description: >
+      Indicates the starting bit position within the specified memory bank where the tagPattern will be applied for matching(see EPC Gen2 Spec).
+  action:
+    type: string
+    enum:
+      - INV_A_NOT_INV_B_OR_ASRT_SL_NOT_DSRT_SL
+      - INV_A_OR_ASRT_SL
+      - NOT_INV_B_OR_NOT_DSRT_SL
+      - INV_A2BB2A_NOT_INV_A_OR_NEG_SL_NOT_ASRT_SL
+      - INV_B_NOT_INV_A_OR_DSRT_SL_NOT_ASRT_SL
+      - INV_B_OR_DSRT_SL
+      - NOT_INV_A_OR_NOT_ASRT_SL
+      - NOT_INV_A2BB2A_OR_NOT_NEG_SL
+    description: >
+      Defines how to set SL/invnetory flag if match/mismatch occurs.
+      These actions determine how tags are selected or excluded during inventory operations(see EPC Gen2 Spec).
+  target:
+    type: string
+    enum:
+      - SESSION_SL
+      - SESSION_0
+      - SESSION_1
+      - SESSION_2
+      - SESSION_3
+    description: >
+      Specifies the session or SL (Select) flag to be used for filtering tags. 
+      This helps in managing tag states and collisions during inventory(see EPC Gen2 Spec).
+  length:
+    type: integer
+    description: >
+      Specifies the number of bits in the tag's memory to be compared against the tagPattern. 
+      This determines the size of the filter applied to the memory bank(see EPC Gen2 Spec).
+required:
+  - enable
+  - tagPattern
+  - memoryBank
+  - offset
+  - action
+  - target
+  - length

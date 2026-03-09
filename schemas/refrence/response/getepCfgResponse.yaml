@@ -1,0 +1,10 @@
+title: epList
+x-stoplight:
+  id: q0de0bvreeite
+type: object
+properties:
+  epConfig:
+    type: array
+    description: An array containing endpoint configurations.
+    items:
+      $ref: ./epConfigurationSoti.yaml

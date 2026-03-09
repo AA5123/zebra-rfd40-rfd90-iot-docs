@@ -1,0 +1,41 @@
+{
+  "title": "delete_certificate",
+  "x-stoplight": {
+    "id": "6uhhq6oxnpm8t"
+  },
+  "description": "Command issued to delete saved certificate  ",
+  "type": "object",
+  "examples": [
+    {
+      "command": "delete_certificate",
+      "requestId": "abc123",
+      "certificateInfo": {
+        "name": "mqtt_ca_cert",
+        "type": "client"
+      }
+    },
+    {
+      "command": "delete_certificate",
+      "requestId": "abc124",
+      "certificateInfo": {
+        "name": "server_ca_cert",
+        "type": "filestore"
+      }
+    }
+  ],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "delete_certificate",
+      "description": "Specifies the operation being performed, in this case, deleting saved certificates."
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+    },
+    "certificateInfo": {
+      "$ref": "../../refrence/payload/delCertPayload.yaml"
+    }
+  }
+}

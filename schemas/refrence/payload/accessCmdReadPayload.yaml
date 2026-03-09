@@ -1,0 +1,24 @@
+title: read
+type: object
+properties:
+  config:
+    type: object
+    properties:
+      memoryBank:
+        type: string
+        enum:
+          - EPC
+          - TID
+          - USER
+          - RESERVED
+        description: Membank Field (see EPC Gen2 Spec)
+      offset:
+        type: integer
+        description: Memory bank offset Field in words (see EPC Gen2 Spec)
+      length:
+        type: integer
+        description: Tag pattern length Field in words(see EPC Gen2 Spec)
+    required:
+      - memoryBank
+      - offset
+      - length

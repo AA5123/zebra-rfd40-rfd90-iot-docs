@@ -1,0 +1,84 @@
+title: OSUpdateDetails
+x-stoplight:
+  id: f9b02122e80a4
+type: object
+examples: []
+properties:
+  url:
+    type: string
+    format: uri
+    example: 'https://192.168.29.39:8000/Build-3.10.27/Firmware'
+    description: The URL where the OS update can be downloaded. Must be a valid URI.
+  authenticationType:
+    type: string
+    enum:
+      - NONE
+      - BASIC
+      - TOKEN
+      - CERTIFICATE
+    example: BASIC
+    description: Specifies the type of authentication required for accessing the URL.
+      NONE - No authentication is needed.
+      BASIC - Username and password are required.
+      CERTIFICATE - A valid inline certificate or preinstalled certificate is required.
+      TOKEN - Token-based authentication is required.
+  authOptions:
+    type: object
+    properties:
+      username:
+        type: string
+        example: admin
+        description: The username for BASIC authentication.
+      password:
+        type: string
+        example: password
+        description: The password for BASIC authentication.
+    description: Contains authentication options such as username and password for BASIC authentication.
+  headerParam:
+    type: array
+    items:
+      type: object
+      properties:
+        key:
+          type: string
+          description: The name of the HTTP header parameter.
+        value:
+          type: string
+          description: The value of the HTTP header parameter.
+    description: A list of custom header parameters to include in the HTTP request.
+  queryParam:
+    type: array
+    items:
+      type: object
+      properties:
+        key:
+          type: string
+          description: The name of the query parameter.
+        value:
+          type: string
+          description: The value of the query parameter.
+    description: A list of query parameters to include in the URL.
+  verificationType:
+    type: string
+    enum:
+      - NONE
+      - VERIFY_PEER
+      - VERIFY_HOST
+      - VERIFY_HOST_PEER
+    example: NONE
+    description: Specifies the type of verification to perform during the connection.
+      NONE - No verification.
+      VERIFY_PEER - Verify the peer's certificate.
+      VERIFY_HOST - Verify the host's certificate.
+      VERIFY_HOST_PEER - Verify both the host and peer certificates.
+  caCertificateFileContent:
+    type: string
+    example: '-----BEGIN CERTIFICATE-----\\r\\nPUdg=\\r\\n-----END CERTIFICATE-----'
+    description: The content of the CA certificate in PEM format, required for certificate-based authentication.
+  caCertificateFile:
+    type: string
+    example: /apps/ca.crt
+    description: The file path to the CA certificate, required for certificate-based authentication.
+required:
+  - url
+  - authenticationType

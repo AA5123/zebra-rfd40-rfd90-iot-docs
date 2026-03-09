@@ -1,0 +1,18 @@
+title: exception
+x-stoplight:
+  id: wqxur4zxw2a0m
+type: object
+properties:
+  type:
+    type: string
+    enum:
+      - RADIO   
+      - SCANNER 
+      - SYSTEM  
+    description: Specifies the category of the error.
+  code:
+    type: integer
+    description: A numeric code representing the specific error.
+  message:
+    type: string
+    description: A detailed message describing the error.

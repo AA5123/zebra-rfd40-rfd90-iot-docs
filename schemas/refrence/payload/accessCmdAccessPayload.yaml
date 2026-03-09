@@ -1,0 +1,17 @@
+title: access
+type: object
+examples:
+  - type: ACCESS
+    config:
+      password: string
+properties:
+  config:
+    type: object
+    properties:
+      password:
+        type: string
+        description: |-
+          Password Field (see EPC Gen2 Spec)
+          Must be a hex string with 8 hex characters. 
+    required:
+      - password

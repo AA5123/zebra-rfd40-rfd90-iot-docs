@@ -1,0 +1,14 @@
+title: deviceCapabilities
+x-stoplight:
+  id: 7gxiz1we1sv22
+type: object
+properties:
+  isBluetoothSupported:
+    type: boolean
+    description: Indicates whether the device supports Bluetooth functionality.
+  isWifiSupported:
+    type: boolean
+    description: Indicates whether the device supports WiFi connectivity.
+  isScannerSupported:
+    type: boolean
+    description: Indicates whether the device supports scanner capabilities.

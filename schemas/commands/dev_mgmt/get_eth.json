@@ -1,0 +1,25 @@
+{
+  "title": "get_eth",
+  "x-stoplight": {
+    "id": "np1ehj39n4xp4"
+  },
+  "description": "This API used to retrieve ethernet configuration details. Security features, static IP configuration, and IPv6 support are not available in the current API version.",
+  "type": "object",
+  "examples": [],
+  "properties": {
+    "command": {
+      "type": "string",
+      "example": "get_eth",
+      "description": "Command issued to get the ethernet configuration"
+    },
+    "requestId": {
+      "type": "string",
+      "example": "abc123",
+      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+    }
+  },
+  "required": [
+    "command",
+    "requestId"
+  ]
+}

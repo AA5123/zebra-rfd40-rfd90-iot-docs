@@ -1,0 +1,13 @@
+title: daAppEvent
+x-stoplight:
+  id: mlaz6c9i4in63
+type: object
+properties:
+  appName:
+    type: string
+    description: The name of the application triggering the event.
+    example: readInfo
+  message:
+    type: string
+    description: A message describing the event's status or action.
+    example: started

@@ -1,0 +1,42 @@
+title: currentRegion
+x-stoplight:
+  id: 380edc8b7805d
+type: object
+examples: []
+properties:
+  frequencyHopping:
+    type: boolean
+    description: Indicates whether frequency hopping is enabled in the region.
+  channelData:
+    type: array
+    items:
+      type: string
+      example: '"915250,915750"'
+    description: List of channel frequencies available in the region, represented as strings.
+  country:
+    type: string
+    example: USA
+    description: The country for ehich the device is configured to.
+  lbtEnabled:
+    type: boolean
+    description: Specifies if Listen Before Talk (LBT) is enabled for the region.
+  maxTxPowerSupported:
+    type: number
+    example: 29.2
+    description: The maximum transmission power supported in the region, measured in dBm.
+  minTxPowerSupported:
+    type: number
+    example: '10.0'
+    description: The minimum transmission power supported in the region, measured in dBm.
+  regulatoryStandard:
+    type: string
+    example: ETSI_EU_800M_900M_3_CHANNEL
+    description: The regulatory standard governing the region's transmission rules.
+required:
+  - frequencyHopping
+  - channelData
+  - country
+  - lbtEnabled
+  - maxTxPowerSupported
+  - minTxPowerSupported
+  - regulatoryStandard
