@@ -238,8 +238,17 @@
 
       document.querySelectorAll('.nav-group-toggle').forEach(function(toggle) {
         toggle.addEventListener('click', function(e) {
-          e.preventDefault();
           var group = toggle.closest('.nav-group');
+                    if (!group) {
+                        return;
+                    }
+                    /* If this group has no children panel, navigate directly */
+                    var childPanel = group.querySelector('.nav-group-children');
+                    if (!childPanel) {
+                        /* Allow default link navigation */
+                        return;
+                    }
+                    e.preventDefault();
                     if (!group) {
                         return;
                     }
