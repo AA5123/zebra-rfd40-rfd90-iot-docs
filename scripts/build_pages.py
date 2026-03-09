@@ -701,7 +701,7 @@ def main():
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>API Reference - RFD40 / RFD90 IOT developer guide</title>
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/redoc-zebra.css?v=9" />
+  <link rel="stylesheet" href="css/redoc-zebra.css?v=10" />
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; height: 100%; }
@@ -839,7 +839,7 @@ def main():
         if (a.querySelector('.indent-spacer')) continue;
         var spacer = document.createElement('span');
         spacer.className = 'indent-spacer';
-        spacer.style.cssText = 'display:inline-block;min-width:32px;width:32px;flex-shrink:0;pointer-events:none;';
+        spacer.style.cssText = 'display:inline-block;min-width:52px;width:52px;flex-shrink:0;pointer-events:none;';
         a.insertBefore(spacer, a.firstChild);
       }
     }
@@ -1037,7 +1037,7 @@ def main():
         f.write(redoc_standalone_html)
     print("Generated docs/api-reference-redoc.html")
 
-    api_ref_body = """<iframe src="api-reference-redoc.html?v=21" title="API Reference" class="api-ref-iframe"></iframe>"""
+    api_ref_body = """<iframe src="api-reference-redoc.html?v=22" title="API Reference" class="api-ref-iframe"></iframe>"""
     api_ref_html = """<!DOCTYPE html>
 <html lang="en" class="layout-api-ref-page">
 <head>
