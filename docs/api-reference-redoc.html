@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>API Reference - RFD40 / RFD90 IOT developer guide</title>
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/redoc-zebra.css?v=11" />
+  <link rel="stylesheet" href="css/redoc-zebra.css?v=12" />
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; height: 100%; }
@@ -123,39 +123,6 @@
       try { injectShadowStyles(el); } catch(e) {}
       try { styleSidebar(); } catch(e) {}
       try { cleanSidebarLabels(); } catch(e) {}
-      try { forceIndentation(); } catch(e) {}
-    }
-
-    /* Physical indentation: prepend non-breaking spaces to operation text.
-       Redoc styled-components override CSS padding/margin but cannot
-       remove text characters we inject into the DOM. */
-    function forceIndentation() {
-      var sidebar = el.querySelector('[role="navigation"]')
-                 || el.querySelector('nav')
-                 || (el.children[0] && el.children[0].children[0]);
-      if (!sidebar) return;
-
-      /* All <a> in sidebar = operations.  Prepend spaces to their first text node. */
-      var allLinks = sidebar.querySelectorAll('a');
-      var PREFIX = '\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0'; /* 10 non-breaking spaces */
-      for (var i = 0; i < allLinks.length; i++) {
-        var a = allLinks[i];
-        /* Skip if already indented */
-        if (a.getAttribute('data-indented')) continue;
-        a.setAttribute('data-indented', '1');
-        /* Find the first text node */
-        var walker = document.createTreeWalker(a, NodeFilter.SHOW_TEXT, null, false);
-        var first = walker.nextNode();
-        if (first) {
-          var txt = first.textContent || '';
-          if (txt.charAt(0) !== '\u00A0') {
-            first.textContent = PREFIX + txt;
-          }
-        } else {
-          /* No text node — prepend one */
-          a.insertBefore(document.createTextNode(PREFIX), a.firstChild);
-        }
-      }
     }
 
     /* Trim sidebar operation labels to just the command name (e.g. "get_version - Retrieves..." → "get_version") */
@@ -294,17 +261,21 @@
             }
 
           } else {
-            /* Depth 2+: Operations — indented, single-line truncated, no triangle */
-            label.style.setProperty('padding', '2px 12px 2px 48px', 'important');
+            /* Depth 2+: Operations — use physical spacer <span> for indent.
+               CSS padding gets overridden by styled-components, but DOM elements
+               cannot be removed. Same proven technique as the depth-1 triangles. */
+            var spacer = label.querySelector('.aws-indent');
+            if (!spacer) {
+              spacer = document.createElement('span');
+              spacer.className = 'aws-indent';
+              spacer.style.cssText = 'display:inline-block;min-width:36px;width:36px;flex-shrink:0;pointer-events:none;';
+              spacer.textContent = ' ';
+              label.insertBefore(spacer, label.firstChild);
+            }
             label.style.setProperty('font-size', '13px', 'important');
             label.style.setProperty('cursor', 'pointer', 'important');
-            label.style.setProperty('white-space', 'nowrap', 'important');
-            label.style.setProperty('overflow', 'hidden', 'important');
-            label.style.setProperty('text-overflow', 'ellipsis', 'important');
-            label.style.setProperty('display', 'block', 'important');
             li.style.setProperty('margin', '0', 'important');
             li.style.setProperty('padding', '0', 'important');
-            li.style.setProperty('overflow', 'hidden', 'important');
             if (tri) tri.remove();
           }
 
