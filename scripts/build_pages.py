@@ -452,13 +452,17 @@ def sidebar(current):
                 lines.append(f'{indent}</div>')
             else:
                 is_home = (label.strip().lower() == "home")
-                classes = []
-                if not is_home:
-                    classes.append("nav-top-link")
-                if current == href:
-                    classes.append("active")
-                cls = (' class="' + " ".join(classes) + '"') if classes else ""
-                lines.append(f'{indent}<a href="{href}"{cls}>{_nav_label_html(label)}</a>')
+                if is_home:
+                    cls = ' class="active"' if current_base == href else ""
+                    lines.append(f'{indent}<a href="{href}"{cls}>{_nav_label_html(label)}</a>')
+                else:
+                    classes = ["nav-group-toggle"]
+                    if current_base == href:
+                        classes.append("active")
+                    cls = ' class="' + " ".join(classes) + '"'
+                    lines.append(f'{indent}<div class="nav-group" data-nav-group>')
+                    lines.append(f'{indent}  <a href="{href}"{cls}>{_nav_label_html(label)}</a>')
+                    lines.append(f'{indent}</div>')
 
     render_items(nav_items)
     lines.append("</div>")
