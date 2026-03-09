@@ -7,100 +7,100 @@
     },
     "tags": [
         {
-            "name": "Management - Device Status",
+            "name": "Device Status",
             "description": "Device Status: get_status, get_version, get_current_region"
         },
         {
-            "name": "Management - Device Configuration",
+            "name": "Device Configuration",
             "description": "Device Configuration: get_config, set_config"
         },
         {
-            "name": "Management - Network Configuration",
+            "name": "Network Configuration",
             "description": "Network Configuration: get_wifi, set_wifi, delete_wifi_profile, get_eth"
         },
         {
-            "name": "Management - MQTT Endpoint Configuration",
+            "name": "MQTT Endpoint Configuration",
             "description": "MQTT Endpoint Configuration: config_endpoint, get_endpoint_config"
         },
         {
-            "name": "Management - Certificate Management",
+            "name": "Certificate Management",
             "description": "Certificate Management: install_certificate, delete_certificate, get_installed_certificate"
         },
         {
-            "name": "Management - System Operations",
+            "name": "System Operations",
             "description": "System Operations: reboot, set_os"
         },
         {
-            "name": "Control - Inventory Control",
+            "name": "Inventory Control",
             "description": "Inventory Control: control_operation (start/stop)"
         },
         {
-            "name": "Control - Operating Mode",
+            "name": "Operating Mode",
             "description": "Operating Mode: set_operating_mode, get_operating_mode"
         },
         {
-            "name": "Control - Tag Filtering",
+            "name": "Tag Filtering",
             "description": "Tag Filtering: set_post_filter, get_post_filter"
         },
         {
-            "name": "Events - Alerts",
+            "name": "Alerts",
             "description": "Alerts: alerts, alert_short"
         },
         {
-            "name": "Events - Event Configuration",
+            "name": "Event Configuration",
             "description": "Event Configuration: config_events"
         },
         {
-            "name": "Events - Device Health",
+            "name": "Device Health",
             "description": "Device Health: heartBeatEVT"
         },
         {
-            "name": "Events - Exceptions",
+            "name": "Exceptions",
             "description": "Exceptions: exceptionEVT"
         },
         {
-            "name": "Events - MQTT Connectivity",
+            "name": "MQTT Connectivity",
             "description": "MQTT Connectivity: mqttConnEVT"
         },
         {
-            "name": "Data - Tag Data Event",
+            "name": "Tag Data Event",
             "description": "Tag Data Event: dataEVT"
         }
     ],
     "x-tagGroups": [
         {
-            "name": "Management Interface (Device Configuration)",
+            "name": "Management",
             "tags": [
-                "Management - Device Status",
-                "Management - Device Configuration",
-                "Management - Network Configuration",
-                "Management - MQTT Endpoint Configuration",
-                "Management - Certificate Management",
-                "Management - System Operations"
+                "Device Status",
+                "Device Configuration",
+                "Network Configuration",
+                "MQTT Endpoint Configuration",
+                "Certificate Management",
+                "System Operations"
             ]
         },
         {
-            "name": "Control Interface (RFID Operations)",
+            "name": "Control",
             "tags": [
-                "Control - Inventory Control",
-                "Control - Operating Mode",
-                "Control - Tag Filtering"
+                "Inventory Control",
+                "Operating Mode",
+                "Tag Filtering"
             ]
         },
         {
-            "name": "Event Interface (Asynchronous Notifications)",
+            "name": "Events",
             "tags": [
-                "Events - Device Health",
-                "Events - Alerts",
-                "Events - Exceptions",
-                "Events - MQTT Connectivity",
-                "Events - Event Configuration"
+                "Device Health",
+                "Alerts",
+                "Exceptions",
+                "MQTT Connectivity",
+                "Event Configuration"
             ]
         },
         {
-            "name": "Data Interface (Tag & Barcode Data)",
+            "name": "Data",
             "tags": [
-                "Data - Tag Data Event"
+                "Tag Data Event"
             ]
         }
     ],
@@ -108,7 +108,7 @@
         "/get_post_filter": {
             "post": {
                 "tags": [
-                    "Control - Tag Filtering"
+                    "Tag Filtering"
                 ],
                 "summary": "get_post_filter",
                 "description": "This operation is used to fetch the post filter applied to filter tag data in RFID devices. The post filter ensures that only relevant tag data is processed based on specified criteria.",
@@ -177,7 +177,7 @@
         "/set_operating_mode": {
             "post": {
                 "tags": [
-                    "Control - Operating Mode"
+                    "Operating Mode"
                 ],
                 "summary": "set_operating_mode",
                 "description": "This operation is used to configure the operating mode of RFID devices. Note: When RFD40/90 sled is configured to FAST_READ profile, data events are not currently supported.",
@@ -508,7 +508,7 @@
         "/get_operating_mode": {
             "post": {
                 "tags": [
-                    "Control - Operating Mode"
+                    "Operating Mode"
                 ],
                 "summary": "get_operating_mode",
                 "description": "This command is designed to fetch the current operating mode information of RFID device within the IOTC system",
@@ -595,7 +595,7 @@
         "/control_operation": {
             "post": {
                 "tags": [
-                    "Control - Inventory Control"
+                    "Inventory Control"
                 ],
                 "summary": "control_operation",
                 "description": "This command controls device functionality, including RFID operations and scan operations.",
@@ -666,7 +666,7 @@
         "/set_post_filter": {
             "post": {
                 "tags": [
-                    "Control - Tag Filtering"
+                    "Tag Filtering"
                 ],
                 "summary": "set_post_filter",
                 "description": "This operation is used to set a post-filter for RFID device, enabling the filtering of tags scanned by the device based on specific criteria.",
@@ -749,7 +749,7 @@
         "/set_os": {
             "post": {
                 "tags": [
-                    "Management - System Operations"
+                    "System Operations"
                 ],
                 "summary": "set_os",
                 "description": "Command issued to set new firmware & initiate firmware update ",
@@ -835,7 +835,7 @@
         "/get_status": {
             "post": {
                 "tags": [
-                    "Management - Device Status"
+                    "Device Status"
                 ],
                 "summary": "get_status",
                 "description": "This command used to retrieve the reader status information.",
@@ -903,7 +903,7 @@
         "/delete_certificate": {
             "post": {
                 "tags": [
-                    "Management - Certificate Management"
+                    "Certificate Management"
                 ],
                 "summary": "delete_certificate",
                 "description": "Command issued to delete saved certificate  ",
@@ -974,7 +974,7 @@
         "/get_version": {
             "post": {
                 "tags": [
-                    "Management - Device Status"
+                    "Device Status"
                 ],
                 "summary": "get_version",
                 "description": "The `get_version` command retrieves detailed reader identity and version information, including:\n\n- Device serial number\n- Model number\n- SKU\n- Firmware version\n- Detailed component versions (scanner, radio, IoT Connector)\n- API version\n\nThis command answers the question:\n\n**\"Which reader is this, and what firmware is it running?\"**",
@@ -1149,7 +1149,7 @@
         "/reboot": {
             "post": {
                 "tags": [
-                    "Management - System Operations"
+                    "System Operations"
                 ],
                 "summary": "reboot",
                 "description": "Reboot command is used to perform warm reset of device. After successful reboot, device will reinitiate the connection to previously connected SOTI server. Upon failure notification will be sent",
@@ -1196,7 +1196,7 @@
         "/get_installed_certificate": {
             "post": {
                 "tags": [
-                    "Management - Certificate Management"
+                    "Certificate Management"
                 ],
                 "summary": "get_installed_certificate",
                 "description": "This API is used to get installed certificates. ",
@@ -1257,7 +1257,7 @@
         "/delete_wifi_profile": {
             "post": {
                 "tags": [
-                    "Management - Network Configuration"
+                    "Network Configuration"
                 ],
                 "summary": "delete_wifi_profile",
                 "description": "Command issued to delete saved wifi profile ",
@@ -1339,7 +1339,7 @@
         "/config_events": {
             "post": {
                 "tags": [
-                    "Events - Event Configuration"
+                    "Event Configuration"
                 ],
                 "summary": "config_events",
                 "description": "Enables or disables specific device events. To apply the changes, a device reboot is required. For RFD4090 devices, only the following events are supported: terminalConnection, firmwareUpdate, network, exceptions, ntp, heartbeat, power, battery, and fileDownload.",
@@ -1448,7 +1448,7 @@
         "/install_certificate": {
             "post": {
                 "tags": [
-                    "Management - Certificate Management"
+                    "Certificate Management"
                 ],
                 "summary": "install_certificate",
                 "description": "This API is used to install certificates. ",
@@ -1610,7 +1610,7 @@
         "/get_wifi": {
             "post": {
                 "tags": [
-                    "Management - Network Configuration"
+                    "Network Configuration"
                 ],
                 "summary": "get_wifi",
                 "description": "This command is used to retrieve wifi configuration details ",
@@ -1854,7 +1854,7 @@
         "/get_endpoint_config": {
             "post": {
                 "tags": [
-                    "Management - MQTT Endpoint Configuration"
+                    "MQTT Endpoint Configuration"
                 ],
                 "summary": "get_endpoint_config",
                 "description": "Command to get configured endpoints.If API does not included endpointName argument, then  response includes all active endpoints detailed configuration & list of all saved endpoint names otherwise response includes interested endpoints configuration only",
@@ -2064,7 +2064,7 @@
         "/get_config": {
             "post": {
                 "tags": [
-                    "Management - Device Configuration"
+                    "Device Configuration"
                 ],
                 "summary": "get_config",
                 "description": "Command issued to retrieve the complete device configuration such as version details, device status, current region details, ethernet & wifi configuration, end point configuration, details of installed certificates, event and alert configuration   ",
@@ -2297,7 +2297,7 @@
         "/get_current_region": {
             "post": {
                 "tags": [
-                    "Management - Device Status"
+                    "Device Status"
                 ],
                 "summary": "get_current_region",
                 "description": "This command is used to retrieve the current region configuration of the device.  ",
@@ -2404,7 +2404,7 @@
         "/config_endpoint": {
             "post": {
                 "tags": [
-                    "Management - MQTT Endpoint Configuration"
+                    "MQTT Endpoint Configuration"
                 ],
                 "summary": "config_endpoint",
                 "description": "Using config_endpoint user can add/delete/modify the end point configuration",
@@ -2605,7 +2605,7 @@
         "/set_wifi": {
             "post": {
                 "tags": [
-                    "Management - Network Configuration"
+                    "Network Configuration"
                 ],
                 "summary": "set_wifi",
                 "description": "This API is used to set wifi configuration. It currently supports IPv4 addressing with DHCP-based IP assignment only; static IP configuration and IPv6 support is not available in the current API version.",
@@ -2769,7 +2769,7 @@
         "/set_config": {
             "post": {
                 "tags": [
-                    "Management - Device Configuration"
+                    "Device Configuration"
                 ],
                 "summary": "set_config",
                 "description": "Command issued to set the complete device configuration such as current region details, ethernet & wifi configuration, end point configuration,  event and alert configuration  ",
@@ -3288,7 +3288,7 @@
         "/get_eth": {
             "post": {
                 "tags": [
-                    "Management - Network Configuration"
+                    "Network Configuration"
                 ],
                 "summary": "get_eth",
                 "description": "This API used to retrieve ethernet configuration details. Security features, static IP configuration, and IPv6 support are not available in the current API version.",
@@ -3355,7 +3355,7 @@
         "/exceptionEVT": {
             "post": {
                 "tags": [
-                    "Events - Exceptions"
+                    "Exceptions"
                 ],
                 "summary": "exceptionEVT",
                 "description": "This event captures details about exception events in the IOTC system, including metadata and component-specific errors.",
@@ -3407,7 +3407,7 @@
         "/mqttConnEVT": {
             "post": {
                 "tags": [
-                    "Events - MQTT Connectivity"
+                    "MQTT Connectivity"
                 ],
                 "summary": "mqttConnEVT",
                 "description": "This event provides details about the connection state of a device, including its metadata and protocol versions.",
@@ -3455,7 +3455,7 @@
         "/alerts": {
             "post": {
                 "tags": [
-                    "Events - Alerts"
+                    "Alerts"
                 ],
                 "summary": "alerts",
                 "description": "Represents a system-generated alert or notification event. Note: Some event types such as antenna, temperature, usage, GPI, and user app info are not supported.",
@@ -3544,7 +3544,7 @@
         "/heartBeatEVT": {
             "post": {
                 "tags": [
-                    "Events - Device Health"
+                    "Device Health"
                 ],
                 "summary": "heartBeatEVT",
                 "description": "This event represents a heartbeat signal sent periodically from a device or system to indicate its active status and provide essential metadata like uptime and event details.",
@@ -3591,7 +3591,7 @@
         "/dataEVT": {
             "post": {
                 "tags": [
-                    "Data - Tag Data Event"
+                    "Tag Data Event"
                 ],
                 "summary": "dataEVT",
                 "description": "Data Events capture and represent the structured information related to various events generated by the system. These events may include tag data, barcode data, and other relevant event-related details. They are utilized for tracking, monitoring, and analyzing system operations and behaviors in real-time or during post-event reviews.",
@@ -3645,7 +3645,7 @@
         "/alert_short": {
             "post": {
                 "tags": [
-                    "Events - Alerts"
+                    "Alerts"
                 ],
                 "summary": "alert_short",
                 "description": "Short form of alerts, does not contain details about the alert. This is mainly meant for SOTI.",

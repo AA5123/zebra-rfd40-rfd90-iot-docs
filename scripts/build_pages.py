@@ -456,13 +456,11 @@ def sidebar(current):
                     cls = ' class="active"' if current_base == href else ""
                     lines.append(f'{indent}<a href="{href}"{cls}>{_nav_label_html(label)}</a>')
                 else:
-                    classes = ["nav-group-toggle"]
+                    classes = ["nav-top-link", "nav-leaf-toggle"]
                     if current_base == href:
                         classes.append("active")
                     cls = ' class="' + " ".join(classes) + '"'
-                    lines.append(f'{indent}<div class="nav-group" data-nav-group>')
-                    lines.append(f'{indent}  <a href="{href}"{cls}>{_nav_label_html(label)}</a>')
-                    lines.append(f'{indent}</div>')
+                    lines.append(f'{indent}<a href="{href}"{cls}>{_nav_label_html(label)}</a>')
 
     render_items(nav_items)
     lines.append("</div>")

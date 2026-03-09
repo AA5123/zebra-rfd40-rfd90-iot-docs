@@ -502,11 +502,26 @@ body {
   color: var(--side-text-active);
 }
 
-/* Align direct top-level numbered links (e.g., 6. API Reference) with group labels */
-.sidebar a.nav-top-link {
-  display: block !important;
-  min-height: 2rem !important;
-  padding-left: 3.4rem !important; /* 1.3rem + 1.6rem arrow slot + 0.5rem gap */
+/* Leaf toggle links (e.g., 6. API Reference) – look like group toggles but navigate directly */
+.sidebar a.nav-leaf-toggle {
+  display: flex !important;
+  align-items: center;
+  gap: 0.5rem;
+  padding-left: 1.3rem !important;
+  min-height: 2rem;
+  font-size: 1.08rem;
+  font-weight: 600;
+}
+.sidebar a.nav-leaf-toggle::before {
+  content: "▸";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  font-size: 1.1rem;
+  color: var(--side-text);
+  flex-shrink: 0;
 }
 
 /* Children visibility */
