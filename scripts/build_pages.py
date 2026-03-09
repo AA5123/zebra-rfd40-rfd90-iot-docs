@@ -701,7 +701,7 @@ def main():
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>API Reference - RFD40 / RFD90 IOT developer guide</title>
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/redoc-zebra.css?v=10" />
+  <link rel="stylesheet" href="css/redoc-zebra.css?v=11" />
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; height: 100%; }
@@ -822,25 +822,35 @@ def main():
       try { forceIndentation(); } catch(e) {}
     }
 
-    /* Physical spacer approach: Redoc styled-components override all CSS padding.
-       Instead, prepend an invisible spacer <span> to each operation <a> tag.
-       This physically pushes the text to the right and CAN'T be overridden. */
+    /* Physical indentation: prepend non-breaking spaces to operation text.
+       Redoc styled-components override CSS padding/margin but cannot
+       remove text characters we inject into the DOM. */
     function forceIndentation() {
       var sidebar = el.querySelector('[role="navigation"]')
                  || el.querySelector('nav')
                  || (el.children[0] && el.children[0].children[0]);
       if (!sidebar) return;
 
-      /* All <a> in sidebar = operations.  Add a spacer if not already present. */
+      /* All <a> in sidebar = operations.  Prepend spaces to their first text node. */
       var allLinks = sidebar.querySelectorAll('a');
+      var PREFIX = '\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0\\u00A0'; /* 10 non-breaking spaces */
       for (var i = 0; i < allLinks.length; i++) {
         var a = allLinks[i];
-        /* Skip if spacer already added */
-        if (a.querySelector('.indent-spacer')) continue;
-        var spacer = document.createElement('span');
-        spacer.className = 'indent-spacer';
-        spacer.style.cssText = 'display:inline-block;min-width:52px;width:52px;flex-shrink:0;pointer-events:none;';
-        a.insertBefore(spacer, a.firstChild);
+        /* Skip if already indented */
+        if (a.getAttribute('data-indented')) continue;
+        a.setAttribute('data-indented', '1');
+        /* Find the first text node */
+        var walker = document.createTreeWalker(a, NodeFilter.SHOW_TEXT, null, false);
+        var first = walker.nextNode();
+        if (first) {
+          var txt = first.textContent || '';
+          if (txt.charAt(0) !== '\\u00A0') {
+            first.textContent = PREFIX + txt;
+          }
+        } else {
+          /* No text node — prepend one */
+          a.insertBefore(document.createTextNode(PREFIX), a.firstChild);
+        }
       }
     }
 
@@ -1037,7 +1047,7 @@ def main():
         f.write(redoc_standalone_html)
     print("Generated docs/api-reference-redoc.html")
 
-    api_ref_body = """<iframe src="api-reference-redoc.html?v=22" title="API Reference" class="api-ref-iframe"></iframe>"""
+    api_ref_body = """<iframe src="api-reference-redoc.html?v=23" title="API Reference" class="api-ref-iframe"></iframe>"""
     api_ref_html = """<!DOCTYPE html>
 <html lang="en" class="layout-api-ref-page">
 <head>
