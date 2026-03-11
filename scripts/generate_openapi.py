@@ -449,21 +449,8 @@ def build_openapi():
         ("title", "RFD40 / RFD90 IOT developer guide"),
         ("version", "v2"),
         ("description",
-         "MQTT-based API for managing and controlling Zebra RFD40 and RFD90 RFID readers.\n\n"
-         "## Publish Topic\n"
-         "Send commands by publishing JSON to:\n\n"
-         "`<TenantID>/<PublishTopic>/<DeviceSerial>`\n\n"
-         "Example: `zebra/CTRL/clients/cmnd/RFD40-212735201D0053`\n\n"
-         "Only one publish topic is supported per device. Configure it via 123RFID Desktop or Mobile.\n\n"
-         "## Subscribe Topics\n"
-         "The device publishes responses and events on four topics:\n\n"
-         "| Topic | Format | Example |\n"
-         "|---|---|---|\n"
-         "| Command Response | `<TenantID>/<ResponseTopic>/<Serial>` | `zebra/CTRL/clients/resp/RFD40-212735201D0053` |\n"
-         "| Alerts & Events | `<TenantID>/<EventTopic>/<Serial>` | `zebra/CTRL/clients/event/RFD40-212735201D0053` |\n"
-         "| Data Events | `<TenantID>/<DataTopic>/<Serial>` | `zebra/DATA/clients/data1event/RFD40-212735201D0053` |\n"
-         "| Last Will (LWT) | `<TenantID>/<LWTTopic>/<Serial>` | `zebra/CTRL/clients/rfid/RFD40-212735201D0053` |\n\n"
-         "Configure subscribe topics via 123RFID Desktop or Mobile."),
+         "MQTT-based API for managing and controlling Zebra RFD40 and RFD90 RFID readers. "
+         "Send JSON command payloads to the MQTT command topic and receive responses on the response topic."),
     ])
 
     # --- Tags ---
