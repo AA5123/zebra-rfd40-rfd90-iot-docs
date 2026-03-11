@@ -163,6 +163,7 @@
           root = nav ? (nav.querySelector('ul') || nav) : null;
         }
         if (!root) return;
+        var currentHash = decodeURIComponent(window.location.hash || '').toLowerCase();
         var items = root.querySelectorAll('li[role="menuitem"]') || root.querySelectorAll('li');
         if (!items || items.length === 0) items = root.querySelectorAll('li');
         for (var i = 0; i < items.length; i++) {
@@ -175,6 +176,16 @@
           }
           var label = li.querySelector(':scope > label') || li.querySelector(':scope > a');
           if (!label) continue;
+
+          /* Detect active item via URL hash */
+          var isActive = false;
+          if (depth >= 2) {
+            var cmdMatch = (label.textContent || '').match(/([a-z][a-z_]+)/);
+            if (cmdMatch && currentHash.indexOf(cmdMatch[1]) !== -1) isActive = true;
+          } else if (depth === 1) {
+            var tagSlug = (label.textContent || '').trim().replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-+|-+$/g, '').toLowerCase();
+            if (tagSlug && currentHash.indexOf(tagSlug) !== -1) isActive = true;
+          }
 
           /* Hide SVGs (Redoc arrows) */
           var svgs = label.querySelectorAll('svg');
@@ -210,12 +221,12 @@
           label.style.setProperty('display', 'flex', 'important');
           label.style.setProperty('align-items', 'baseline', 'important');
           label.style.setProperty('font-family', '"Inter","Segoe UI",system-ui,sans-serif', 'important');
-          label.style.setProperty('font-weight', '400', 'important');
-          label.style.setProperty('color', '#16191f', 'important');
+          label.style.setProperty('font-weight', isActive && depth >= 1 ? '600' : '400', 'important');
+          label.style.setProperty('color', isActive && depth >= 1 ? '#0073bb' : '#16191f', 'important');
           label.style.setProperty('text-transform', 'none', 'important');
           label.style.setProperty('letter-spacing', 'normal', 'important');
           label.style.setProperty('opacity', '1', 'important');
-          label.style.setProperty('background', 'transparent', 'important');
+          label.style.setProperty('background', isActive && depth >= 2 ? '#f0f4ff' : 'transparent', 'important');
           li.style.setProperty('border', 'none', 'important');
           li.style.setProperty('overflow', 'visible', 'important');
 
@@ -279,11 +290,7 @@
             if (tri) tri.remove();
           }
 
-          /* Active state */
-          if (label.classList.contains('active')) {
-            label.style.setProperty('color', '#0073bb', 'important');
-            label.style.setProperty('font-weight', '600', 'important');
-          }
+
         }
       } finally {
         setTimeout(function() { window._awsLock = false; }, 20);
@@ -314,6 +321,9 @@
       var obs = new MutationObserver(function() { setTimeout(runHide, 50); });
       obs.observe(el, { childList: true, subtree: true });
     }
+    window.addEventListener('hashchange', function() { setTimeout(runHide, 50); });
+    var _scrollT;
+    document.addEventListener('scroll', function() { clearTimeout(_scrollT); _scrollT = setTimeout(runHide, 150); }, true);
   })();
   </script>
 </body>
