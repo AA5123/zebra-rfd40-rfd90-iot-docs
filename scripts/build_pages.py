@@ -815,6 +815,36 @@ def main():
       try { injectShadowStyles(el); } catch(e) {}
       try { styleSidebar(); } catch(e) {}
       try { cleanSidebarLabels(); } catch(e) {}
+      try { indentNestedProps(); } catch(e) {}
+    }
+
+    /* Indent nested schema property blocks in the content area.
+       Redoc renders child properties inside nested <table> elements
+       wrapped in <div> containers. We walk the content panel and
+       apply increasing left-margin based on nesting depth. */
+    function indentNestedProps() {
+      /* Content panel is the second child of the Redoc wrapper */
+      var wrap = el.children[0];
+      if (!wrap) return;
+      var content = wrap.children.length > 1 ? wrap.children[1] : null;
+      if (!content) return;
+      var tables = content.querySelectorAll('table');
+      for (var i = 0; i < tables.length; i++) {
+        var tbl = tables[i];
+        /* Count nesting depth: how many ancestor <table> elements inside content */
+        var depth = 0;
+        var p = tbl.parentElement;
+        while (p && p !== content) {
+          if (p.tagName === 'TABLE') depth++;
+          p = p.parentElement;
+        }
+        if (depth > 0) {
+          var ml = Math.min(depth, 4) * 24;
+          tbl.style.setProperty('margin-left', ml + 'px', 'important');
+          tbl.style.setProperty('border-left', '3px solid #d0d7de', 'important');
+          tbl.style.setProperty('padding-left', '12px', 'important');
+        }
+      }
     }
 
     /* Trim sidebar operation labels to just the command name (e.g. "get_version - Retrieves..." → "get_version") */

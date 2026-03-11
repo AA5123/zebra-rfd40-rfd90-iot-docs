@@ -205,21 +205,4 @@ a[href*="redoc.ly"] {
 }
 
 /* ═══ Nested schema property indentation ═══ */
-/* Redoc wraps child properties inside nested table/div containers.
-   Add left padding + a visible left border for each nesting level. */
-
-/* Level 1 nesting (e.g. detailedVersions children, response children) */
-#redoc-container table table,
-#redoc-container [data-section-id] table table,
-#redoc-container div[class] > table table {
-  margin-left: 32px !important;
-  border-left: 3px solid #d0d7de !important;
-  padding-left: 16px !important;
-}
-
-/* Level 2+ nesting */
-#redoc-container table table table {
-  margin-left: 28px !important;
-  border-left: 3px solid #dce3ea !important;
-  padding-left: 14px !important;
-}
+/* Handled by JavaScript (indentNestedProps) since Redoc uses styled-components. */
