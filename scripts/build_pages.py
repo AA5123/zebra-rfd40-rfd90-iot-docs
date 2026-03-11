@@ -596,10 +596,7 @@ NAV_SCRIPT = """
                         /* Allow default link navigation */
                         return;
                     }
-                    e.preventDefault();
-                    if (!group) {
-                        return;
-                    }
+                    /* Always expand/collapse the sub-items */
                     var willExpand = group.classList.contains('collapsed');
                     if (willExpand) {
                         navGroups.forEach(function(other) {
@@ -619,6 +616,11 @@ NAV_SCRIPT = """
                         toggle.classList.remove('active');
                     }
                     syncExpandedAria();
+                    /* Navigate to the page */
+                    var href = toggle.getAttribute('href');
+                    if (href) {
+                        window.location.href = href;
+                    }
         });
       });
 
