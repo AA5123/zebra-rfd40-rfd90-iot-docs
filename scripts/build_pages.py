@@ -1099,15 +1099,9 @@ def main():
     # Remove branding metadata so Redoc does not render a logo block in API sidebar/header.
     if isinstance(spec.get("info"), dict) and "x-logo" in spec["info"]:
         del spec["info"]["x-logo"]
-    spec["info"]["description"] = (
-        "**This is an MQTT API, not REST.** There are no HTTP endpoints. Each operation is a **command payload**: "
-        "publish JSON to the MQTT **command topic** (`<Tenant ID>/<Publish Topic>/<Device Serial No>`). "
-        "Device replies are received on your configured **command response** topic. "
-        "Use this API reference for payload schemas/examples and see **Getting Started** plus **MQTT Communication Protocol** for end-to-end flow."
-    )
     with open(openapi_path, "w", encoding="utf-8") as f:
         json.dump(spec, f, indent=4, ensure_ascii=False)
-    print("Reset docs/openapi.yaml description.")
+    print("Cleaned docs/openapi.yaml.")
 
 
 if __name__ == "__main__":
