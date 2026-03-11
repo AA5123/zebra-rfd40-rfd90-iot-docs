@@ -207,8 +207,7 @@ OPERATION_DESCRIPTIONS = {
         "| `detailedVersions.iotcVersion` | IoT Connector software version |\n\n"
         "**Typical use cases:**\n"
         "- Inventory — collect model/serial/SKU across all scanners for asset tracking.\n"
-        "- Firmware management — check which scanners need firmware updates.\n"
-        "- Support tickets — include firmware versions when reporting issues to Zebra."
+        "- Firmware management — check which scanners need firmware updates."
     ),
     "get_current_region": (
         "Retrieves the **regulatory radio configuration** of the scanner — which country's rules it follows, "
