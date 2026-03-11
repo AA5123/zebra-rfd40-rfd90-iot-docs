@@ -2,6 +2,7 @@ title: readerVersion
 x-stoplight:
   id: e2effa15ae429
 type: object
+description: "Scanner identity — model, serial number, SKU, and firmware versions for the main device, barcode scanner, RFID radio, and IoT Connector. These values only change after a firmware update."
 examples: []
 properties:
   firmwareVersion:

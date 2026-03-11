@@ -111,7 +111,7 @@
                     "Device Status"
                 ],
                 "summary": "get_status",
-                "description": "This command used to retrieve the reader status information.",
+                "description": "Retrieves **real-time health and status** of the scanner — battery, temperature, radio, power, clock sync, and terminal connection.\n\n**Response fields:**\n\n| Field | What it tells you |\n|---|---|\n| `powerSource` | How the scanner is powered — DC, Wall Charger, USB, or Cradle |\n| `radioActivity` | Whether the RFID radio is currently active or idle |\n| `radioConnection` | Whether the radio module is connected or disconnected |\n| `hostname` | The scanner's network hostname |\n| `systemTime` | Current device clock in ISO 8601 format |\n| `temperature` | Internal temperature in °C — monitor for overheating |\n| `ntp` | Clock sync status — offset (ms drift) and reach (sync success history) |\n| `terminalConnection` | Paired phone/tablet — connection status and type (Bluetooth, USB, CIO) |\n| `batteryStatus` | Battery capacity (mAh), charge %, health (Good/Average/Poor), charge state |\n\n**Typical use cases:**\n- Dashboard monitoring — show live scanner health on a management console.\n- Battery management — track charge levels across a fleet before a shift starts.\n- Troubleshooting — check if radio is connected, temperature is normal, clock is synced.\n\n**Note:** This is a read-only command. No parameters beyond `command` and `requestId`.",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -121,13 +121,16 @@
                                 "properties": {
                                     "command": {
                                         "type": "string",
+                                        "enum": [
+                                            "get_status"
+                                        ],
                                         "example": "get_status",
-                                        "description": "Command used to get the reader status information "
+                                        "description": "Must be `get_status`. Tells the scanner to return its current health and status."
                                     },
                                     "requestId": {
                                         "type": "string",
                                         "example": "abcd123",
-                                        "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+                                        "description": "A unique ID you assign to this request. The scanner echoes it back in the response so you can match requests to responses."
                                     }
                                 },
                                 "required": [
@@ -140,7 +143,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "Response",
+                        "description": "Returns the scanner's current health and status. The `deviceStatus` object contains all status fields; the `response` object tells you if the command succeeded.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -148,11 +151,13 @@
                                     "properties": {
                                         "command": {
                                             "type": "string",
-                                            "example": "get_status"
+                                            "example": "get_status",
+                                            "description": "Echoes back the command name — always `get_status` for this response."
                                         },
                                         "requestId": {
                                             "type": "string",
-                                            "example": "abc123"
+                                            "example": "abc123",
+                                            "description": "Echoes back the requestId you sent, so you can match this response to your original request."
                                         },
                                         "apiVersion": {
                                             "type": "string",
@@ -160,10 +165,12 @@
                                                 "V1.0",
                                                 "V1.1"
                                             ],
-                                            "example": "V1.1"
+                                            "example": "V1.1",
+                                            "description": "The API version of the IoT Connector responding to this command."
                                         },
                                         "deviceStatus": {
                                             "type": "object",
+                                            "description": "Real-time device health — power source, RFID radio state, temperature, battery level and health, NTP clock sync, and paired terminal (phone/tablet) connection.",
                                             "properties": {
                                                 "powerSource": {
                                                     "type": "string",
@@ -293,17 +300,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },
@@ -367,7 +375,7 @@
                     "Device Status"
                 ],
                 "summary": "get_version",
-                "description": "This command is used to retrieve the reader information like device serial no, model no, sku, and firmware version information. ",
+                "description": "Retrieves the **scanner's identity card** — model, serial number, SKU, and all firmware versions.\n\n**Response fields:**\n\n| Field | What it tells you |\n|---|---|\n| `firmwareVersion` | Main device firmware version |\n| `model` | Scanner model — RFD40 or RFD90 |\n| `serialNumber` | Unique device serial number |\n| `sku` | Stock Keeping Unit — encodes model, features, and region (e.g. `RFD4031-G10B700-US`) |\n| `detailedVersions.scannerFirmware` | Barcode scanner module firmware |\n| `detailedVersions.radioFirmware` | RFID radio module firmware |\n| `detailedVersions.iotcVersion` | IoT Connector software version |\n\n**Typical use cases:**\n- Inventory — collect model/serial/SKU across all scanners for asset tracking.\n- Firmware management — check which scanners need firmware updates.\n- Support tickets — include firmware versions when reporting issues to Zebra.\n\n**Note:** This is a read-only command. All values are factory-set or change only after firmware updates.",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -377,13 +385,16 @@
                                 "properties": {
                                     "command": {
                                         "type": "string",
+                                        "enum": [
+                                            "get_version"
+                                        ],
                                         "example": "get_version",
-                                        "description": "Used to get the reader information "
+                                        "description": "Must be `get_version`. Tells the scanner to return its identity and firmware information."
                                     },
                                     "requestId": {
                                         "type": "string",
                                         "example": "abc123",
-                                        "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+                                        "description": "A unique ID you assign to this request. The scanner echoes it back in the response so you can match requests to responses."
                                     }
                                 },
                                 "required": [
@@ -396,7 +407,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "Response",
+                        "description": "Returns the scanner's identity and firmware details. The `readerVersion` object contains all version fields; the `response` object tells you if the command succeeded.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -404,11 +415,13 @@
                                     "properties": {
                                         "command": {
                                             "type": "string",
-                                            "default": "get_version"
+                                            "default": "get_version",
+                                            "description": "Echoes back the command name — always `get_version` for this response."
                                         },
                                         "requestId": {
                                             "type": "string",
-                                            "example": "abcd123"
+                                            "example": "abcd123",
+                                            "description": "Echoes back the requestId you sent, so you can match this response to your original request."
                                         },
                                         "apiVersion": {
                                             "type": "string",
@@ -416,10 +429,12 @@
                                                 "V1.1",
                                                 "V1.0"
                                             ],
-                                            "example": "V1.1"
+                                            "example": "V1.1",
+                                            "description": "The API version of the IoT Connector responding to this command."
                                         },
                                         "readerVersion": {
                                             "type": "object",
+                                            "description": "Scanner identity — model, serial number, SKU, and firmware versions for the main device, barcode scanner, RFID radio, and IoT Connector. These values only change after a firmware update.",
                                             "properties": {
                                                 "firmwareVersion": {
                                                     "type": "string",
@@ -479,17 +494,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },
@@ -543,7 +559,7 @@
                     "Device Status"
                 ],
                 "summary": "get_current_region",
-                "description": "This command is used to retrieve the current region configuration of the device.  ",
+                "description": "Retrieves the **regulatory radio configuration** of the scanner — which country's rules it follows, what frequencies it can use, and power limits.\n\n**Response fields:**\n\n| Field | What it tells you |\n|---|---|\n| `country` | The country this scanner is configured for (e.g. United States, Germany) |\n| `regulatoryStandard` | The radio regulation it follows (e.g. FCC for US, ETSI for Europe) |\n| `frequencyHopping` | Whether the scanner automatically switches between frequency channels |\n| `lbtEnabled` | Whether Listen Before Talk is enabled (required in some regions like Japan/EU) |\n| `maxTxPowerSupported` | Maximum allowed transmit power in dBm |\n| `minTxPowerSupported` | Minimum transmit power in dBm |\n| `channelData` | List of all available frequency channels (in kHz) the scanner can use |\n\n**Typical use cases:**\n- Compliance auditing — verify scanners are configured for the correct country before deployment.\n- RF planning — check available channels and power limits for site planning.\n- Multi-region management — confirm scanners shipped to different countries have the right region settings.\n\n**Note:** This is a read-only command. Region settings are factory-set based on the SKU and cannot be changed via API.",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -553,22 +569,29 @@
                                 "properties": {
                                     "command": {
                                         "type": "string",
+                                        "enum": [
+                                            "get_current_region"
+                                        ],
                                         "example": "get_current_region",
-                                        "description": "Specifies the operation being performed, in this case, retrieving the current region configuration."
+                                        "description": "Must be `get_current_region`. Tells the scanner to return its regulatory radio configuration."
                                     },
                                     "requestId": {
                                         "type": "string",
                                         "example": "abc123",
-                                        "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+                                        "description": "A unique ID you assign to this request. The scanner echoes it back in the response so you can match requests to responses."
                                     }
-                                }
+                                },
+                                "required": [
+                                    "command",
+                                    "requestId"
+                                ]
                             }
                         }
                     }
                 },
                 "responses": {
                     "default": {
-                        "description": "Response",
+                        "description": "Returns the scanner's regulatory radio configuration. The `currentRegion` object contains all region fields; the `response` object tells you if the command succeeded.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -577,12 +600,12 @@
                                         "command": {
                                             "type": "string",
                                             "example": "get_current_region",
-                                            "description": "The command issued by the client, indicating the operation to retrieve the current region."
+                                            "description": "Echoes back the command name — always `get_current_region` for this response."
                                         },
                                         "requestId": {
                                             "type": "string",
                                             "example": "abc123",
-                                            "description": "A unique identifier for tracking the request."
+                                            "description": "Echoes back the requestId you sent, so you can match this response to your original request."
                                         },
                                         "apiVersion": {
                                             "type": "string",
@@ -591,10 +614,11 @@
                                                 "V1.1"
                                             ],
                                             "example": "V1.1",
-                                            "description": "The version of the API being called, allowing for version-specific processing."
+                                            "description": "The API version of the IoT Connector responding to this command."
                                         },
                                         "currentRegion": {
                                             "type": "object",
+                                            "description": "Regulatory radio configuration — country, regulatory standard, available frequency channels, transmit power limits, frequency hopping, and Listen Before Talk settings. These are factory-set and cannot be changed.",
                                             "properties": {
                                                 "frequencyHopping": {
                                                     "type": "boolean",
@@ -611,7 +635,7 @@
                                                 "country": {
                                                     "type": "string",
                                                     "example": "USA",
-                                                    "description": "The country for ehich the device is configured to."
+                                                    "description": "The country for which the device is configured."
                                                 },
                                                 "lbtEnabled": {
                                                     "type": "boolean",
@@ -645,17 +669,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },
@@ -758,7 +783,7 @@
                     "Device Configuration"
                 ],
                 "summary": "get_config",
-                "description": "Retrieves the complete device configuration in a single response — equivalent to calling get_version, get_status, get_current_region, get_wifi, get_eth, get_endpoint_config, and get_installed_certificate all at once. The response includes: readerVersion (model, serial, firmware), deviceStatus (battery, temperature, radio, power), currentRegion (country, frequencies, power limits), wifiConfig (SSID, IP, security), ethConfig (ethernet status), epConfig (MQTT endpoint settings), installedCerts (certificate details), and eventConfiguration (enabled events/alerts). This is a read-only command — use set_config to change settings.",
+                "description": "Retrieves the **complete device configuration** in a single response — equivalent to calling `get_version`, `get_status`, `get_current_region`, `get_wifi`, `get_eth`, `get_endpoint_config`, and `get_installed_certificate` all at once.\n\n**Response sections:**\n\n| Section | Contents |\n|---|---|\n| `readerVersion` | Model, serial number, SKU, firmware versions (main, scanner, radio, IoTC) |\n| `deviceStatus` | Power source, radio state, temperature, battery health, NTP sync, terminal connection |\n| `currentRegion` | Country, regulatory standard, frequency channels, power limits, frequency hopping, LBT |\n| `wifiConfig` | Wi-Fi interface status, connected SSID, IP address, MAC, DHCP, security type |\n| `ethConfig` | Ethernet interface status, link speed, IP configuration |\n| `epConfig` | Active MQTT endpoint: type, broker URL, port, protocol, credentials, topics, security |\n| `installedCerts` | List of installed certificates with type, validity dates, and algorithms |\n| `eventConfiguration` | Which events/alerts are enabled (heartbeat, battery, temperature, firmware, network, etc.) |\n\n**Typical use cases:**\n- First-time setup — see how a blank scanner is configured before applying changes via `set_config`.\n- Troubleshooting — get the full picture when something isn't working.\n- Auditing — verify all settings across a fleet of scanners.\n\n**Note:** This is a read-only command. No parameters beyond `command` and `requestId`. To change settings, use `set_config`.",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -768,13 +793,16 @@
                                 "properties": {
                                     "command": {
                                         "type": "string",
+                                        "enum": [
+                                            "get_config"
+                                        ],
                                         "example": "get_config",
-                                        "description": "Specifies the operation being performed, in this case, retrieving the complete device configuration."
+                                        "description": "Must be `get_config`. Tells the scanner to return its full configuration."
                                     },
                                     "requestId": {
                                         "type": "string",
                                         "example": "abc123",
-                                        "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+                                        "description": "A unique ID you assign to this request. The scanner echoes it back in the response so you can match requests to responses."
                                     }
                                 }
                             }
@@ -783,7 +811,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "Response",
+                        "description": "Returns the full device configuration. The `currentConfig` object contains all settings; the `response` object tells you if the command succeeded or failed.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -806,6 +834,7 @@
                                             "properties": {
                                                 "readerVersion": {
                                                     "type": "object",
+                                                    "description": "Scanner identity — model, serial number, SKU, and firmware versions for the main device, barcode scanner, RFID radio, and IoT Connector. These values only change after a firmware update.",
                                                     "properties": {
                                                         "firmwareVersion": {
                                                             "type": "string",
@@ -865,6 +894,7 @@
                                                 },
                                                 "deviceStatus": {
                                                     "type": "object",
+                                                    "description": "Real-time device health — power source, RFID radio state, temperature, battery level and health, NTP clock sync, and paired terminal (phone/tablet) connection.",
                                                     "properties": {
                                                         "powerSource": {
                                                             "type": "string",
@@ -994,6 +1024,7 @@
                                                 },
                                                 "currentRegion": {
                                                     "type": "object",
+                                                    "description": "Regulatory radio configuration — country, regulatory standard, available frequency channels, transmit power limits, frequency hopping, and Listen Before Talk settings. These are factory-set and cannot be changed.",
                                                     "properties": {
                                                         "frequencyHopping": {
                                                             "type": "boolean",
@@ -1010,7 +1041,7 @@
                                                         "country": {
                                                             "type": "string",
                                                             "example": "USA",
-                                                            "description": "The country for ehich the device is configured to."
+                                                            "description": "The country for which the device is configured."
                                                         },
                                                         "lbtEnabled": {
                                                             "type": "boolean",
@@ -2039,17 +2070,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },
@@ -4526,17 +4558,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },
@@ -5244,17 +5277,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },
@@ -6031,17 +6065,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },
@@ -6148,17 +6183,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },
@@ -6458,17 +6494,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },
@@ -7088,17 +7125,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },
@@ -7575,17 +7613,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },
@@ -8057,17 +8096,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },
@@ -8207,17 +8247,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },
@@ -8392,17 +8433,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },
@@ -8505,17 +8547,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },
@@ -8746,17 +8789,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },
@@ -8901,17 +8945,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },
@@ -9643,17 +9688,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },
@@ -10121,17 +10167,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },
@@ -10374,17 +10421,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },
@@ -10546,17 +10594,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },
@@ -11764,17 +11813,18 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
                                                     "example": "0",
-                                                    "description": "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **1** — Command payload accepted\n- **2** — Invalid payload\n- **3** — Not able to retrieve information\n- **4** — Firmware update in progress\n- **5** — Can't reboot, inventory in progress\n- **6** — Region is not configured\n- **7** — Interface is not available\n- **8** — Insufficient flash size\n- **9** — File not found\n- **10** — Configuration already exists\n- **11** — Inventory in progress\n- **12** — No radio operation in progress\n- **13** — Firmware update failed\n- **14** — Battery too low for firmware update\n- **15** — WIFI: SSID not found\n- **16** — WIFI: Cannot delete active SSID\n- **17** — WIFI: SSID missing\n- **18** — WIFI: SSID already exists\n- **19** — WIFI: SSID count overflow\n- **20** — WiFi is not supported\n- **21** — Certificate not found\n- **22** — Advanced configuration not set\n- **23** — Invalid enum value\n- **24** — Max 32 prefilters limit exceeded\n- **25** — Max 3 publish topics exceeded\n- **26** — Max 1 subscribe topic exceeded\n- **27** — Invalid tenant ID length\n- **28** — Tag match pattern length exceeded",
                                                     "minimum": 0,
                                                     "maximum": 24
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "description": "response description in detail",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
                                                     "example": "Success"
                                                 }
                                             },

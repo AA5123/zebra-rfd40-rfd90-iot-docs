@@ -35,12 +35,12 @@
     "command": {
       "type": "string",
       "example": "get_current_region",
-      "description": "The command issued by the client, indicating the operation to retrieve the current region."
+      "description": "Echoes back the command name — always `get_current_region` for this response."
     },
     "requestId": {
       "type": "string",
       "example": "abc123",
-      "description": "A unique identifier for tracking the request."
+      "description": "Echoes back the requestId you sent, so you can match this response to your original request."
     },
     "apiVersion": {
       "type": "string",
@@ -49,7 +49,7 @@
         "V1.1"
       ],
       "example": "V1.1",
-      "description": "The version of the API being called, allowing for version-specific processing."
+      "description": "The API version of the IoT Connector responding to this command."
     },
     "currentRegion": {
       "$ref": "../../refrence/response/currentRegionResponse.yaml",

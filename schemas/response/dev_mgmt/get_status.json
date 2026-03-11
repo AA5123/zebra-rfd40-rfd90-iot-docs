@@ -40,11 +40,13 @@
   "properties": {
     "command": {
       "type": "string",
-      "example": "get_status"
+      "example": "get_status",
+      "description": "Echoes back the command name — always `get_status` for this response."
     },
     "requestId": {
       "type": "string",
-      "example": "abc123"
+      "example": "abc123",
+      "description": "Echoes back the requestId you sent, so you can match this response to your original request."
     },
     "apiVersion": {
       "type": "string",
@@ -52,7 +54,8 @@
         "V1.0",
         "V1.1"
       ],
-      "example": "V1.1"
+      "example": "V1.1",
+      "description": "The API version of the IoT Connector responding to this command."
     },
     "deviceStatus": {
       "$ref": "../../refrence/response/deviceStatusResponse.yaml"

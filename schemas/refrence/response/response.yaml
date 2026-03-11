@@ -2,16 +2,47 @@ title: response
 x-stoplight:
   id: 1uzw0wye4si2y
 type: object
+description: "Status of the command execution — check `code` to confirm success (0) or identify the error."
 properties:
   code:
     type: integer
     example: '0'
-    description: "response code\n0\tSuccess,\n1\tCommand payload is accepted,\n2\tInvalid payload,\n3\tNot able to retrieve information,\n4\tFirmware update in progress,\n5\tCan't reboot device, inventory in progress,\n6\tRegion is not configured,\n7\tInterface is not available,\n8\tInsufficient flash size,\n9\tFile not found,\n10\tConfiguration already exist,\n11\tInventory in progress,\n12\tNo Radio Operation in Progress,\n13\tFirmware update Failed,\n14\tBattery is low, Cannot update firmware,\n15\tWIFI Error - SSID not found,\n16\tWIFI Error - Cannot delete active SSID,\n17\tWIFI Error - SSID missed,\n18\tWIFI Error - SSID already exist,\n19\tWIFI Error - SSID count overflow,\n20\tWifi is not supported,\n21\tCertificate not found,\n22\tAdvanced configuration not set,\n23\tInvalid enum value,\n24\tMax 32 prefilters limit exceeded,\n25\tMax 3 publish topics exceeded,\n26\tMax 1 subscribe topic exceeded,\n27\tInvalid tenant ID length,\n28\tTag match pattern length exceeded\n"
+    description: |-
+      Response code indicating success or failure.
+      - **0** — Success
+      - **1** — Command payload accepted
+      - **2** — Invalid payload
+      - **3** — Not able to retrieve information
+      - **4** — Firmware update in progress
+      - **5** — Can't reboot, inventory in progress
+      - **6** — Region is not configured
+      - **7** — Interface is not available
+      - **8** — Insufficient flash size
+      - **9** — File not found
+      - **10** — Configuration already exists
+      - **11** — Inventory in progress
+      - **12** — No radio operation in progress
+      - **13** — Firmware update failed
+      - **14** — Battery too low for firmware update
+      - **15** — WIFI: SSID not found
+      - **16** — WIFI: Cannot delete active SSID
+      - **17** — WIFI: SSID missing
+      - **18** — WIFI: SSID already exists
+      - **19** — WIFI: SSID count overflow
+      - **20** — WiFi is not supported
+      - **21** — Certificate not found
+      - **22** — Advanced configuration not set
+      - **23** — Invalid enum value
+      - **24** — Max 32 prefilters limit exceeded
+      - **25** — Max 3 publish topics exceeded
+      - **26** — Max 1 subscribe topic exceeded
+      - **27** — Invalid tenant ID length
+      - **28** — Tag match pattern length exceeded
     minimum: 0
     maximum: 24
   description:
     type: string
-    description: response description in detail
+    description: 'Human-readable description of the response code (e.g. "Success", "Invalid payload").'
     example: Success
 required:
   - code

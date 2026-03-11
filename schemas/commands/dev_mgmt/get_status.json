@@ -8,13 +8,14 @@
   "properties": {
     "command": {
       "type": "string",
+      "enum": ["get_status"],
       "example": "get_status",
-      "description": "Command used to get the reader status information "
+      "description": "Must be `get_status`. Tells the scanner to return its current health and status."
     },
     "requestId": {
       "type": "string",
       "example": "abcd123",
-      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+      "description": "A unique ID you assign to this request. The scanner echoes it back in the response so you can match requests to responses."
     }
   },
   "required": [

@@ -9,13 +9,14 @@
   "properties": {
     "command": {
       "type": "string",
+      "enum": ["get_version"],
       "example": "get_version",
-      "description": "Used to get the reader information "
+      "description": "Must be `get_version`. Tells the scanner to return its identity and firmware information."
     },
     "requestId": {
       "type": "string",
       "example": "abc123",
-      "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+      "description": "A unique ID you assign to this request. The scanner echoes it back in the response so you can match requests to responses."
     }
   },
   "required": [

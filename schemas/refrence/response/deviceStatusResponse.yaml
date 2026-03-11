@@ -2,6 +2,7 @@ title: deviceStatus
 x-stoplight:
   id: remoc4mkht8l3
 type: object
+description: "Real-time device health — power source, RFID radio state, temperature, battery level and health, NTP clock sync, and paired terminal (phone/tablet) connection."
 properties:
   powerSource:
     type: string

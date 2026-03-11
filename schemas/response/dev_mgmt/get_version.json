@@ -31,11 +31,13 @@
   "properties": {
     "command": {
       "type": "string",
-      "default": "get_version"
+      "default": "get_version",
+      "description": "Echoes back the command name — always `get_version` for this response."
     },
     "requestId": {
       "type": "string",
-      "example": "abcd123"
+      "example": "abcd123",
+      "description": "Echoes back the requestId you sent, so you can match this response to your original request."
     },
     "apiVersion": {
       "type": "string",
@@ -43,7 +45,8 @@
         "V1.1",
         "V1.0"
       ],
-      "example": "V1.1"
+      "example": "V1.1",
+      "description": "The API version of the IoT Connector responding to this command."
     },
     "readerVersion": {
       "$ref": "../../refrence/response/readerVersionResponse.yaml"
