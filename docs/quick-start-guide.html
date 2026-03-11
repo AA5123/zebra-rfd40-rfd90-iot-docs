@@ -192,36 +192,34 @@
 
       document.querySelectorAll('.nav-group-toggle').forEach(function(toggle) {
         toggle.addEventListener('click', function(e) {
-          e.preventDefault();
           var group = toggle.closest('.nav-group');
                     if (!group) {
                         return;
                     }
-                    var willExpand = group.classList.contains('collapsed');
-                    if (willExpand) {
-                        navGroups.forEach(function(other) {
-                            if (other !== group) {
-                                other.classList.add('collapsed');
-                                var otherToggle = other.querySelector('.nav-group-toggle');
-                                if (otherToggle) {
-                                    otherToggle.classList.remove('active');
+                    var hasChildren = !!group.querySelector('.nav-group-children');
+                    if (hasChildren) {
+                        /* Has sub-items: just toggle expand/collapse, no navigation */
+                        e.preventDefault();
+                        var willExpand = group.classList.contains('collapsed');
+                        if (willExpand) {
+                            navGroups.forEach(function(other) {
+                                if (other !== group) {
+                                    other.classList.add('collapsed');
+                                    var otherToggle = other.querySelector('.nav-group-toggle');
+                                    if (otherToggle) {
+                                        otherToggle.classList.remove('active');
+                                    }
                                 }
-                            }
-                        });
-                        group.classList.remove('collapsed');
-                        toggle.classList.add('active');
-                        syncExpandedAria();
-                        /* Navigate to the page when expanding */
-                        var href = toggle.getAttribute('href');
-                        if (href) {
-                            window.location.href = href;
+                            });
+                            group.classList.remove('collapsed');
+                            toggle.classList.add('active');
+                        } else {
+                            group.classList.add('collapsed');
+                            toggle.classList.remove('active');
                         }
-                    } else {
-                        /* Collapse without navigating */
-                        group.classList.add('collapsed');
-                        toggle.classList.remove('active');
                         syncExpandedAria();
                     }
+                    /* No children (leaf): let the default <a> navigation happen */
         });
       });
 
