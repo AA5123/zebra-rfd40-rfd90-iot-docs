@@ -586,17 +586,11 @@ NAV_SCRIPT = """
 
       document.querySelectorAll('.nav-group-toggle').forEach(function(toggle) {
         toggle.addEventListener('click', function(e) {
+          e.preventDefault();
           var group = toggle.closest('.nav-group');
                     if (!group) {
                         return;
                     }
-                    /* If this group has no children panel, navigate directly */
-                    var childPanel = group.querySelector('.nav-group-children');
-                    if (!childPanel) {
-                        /* Allow default link navigation */
-                        return;
-                    }
-                    /* Always expand/collapse the sub-items */
                     var willExpand = group.classList.contains('collapsed');
                     if (willExpand) {
                         navGroups.forEach(function(other) {
@@ -608,18 +602,19 @@ NAV_SCRIPT = """
                                 }
                             }
                         });
-                    }
-                    group.classList.toggle('collapsed');
-                    if (!group.classList.contains('collapsed')) {
+                        group.classList.remove('collapsed');
                         toggle.classList.add('active');
+                        syncExpandedAria();
+                        /* Navigate to the page when expanding */
+                        var href = toggle.getAttribute('href');
+                        if (href) {
+                            window.location.href = href;
+                        }
                     } else {
+                        /* Collapse without navigating */
+                        group.classList.add('collapsed');
                         toggle.classList.remove('active');
-                    }
-                    syncExpandedAria();
-                    /* Navigate to the page */
-                    var href = toggle.getAttribute('href');
-                    if (href) {
-                        window.location.href = href;
+                        syncExpandedAria();
                     }
         });
       });
