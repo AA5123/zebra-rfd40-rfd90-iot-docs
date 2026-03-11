@@ -111,7 +111,7 @@
                     "Device Status"
                 ],
                 "summary": "get_status",
-                "description": "This command used to retrieve the reader status information.",
+                "description": "Retrieves **real-time health and status** of the scanner — battery, temperature, radio, power, clock sync, and terminal connection.\n\n**Response fields:**\n\n| Field | What it tells you |\n|---|---|\n| `powerSource` | How the scanner is powered — DC, Wall Charger, USB, or Cradle |\n| `radioActivity` | Whether the RFID radio is currently active or idle |\n| `radioConnection` | Whether the radio module is connected or disconnected |\n| `hostname` | The scanner's network hostname |\n| `systemTime` | Current device clock in ISO 8601 format |\n| `temperature` | Internal temperature in °C — monitor for overheating |\n| `ntp` | Clock sync status — offset (ms drift) and reach (sync success history) |\n| `terminalConnection` | Paired phone/tablet — connection status and type (Bluetooth, USB, CIO) |\n| `batteryStatus` | Battery capacity (mAh), charge %, health (Good/Average/Poor), charge state |\n\n**Typical use cases:**\n- Dashboard monitoring — show live scanner health on a management console.\n- Battery management — track charge levels across a fleet before a shift starts.\n- Troubleshooting — check if radio is connected, temperature is normal, clock is synced.\n\n**Note:** This is a read-only command. No parameters beyond `command` and `requestId`.",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -121,13 +121,14 @@
                                 "properties": {
                                     "command": {
                                         "type": "string",
+                                        "enum": ["get_status"],
                                         "example": "get_status",
-                                        "description": "Command used to get the reader status information "
+                                        "description": "Must be `get_status`. Tells the scanner to return its current health and status."
                                     },
                                     "requestId": {
                                         "type": "string",
                                         "example": "abcd123",
-                                        "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+                                        "description": "A unique ID you assign to this request. The scanner echoes it back in the response so you can match requests to responses."
                                     }
                                 },
                                 "required": [
@@ -140,7 +141,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "Response",
+                        "description": "Returns the scanner's current health and status. The `deviceStatus` object contains all status fields; the `response` object tells you if the command succeeded.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -148,11 +149,13 @@
                                     "properties": {
                                         "command": {
                                             "type": "string",
-                                            "example": "get_status"
+                                            "example": "get_status",
+                                            "description": "Echoes back the command name — always `get_status` for this response."
                                         },
                                         "requestId": {
                                             "type": "string",
-                                            "example": "abc123"
+                                            "example": "abc123",
+                                            "description": "Echoes back the requestId you sent, so you can match this response to your original request."
                                         },
                                         "apiVersion": {
                                             "type": "string",
@@ -160,10 +163,12 @@
                                                 "V1.0",
                                                 "V1.1"
                                             ],
-                                            "example": "V1.1"
+                                            "example": "V1.1",
+                                            "description": "The API version of the IoT Connector responding to this command."
                                         },
                                         "deviceStatus": {
                                             "type": "object",
+                                            "description": "Real-time device health — power source, RFID radio state, temperature, battery level and health, NTP clock sync, and paired terminal (phone/tablet) connection.",
                                             "properties": {
                                                 "powerSource": {
                                                     "type": "string",
@@ -293,6 +298,7 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
@@ -367,7 +373,7 @@
                     "Device Status"
                 ],
                 "summary": "get_version",
-                "description": "This command is used to retrieve the reader information like device serial no, model no, sku, and firmware version information. ",
+                "description": "Retrieves the **scanner's identity card** — model, serial number, SKU, and all firmware versions.\n\n**Response fields:**\n\n| Field | What it tells you |\n|---|---|\n| `firmwareVersion` | Main device firmware version |\n| `model` | Scanner model — RFD40 or RFD90 |\n| `serialNumber` | Unique device serial number |\n| `sku` | Stock Keeping Unit — encodes model, features, and region (e.g. `RFD4031-G10B700-US`) |\n| `detailedVersions.scannerFirmware` | Barcode scanner module firmware |\n| `detailedVersions.radioFirmware` | RFID radio module firmware |\n| `detailedVersions.iotcVersion` | IoT Connector software version |\n\n**Typical use cases:**\n- Inventory — collect model/serial/SKU across all scanners for asset tracking.\n- Firmware management — check which scanners need firmware updates.\n- Support tickets — include firmware versions when reporting issues to Zebra.\n\n**Note:** This is a read-only command. All values are factory-set or change only after firmware updates.",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -377,13 +383,14 @@
                                 "properties": {
                                     "command": {
                                         "type": "string",
+                                        "enum": ["get_version"],
                                         "example": "get_version",
-                                        "description": "Used to get the reader information "
+                                        "description": "Must be `get_version`. Tells the scanner to return its identity and firmware information."
                                     },
                                     "requestId": {
                                         "type": "string",
                                         "example": "abc123",
-                                        "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+                                        "description": "A unique ID you assign to this request. The scanner echoes it back in the response so you can match requests to responses."
                                     }
                                 },
                                 "required": [
@@ -396,7 +403,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "Response",
+                        "description": "Returns the scanner's identity and firmware details. The `readerVersion` object contains all version fields; the `response` object tells you if the command succeeded.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -404,11 +411,13 @@
                                     "properties": {
                                         "command": {
                                             "type": "string",
-                                            "default": "get_version"
+                                            "default": "get_version",
+                                            "description": "Echoes back the command name — always `get_version` for this response."
                                         },
                                         "requestId": {
                                             "type": "string",
-                                            "example": "abcd123"
+                                            "example": "abcd123",
+                                            "description": "Echoes back the requestId you sent, so you can match this response to your original request."
                                         },
                                         "apiVersion": {
                                             "type": "string",
@@ -416,10 +425,12 @@
                                                 "V1.1",
                                                 "V1.0"
                                             ],
-                                            "example": "V1.1"
+                                            "example": "V1.1",
+                                            "description": "The API version of the IoT Connector responding to this command."
                                         },
                                         "readerVersion": {
                                             "type": "object",
+                                            "description": "Scanner identity — model, serial number, SKU, and firmware versions for the main device, barcode scanner, RFID radio, and IoT Connector. These values only change after a firmware update.",
                                             "properties": {
                                                 "firmwareVersion": {
                                                     "type": "string",
@@ -479,6 +490,7 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
@@ -543,7 +555,7 @@
                     "Device Status"
                 ],
                 "summary": "get_current_region",
-                "description": "This command is used to retrieve the current region configuration of the device.  ",
+                "description": "Retrieves the **regulatory radio configuration** of the scanner — which country's rules it follows, what frequencies it can use, and power limits.\n\n**Response fields:**\n\n| Field | What it tells you |\n|---|---|\n| `country` | The country this scanner is configured for (e.g. United States, Germany) |\n| `regulatoryStandard` | The radio regulation it follows (e.g. FCC for US, ETSI for Europe) |\n| `frequencyHopping` | Whether the scanner automatically switches between frequency channels |\n| `lbtEnabled` | Whether Listen Before Talk is enabled (required in some regions like Japan/EU) |\n| `maxTxPowerSupported` | Maximum allowed transmit power in dBm |\n| `minTxPowerSupported` | Minimum transmit power in dBm |\n| `channelData` | List of all available frequency channels (in kHz) the scanner can use |\n\n**Typical use cases:**\n- Compliance auditing — verify scanners are configured for the correct country before deployment.\n- RF planning — check available channels and power limits for site planning.\n- Multi-region management — confirm scanners shipped to different countries have the right region settings.\n\n**Note:** This is a read-only command. Region settings are factory-set based on the SKU and cannot be changed via API.",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -553,22 +565,24 @@
                                 "properties": {
                                     "command": {
                                         "type": "string",
+                                        "enum": ["get_current_region"],
                                         "example": "get_current_region",
-                                        "description": "Specifies the operation being performed, in this case, retrieving the current region configuration."
+                                        "description": "Must be `get_current_region`. Tells the scanner to return its regulatory radio configuration."
                                     },
                                     "requestId": {
                                         "type": "string",
                                         "example": "abc123",
-                                        "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+                                        "description": "A unique ID you assign to this request. The scanner echoes it back in the response so you can match requests to responses."
                                     }
-                                }
+                                },
+                                "required": ["command", "requestId"]
                             }
                         }
                     }
                 },
                 "responses": {
                     "default": {
-                        "description": "Response",
+                        "description": "Returns the scanner's regulatory radio configuration. The `currentRegion` object contains all region fields; the `response` object tells you if the command succeeded.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -577,12 +591,12 @@
                                         "command": {
                                             "type": "string",
                                             "example": "get_current_region",
-                                            "description": "The command issued by the client, indicating the operation to retrieve the current region."
+                                            "description": "Echoes back the command name — always `get_current_region` for this response."
                                         },
                                         "requestId": {
                                             "type": "string",
                                             "example": "abc123",
-                                            "description": "A unique identifier for tracking the request."
+                                            "description": "Echoes back the requestId you sent, so you can match this response to your original request."
                                         },
                                         "apiVersion": {
                                             "type": "string",
@@ -591,10 +605,11 @@
                                                 "V1.1"
                                             ],
                                             "example": "V1.1",
-                                            "description": "The version of the API being called, allowing for version-specific processing."
+                                            "description": "The API version of the IoT Connector responding to this command."
                                         },
                                         "currentRegion": {
                                             "type": "object",
+                                            "description": "Regulatory radio configuration — country, regulatory standard, available frequency channels, transmit power limits, frequency hopping, and Listen Before Talk settings. These are factory-set and cannot be changed.",
                                             "properties": {
                                                 "frequencyHopping": {
                                                     "type": "boolean",
@@ -611,7 +626,7 @@
                                                 "country": {
                                                     "type": "string",
                                                     "example": "USA",
-                                                    "description": "The country for ehich the device is configured to."
+                                                    "description": "The country for which the device is configured."
                                                 },
                                                 "lbtEnabled": {
                                                     "type": "boolean",
@@ -645,6 +660,7 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
