@@ -67,3 +67,7 @@ properties:
         - subjectName
         - validFrom
         - validTill
+description: >-
+  Installed TLS/SSL certificates — lists every certificate on the device with its type
+  (client, server, MQTT, Wi-Fi), issuer, subject, validity dates, and public key details.
+  Used for secure MQTT and enterprise Wi-Fi connections.

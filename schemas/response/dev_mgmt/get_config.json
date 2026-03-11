@@ -204,15 +204,18 @@
   "properties": {
     "command": {
       "type": "string",
-      "example": "get_config"
+      "example": "get_config",
+      "description": "Echoes back the command name — always `get_config` for this response."
     },
     "requestId": {
       "type": "string",
-      "example": "abc123"
+      "example": "abc123",
+      "description": "Echoes back the requestId you sent, so you can match this response to your original request."
     },
     "apiVersion": {
       "type": "string",
-      "example": "V1.1"
+      "example": "V1.1",
+      "description": "The API version supported by the scanner (currently V1.1)."
     },
     "currentConfig": {
       "$ref": "../../refrence/response/getConfigResponse.yaml"

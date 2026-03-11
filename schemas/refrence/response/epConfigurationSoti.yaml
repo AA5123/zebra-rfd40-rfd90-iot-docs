@@ -182,3 +182,7 @@ properties:
       - url
       - verificationType
       - port
+description: >-
+  MQTT endpoint configuration — broker connection details (URL, port, protocol), authentication
+  (username/password, TLS certificates), publish/subscribe topics with QoS levels, keep-alive
+  and reconnect settings, and event configuration (which device events are forwarded to the broker).

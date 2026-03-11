@@ -283,3 +283,7 @@ properties:
       - status
       - hostname
       - macAddress
+description: >-
+  Wi-Fi network configuration — interface status (enabled/disabled), connected access point
+  (SSID, signal, security type), IP addressing (IPv4/IPv6, DHCP or static), and enterprise
+  security credentials (WPA2/WPA3 Personal or Enterprise, certificates).

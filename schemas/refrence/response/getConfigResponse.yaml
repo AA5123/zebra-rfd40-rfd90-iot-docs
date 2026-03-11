@@ -2,6 +2,10 @@ title: currentConfig
 x-stoplight:
   id: n6n85i7x12eoh
 type: object
+description: >-
+  Complete device configuration snapshot — contains every configurable section of the scanner
+  in a single object. Each sub-object corresponds to a standalone get command
+  (e.g. readerVersion = get_version, deviceStatus = get_status).
 properties:
   readerVersion:
     $ref: ./readerVersionResponse.yaml

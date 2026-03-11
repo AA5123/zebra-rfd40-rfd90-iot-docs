@@ -819,18 +819,22 @@
                                     "properties": {
                                         "command": {
                                             "type": "string",
-                                            "example": "get_config"
+                                            "example": "get_config",
+                                            "description": "Echoes back the command name — always `get_config` for this response."
                                         },
                                         "requestId": {
                                             "type": "string",
-                                            "example": "abc123"
+                                            "example": "abc123",
+                                            "description": "Echoes back the requestId you sent, so you can match this response to your original request."
                                         },
                                         "apiVersion": {
                                             "type": "string",
-                                            "example": "V1.1"
+                                            "example": "V1.1",
+                                            "description": "The API version supported by the scanner (currently V1.1)."
                                         },
                                         "currentConfig": {
                                             "type": "object",
+                                            "description": "Complete device configuration snapshot — contains every configurable section of the scanner in a single object. Each sub-object corresponds to a standalone get command (e.g. readerVersion = get_version, deviceStatus = get_status).",
                                             "properties": {
                                                 "readerVersion": {
                                                     "type": "object",
@@ -1627,7 +1631,8 @@
                                                                 "macAddress"
                                                             ]
                                                         }
-                                                    }
+                                                    },
+                                                    "description": "Wi-Fi network configuration — interface status (enabled/disabled), connected access point (SSID, signal, security type), IP addressing (IPv4/IPv6, DHCP or static), and enterprise security credentials (WPA2/WPA3 Personal or Enterprise, certificates)."
                                                 },
                                                 "installedCerts": {
                                                     "type": "object",
@@ -1712,7 +1717,8 @@
                                                                 ]
                                                             }
                                                         }
-                                                    }
+                                                    },
+                                                    "description": "Installed TLS/SSL certificates — lists every certificate on the device with its type (client, server, MQTT, Wi-Fi), issuer, subject, validity dates, and public key details. Used for secure MQTT and enterprise Wi-Fi connections."
                                                 },
                                                 "epConfig": {
                                                     "type": "object",
@@ -2047,10 +2053,12 @@
                                                                 "port"
                                                             ]
                                                         }
-                                                    }
+                                                    },
+                                                    "description": "MQTT endpoint configuration — broker connection details (URL, port, protocol), authentication (username/password, TLS certificates), publish/subscribe topics with QoS levels, keep-alive and reconnect settings, and event configuration (which device events are forwarded to the broker)."
                                                 },
                                                 "deviceCapabilities": {
                                                     "type": "object",
+                                                    "description": "Hardware capabilities of the scanner — indicates whether Bluetooth, Wi-Fi, and barcode scanning features are supported on this particular model.",
                                                     "properties": {
                                                         "isBluetoothSupported": {
                                                             "type": "boolean",
@@ -4549,7 +4557,8 @@
                                                                             "macAddress"
                                                                         ]
                                                                     }
-                                                                }
+                                                                },
+                                                                "description": "Wi-Fi network configuration — interface status (enabled/disabled), connected access point (SSID, signal, security type), IP addressing (IPv4/IPv6, DHCP or static), and enterprise security credentials (WPA2/WPA3 Personal or Enterprise, certificates)."
                                                             }
                                                         }
                                                     }
@@ -5270,7 +5279,8 @@
                                                                     "macAddress"
                                                                 ]
                                                             }
-                                                        }
+                                                        },
+                                                        "description": "Wi-Fi network configuration — interface status (enabled/disabled), connected access point (SSID, signal, security type), IP addressing (IPv4/IPv6, DHCP or static), and enterprise security credentials (WPA2/WPA3 Personal or Enterprise, certificates)."
                                                     }
                                                 }
                                             }
@@ -7592,7 +7602,8 @@
                                                                             "port"
                                                                         ]
                                                                     }
-                                                                }
+                                                                },
+                                                                "description": "MQTT endpoint configuration — broker connection details (URL, port, protocol), authentication (username/password, TLS certificates), publish/subscribe topics with QoS levels, keep-alive and reconnect settings, and event configuration (which device events are forwarded to the broker)."
                                                             }
                                                         }
                                                     }
@@ -8429,7 +8440,8 @@
                                                         ]
                                                     }
                                                 }
-                                            }
+                                            },
+                                            "description": "Installed TLS/SSL certificates — lists every certificate on the device with its type (client, server, MQTT, Wi-Fi), issuer, subject, validity dates, and public key details. Used for secure MQTT and enterprise Wi-Fi connections."
                                         },
                                         "response": {
                                             "type": "object",
