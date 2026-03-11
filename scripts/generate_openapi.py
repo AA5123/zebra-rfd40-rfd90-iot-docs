@@ -49,21 +49,124 @@ TAG_GROUPS = OrderedDict([
 
 # Tag descriptions (shown when you click a tag heading in Redoc)
 TAG_DESCRIPTIONS = {
-    "Device Status": "Device Status: get_status, get_version, get_current_region",
-    "Device Configuration": "Device Configuration: get_config, set_config",
-    "Network Configuration": "Network Configuration: get_wifi, set_wifi, delete_wifi_profile, get_eth",
-    "MQTT Endpoint Configuration": "MQTT Endpoint Configuration: config_endpoint, get_endpoint_config",
-    "Certificate Management": "Certificate Management: install_certificate, delete_certificate, get_installed_certificate",
-    "System Operations": "System Operations: reboot, set_os",
-    "Inventory Control": "Inventory Control: control_operation (start/stop)",
-    "Operating Mode": "Operating Mode: set_operating_mode, get_operating_mode",
-    "Tag Filtering": "Tag Filtering: set_post_filter, get_post_filter",
-    "Device Health": "Device Health: heartBeatEVT",
-    "Alerts": "Alerts: alerts, alert_short",
-    "Exceptions": "Exceptions: exceptionEVT",
-    "MQTT Connectivity": "MQTT Connectivity: mqttConnEVT",
-    "Event Configuration": "Event Configuration: config_events",
-    "Tag Data Event": "Tag Data Event: dataEVT",
+    "Device Status": (
+        "Check what the scanner **is** — its identity, health, and regional settings.\n\n"
+        "| Command | Purpose |\n"
+        "|---|---|\n"
+        "| `get_status` | Real-time health — battery, temperature, radio state, power source, clock sync, terminal connection |\n"
+        "| `get_version` | Scanner identity — model, serial number, SKU, and firmware versions (main, scanner, radio, IoTC) |\n"
+        "| `get_current_region` | Regulatory radio config — country, frequency channels, power limits, frequency hopping, LBT |\n\n"
+        "All three are **read-only** commands. Use them for monitoring dashboards, firmware audits, and compliance checks."
+    ),
+    "Device Configuration": (
+        "Read or write the scanner's **complete configuration** in a single command.\n\n"
+        "| Command | Purpose |\n"
+        "|---|---|\n"
+        "| `get_config` | Retrieve everything — equivalent to calling get_version + get_status + get_current_region + get_wifi + get_eth + get_endpoint_config + get_installed_certificate at once |\n"
+        "| `set_config` | Apply configuration changes — Wi-Fi, endpoint, events, and more in one payload |\n\n"
+        "`get_config` is read-only. `set_config` is the primary way to push settings to one or many scanners."
+    ),
+    "Network Configuration": (
+        "Manage the scanner's **Wi-Fi and Ethernet** network connections.\n\n"
+        "| Command | Purpose |\n"
+        "|---|---|\n"
+        "| `get_wifi` | Current Wi-Fi status — connected SSID, IP address, signal, security type |\n"
+        "| `set_wifi` | Configure Wi-Fi — add/update SSID, set security (WPA2/WPA3/Enterprise), IP settings |\n"
+        "| `delete_wifi_profile` | Remove a saved Wi-Fi profile by SSID |\n"
+        "| `get_eth` | Ethernet status — link state, speed, IP address, 802.1X security |\n\n"
+        "The scanner supports both Wi-Fi and Ethernet simultaneously. Wi-Fi profiles are stored on device and auto-connect on reboot."
+    ),
+    "MQTT Endpoint Configuration": (
+        "Configure **where the scanner sends data** — the MQTT broker connection.\n\n"
+        "| Command | Purpose |\n"
+        "|---|---|\n"
+        "| `config_endpoint` | Set up or update the MQTT broker — URL, port, protocol, credentials, topics, TLS settings |\n"
+        "| `get_endpoint_config` | Retrieve the current MQTT endpoint configuration |\n\n"
+        "The scanner communicates with your backend via MQTT. These commands control the broker URL, publish/subscribe topics, QoS levels, keep-alive, and reconnect behavior."
+    ),
+    "Certificate Management": (
+        "Manage **TLS/SSL certificates** for secure MQTT and Wi-Fi Enterprise connections.\n\n"
+        "| Command | Purpose |\n"
+        "|---|---|\n"
+        "| `install_certificate` | Upload a certificate (CA, client, MQTT, Wi-Fi) to the scanner |\n"
+        "| `delete_certificate` | Remove an installed certificate by name |\n"
+        "| `get_installed_certificate` | List all certificates currently installed on the device |\n\n"
+        "Certificates are required for MQTT-TLS connections and WPA2/WPA3 Enterprise Wi-Fi authentication."
+    ),
+    "System Operations": (
+        "Perform **system-level actions** on the scanner.\n\n"
+        "| Command | Purpose |\n"
+        "|---|---|\n"
+        "| `reboot` | Restart the scanner — applies pending configuration changes |\n"
+        "| `set_os` | Trigger a firmware update on the device |\n\n"
+        "⚠️ Both commands interrupt normal scanner operation. `reboot` requires no active inventory. `set_os` requires sufficient battery level."
+    ),
+    "Inventory Control": (
+        "**Start and stop** RFID tag reading (inventory) operations.\n\n"
+        "| Command | Purpose |\n"
+        "|---|---|\n"
+        "| `control_operation` | Start or stop an RFID inventory scan |\n\n"
+        "When started, the scanner continuously reads RFID tags and publishes tag data events to the MQTT broker. Use `stop` to end the scan."
+    ),
+    "Operating Mode": (
+        "Configure **how the scanner reads tags** — mode, power, and session settings.\n\n"
+        "| Command | Purpose |\n"
+        "|---|---|\n"
+        "| `set_operating_mode` | Set the RFID operating mode — transmit power, session, tag population, and more |\n"
+        "| `get_operating_mode` | Retrieve the current RFID operating mode settings |\n\n"
+        "Operating mode controls the RF parameters that affect read range, speed, and tag population handling."
+    ),
+    "Tag Filtering": (
+        "Filter **which tags are reported** after an inventory scan.\n\n"
+        "| Command | Purpose |\n"
+        "|---|---|\n"
+        "| `set_post_filter` | Define filter rules — match by EPC pattern, memory bank, or mask to include/exclude specific tags |\n"
+        "| `get_post_filter` | Retrieve the current tag filter configuration |\n\n"
+        "Post-filters are applied after the radio reads tags, reducing noise by only reporting tags that match your criteria."
+    ),
+    "Device Health": (
+        "Periodic **heartbeat events** sent by the scanner to confirm it is alive and connected.\n\n"
+        "| Event | Purpose |\n"
+        "|---|---|\n"
+        "| `heartBeatEVT` | Periodic health pulse — battery status, inventory state, and connectivity confirmation |\n\n"
+        "Heartbeat interval is configurable via `set_config` → `eventConfiguration` → `heartbeatConfiguration`. If heartbeats stop arriving, the scanner may be offline or disconnected."
+    ),
+    "Alerts": (
+        "**Alert events** triggered by significant device state changes.\n\n"
+        "| Event | Purpose |\n"
+        "|---|---|\n"
+        "| `alerts` | Full alert details — battery, temperature, power, network, firmware, and antenna alerts |\n"
+        "| `alert_short` | Compact alert summary for lightweight monitoring |\n\n"
+        "Alerts are push-based — the scanner publishes them automatically when a threshold is crossed or a state changes. Enable/disable specific alerts via `set_config` → `eventConfiguration`."
+    ),
+    "Exceptions": (
+        "**Exception events** for errors and unexpected conditions.\n\n"
+        "| Event | Purpose |\n"
+        "|---|---|\n"
+        "| `exceptionEVT` | Error reports — radio failures, configuration errors, and other exceptional conditions |\n\n"
+        "Exceptions indicate something went wrong that may require operator attention or automated recovery."
+    ),
+    "MQTT Connectivity": (
+        "**MQTT connection state** change events.\n\n"
+        "| Event | Purpose |\n"
+        "|---|---|\n"
+        "| `mqttConnEVT` | Broker connection/disconnection events — tracks when the scanner connects to or loses connection with the MQTT broker |\n\n"
+        "Use these events to monitor broker connectivity across your fleet and trigger reconnection alerts."
+    ),
+    "Event Configuration": (
+        "Configure **which events** the scanner publishes to the MQTT broker.\n\n"
+        "| Command | Purpose |\n"
+        "|---|---|\n"
+        "| `config_events` | Enable or disable specific events and alerts — heartbeat, battery, temperature, network, firmware, NTP, etc. |\n\n"
+        "Event configuration controls which device events are forwarded to the broker. You can also set the heartbeat interval and choose what data to include in heartbeats."
+    ),
+    "Tag Data Event": (
+        "**RFID tag read data** published during an active inventory scan.\n\n"
+        "| Event | Purpose |\n"
+        "|---|---|\n"
+        "| `dataEVT` | Tag data — EPC, RSSI, antenna, timestamp, and optional memory bank data for each tag read |\n\n"
+        "Tag data events stream continuously while inventory is running. Each event contains one or more tag reads with EPC (Electronic Product Code), signal strength, and read metadata."
+    ),
 }
 
 # ---------------------------------------------------------------------------
@@ -155,10 +258,10 @@ OPERATION_DESCRIPTIONS = {
 # Enhanced response descriptions (overrides the default "Response" text)
 # ---------------------------------------------------------------------------
 RESPONSE_DESCRIPTIONS = {
-    "get_status": "Returns the scanner's current health and status. The `deviceStatus` object contains all status fields; the `response` object tells you if the command succeeded.",
-    "get_version": "Returns the scanner's identity and firmware details. The `readerVersion` object contains all version fields; the `response` object tells you if the command succeeded.",
-    "get_current_region": "Returns the scanner's regulatory radio configuration. The `currentRegion` object contains all region fields; the `response` object tells you if the command succeeded.",
-    "get_config": "Returns the full device configuration. The `currentConfig` object contains all settings; the `response` object tells you if the command succeeded or failed.",
+    "get_status": "get_status response",
+    "get_version": "get_version response",
+    "get_current_region": "get_current_region response",
+    "get_config": "get_config response",
 }
 
 # Map: operation filename (without .json) -> (tag name, source folder key)
@@ -436,7 +539,7 @@ def build_openapi():
                 if resp_examples:
                     resp_content["application/json"]["examples"] = resp_examples
 
-                resp_desc = RESPONSE_DESCRIPTIONS.get(operation, "Success")
+                resp_desc = RESPONSE_DESCRIPTIONS.get(operation, f"{operation} response")
 
                 op["responses"] = OrderedDict([
                     ("default", OrderedDict([
