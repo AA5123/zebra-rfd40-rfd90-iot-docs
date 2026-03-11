@@ -191,8 +191,7 @@ OPERATION_DESCRIPTIONS = {
         "**Typical use cases:**\n"
         "- Dashboard monitoring — show live scanner health on a management console.\n"
         "- Battery management — track charge levels across a fleet before a shift starts.\n"
-        "- Troubleshooting — check if radio is connected, temperature is normal, clock is synced.\n\n"
-        "**Note:** This is a read-only command. No parameters beyond `command` and `requestId`."
+        "- Troubleshooting — check if radio is connected, temperature is normal, clock is synced."
     ),
     "get_version": (
         "Retrieves the **scanner's identity card** — model, serial number, SKU, and all firmware versions.\n\n"
@@ -209,8 +208,7 @@ OPERATION_DESCRIPTIONS = {
         "**Typical use cases:**\n"
         "- Inventory — collect model/serial/SKU across all scanners for asset tracking.\n"
         "- Firmware management — check which scanners need firmware updates.\n"
-        "- Support tickets — include firmware versions when reporting issues to Zebra.\n\n"
-        "**Note:** This is a read-only command. All values are factory-set or change only after firmware updates."
+        "- Support tickets — include firmware versions when reporting issues to Zebra."
     ),
     "get_current_region": (
         "Retrieves the **regulatory radio configuration** of the scanner — which country's rules it follows, "
@@ -228,8 +226,7 @@ OPERATION_DESCRIPTIONS = {
         "**Typical use cases:**\n"
         "- Compliance auditing — verify scanners are configured for the correct country before deployment.\n"
         "- RF planning — check available channels and power limits for site planning.\n"
-        "- Multi-region management — confirm scanners shipped to different countries have the right region settings.\n\n"
-        "**Note:** This is a read-only command. Region settings are factory-set based on the SKU and cannot be changed via API."
+        "- Multi-region management — confirm scanners shipped to different countries have the right region settings."
     ),
     "get_config": (
         "Retrieves the **complete device configuration** in a single response — equivalent to calling "
@@ -249,8 +246,7 @@ OPERATION_DESCRIPTIONS = {
         "**Typical use cases:**\n"
         "- First-time setup — see how a blank scanner is configured before applying changes via `set_config`.\n"
         "- Troubleshooting — get the full picture when something isn't working.\n"
-        "- Auditing — verify all settings across a fleet of scanners.\n\n"
-        "**Note:** This is a read-only command. No parameters beyond `command` and `requestId`. To change settings, use `set_config`."
+        "- Auditing — verify all settings across a fleet of scanners."
     ),
 }
 
