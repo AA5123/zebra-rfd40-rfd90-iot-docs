@@ -758,7 +758,7 @@
                     "Device Configuration"
                 ],
                 "summary": "get_config",
-                "description": "Retrieves the complete device configuration in a single response — equivalent to calling get_version, get_status, get_current_region, get_wifi, get_eth, get_endpoint_config, and get_installed_certificate all at once. The response includes: readerVersion (model, serial, firmware), deviceStatus (battery, temperature, radio, power), currentRegion (country, frequencies, power limits), wifiConfig (SSID, IP, security), ethConfig (ethernet status), epConfig (MQTT endpoint settings), installedCerts (certificate details), and eventConfiguration (enabled events/alerts). This is a read-only command — use set_config to change settings.",
+                "description": "Retrieves the **complete device configuration** in a single response — equivalent to calling `get_version`, `get_status`, `get_current_region`, `get_wifi`, `get_eth`, `get_endpoint_config`, and `get_installed_certificate` all at once.\n\n**Response sections:**\n\n| Section | Contents |\n|---|---|\n| `readerVersion` | Model, serial number, SKU, firmware versions (main, scanner, radio, IoTC) |\n| `deviceStatus` | Power source, radio state, temperature, battery health, NTP sync, terminal connection |\n| `currentRegion` | Country, regulatory standard, frequency channels, power limits, frequency hopping, LBT |\n| `wifiConfig` | Wi-Fi interface status, connected SSID, IP address, MAC, DHCP, security type |\n| `ethConfig` | Ethernet interface status, link speed, IP configuration |\n| `epConfig` | Active MQTT endpoint: type, broker URL, port, protocol, credentials, topics, security |\n| `installedCerts` | List of installed certificates with type, validity dates, and algorithms |\n| `eventConfiguration` | Which events/alerts are enabled (heartbeat, battery, temperature, firmware, network, etc.) |\n\n**Typical use cases:**\n- First-time setup — see how a blank scanner is configured before applying changes via `set_config`.\n- Troubleshooting — get the full picture when something isn't working.\n- Auditing — verify all settings across a fleet of scanners.\n\n**Note:** This is a read-only command. No parameters beyond `command` and `requestId`. To change settings, use `set_config`.",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -803,9 +803,11 @@
                                         },
                                         "currentConfig": {
                                             "type": "object",
+                                            "description": "Contains the complete device configuration — version info, status, region, Wi-Fi, Ethernet, MQTT endpoint, certificates, and event settings.",
                                             "properties": {
                                                 "readerVersion": {
                                                     "type": "object",
+                                                    "description": "Scanner identity — model, serial number, SKU, and firmware versions for the main device, barcode scanner, RFID radio, and IoT Connector. Same data as a standalone get_version call. These values only change after a firmware update.",
                                                     "properties": {
                                                         "firmwareVersion": {
                                                             "type": "string",
@@ -865,6 +867,7 @@
                                                 },
                                                 "deviceStatus": {
                                                     "type": "object",
+                                                    "description": "Real-time device health — power source, RFID radio state, temperature, battery level and health, NTP clock sync, and paired terminal connection. Same data as a standalone get_status call. These values change frequently.",
                                                     "properties": {
                                                         "powerSource": {
                                                             "type": "string",
@@ -994,6 +997,7 @@
                                                 },
                                                 "currentRegion": {
                                                     "type": "object",
+                                                    "description": "Regulatory radio configuration — country, regulatory standard (e.g. FCC, ETSI), available frequency channels, transmit power limits, frequency hopping, and Listen Before Talk settings. Same data as a standalone get_current_region call. Factory-set based on SKU — read-only, cannot be changed.",
                                                     "properties": {
                                                         "frequencyHopping": {
                                                             "type": "boolean",
@@ -1044,6 +1048,7 @@
                                                 },
                                                 "ethConfig": {
                                                     "type": "object",
+                                                    "description": "Ethernet network configuration — interface status (enabled/disabled), link status and speed, hostname, MAC address, and IPv4/IPv6 settings. Same data as a standalone get_eth call.",
                                                     "properties": {
                                                         "interfaceDetails": {
                                                             "type": "object",
@@ -1229,11 +1234,11 @@
                                                                 "macAddress"
                                                             ]
                                                         }
-                                                    },
-                                                    "description": "Detailed schema for Ethernet configuration."
+                                                    }
                                                 },
                                                 "wifiConfig": {
                                                     "type": "object",
+                                                    "description": "Wi-Fi network configuration — interface status, connected SSID, IP address, MAC address, DHCP settings, and security type (WPA2/WPA3 Personal or Enterprise). Same data as a standalone get_wifi call.",
                                                     "properties": {
                                                         "interfaceDetails": {
                                                             "type": "object",
@@ -1600,6 +1605,7 @@
                                                 },
                                                 "installedCerts": {
                                                     "type": "object",
+                                                    "description": "Installed security certificates — list of all certificates on the device including name, type (mqtt, wifi, server, filestore), installation time, public key algorithm, validity period, and serial number. Same data as a standalone get_installed_certificate call. Empty if no certificates are installed.",
                                                     "properties": {
                                                         "certInfo": {
                                                             "type": "array",
@@ -1685,6 +1691,7 @@
                                                 },
                                                 "epConfig": {
                                                     "type": "object",
+                                                    "description": "Active MQTT endpoint configuration — endpoint type (MGMT, CTRL, DATA, etc.), broker URL, port, protocol (MQTT/MQTT_TLS), credentials, publish/subscribe topics, QoS, keep-alive, reconnection settings, security parameters, and per-endpoint event configuration. Same data as a standalone get_endpoint_config call.",
                                                     "properties": {
                                                         "configuration": {
                                                             "type": "object",
@@ -2020,6 +2027,7 @@
                                                 },
                                                 "deviceCapabilities": {
                                                     "type": "object",
+                                                    "description": "Hardware capabilities of the device — indicates whether Bluetooth, Wi-Fi, and barcode scanner features are supported on this model.",
                                                     "properties": {
                                                         "isBluetoothSupported": {
                                                             "type": "boolean",
