@@ -450,11 +450,12 @@ def sidebar(current):
                     cls = ' class="active"' if current_base == href else ""
                     lines.append(f'{indent}<a href="{href}"{cls}>{_nav_label_html(label)}</a>')
                 else:
-                    classes = ["nav-top-link", "nav-leaf-toggle"]
-                    if current_base == href:
-                        classes.append("active")
-                    cls = ' class="' + " ".join(classes) + '"'
-                    lines.append(f'{indent}<a href="{href}"{cls}>{_nav_label_html(label)}</a>')
+                    # Render as a nav-group (same style as expandable items) but with no children
+                    group_cls = "nav-group" + ("" if current_base == href else " collapsed")
+                    toggle_classes = "nav-group-toggle" + (" active" if current_base == href else "")
+                    lines.append(f'{indent}<div class="{group_cls}" data-nav-group>')
+                    lines.append(f'{indent}  <a href="{href}" class="{toggle_classes}">{_nav_label_html(label)}</a>')
+                    lines.append(f'{indent}</div>')
 
     render_items(nav_items)
     lines.append("</div>")
