@@ -111,7 +111,7 @@
                     "Device Status"
                 ],
                 "summary": "get_status",
-                "description": "Retrieves **real-time health and status** of the scanner — battery, temperature, radio, power, clock sync, and terminal connection.\n\n**Response fields:**\n\n| Field | What it tells you |\n|---|---|\n| `powerSource` | How the scanner is powered — DC, Wall Charger, USB, or Cradle |\n| `radioActivity` | Whether the RFID radio is currently active or idle |\n| `radioConnection` | Whether the radio module is connected or disconnected |\n| `hostname` | The scanner's network hostname |\n| `systemTime` | Current device clock in ISO 8601 format |\n| `temperature` | Internal temperature in °C — monitor for overheating |\n| `ntp` | Clock sync status — offset (ms drift) and reach (sync success history) |\n| `terminalConnection` | Paired phone/tablet — connection status and type (Bluetooth, USB, CIO) |\n| `batteryStatus` | Battery capacity (mAh), charge %, health (Good/Average/Poor), charge state |\n\n**Typical use cases:**\n- Dashboard monitoring — show live scanner health on a management console.\n- Battery management — track charge levels across a fleet before a shift starts.\n- Troubleshooting — check if radio is connected, temperature is normal, clock is synced.",
+                "description": "Retrieves **real-time health and status** of the scanner — battery, temperature, radio, power, clock sync, and terminal connection.\n\n**Response fields:**\n\n| Field | What it tells you |\n|---|---|\n| `powerSource` | How the scanner is powered — DC, Wall Charger, USB, or Cradle |\n| `radioActivity` | Whether the RFID radio is currently active or idle |\n| `radioConnection` | Whether the radio module is connected or disconnected |\n| `hostname` | The scanner's network hostname |\n| `systemTime` | Current device clock in ISO 8601 format |\n| `temperature` | Internal temperature in °C — monitor for overheating |\n| `ntp` | Clock sync status — offset (ms drift) and reach (sync success history) |\n| `terminalConnection` | Paired phone/tablet — connection status and type (Bluetooth, USB, CIO) |\n| `batteryStatus` | Battery capacity (mAh), charge %, health (Good/Average/Poor), charge state |\n\n**Typical use cases:**\n- Dashboard monitoring — show live scanner health on a management console.\n- Battery management — track charge levels across a fleet before a shift starts.\n- Troubleshooting — check if radio is connected, temperature is normal, clock is synced.\n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -375,7 +375,7 @@
                     "Device Status"
                 ],
                 "summary": "get_version",
-                "description": "Retrieves the **scanner's identity card** — model, serial number, SKU, and all firmware versions.\n\n**Response fields:**\n\n| Field | What it tells you |\n|---|---|\n| `firmwareVersion` | Main device firmware version |\n| `model` | Scanner model — RFD40 or RFD90 |\n| `serialNumber` | Unique device serial number |\n| `sku` | Stock Keeping Unit — encodes model, features, and region (e.g. `RFD4031-G10B700-US`) |\n| `detailedVersions.scannerFirmware` | Barcode scanner module firmware |\n| `detailedVersions.radioFirmware` | RFID radio module firmware |\n| `detailedVersions.iotcVersion` | IoT Connector software version |\n\n**Typical use cases:**\n- Inventory — collect model/serial/SKU across all scanners for asset tracking.\n- Firmware management — check which scanners need firmware updates.",
+                "description": "Retrieves the **scanner's identity card** — model, serial number, SKU, and all firmware versions.\n\n**Response fields:**\n\n| Field | What it tells you |\n|---|---|\n| `firmwareVersion` | Main device firmware version |\n| `model` | Scanner model — RFD40 or RFD90 |\n| `serialNumber` | Unique device serial number |\n| `sku` | Stock Keeping Unit — encodes model, features, and region (e.g. `RFD4031-G10B700-US`) |\n| `detailedVersions.scannerFirmware` | Barcode scanner module firmware |\n| `detailedVersions.radioFirmware` | RFID radio module firmware |\n| `detailedVersions.iotcVersion` | IoT Connector software version |\n\n**Typical use cases:**\n- Inventory — collect model/serial/SKU across all scanners for asset tracking.\n- Firmware management — check which scanners need firmware updates.\n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -559,7 +559,7 @@
                     "Device Status"
                 ],
                 "summary": "get_current_region",
-                "description": "Retrieves the **regulatory radio configuration** of the scanner — which country's rules it follows, what frequencies it can use, and power limits.\n\n**Response fields:**\n\n| Field | What it tells you |\n|---|---|\n| `country` | The country this scanner is configured for (e.g. United States, Germany) |\n| `regulatoryStandard` | The radio regulation it follows (e.g. FCC for US, ETSI for Europe) |\n| `frequencyHopping` | Whether the scanner automatically switches between frequency channels |\n| `lbtEnabled` | Whether Listen Before Talk is enabled (required in some regions like Japan/EU) |\n| `maxTxPowerSupported` | Maximum allowed transmit power in dBm |\n| `minTxPowerSupported` | Minimum transmit power in dBm |\n| `channelData` | List of all available frequency channels (in kHz) the scanner can use |\n\n**Typical use cases:**\n- Compliance auditing — verify scanners are configured for the correct country before deployment.\n- RF planning — check available channels and power limits for site planning.\n- Multi-region management — confirm scanners shipped to different countries have the right region settings.",
+                "description": "Retrieves the **regulatory radio configuration** of the scanner — which country's rules it follows, what frequencies it can use, and power limits.\n\n**Response fields:**\n\n| Field | What it tells you |\n|---|---|\n| `country` | The country this scanner is configured for (e.g. United States, Germany) |\n| `regulatoryStandard` | The radio regulation it follows (e.g. FCC for US, ETSI for Europe) |\n| `frequencyHopping` | Whether the scanner automatically switches between frequency channels |\n| `lbtEnabled` | Whether Listen Before Talk is enabled (required in some regions like Japan/EU) |\n| `maxTxPowerSupported` | Maximum allowed transmit power in dBm |\n| `minTxPowerSupported` | Minimum transmit power in dBm |\n| `channelData` | List of all available frequency channels (in kHz) the scanner can use |\n\n**Typical use cases:**\n- Compliance auditing — verify scanners are configured for the correct country before deployment.\n- RF planning — check available channels and power limits for site planning.\n- Multi-region management — confirm scanners shipped to different countries have the right region settings.\n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -783,7 +783,7 @@
                     "Device Configuration"
                 ],
                 "summary": "get_config",
-                "description": "Retrieves the **complete device configuration** in a single response — equivalent to calling `get_version`, `get_status`, `get_current_region`, `get_wifi`, `get_eth`, `get_endpoint_config`, and `get_installed_certificate` all at once.\n\n**Response sections:**\n\n| Section | Contents |\n|---|---|\n| `readerVersion` | Model, serial number, SKU, firmware versions (main, scanner, radio, IoTC) |\n| `deviceStatus` | Power source, radio state, temperature, battery health, NTP sync, terminal connection |\n| `currentRegion` | Country, regulatory standard, frequency channels, power limits, frequency hopping, LBT |\n| `wifiConfig` | Wi-Fi interface status, connected SSID, IP address, MAC, DHCP, security type |\n| `ethConfig` | Ethernet interface status, link speed, IP configuration |\n| `epConfig` | Active MQTT endpoint: type, broker URL, port, protocol, credentials, topics, security |\n| `installedCerts` | List of installed certificates with type, validity dates, and algorithms |\n| `eventConfiguration` | Which events/alerts are enabled (heartbeat, battery, temperature, firmware, network, etc.) |\n\n**Typical use cases:**\n- First-time setup — see how a blank scanner is configured before applying changes via `set_config`.\n- Troubleshooting — get the full picture when something isn't working.\n- Auditing — verify all settings across a fleet of scanners.",
+                "description": "Retrieves the **complete device configuration** in a single response — equivalent to calling `get_version`, `get_status`, `get_current_region`, `get_wifi`, `get_eth`, `get_endpoint_config`, and `get_installed_certificate` all at once.\n\n**Response sections:**\n\n| Section | Contents |\n|---|---|\n| `readerVersion` | Model, serial number, SKU, firmware versions (main, scanner, radio, IoTC) |\n| `deviceStatus` | Power source, radio state, temperature, battery health, NTP sync, terminal connection |\n| `currentRegion` | Country, regulatory standard, frequency channels, power limits, frequency hopping, LBT |\n| `wifiConfig` | Wi-Fi interface status, connected SSID, IP address, MAC, DHCP, security type |\n| `ethConfig` | Ethernet interface status, link speed, IP configuration |\n| `epConfig` | Active MQTT endpoint: type, broker URL, port, protocol, credentials, topics, security |\n| `installedCerts` | List of installed certificates with type, validity dates, and algorithms |\n| `eventConfiguration` | Which events/alerts are enabled (heartbeat, battery, temperature, firmware, network, etc.) |\n\n**Typical use cases:**\n- First-time setup — see how a blank scanner is configured before applying changes via `set_config`.\n- Troubleshooting — get the full picture when something isn't working.\n- Auditing — verify all settings across a fleet of scanners.\n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -2318,7 +2318,7 @@
                     "Device Configuration"
                 ],
                 "summary": "set_config",
-                "description": "Command issued to set the complete device configuration such as current region details, ethernet & wifi configuration, end point configuration,  event and alert configuration  ",
+                "description": "Command issued to set the complete device configuration such as current region details, ethernet & wifi configuration, end point configuration,  event and alert configuration  \n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -4859,7 +4859,7 @@
                     "Network Configuration"
                 ],
                 "summary": "get_wifi",
-                "description": "This command is used to retrieve wifi configuration details ",
+                "description": "This command is used to retrieve wifi configuration details \n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -5538,7 +5538,7 @@
                     "Network Configuration"
                 ],
                 "summary": "set_wifi",
-                "description": "This API is used to set wifi configuration. It currently supports IPv4 addressing with DHCP-based IP assignment only; static IP configuration and IPv6 support is not available in the current API version.",
+                "description": "This API is used to set wifi configuration. It currently supports IPv4 addressing with DHCP-based IP assignment only; static IP configuration and IPv6 support is not available in the current API version.\n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -6127,7 +6127,7 @@
                     "Network Configuration"
                 ],
                 "summary": "delete_wifi_profile",
-                "description": "Command issued to delete saved wifi profile ",
+                "description": "Command issued to delete saved wifi profile \n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -6261,7 +6261,7 @@
                     "Network Configuration"
                 ],
                 "summary": "get_eth",
-                "description": "This API used to retrieve ethernet configuration details. Security features, static IP configuration, and IPv6 support are not available in the current API version.",
+                "description": "This API used to retrieve ethernet configuration details. Security features, static IP configuration, and IPv6 support are not available in the current API version.\n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -6572,7 +6572,7 @@
                     "MQTT Endpoint Configuration"
                 ],
                 "summary": "config_endpoint",
-                "description": "Using config_endpoint user can add/delete/modify the end point configuration",
+                "description": "Using config_endpoint user can add/delete/modify the end point configuration\n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -7182,7 +7182,7 @@
                     "MQTT Endpoint Configuration"
                 ],
                 "summary": "get_endpoint_config",
-                "description": "Command to get configured endpoints.If API does not included endpointName argument, then  response includes all active endpoints detailed configuration & list of all saved endpoint names otherwise response includes interested endpoints configuration only",
+                "description": "Command to get configured endpoints.If API does not included endpointName argument, then  response includes all active endpoints detailed configuration & list of all saved endpoint names otherwise response includes interested endpoints configuration only\n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -7816,7 +7816,7 @@
                     "Certificate Management"
                 ],
                 "summary": "install_certificate",
-                "description": "This API is used to install certificates. ",
+                "description": "This API is used to install certificates. \n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -8160,7 +8160,7 @@
                     "Certificate Management"
                 ],
                 "summary": "delete_certificate",
-                "description": "Command issued to delete saved certificate  ",
+                "description": "Command issued to delete saved certificate  \n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -8311,7 +8311,7 @@
                     "Certificate Management"
                 ],
                 "summary": "get_installed_certificate",
-                "description": "This API is used to get installed certificates. ",
+                "description": "This API is used to get installed certificates. \n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -8506,7 +8506,7 @@
                     "System Operations"
                 ],
                 "summary": "reboot",
-                "description": "Reboot command is used to perform warm reset of device. After successful reboot, device will reinitiate the connection to previously connected SOTI server. Upon failure notification will be sent",
+                "description": "Reboot command is used to perform warm reset of device. After successful reboot, device will reinitiate the connection to previously connected SOTI server. Upon failure notification will be sent\n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -8612,7 +8612,7 @@
                     "System Operations"
                 ],
                 "summary": "set_os",
-                "description": "Command issued to set new firmware & initiate firmware update ",
+                "description": "Command issued to set new firmware & initiate firmware update \n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -8853,7 +8853,7 @@
                     "Inventory Control"
                 ],
                 "summary": "control_operation",
-                "description": "This command controls device functionality, including RFID operations and scan operations.",
+                "description": "This command controls device functionality, including RFID operations and scan operations.\n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -9010,7 +9010,7 @@
                     "Operating Mode"
                 ],
                 "summary": "set_operating_mode",
-                "description": "This operation is used to configure the operating mode of RFID devices. Note: When RFD40/90 sled is configured to FAST_READ profile, data events are not currently supported.",
+                "description": "This operation is used to configure the operating mode of RFID devices. Note: When RFD40/90 sled is configured to FAST_READ profile, data events are not currently supported.\n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -9753,7 +9753,7 @@
                     "Operating Mode"
                 ],
                 "summary": "get_operating_mode",
-                "description": "This command is designed to fetch the current operating mode information of RFID device within the IOTC system",
+                "description": "This command is designed to fetch the current operating mode information of RFID device within the IOTC system\n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -10263,7 +10263,7 @@
                     "Tag Filtering"
                 ],
                 "summary": "set_post_filter",
-                "description": "This operation is used to set a post-filter for RFID device, enabling the filtering of tags scanned by the device based on specific criteria.",
+                "description": "This operation is used to set a post-filter for RFID device, enabling the filtering of tags scanned by the device based on specific criteria.\n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -10486,7 +10486,7 @@
                     "Tag Filtering"
                 ],
                 "summary": "get_post_filter",
-                "description": "This operation is used to fetch the post filter applied to filter tag data in RFID devices. The post filter ensures that only relevant tag data is processed based on specified criteria.",
+                "description": "This operation is used to fetch the post filter applied to filter tag data in RFID devices. The post filter ensures that only relevant tag data is processed based on specified criteria.\n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -10666,7 +10666,7 @@
                     "Device Health"
                 ],
                 "summary": "heartBeatEVT",
-                "description": "This event represents a heartbeat signal sent periodically from a device or system to indicate its active status and provide essential metadata like uptime and event details.",
+                "description": "This event represents a heartbeat signal sent periodically from a device or system to indicate its active status and provide essential metadata like uptime and event details.\n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -10792,7 +10792,7 @@
                     "Alerts"
                 ],
                 "summary": "alerts",
-                "description": "Represents a system-generated alert or notification event. Note: Some event types such as antenna, temperature, usage, GPI, and user app info are not supported.",
+                "description": "Represents a system-generated alert or notification event. Note: Some event types such as antenna, temperature, usage, GPI, and user app info are not supported.\n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -11224,7 +11224,7 @@
                     "Alerts"
                 ],
                 "summary": "alert_short",
-                "description": "Short form of alerts, does not contain details about the alert. This is mainly meant for SOTI.",
+                "description": "Short form of alerts, does not contain details about the alert. This is mainly meant for SOTI.\n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -11382,7 +11382,7 @@
                     "Exceptions"
                 ],
                 "summary": "exceptionEVT",
-                "description": "This event captures details about exception events in the IOTC system, including metadata and component-specific errors.",
+                "description": "This event captures details about exception events in the IOTC system, including metadata and component-specific errors.\n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -11517,7 +11517,7 @@
                     "MQTT Connectivity"
                 ],
                 "summary": "mqttConnEVT",
-                "description": "This event provides details about the connection state of a device, including its metadata and protocol versions.",
+                "description": "This event provides details about the connection state of a device, including its metadata and protocol versions.\n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -11603,7 +11603,7 @@
                     "Event Configuration"
                 ],
                 "summary": "config_events",
-                "description": "Enables or disables specific device events. To apply the changes, a device reboot is required. For RFD4090 devices, only the following events are supported: terminalConnection, firmwareUpdate, network, exceptions, ntp, heartbeat, power, battery, and fileDownload.",
+                "description": "Enables or disables specific device events. To apply the changes, a device reboot is required. For RFD4090 devices, only the following events are supported: terminalConnection, firmwareUpdate, network, exceptions, ntp, heartbeat, power, battery, and fileDownload.\n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -11878,7 +11878,7 @@
                     "Tag Data Event"
                 ],
                 "summary": "dataEVT",
-                "description": "Data Events capture and represent the structured information related to various events generated by the system. These events may include tag data, barcode data, and other relevant event-related details. They are utilized for tracking, monitoring, and analyzing system operations and behaviors in real-time or during post-event reviews.",
+                "description": "Data Events capture and represent the structured information related to various events generated by the system. These events may include tag data, barcode data, and other relevant event-related details. They are utilized for tracking, monitoring, and analyzing system operations and behaviors in real-time or during post-event reviews.\n\n**Supported readers:** RFD40, RFD90",
                 "requestBody": {
                     "required": true,
                     "content": {

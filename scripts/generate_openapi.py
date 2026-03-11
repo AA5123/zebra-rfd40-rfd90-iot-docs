@@ -499,6 +499,13 @@ def build_openapi():
         title = req_schema.get("title", operation)
         description = OPERATION_DESCRIPTIONS.get(operation) or req_schema.get("description", None)
 
+        # Append supported readers to every operation description
+        supported_readers = "\n\n**Supported readers:** RFD40, RFD90"
+        if description:
+            description = description + supported_readers
+        else:
+            description = supported_readers.lstrip()
+
         # Build request body
         req_examples = extract_examples(req_schema, title, example_data)
         req_schema_clean = extract_schema(req_schema, req_path)
