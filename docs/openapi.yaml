@@ -758,7 +758,7 @@
                     "Device Configuration"
                 ],
                 "summary": "get_config",
-                "description": "Command issued to retrieve the complete device configuration such as version details, device status, current region details, ethernet & wifi configuration, end point configuration, details of installed certificates, event and alert configuration   ",
+                "description": "Retrieves the complete device configuration in a single response — equivalent to calling get_version, get_status, get_current_region, get_wifi, get_eth, get_endpoint_config, and get_installed_certificate all at once. The response includes: readerVersion (model, serial, firmware), deviceStatus (battery, temperature, radio, power), currentRegion (country, frequencies, power limits), wifiConfig (SSID, IP, security), ethConfig (ethernet status), epConfig (MQTT endpoint settings), installedCerts (certificate details), and eventConfiguration (enabled events/alerts). This is a read-only command — use set_config to change settings.",
                 "requestBody": {
                     "required": true,
                     "content": {
