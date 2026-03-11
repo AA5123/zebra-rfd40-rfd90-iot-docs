@@ -12,12 +12,7 @@ TOC_PATH = os.path.join(ROOT, "toc.json")
 # Section order and mapping: (content path, output html, nav label). Sidebar children are auto-generated from ### and #### headings.
 PAGES = [
     ("1-introduction/introduction.md", "introduction.html", "1. Introduction"),
-    ("2-rfid-fundamentals/rfid-fundamentals.md", "rfid-fundamentals.html", "2. RFID Fundamentals"),
-    ("3-system-architecture/system-architecture.md", "system-architecture.html", "3. System Architecture"),
-    ("4-quick-start-guide/quick-start-guide.md", "quick-start-guide.html", "4. Quick Start Guide"),
-    ("5-tutorials/tutorials.md", "tutorials.html", "5. Tutorials"),
-    ("7-troubleshooting/troubleshooting.md", "troubleshooting.html", "7. Troubleshooting"),
-    ("8-appendices/appendices.md", "appendices.html", "8. Appendices"),
+    ("4-quick-start-guide/quick-start-guide.md", "quick-start-guide.html", "2. Quick Start Guide"),
 ]
 
 
@@ -385,8 +380,7 @@ def build_toc_from_content():
                 child["depth"] = 2
             children.append(child)
         items.append({"href": html_name, "label": title, "children": children})
-        if html_name == "tutorials.html":
-            items.append({"href": "api-reference.html", "label": "6. API Reference"})
+    items.append({"href": "api-reference.html", "label": "3. API Reference"})
     return items
 
 
@@ -685,18 +679,13 @@ def main():
 
     home_body = """
 <h1>RFD40 / RFD90 IOT developer guide</h1>
-<p>Comprehensive developer documentation for Zebra RFD40/RFD90 handheld RFID readers, including architecture, tutorials, API reference, and troubleshooting guidance.</p>
+<p>Comprehensive developer documentation for Zebra RFD40/RFD90 handheld RFID readers.</p>
 <hr>
 <h2>Documentation</h2>
 <ul>
   <li><a href="introduction.html">1. Introduction</a> — About the document, supported devices, key capabilities, related docs, and support.</li>
-  <li><a href="rfid-fundamentals.html">2. RFID Fundamentals</a> — RFID concepts, components, tags, memory banks, inventory, and access operations.</li>
-  <li><a href="system-architecture.html">3. System Architecture</a> — Reader architecture, communication model, interfaces, MQTT overview, and tag data flow.</li>
-  <li><a href="quick-start-guide.html">4. Quick Start Guide</a> — Prerequisites, setup, endpoint configuration, and first inventory.</li>
-  <li><a href="tutorials.html">5. Tutorials</a> — Practical task-based walkthroughs for reader configuration and operations.</li>
-  <li><a href="api-reference.html">6. API Reference</a> — Complete reference documentation for supported reader APIs.</li>
-  <li><a href="troubleshooting.html">7. Troubleshooting</a> — Command, communication, and connectivity issue resolution.</li>
-  <li><a href="appendices.html">8. Appendices</a> — MQTT topic reference, tag data fields, hardware specs, and regulatory details.</li>
+  <li><a href="quick-start-guide.html">2. Quick Start Guide</a> — Prerequisites, setup, endpoint configuration, and first inventory.</li>
+  <li><a href="api-reference.html">3. API Reference</a> — Complete reference documentation for supported reader APIs.</li>
 </ul>
 """
     with open(os.path.join(DOCS_DIR, "index.html"), "w", encoding="utf-8") as f:
