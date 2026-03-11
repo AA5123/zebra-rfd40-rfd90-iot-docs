@@ -449,12 +449,8 @@ def build_openapi():
         ("title", "RFD40 / RFD90 IOT developer guide"),
         ("version", "v2"),
         ("description",
-         "**This is an MQTT API, not REST.** There are no HTTP endpoints. "
-         "Each operation is a **command payload**: publish JSON to the MQTT "
-         "**command topic** (`<Tenant ID>/<Publish Topic>/<Device Serial No>`). "
-         "Device replies are received on your configured **command response** topic. "
-         "Use this API reference for payload schemas/examples and see "
-         "**Getting Started** plus **MQTT Communication Protocol** for end-to-end flow."),
+         "MQTT-based API for managing and controlling Zebra RFD40 and RFD90 RFID readers. "
+         "Send JSON command payloads to the MQTT command topic and receive responses on the response topic."),
     ])
 
     # --- Tags ---
