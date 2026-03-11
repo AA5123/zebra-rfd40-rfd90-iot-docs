@@ -765,16 +765,18 @@
                         "application/json": {
                             "schema": {
                                 "type": "object",
+                                "required": ["command", "requestId"],
                                 "properties": {
                                     "command": {
                                         "type": "string",
+                                        "enum": ["get_config"],
                                         "example": "get_config",
-                                        "description": "Specifies the operation being performed, in this case, retrieving the complete device configuration."
+                                        "description": "Must be `get_config`. Tells the scanner to return its full configuration."
                                     },
                                     "requestId": {
                                         "type": "string",
                                         "example": "abc123",
-                                        "description": "A unique identifier for the request, allowing tracking and debugging of the operation."
+                                        "description": "A unique ID you assign to this request. The scanner echoes it back in the response so you can match requests to responses when sending multiple commands."
                                     }
                                 }
                             }
@@ -783,7 +785,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "Response",
+                        "description": "Returns the full device configuration. The `currentConfig` object contains all settings; the `response` object tells you if the command succeeded or failed.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -791,15 +793,18 @@
                                     "properties": {
                                         "command": {
                                             "type": "string",
-                                            "example": "get_config"
+                                            "example": "get_config",
+                                            "description": "Echoes back the command name — always `get_config` for this response."
                                         },
                                         "requestId": {
                                             "type": "string",
-                                            "example": "abc123"
+                                            "example": "abc123",
+                                            "description": "Echoes back the requestId you sent, so you can match this response to your original request."
                                         },
                                         "apiVersion": {
                                             "type": "string",
-                                            "example": "V1.1"
+                                            "example": "V1.1",
+                                            "description": "The API version of the IoT Connector responding to this command."
                                         },
                                         "currentConfig": {
                                             "type": "object",
@@ -2047,6 +2052,7 @@
                                         },
                                         "response": {
                                             "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
                                             "properties": {
                                                 "code": {
                                                     "type": "integer",
