@@ -32,14 +32,15 @@
   <div class="nav-group" data-nav-group>
     <a href="quick-start-guide.html" class="nav-group-toggle active" aria-expanded="true" aria-controls="quick-start-guide-html-children"><span class="nav-label"><span class="nav-label-num">2.</span><span class="nav-label-text">Quick Start Guide</span></span></a>
     <div class="nav-group-children" id="quick-start-guide-html-children">
-      <a href="quick-start-guide.html#prerequisites" class="nav-sub"><span class="nav-label"><span class="nav-label-num">2.1.</span><span class="nav-label-text">Prerequisites</span></span></a>
-      <a href="quick-start-guide.html#powering-on-the-reader" class="nav-sub"><span class="nav-label"><span class="nav-label-num">2.2.</span><span class="nav-label-text">Powering On the Reader</span></span></a>
-      <a href="quick-start-guide.html#connecting-to-wi-fi" class="nav-sub"><span class="nav-label"><span class="nav-label-num">2.3.</span><span class="nav-label-text">Connecting to Wi-Fi</span></span></a>
-      <a href="quick-start-guide.html#configuring-the-mqtt-broker" class="nav-sub"><span class="nav-label"><span class="nav-label-num">2.4.</span><span class="nav-label-text">Configuring the MQTT Broker</span></span></a>
-      <a href="quick-start-guide.html#configuring-the-mqtt-endpoint" class="nav-sub"><span class="nav-label"><span class="nav-label-num">2.5.</span><span class="nav-label-text">Configuring the MQTT Endpoint</span></span></a>
-      <a href="quick-start-guide.html#verifying-device-connectivity" class="nav-sub"><span class="nav-label"><span class="nav-label-num">2.6.</span><span class="nav-label-text">Verifying Device Connectivity</span></span></a>
-      <a href="quick-start-guide.html#running-the-first-inventory" class="nav-sub"><span class="nav-label"><span class="nav-label-num">2.7.</span><span class="nav-label-text">Running the First Inventory</span></span></a>
-      <a href="quick-start-guide.html#receiving-tag-data" class="nav-sub"><span class="nav-label"><span class="nav-label-num">2.8.</span><span class="nav-label-text">Receiving Tag Data</span></span></a>
+      <a href="quick-start-guide.html#2-0-where-api-documentation-fits" class="nav-sub"><span class="nav-label"><span class="nav-label-num">2.1.</span><span class="nav-label-text">Where API Documentation Fits</span></span></a>
+      <a href="quick-start-guide.html#2-1-before-you-begin" class="nav-sub"><span class="nav-label"><span class="nav-label-num">2.2.</span><span class="nav-label-text">Before You Begin</span></span></a>
+      <a href="quick-start-guide.html#2-2-iot-connector-endpoints-at-a-glance" class="nav-sub"><span class="nav-label"><span class="nav-label-num">2.3.</span><span class="nav-label-text">IoT Connector Endpoints at a Glance</span></span></a>
+      <a href="quick-start-guide.html#2-3-step-1-connect-the-reader-to-the-network" class="nav-sub"><span class="nav-label"><span class="nav-label-num">2.4.</span><span class="nav-label-text">Step 1: Connect the Reader to the Network</span></span></a>
+      <a href="quick-start-guide.html#2-4-step-2-configure-control-and-data-endpoints" class="nav-sub"><span class="nav-label"><span class="nav-label-num">2.5.</span><span class="nav-label-text">Step 2: Configure Control and Data Endpoints</span></span></a>
+      <a href="quick-start-guide.html#2-5-step-3-confirm-topic-configuration" class="nav-sub"><span class="nav-label"><span class="nav-label-num">2.6.</span><span class="nav-label-text">Step 3: Confirm Topic Configuration</span></span></a>
+      <a href="quick-start-guide.html#2-6-step-4-verify-connectivity-with-get-status" class="nav-sub"><span class="nav-label"><span class="nav-label-num">2.7.</span><span class="nav-label-text">Step 4: Verify Connectivity with get_status</span></span></a>
+      <a href="quick-start-guide.html#2-7-if-verification-fails" class="nav-sub"><span class="nav-label"><span class="nav-label-num">2.8.</span><span class="nav-label-text">If Verification Fails</span></span></a>
+      <a href="quick-start-guide.html#2-8-next-steps" class="nav-sub"><span class="nav-label"><span class="nav-label-num">2.9.</span><span class="nav-label-text">Next Steps</span></span></a>
     </div>
   </div>
   <div class="nav-group collapsed" data-nav-group>
@@ -47,23 +48,239 @@
   </div>
 </div>
     <main class="main">
-<h1 id="4-quick-start-guide">4. Quick Start Guide</h1>
+<h2 id="2-getting-started">Getting Started</h2>
 
-<h2 id="prerequisites">Prerequisites</h2>
+<p>
+A step-by-step guide to configure IoT Connector and make your first successful command call.
+</p>
 
-<h2 id="powering-on-the-reader">Powering On the Reader</h2>
+<h3 id="2-0-where-api-documentation-fits">Where API Documentation Fits</h3>
 
-<h2 id="connecting-to-wi-fi">Connecting to Wi-Fi</h2>
+<p>
+This documentation is split into two parts so developers can find information quickly:
+</p>
 
-<h2 id="configuring-the-mqtt-broker">Configuring the MQTT Broker</h2>
+<ol>
+<li><strong>Guides</strong> (Introduction, Overview, Getting Started, Tutorials, Troubleshooting): setup flow, architecture, and usage patterns.</li>
+<li><strong>API Reference</strong> (OpenAPI and AsyncAPI): exact commands, schemas, payload fields, response codes, and topic contracts.</li>
+</ol>
 
-<h2 id="configuring-the-mqtt-endpoint">Configuring the MQTT Endpoint</h2>
+<p>
+For RFD40/90 IoT Connector, most application developers integrate through REST-style definitions and MQTT message contracts. For this reason, API Reference is a dedicated section and is not mixed into long-form guides.
+</p>
 
-<h2 id="verifying-device-connectivity">Verifying Device Connectivity</h2>
+<p>
+Use this page to complete environment setup and first connectivity checks, then move to API Reference for command-level integration.
+</p>
 
-<h2 id="running-the-first-inventory">Running the First Inventory</h2>
+<h3 id="2-1-before-you-begin">Before You Begin</h3>
 
-<h2 id="receiving-tag-data">Receiving Tag Data</h2>
+<p>
+To use IoT Connector (Control and Data interfaces), you need:
+</p>
+
+<ol>
+<li><strong>RFD40/90 reader</strong> with firmware that supports IoT Connector.</li>
+<li><strong>MQTT broker</strong> such as Mosquitto, EMQX, or HiveMQ.</li>
+<li><strong>MQTT client</strong> to publish commands and subscribe to responses/events (for example, MQTTX).</li>
+<li><strong>Network connectivity</strong> so both the reader and client can reach the broker over Wi-Fi or Ethernet.</li>
+<li><strong>Certificates</strong> if you use MQTT TLS (port 8883).</li>
+</ol>
+
+<p>
+For Management and Event endpoints, use 123RFID Desktop. For Control and Data endpoints, use IOTC_DataCtrlUtil or ZETI commands.
+</p>
+
+<h3 id="2-2-iot-connector-endpoints-at-a-glance">IoT Connector Endpoints at a Glance</h3>
+
+<p>
+IoT Connector supports these endpoint types:
+</p>
+
+<ol>
+<li><strong>Management</strong>: Inbound commands and outbound responses for device management.</li>
+<li><strong>Event</strong>: Outbound asynchronous health/events/alerts.</li>
+<li><strong>Control</strong>: Inbound commands and outbound responses for RFID operations.</li>
+<li><strong>Data</strong>: Outbound tag and barcode event data.</li>
+</ol>
+
+<img src="assets/getting-started/figure-2-1-endpoint-model.png" alt="Figure 2-1. IoT Connector endpoint model" loading="lazy" />
+
+<p>
+*Figure 2-1. IoT Connector endpoint model showing Management, Event, Control, and Data flows.*
+</p>
+
+<h3 id="2-3-step-1-connect-the-reader-to-the-network">Step 1: Connect the Reader to the Network</h3>
+
+<ol>
+<li>Configure Wi-Fi (or Ethernet) on the reader.</li>
+<li>If secure connectivity is required, install certificates first.</li>
+<li>Confirm the reader can reach the MQTT broker network.</li>
+</ol>
+
+<img src="assets/getting-started/figure-2-2-network-setup.png" alt="Figure 2-2. Reader network connection setup" loading="lazy" />
+
+<p>
+*Figure 2-2. Reader network setup in the configuration tool before endpoint provisioning.*
+</p>
+
+<h3 id="2-4-step-2-configure-control-and-data-endpoints">Step 2: Configure Control and Data Endpoints</h3>
+
+<p>
+Use IOTC_DataCtrlUtil or ZETI to create endpoint configurations.
+</p>
+
+<p>
+For each endpoint, configure:
+</p>
+
+<ol>
+<li><strong>Endpoint type</strong>: <code>control</code>, <code>data1</code> (and <code>data2</code> when available).</li>
+<li><strong>Name</strong>: Unique endpoint name.</li>
+<li><strong>Protocol</strong>: <code>MQTT</code> (1883) or <code>MQTT TLS</code> (8883).</li>
+<li><strong>Broker URL</strong>: Hostname or IP address.</li>
+<li><strong>Tenant ID</strong>.</li>
+<li><strong>Keep Alive</strong> and reconnection delays.</li>
+<li><strong>Authentication</strong>: Username and password (if required).</li>
+</ol>
+
+<p>
+After saving the endpoint:
+</p>
+
+<ol>
+<li>Activate the endpoint.</li>
+<li>Reboot the device so the broker connection starts with the new configuration.</li>
+</ol>
+
+<img src="assets/getting-started/figure-2-3-endpoint-config.png" alt="Figure 2-3. Endpoint configuration form" loading="lazy" />
+
+<p>
+*Figure 2-3. Control/Data endpoint configuration fields in IOTC_DataCtrlUtil.*
+</p>
+
+<img src="assets/getting-started/figure-2-4-endpoint-activation.png" alt="Figure 2-4. Endpoint activation status" loading="lazy" />
+
+<p>
+*Figure 2-4. Endpoint activation result before device reboot.*
+</p>
+
+<h3 id="2-5-step-3-confirm-topic-configuration">Step 3: Confirm Topic Configuration</h3>
+
+<p>
+Use the endpoint configuration output to confirm publish and subscribe topics.
+</p>
+
+<p>
+Publish topic format:
+</p>
+
+<pre><code>
+&lt;Tenant ID&gt;/&lt;Configured Publish Topic&gt;/&lt;Device Serial Number&gt;
+
+</code></pre>
+
+<p>
+Subscribe topic format:
+</p>
+
+<pre><code>
+&lt;Tenant ID&gt;/&lt;Configured Subscribe Topic&gt;/&lt;Device Serial Number&gt;
+
+</code></pre>
+
+<p>
+Typical subscribe channels:
+</p>
+
+<ol>
+<li>Command response topic.</li>
+<li>Alert and event topic.</li>
+<li>Data events topic.</li>
+<li>Last will and testament topic.</li>
+</ol>
+
+<img src="assets/getting-started/figure-2-5-topic-mapping.png" alt="Figure 2-5. Topic mapping example" loading="lazy" />
+
+<p>
+*Figure 2-5. Example topic mapping using tenant ID, configured topic path, and device serial number.*
+</p>
+
+<h3 id="2-6-step-4-verify-connectivity-with-get-status">Step 4: Verify Connectivity with get_status</h3>
+
+<p>
+Before running inventory commands, verify that Control endpoint messaging works end-to-end.
+</p>
+
+<ol>
+<li>Connect your MQTT client to the same broker.</li>
+<li>Subscribe to the reader command response topic.</li>
+<li>Publish a <code>get_status</code> command to the reader publish topic.</li>
+</ol>
+
+<p>
+Example request:
+</p>
+
+<pre><code>
+{
+  "command": "get_status",
+  "requestId": "verify-001"
+}
+
+</code></pre>
+
+<p>
+Expected result:
+</p>
+
+<ol>
+<li>You receive a response on the command response topic.</li>
+<li>The payload includes status details and a success response code.</li>
+</ol>
+
+<img src="assets/getting-started/figure-2-6-get-status.png" alt="Figure 2-6. get_status command and response" loading="lazy" />
+
+<p>
+*Figure 2-6. Publishing <code>get_status</code> and validating a successful response on the response topic.*
+</p>
+
+<h3 id="2-7-if-verification-fails">If Verification Fails</h3>
+
+<p>
+If you do not receive a response:
+</p>
+
+<ol>
+<li>Confirm broker service is running.</li>
+<li>Confirm reader and client are both connected to the broker network.</li>
+<li>Confirm endpoint is activated.</li>
+<li>Confirm device was rebooted after endpoint activation.</li>
+<li>Confirm tenant ID, topic path, and device serial number match exactly.</li>
+<li>Confirm credentials and certificates (for MQTT TLS).</li>
+</ol>
+
+<h3 id="2-8-next-steps">Next Steps</h3>
+
+<p>
+After <code>get_status</code> succeeds:
+</p>
+
+<ol>
+<li>Configure operating mode and filters from API Reference.</li>
+<li>Send <code>control_operation</code> commands to start and stop inventory.</li>
+<li>Subscribe to Data topics to validate tag event output.</li>
+</ol>
+
+<p>
+See also:
+</p>
+
+<ol>
+<li>MQTT protocol and topic conventions.</li>
+<li>API Reference for command schemas.</li>
+<li>Troubleshooting for endpoint and message-flow failures.</li></ol>
+
     </main>
   </div>
     </div>

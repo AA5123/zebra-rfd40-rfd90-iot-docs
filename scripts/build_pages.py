@@ -12,7 +12,7 @@ TOC_PATH = os.path.join(ROOT, "toc.json")
 # Section order and mapping: (content path, output html, nav label). Sidebar children are auto-generated from ### and #### headings.
 PAGES = [
     ("1-introduction/introduction.md", "introduction.html", "1. Introduction"),
-    ("4-quick-start-guide/quick-start-guide.md", "quick-start-guide.html", "2. Quick Start Guide"),
+    ("2-getting-started/getting-started.md", "quick-start-guide.html", "2. Quick Start Guide"),
 ]
 
 
@@ -73,6 +73,12 @@ def md_to_html(md):
     html = re.sub(r"^# (.+)$", _h1, html, flags=re.MULTILINE)
     html = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", html)
     html = re.sub(r"`([^`]+)`", r"<code>\1</code>", html)
+    # Images: ![alt](src)
+    html = re.sub(
+        r"!\[([^\]]*)\]\(([^)]+)\)",
+        lambda m: '<img src="' + m.group(2) + '" alt="' + _html_escape(m.group(1)) + '" loading="lazy" />',
+        html,
+    )
     def link_sub(m):
         text, url = m.group(1), m.group(2)
         if url in (

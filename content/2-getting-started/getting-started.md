@@ -39,7 +39,7 @@ IoT Connector supports these endpoint types:
 3. **Control**: Inbound commands and outbound responses for RFID operations.
 4. **Data**: Outbound tag and barcode event data.
 
-![Figure 2-1. IoT Connector endpoint model](../../docs/assets/getting-started/figure-2-1-endpoint-model.png)
+![Figure 2-1. IoT Connector endpoint model](assets/getting-started/figure-2-1-endpoint-model.png)
 
 *Figure 2-1. IoT Connector endpoint model showing Management, Event, Control, and Data flows.*
 
@@ -49,7 +49,7 @@ IoT Connector supports these endpoint types:
 2. If secure connectivity is required, install certificates first.
 3. Confirm the reader can reach the MQTT broker network.
 
-![Figure 2-2. Reader network connection setup](../../docs/assets/getting-started/figure-2-2-network-setup.png)
+![Figure 2-2. Reader network connection setup](assets/getting-started/figure-2-2-network-setup.png)
 
 *Figure 2-2. Reader network setup in the configuration tool before endpoint provisioning.*
 
@@ -72,11 +72,11 @@ After saving the endpoint:
 1. Activate the endpoint.
 2. Reboot the device so the broker connection starts with the new configuration.
 
-![Figure 2-3. Endpoint configuration form](../../docs/assets/getting-started/figure-2-3-endpoint-config.png)
+![Figure 2-3. Endpoint configuration form](assets/getting-started/figure-2-3-endpoint-config.png)
 
 *Figure 2-3. Control/Data endpoint configuration fields in IOTC_DataCtrlUtil.*
 
-![Figure 2-4. Endpoint activation status](../../docs/assets/getting-started/figure-2-4-endpoint-activation.png)
+![Figure 2-4. Endpoint activation status](assets/getting-started/figure-2-4-endpoint-activation.png)
 
 *Figure 2-4. Endpoint activation result before device reboot.*
 
@@ -103,7 +103,7 @@ Typical subscribe channels:
 3. Data events topic.
 4. Last will and testament topic.
 
-![Figure 2-5. Topic mapping example](../../docs/assets/getting-started/figure-2-5-topic-mapping.png)
+![Figure 2-5. Topic mapping example](assets/getting-started/figure-2-5-topic-mapping.png)
 
 *Figure 2-5. Example topic mapping using tenant ID, configured topic path, and device serial number.*
 
@@ -129,7 +129,7 @@ Expected result:
 1. You receive a response on the command response topic.
 2. The payload includes status details and a success response code.
 
-![Figure 2-6. get_status command and response](../../docs/assets/getting-started/figure-2-6-get-status.png)
+![Figure 2-6. get_status command and response](assets/getting-started/figure-2-6-get-status.png)
 
 *Figure 2-6. Publishing `get_status` and validating a successful response on the response topic.*
 
