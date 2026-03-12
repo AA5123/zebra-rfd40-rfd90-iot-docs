@@ -12,6 +12,7 @@ Usage:
 import json
 import os
 import sys
+import re
 from collections import OrderedDict
 
 import yaml
@@ -176,6 +177,14 @@ OPERATION_DESCRIPTIONS = {
     "get_status": (
         "Retrieves **real-time health and status** of the scanner — battery, temperature, "
         "radio, power, clock sync, and terminal connection.\n\n"
+        "**Command details:**\n\n"
+        "- Pattern Name: Reader Health and Status Retrieval\n"
+        "- Communication Type: Bidirectional (Cloud to Device, Device to Cloud)\n"
+        "- MQTT Version: 3.1.1\n"
+        "- API Version: V1.1\n"
+        "- Document Version: 1.0.0\n"
+        "- Last Updated: 2026-03-12\n"
+        "- Applies To: RFD40 Series, RFD90 Series\n\n"
         "**Response fields:**\n\n"
         "| Field | What it tells you |\n"
         "|---|---|\n"
@@ -191,7 +200,16 @@ OPERATION_DESCRIPTIONS = {
         "**Typical use cases:**\n"
         "- Dashboard monitoring — show live scanner health on a management console.\n"
         "- Battery management — track charge levels across a fleet before a shift starts.\n"
-        "- Troubleshooting — check if radio is connected, temperature is normal, clock is synced."
+        "- Troubleshooting — check if radio is connected, temperature is normal, clock is synced.\n\n"
+        "**MQTT topics for this command:**\n\n"
+        "- Command topic (Cloud to Device):\n"
+        "  `<tenantId>/CTRL/clients/cmnd/<deviceSerial>`\n"
+        "- Response topic (Device to Cloud):\n"
+        "  `<tenantId>/CTRL/clients/resp/<deviceSerial>`\n\n"
+        "**Example:**\n"
+        "- Command: `zebra/CTRL/clients/cmnd/RFD40-12345678`\n"
+        "- Response: `zebra/CTRL/clients/resp/RFD40-12345678`\n\n"
+        "Ensure these topic paths match your configured endpoint topics."
     ),
     "get_version": (
         "Retrieves the **scanner's identity card** — model, serial number, SKU, and all firmware versions.\n\n"
@@ -512,12 +530,11 @@ def build_openapi():
         title = req_schema.get("title", operation)
         description = OPERATION_DESCRIPTIONS.get(operation) or req_schema.get("description", None)
 
-        # Append supported readers to every operation description
-        supported_readers = "\n\n**Supported readers:** RFD40, RFD90"
-        if description:
-            description = description + supported_readers
-        else:
-            description = supported_readers.lstrip()
+        # Remove legacy footer text if present in source descriptions.
+        if isinstance(description, str):
+            description = re.sub(r"\n\n\*\*Supported readers:\*\*\s*RFD40,\s*RFD90\s*$", "", description).strip()
+
+        # Keep operation descriptions focused on command behavior; do not append a global supported-readers footer.
 
         # Build request body
         req_examples = extract_examples(req_schema, title, example_data)
