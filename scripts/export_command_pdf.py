@@ -85,7 +85,7 @@ def flatten_schema(
                 "field": full_name,
                 "type": html.escape(type_text),
                 "required": req,
-                "description": html.escape(str(desc)),
+                "description": str(desc),
                 "example": format_value(example),
             }
         )
@@ -109,7 +109,7 @@ def table_html(rows: List[Dict[str, str]], title: str) -> str:
             f"<td><code>{r['field']}</code></td>"
             f"<td>{r['type']}</td>"
             f"<td>{r['required']}</td>"
-            f"<td>{r['description']}</td>"
+            f"<td>{render_table_description(r['description'])}</td>"
             f"<td><code>{r['example']}</code></td>"
             "</tr>"
         )
@@ -142,6 +142,26 @@ def _render_inline(text: str) -> str:
     rendered = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", rendered)
     rendered = re.sub(r"`([^`]+)`", r"<code>\1</code>", rendered)
     return rendered
+
+
+def render_table_description(text: str) -> str:
+    """Render field description text for table cells in a readable format."""
+    if not text:
+        return ""
+    lines = [ln.rstrip() for ln in str(text).splitlines() if ln.strip()]
+    if not lines:
+        return ""
+
+    bullet_lines = [ln.strip() for ln in lines if ln.strip().startswith("-")]
+    non_bullet_lines = [ln.strip() for ln in lines if not ln.strip().startswith("-")]
+
+    parts: List[str] = []
+    if non_bullet_lines:
+        parts.append(_render_inline(" ".join(non_bullet_lines)))
+    if bullet_lines:
+        parts.append("<ul>" + "".join(f"<li>{_render_inline(ln.lstrip('- ').strip())}</li>" for ln in bullet_lines) + "</ul>")
+
+    return "".join(parts)
 
 
 def render_markdown_like(text: str) -> str:
