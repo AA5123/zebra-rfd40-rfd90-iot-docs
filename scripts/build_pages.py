@@ -689,6 +689,10 @@ def main():
   <li><a href="quick-start-guide.html">2. Quick Start Guide</a> — Prerequisites, setup, endpoint configuration, and first inventory.</li>
   <li><a href="api-reference.html">3. API Reference</a> — Complete reference documentation for supported reader APIs.</li>
 </ul>
+<h2>Command PDFs</h2>
+<ul>
+    <li><a href="command-pdfs/get_status.pdf">get_status.pdf</a> — One-command PDF with description, request/response fields, and examples.</li>
+</ul>
 """
     with open(os.path.join(DOCS_DIR, "index.html"), "w", encoding="utf-8") as f:
         f.write(wrap("Home", "index.html", home_body.strip()))
