@@ -13,6 +13,7 @@ import argparse
 import html
 import json
 import os
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -136,12 +137,94 @@ def choose_browser_executable() -> Optional[str]:
     return None
 
 
+def _render_inline(text: str) -> str:
+    rendered = html.escape(text)
+    rendered = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", rendered)
+    rendered = re.sub(r"`([^`]+)`", r"<code>\1</code>", rendered)
+    return rendered
+
+
 def render_markdown_like(text: str) -> str:
-    # Preserve readability without a markdown engine: keep line breaks and code ticks.
-    escaped = html.escape(text)
-    escaped = escaped.replace("`", "<code>").replace("<code>", "<code>", 1)
-    # Better: keep as pre-wrapped paragraph for predictable output.
-    return f"<pre class=\"desc\">{escaped}</pre>"
+    """Render a small markdown subset used in command descriptions.
+
+    Supports:
+    - bold (**x**)
+    - inline code (`x`)
+    - bullet lists (- x)
+    - markdown tables
+    - paragraph blocks
+    """
+    if not text.strip():
+        return "<p>No description available.</p>"
+
+    lines = text.splitlines()
+    out: List[str] = []
+    i = 0
+
+    while i < len(lines):
+        line = lines[i].rstrip()
+
+        if not line.strip():
+            i += 1
+            continue
+
+        # Table block
+        if "|" in line and i + 1 < len(lines) and re.match(r"^\|?\s*[-:| ]+\|?\s*$", lines[i + 1].strip()):
+            header = [c.strip() for c in line.strip().strip("|").split("|")]
+            i += 2
+            rows: List[List[str]] = []
+            while i < len(lines):
+                row_line = lines[i].strip()
+                if not row_line or "|" not in row_line:
+                    break
+                rows.append([c.strip() for c in row_line.strip("|").split("|")])
+                i += 1
+
+            out.append("<table><thead><tr>" + "".join(f"<th>{_render_inline(h)}</th>" for h in header) + "</tr></thead><tbody>")
+            for row in rows:
+                out.append("<tr>" + "".join(f"<td>{_render_inline(c)}</td>" for c in row) + "</tr>")
+            out.append("</tbody></table>")
+            continue
+
+        # Bullet list block
+        if line.lstrip().startswith("- "):
+            out.append("<ul>")
+            while i < len(lines):
+                li = lines[i].rstrip()
+                if not li.lstrip().startswith("- "):
+                    break
+                out.append(f"<li>{_render_inline(li.lstrip()[2:])}</li>")
+                i += 1
+            out.append("</ul>")
+            continue
+
+        # Standalone bold heading line like **Command details:**
+        if re.match(r"^\*\*[^*]+\*\*:?$", line.strip()):
+            content = line.strip().strip(":")
+            content = content.strip("*")
+            out.append(f"<h3>{html.escape(content)}</h3>")
+            i += 1
+            continue
+
+        # Paragraph block
+        para_parts = [line.strip()]
+        i += 1
+        while i < len(lines):
+            nxt = lines[i].rstrip()
+            if not nxt.strip():
+                break
+            if nxt.lstrip().startswith("- "):
+                break
+            if "|" in nxt and i + 1 < len(lines) and re.match(r"^\|?\s*[-:| ]+\|?\s*$", lines[i + 1].strip()):
+                break
+            if re.match(r"^\*\*[^*]+\*\*:?$", nxt.strip()):
+                break
+            para_parts.append(nxt.strip())
+            i += 1
+
+        out.append(f"<p>{_render_inline(' '.join(para_parts))}</p>")
+
+    return "\n".join(out)
 
 
 def build_html(command: str, op: Dict[str, Any]) -> str:

@@ -25,49 +25,50 @@ th { background: #f2f2f2; text-align: left; }
 <h1>get_status</h1>
 <div class="meta">Command: <code>get_status</code></div>
 <h2>Description</h2>
-<pre class="desc">Retrieves **real-time health and status** of the scanner — battery, temperature, radio, power, clock sync, and terminal connection.
-
-**Command details:**
-
-- Pattern Name: Reader Health and Status Retrieval
-- Communication Type: Bidirectional (Cloud to Device, Device to Cloud)
-- MQTT Version: 3.1.1
-- API Version: V1.1
-- Document Version: 1.0.0
-- Last Updated: 2026-03-12
-- Applies To: RFD40 Series, RFD90 Series
-
-**Response fields:**
-
-| Field | What it tells you |
-|---|---|
-| <code>powerSource<code> | How the scanner is powered — DC, Wall Charger, USB, or Cradle |
-| <code>radioActivity<code> | Whether the RFID radio is currently active or idle |
-| <code>radioConnection<code> | Whether the radio module is connected or disconnected |
-| <code>hostname<code> | The scanner&#x27;s network hostname |
-| <code>systemTime<code> | Current device clock in ISO 8601 format |
-| <code>temperature<code> | Internal temperature in °C — monitor for overheating |
-| <code>ntp<code> | Clock sync status — offset (ms drift) and reach (sync success history) |
-| <code>terminalConnection<code> | Paired phone/tablet — connection status and type (Bluetooth, USB, CIO) |
-| <code>batteryStatus<code> | Battery capacity (mAh), charge %, health (Good/Average/Poor), charge state |
-
-**Typical use cases:**
-- Dashboard monitoring — show live scanner health on a management console.
-- Battery management — track charge levels across a fleet before a shift starts.
-- Troubleshooting — check if radio is connected, temperature is normal, clock is synced.
-
-**MQTT topics for this command:**
-
-- Command topic (Cloud to Device):
-  <code>&lt;tenantId&gt;/CTRL/clients/cmnd/&lt;deviceSerial&gt;<code>
-- Response topic (Device to Cloud):
-  <code>&lt;tenantId&gt;/CTRL/clients/resp/&lt;deviceSerial&gt;<code>
-
-**Example:**
-- Command: <code>zebra/CTRL/clients/cmnd/RFD40-12345678<code>
-- Response: <code>zebra/CTRL/clients/resp/RFD40-12345678<code>
-
-Ensure these topic paths match your configured endpoint topics.</pre>
+<p>Retrieves <strong>real-time health and status</strong> of the scanner — battery, temperature, radio, power, clock sync, and terminal connection.</p>
+<h3>Command details:</h3>
+<ul>
+<li>Pattern Name: Reader Health and Status Retrieval</li>
+<li>Communication Type: Bidirectional (Cloud to Device, Device to Cloud)</li>
+<li>MQTT Version: 3.1.1</li>
+<li>API Version: V1.1</li>
+<li>Document Version: 1.0.0</li>
+<li>Last Updated: 2026-03-12</li>
+<li>Applies To: RFD40 Series, RFD90 Series</li>
+</ul>
+<h3>Response fields:</h3>
+<table><thead><tr><th>Field</th><th>What it tells you</th></tr></thead><tbody>
+<tr><td><code>powerSource</code></td><td>How the scanner is powered — DC, Wall Charger, USB, or Cradle</td></tr>
+<tr><td><code>radioActivity</code></td><td>Whether the RFID radio is currently active or idle</td></tr>
+<tr><td><code>radioConnection</code></td><td>Whether the radio module is connected or disconnected</td></tr>
+<tr><td><code>hostname</code></td><td>The scanner&#x27;s network hostname</td></tr>
+<tr><td><code>systemTime</code></td><td>Current device clock in ISO 8601 format</td></tr>
+<tr><td><code>temperature</code></td><td>Internal temperature in °C — monitor for overheating</td></tr>
+<tr><td><code>ntp</code></td><td>Clock sync status — offset (ms drift) and reach (sync success history)</td></tr>
+<tr><td><code>terminalConnection</code></td><td>Paired phone/tablet — connection status and type (Bluetooth, USB, CIO)</td></tr>
+<tr><td><code>batteryStatus</code></td><td>Battery capacity (mAh), charge %, health (Good/Average/Poor), charge state</td></tr>
+</tbody></table>
+<h3>Typical use cases:</h3>
+<ul>
+<li>Dashboard monitoring — show live scanner health on a management console.</li>
+<li>Battery management — track charge levels across a fleet before a shift starts.</li>
+<li>Troubleshooting — check if radio is connected, temperature is normal, clock is synced.</li>
+</ul>
+<h3>MQTT topics for this command:</h3>
+<ul>
+<li>Command topic (Cloud to Device):</li>
+</ul>
+<p><code>&lt;tenantId&gt;/CTRL/clients/cmnd/&lt;deviceSerial&gt;</code></p>
+<ul>
+<li>Response topic (Device to Cloud):</li>
+</ul>
+<p><code>&lt;tenantId&gt;/CTRL/clients/resp/&lt;deviceSerial&gt;</code></p>
+<h3>Example:</h3>
+<ul>
+<li>Command: <code>zebra/CTRL/clients/cmnd/RFD40-12345678</code></li>
+<li>Response: <code>zebra/CTRL/clients/resp/RFD40-12345678</code></li>
+</ul>
+<p>Ensure these topic paths match your configured endpoint topics.</p>
 <h2>Request</h2>
 <h3>Request Fields</h3>
 <table>
