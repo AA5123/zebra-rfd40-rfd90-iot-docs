@@ -96,6 +96,55 @@ def flatten_schema(
     return rows
 
 
+def build_example_from_schema(schema: Dict[str, Any]) -> Any:
+    """Build a best-effort example payload from a JSON schema object."""
+    if not isinstance(schema, dict):
+        return None
+
+    if "example" in schema:
+        return schema.get("example")
+    if "default" in schema:
+        return schema.get("default")
+
+    enum_vals = schema.get("enum")
+    if isinstance(enum_vals, list) and enum_vals:
+        return enum_vals[0]
+
+    stype = schema.get("type")
+    if stype == "object":
+        props = schema.get("properties", {})
+        if not isinstance(props, dict):
+            return {}
+        out: Dict[str, Any] = {}
+        required = schema.get("required", []) or []
+        for name, prop in props.items():
+            if not isinstance(prop, dict):
+                continue
+            child = build_example_from_schema(prop)
+            if child is not None:
+                out[name] = child
+            elif name in required:
+                out[name] = ""
+        return out
+
+    if stype == "array":
+        items = schema.get("items", {})
+        item_example = build_example_from_schema(items if isinstance(items, dict) else {})
+        return [item_example] if item_example is not None else []
+
+    if stype == "integer":
+        return 0
+    if stype == "number":
+        return 0
+    if stype == "boolean":
+        return False
+    if stype == "string":
+        return ""
+
+    # Unknown type - return None so callers can decide whether to include.
+    return None
+
+
 def table_html(rows: List[Dict[str, str]], title: str) -> str:
     if not rows:
         return f"<h3>{html.escape(title)}</h3><p>No fields available.</p>"
@@ -278,6 +327,25 @@ def build_html(command: str, op: Dict[str, Any]) -> str:
         .get("application/json", {})
         .get("examples", {})
     )
+
+    # Fallback: derive examples from schema when explicit examples are missing.
+    if (not isinstance(req_examples, dict) or not req_examples) and isinstance(req_schema, dict):
+        derived_req = build_example_from_schema(req_schema)
+        if derived_req is not None:
+            req_examples = {
+                "Generated Example": {
+                    "value": derived_req
+                }
+            }
+
+    if (not isinstance(resp_examples, dict) or not resp_examples) and isinstance(resp_schema, dict):
+        derived_resp = build_example_from_schema(resp_schema)
+        if derived_resp is not None:
+            resp_examples = {
+                "Generated Example": {
+                    "value": derived_resp
+                }
+            }
 
     def examples_to_html(examples: Any, title: str) -> str:
         if not isinstance(examples, dict) or not examples:
