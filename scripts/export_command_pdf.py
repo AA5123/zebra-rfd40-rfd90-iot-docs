@@ -364,20 +364,82 @@ def build_html(command: str, op: Dict[str, Any]) -> str:
 <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />
 <title>{html.escape(command)} Command Spec</title>
 <style>
-body {{ font-family: Segoe UI, Arial, sans-serif; margin: 28px; color: #111; }}
+@page {{ size: A4; margin: 14mm; }}
+* {{ box-sizing: border-box; }}
+body {{
+    font-family: "Segoe UI", "Calibri", Arial, sans-serif;
+    margin: 0;
+    color: #111;
+    font-size: 11pt;
+    line-height: 1.45;
+}}
 h1, h2, h3 {{ margin: 0 0 10px; }}
-h1 {{ font-size: 28px; }}
-h2 {{ margin-top: 26px; border-top: 1px solid #ddd; padding-top: 12px; font-size: 21px; }}
-h3 {{ margin-top: 18px; font-size: 16px; }}
-h4 {{ margin: 14px 0 6px; font-size: 14px; }}
-p {{ line-height: 1.45; }}
+h1 {{
+    font-size: 26pt;
+    letter-spacing: 0.2px;
+    margin-bottom: 6px;
+}}
+h2 {{
+    margin-top: 28px;
+    border-top: 2px solid #d9dde3;
+    padding-top: 10px;
+    font-size: 16pt;
+    page-break-after: avoid;
+}}
+h3 {{
+    margin-top: 16px;
+    font-size: 12pt;
+    color: #1f3b5c;
+    page-break-after: avoid;
+}}
+h4 {{ margin: 12px 0 6px; font-size: 11pt; }}
+p {{ margin: 8px 0; }}
+ul {{ margin: 6px 0 10px 20px; padding: 0; }}
+li {{ margin: 3px 0; }}
 pre, code {{ font-family: Consolas, "Courier New", monospace; }}
-pre {{ background: #f5f7fa; border: 1px solid #d9dde3; border-radius: 6px; padding: 10px; overflow-x: auto; white-space: pre-wrap; }}
-pre.desc {{ white-space: pre-wrap; line-height: 1.45; }}
-table {{ border-collapse: collapse; width: 100%; margin-top: 8px; }}
-th, td {{ border: 1px solid #d6d6d6; padding: 8px; vertical-align: top; font-size: 12px; }}
-th {{ background: #f2f2f2; text-align: left; }}
-.meta {{ color: #555; margin-bottom: 12px; }}
+code {{
+    background: #f3f5f8;
+    border: 1px solid #dce3ea;
+    border-radius: 4px;
+    padding: 1px 4px;
+    font-size: 90%;
+}}
+pre {{
+    background: #f7f9fb;
+    border: 1px solid #d9dde3;
+    border-radius: 8px;
+    padding: 10px 12px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+}}
+table {{
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 8px;
+    table-layout: fixed;
+}}
+th, td {{
+    border: 1px solid #d6dbe1;
+    padding: 7px 8px;
+    vertical-align: top;
+    font-size: 10pt;
+    word-break: break-word;
+}}
+th {{
+    background: #eef3f8;
+    text-align: left;
+    font-weight: 600;
+}}
+tr:nth-child(even) td {{ background: #fcfdff; }}
+.meta {{
+    color: #3f536b;
+    margin-bottom: 14px;
+    font-size: 10.5pt;
+}}
+/* Keep rows and headings together while printing */
+tr, td, th {{ page-break-inside: avoid; }}
+h2, h3 {{ page-break-inside: avoid; }}
 </style>
 </head>
 <body>
