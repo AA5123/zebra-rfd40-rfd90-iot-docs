@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>get_status Command Spec</title>
+<style>
+body { font-family: Segoe UI, Arial, sans-serif; margin: 28px; color: #111; }
+h1, h2, h3 { margin: 0 0 10px; }
+h1 { font-size: 28px; }
+h2 { margin-top: 26px; border-top: 1px solid #ddd; padding-top: 12px; font-size: 21px; }
+h3 { margin-top: 18px; font-size: 16px; }
+h4 { margin: 14px 0 6px; font-size: 14px; }
+p { line-height: 1.45; }
+pre, code { font-family: Consolas, "Courier New", monospace; }
+pre { background: #f5f7fa; border: 1px solid #d9dde3; border-radius: 6px; padding: 10px; overflow-x: auto; white-space: pre-wrap; }
+pre.desc { white-space: pre-wrap; line-height: 1.45; }
+table { border-collapse: collapse; width: 100%; margin-top: 8px; }
+th, td { border: 1px solid #d6d6d6; padding: 8px; vertical-align: top; font-size: 12px; }
+th { background: #f2f2f2; text-align: left; }
+.meta { color: #555; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+<h1>get_status</h1>
+<div class="meta">Command: <code>get_status</code></div>
+<h2>Description</h2>
+<pre class="desc">Retrieves **real-time health and status** of the scanner — battery, temperature, radio, power, clock sync, and terminal connection.
+
+**Command details:**
+
+- Pattern Name: Reader Health and Status Retrieval
+- Communication Type: Bidirectional (Cloud to Device, Device to Cloud)
+- MQTT Version: 3.1.1
+- API Version: V1.1
+- Document Version: 1.0.0
+- Last Updated: 2026-03-12
+- Applies To: RFD40 Series, RFD90 Series
+
+**Response fields:**
+
+| Field | What it tells you |
+|---|---|
+| <code>powerSource<code> | How the scanner is powered — DC, Wall Charger, USB, or Cradle |
+| <code>radioActivity<code> | Whether the RFID radio is currently active or idle |
+| <code>radioConnection<code> | Whether the radio module is connected or disconnected |
+| <code>hostname<code> | The scanner&#x27;s network hostname |
+| <code>systemTime<code> | Current device clock in ISO 8601 format |
+| <code>temperature<code> | Internal temperature in °C — monitor for overheating |
+| <code>ntp<code> | Clock sync status — offset (ms drift) and reach (sync success history) |
+| <code>terminalConnection<code> | Paired phone/tablet — connection status and type (Bluetooth, USB, CIO) |
+| <code>batteryStatus<code> | Battery capacity (mAh), charge %, health (Good/Average/Poor), charge state |
+
+**Typical use cases:**
+- Dashboard monitoring — show live scanner health on a management console.
+- Battery management — track charge levels across a fleet before a shift starts.
+- Troubleshooting — check if radio is connected, temperature is normal, clock is synced.
+
+**MQTT topics for this command:**
+
+- Command topic (Cloud to Device):
+  <code>&lt;tenantId&gt;/CTRL/clients/cmnd/&lt;deviceSerial&gt;<code>
+- Response topic (Device to Cloud):
+  <code>&lt;tenantId&gt;/CTRL/clients/resp/&lt;deviceSerial&gt;<code>
+
+**Example:**
+- Command: <code>zebra/CTRL/clients/cmnd/RFD40-12345678<code>
+- Response: <code>zebra/CTRL/clients/resp/RFD40-12345678<code>
+
+Ensure these topic paths match your configured endpoint topics.</pre>
+<h2>Request</h2>
+<h3>Request Fields</h3>
+<table>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>command</code></td><td>string (enum)</td><td>Yes</td><td>Must be `get_status`. Tells the scanner to return its current health and status.</td><td><code>get_status</code></td></tr>
+<tr><td><code>requestId</code></td><td>string</td><td>Yes</td><td>A unique ID you assign to this request. The scanner echoes it back in the response so you can match requests to responses.</td><td><code>abcd123</code></td></tr>
+</tbody></table>
+<h3>Request Examples</h3><p>No examples available.</p>
+<h2>Response</h2>
+<h3>Response Fields</h3>
+<table>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>command</code></td><td>string</td><td>Yes</td><td>Echoes back the command name — always `get_status` for this response.</td><td><code>get_status</code></td></tr>
+<tr><td><code>requestId</code></td><td>string</td><td>Yes</td><td>Echoes back the requestId you sent, so you can match this response to your original request.</td><td><code>abc123</code></td></tr>
+<tr><td><code>apiVersion</code></td><td>string (enum)</td><td>Yes</td><td>The API version of the IoT Connector responding to this command.</td><td><code>V1.1</code></td></tr>
+<tr><td><code>deviceStatus</code></td><td>object</td><td>No</td><td>Real-time device health — power source, RFID radio state, temperature, battery level and health, NTP clock sync, and paired terminal (phone/tablet) connection.</td><td><code></code></td></tr>
+<tr><td><code>deviceStatus.powerSource</code></td><td>string (enum)</td><td>Yes</td><td>The source of power for the device (e.g., DC, Wall Charger, USB, or Cradle).</td><td><code>CRADLE</code></td></tr>
+<tr><td><code>deviceStatus.radioActivity</code></td><td>string (enum)</td><td>Yes</td><td>The activity status of the device&#x27;s radio (e.g., Active or Inactive).</td><td><code>ACTIVE</code></td></tr>
+<tr><td><code>deviceStatus.radioConnection</code></td><td>string (enum)</td><td>Yes</td><td>The connection status of the device&#x27;s radio (e.g., Connected or Disconnected).</td><td><code>CONNECTED</code></td></tr>
+<tr><td><code>deviceStatus.hostname</code></td><td>string</td><td>Yes</td><td>The hostname of the device on the network.</td><td><code>RFD40-212735201D0053.local</code></td></tr>
+<tr><td><code>deviceStatus.systemTime </code></td><td>string</td><td>Yes</td><td>The system time of the device in ISO 8601 format.</td><td><code>2022-07-01T03:01:31.464Z</code></td></tr>
+<tr><td><code>deviceStatus.temperature</code></td><td>integer</td><td>Yes</td><td>The current temperature of the device in degrees Celsius.</td><td><code>32</code></td></tr>
+<tr><td><code>deviceStatus.ntp</code></td><td>object</td><td>No</td><td>Details about the Network Time Protocol (NTP) synchronization.</td><td><code></code></td></tr>
+<tr><td><code>deviceStatus.ntp.offset</code></td><td>integer</td><td>No</td><td>The offset in milliseconds between the device&#x27;s clock and the NTP server.</td><td><code>120</code></td></tr>
+<tr><td><code>deviceStatus.ntp.reach</code></td><td>integer</td><td>No</td><td>The reachability score of the NTP server.</td><td><code>321</code></td></tr>
+<tr><td><code>deviceStatus.terminalConnection</code></td><td>object</td><td>No</td><td>Details about the terminal connection to the device.</td><td><code></code></td></tr>
+<tr><td><code>deviceStatus.terminalConnection.status</code></td><td>string (enum)</td><td>No</td><td>The connection status of the terminal (e.g., Connected or Disconnected).</td><td><code>connected</code></td></tr>
+<tr><td><code>deviceStatus.terminalConnection.type</code></td><td>string (enum)</td><td>No</td><td>The type of terminal connection (e.g., Bluetooth, CIO, or USB).</td><td><code></code></td></tr>
+<tr><td><code>deviceStatus.batteryStatus</code></td><td>object</td><td>No</td><td>Information about the battery status of the device.</td><td><code></code></td></tr>
+<tr><td><code>deviceStatus.batteryStatus.capacity</code></td><td>integer</td><td>No</td><td>The battery capacity remaining in mAh.</td><td><code>21</code></td></tr>
+<tr><td><code>deviceStatus.batteryStatus.stateOfHealth</code></td><td>string (enum)</td><td>No</td><td>The overall health of the battery (e.g., Good, Average, or Poor).</td><td><code>GOOD</code></td></tr>
+<tr><td><code>deviceStatus.batteryStatus.chargePercentage</code></td><td>integer</td><td>No</td><td>The percentage of battery charge remaining.</td><td><code>23</code></td></tr>
+<tr><td><code>deviceStatus.batteryStatus.chargeStatus</code></td><td>integer</td><td>No</td><td>The charging status of the device battery:
+0 - Charger not connected,
+1 - Charger connected and charging in progress,
+2 - Charger connected and battery is 100%.</td><td><code>1</code></td></tr>
+<tr><td><code>response</code></td><td>object</td><td>Yes</td><td>Status of the command execution — check `code` to confirm success (0) or identify the error.</td><td><code></code></td></tr>
+<tr><td><code>response.code</code></td><td>integer</td><td>Yes</td><td>Response code indicating success or failure.
+- **0** — Success
+- **1** — Command payload accepted
+- **2** — Invalid payload
+- **3** — Not able to retrieve information
+- **4** — Firmware update in progress
+- **5** — Can&#x27;t reboot, inventory in progress
+- **6** — Region is not configured
+- **7** — Interface is not available
+- **8** — Insufficient flash size
+- **9** — File not found
+- **10** — Configuration already exists
+- **11** — Inventory in progress
+- **12** — No radio operation in progress
+- **13** — Firmware update failed
+- **14** — Battery too low for firmware update
+- **15** — WIFI: SSID not found
+- **16** — WIFI: Cannot delete active SSID
+- **17** — WIFI: SSID missing
+- **18** — WIFI: SSID already exists
+- **19** — WIFI: SSID count overflow
+- **20** — WiFi is not supported
+- **21** — Certificate not found
+- **22** — Advanced configuration not set
+- **23** — Invalid enum value
+- **24** — Max 32 prefilters limit exceeded
+- **25** — Max 3 publish topics exceeded
+- **26** — Max 1 subscribe topic exceeded
+- **27** — Invalid tenant ID length
+- **28** — Tag match pattern length exceeded</td><td><code>0</code></td></tr>
+<tr><td><code>response.description</code></td><td>string</td><td>Yes</td><td>Human-readable description of the response code (e.g. &quot;Success&quot;, &quot;Invalid payload&quot;).</td><td><code>Success</code></td></tr>
+</tbody></table>
+<h3>Response Examples</h3>
+<h4>Device status info</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;get_status&quot;,
+  &quot;requestId&quot;: &quot;abc123&quot;,
+  &quot;apiVersion&quot;: &quot;V1.1&quot;,
+  &quot;deviceStatus&quot;: {
+    &quot;powerSource&quot;: &quot;USB&quot;,
+    &quot;radioActivity&quot;: &quot;INACTIVE&quot;,
+    &quot;radioConnection&quot;: &quot;CONNECTED&quot;,
+    &quot;systemTime&quot;: &quot;2024-02-26T13:45:53.728Z&quot;,
+    &quot;temperature&quot;: 32,
+    &quot;ntp&quot;: {
+      &quot;offset&quot;: 0,
+      &quot;reach&quot;: 0
+    },
+    &quot;terminalConnection&quot;: {
+      &quot;status&quot;: &quot;CONNECTED&quot;,
+      &quot;type&quot;: &quot;USB&quot;
+    },
+    &quot;batteryStatus&quot;: {
+      &quot;capacity&quot;: 6400,
+      &quot;stateOfHealth&quot;: &quot;GOOD&quot;,
+      &quot;chargePercentage&quot;: 100,
+      &quot;chargeStatus&quot;: 1
+    }
+  },
+  &quot;response&quot;: {
+    &quot;code&quot;: 0,
+    &quot;description&quot;: &quot;Success&quot;
+  }
+}</code></pre>
+</body>
+</html>
