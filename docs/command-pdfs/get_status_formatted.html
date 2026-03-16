@@ -81,9 +81,36 @@ tr:nth-child(even) td { background: #fcfdff; }
 /* Keep rows and headings together while printing */
 tr, td, th { page-break-inside: avoid; }
 h2, h3 { page-break-inside: avoid; }
+.download-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
+.download-bar a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #1f3b5c;
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-size: 10.5pt;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+.download-bar a:hover { background: #2a5080; }
+.download-bar a svg { fill: #fff; width: 16px; height: 16px; }
+@media print { .download-bar { display: none; } }
 </style>
 </head>
 <body>
+<div class="download-bar">
+  <a href="get_status_formatted.pdf" download title="Download as PDF">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 20h14v-2H5v2zm7-18v12.17l3.59-3.58L17 12l-5 5-5-5 1.41-1.41L12 14.17V2z"/></svg>
+    Download PDF
+  </a>
+</div>
 <h1>get_status</h1>
 <div class="meta">Command: <code>get_status</code></div>
 <h2>Description</h2>
