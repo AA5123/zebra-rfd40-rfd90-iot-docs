@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>get_status Command Spec</title>
 <style>
-@page { size: A4; margin: 14mm; }
+@page { size: A4; margin: 22mm 14mm 20mm 14mm; }
 * { box-sizing: border-box; }
 body {
     font-family: "Segoe UI", "Calibri", Arial, sans-serif;
@@ -13,6 +13,56 @@ body {
     color: #111;
     font-size: 11pt;
     line-height: 1.45;
+}
+/* ── Print header & footer (repeated on every page) ── */
+.pdf-header, .pdf-footer {
+    display: none;
+}
+@media print {
+    .pdf-header {
+        display: block;
+        position: fixed;
+        top: -14mm;
+        left: 0;
+        right: 0;
+        height: 12mm;
+        border-bottom: 1.5px solid #1f3b5c;
+        padding: 0 0 3px 0;
+        font-size: 8pt;
+        color: #1f3b5c;
+    }
+    .pdf-header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        height: 100%;
+    }
+    .pdf-header .doc-brand {
+        font-weight: 700;
+        font-size: 9pt;
+        letter-spacing: 0.3px;
+    }
+    .pdf-header .doc-title {
+        font-weight: 400;
+        font-size: 8pt;
+    }
+    .pdf-footer {
+        display: block;
+        position: fixed;
+        bottom: -12mm;
+        left: 0;
+        right: 0;
+        height: 10mm;
+        border-top: 1px solid #d9dde3;
+        padding-top: 3px;
+        font-size: 7.5pt;
+        color: #6b7a8d;
+    }
+    .pdf-footer-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
 }
 h1, h2, h3 { margin: 0 0 10px; }
 h1 {
@@ -101,10 +151,23 @@ h2, h3 { page-break-inside: avoid; }
 }
 .download-bar a:hover { background: #2a5080; }
 .download-bar a svg { fill: #fff; width: 16px; height: 16px; }
-@media print { .download-bar { display: none; } }
+@media print {
+    .download-bar { display: none; }
+    body { padding-top: 2mm; }
+}
 </style>
 </head>
 <body>
+<!-- Print-only header (every page) -->
+<div class="pdf-header"><div class="pdf-header-inner">
+    <span class="doc-brand">ZEBRA TECHNOLOGIES</span>
+    <span class="doc-title">get_status &mdash; RFD40 / RFD90 IoT Connector API Reference</span>
+</div></div>
+<!-- Print-only footer (every page) -->
+<div class="pdf-footer"><div class="pdf-footer-inner">
+    <span>API Version: V1.1 &nbsp;|&nbsp; Document Version: 1.0.0 &nbsp;|&nbsp; Last Updated: 2026-03-12</span>
+    <span>Zebra Confidential</span>
+</div></div>
 <div class="download-bar">
   <a href="get_status_formatted.pdf" download title="Download as PDF">
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 20h14v-2H5v2zm7-18v12.17l3.59-3.58L17 12l-5 5-5-5 1.41-1.41L12 14.17V2z"/></svg>
