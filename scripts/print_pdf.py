@@ -22,14 +22,14 @@ CHROME_PATH = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 CDP_PORT = 9223  # DevTools port
 
 HEADER_TEMPLATE = """
-<div style="width:100%; font-family:Segoe UI,Calibri,Arial,sans-serif; font-size:8px; padding:0 10mm; display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid #1f3b5c; padding-bottom:2px;">
+<div style="width:100%; font-family:Segoe UI,Calibri,Arial,sans-serif; font-size:8px; padding:4px 10mm 6px 10mm; display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #1f3b5c; margin-bottom:8px;">
     <span style="font-weight:700; font-size:9px; color:#1f3b5c; letter-spacing:0.3px;">ZEBRA TECHNOLOGIES</span>
-    <span style="color:#1f3b5c;">get_status — RFD40 / RFD90 IoT Connector API Reference</span>
+    <span style="color:#1f3b5c; font-size:7.5px;">get_status &mdash; RFD40 / RFD90 IoT Connector API Reference</span>
 </div>
 """
 
 FOOTER_TEMPLATE = """
-<div style="width:100%; font-family:Segoe UI,Calibri,Arial,sans-serif; font-size:7px; padding:0 10mm; display:flex; justify-content:space-between; align-items:flex-start; border-top:1px solid #d9dde3; padding-top:2px; color:#6b7a8d;">
+<div style="width:100%; font-family:Segoe UI,Calibri,Arial,sans-serif; font-size:7px; padding:6px 10mm 4px 10mm; display:flex; justify-content:space-between; align-items:center; border-top:1px solid #d9dde3; margin-top:8px; color:#6b7a8d;">
     <span>API Version: V1.1 &nbsp;|&nbsp; Document Version: 1.0.0 &nbsp;|&nbsp; Last Updated: 2026-03-12</span>
     <span>Page <span class="pageNumber"></span> of <span class="totalPages"></span> &nbsp;|&nbsp; Zebra Confidential</span>
 </div>
@@ -212,8 +212,8 @@ def main():
                 "printBackground": True,
                 "paperWidth": 8.27,   # A4 in inches
                 "paperHeight": 11.69,
-                "marginTop": 1.1,     # ~28mm for header clearance
-                "marginBottom": 1.0,  # ~25mm for footer clearance
+                "marginTop": 1.4,     # ~36mm for header clearance
+                "marginBottom": 1.3,  # ~33mm for footer clearance
                 "marginLeft": 0.55,
                 "marginRight": 0.55,
                 "preferCSSPageSize": False,
