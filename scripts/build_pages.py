@@ -1112,60 +1112,166 @@ def main():
     <title>AsyncAPI Reference - RFD40 / RFD90 IOT developer guide</title>
     <style>
         html, body { margin: 0; padding: 0; height: 100%; }
-        body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; }
-        #container { height: 100%; }
-        asyncapi-component { display: block; height: 100%; min-height: 100%; }
-        #fallback { display: none; padding: 16px; }
-        #fallback pre {
-            background: #f7f9fb;
-            border: 1px solid #d9dde3;
-            border-radius: 8px;
-            padding: 12px;
-            overflow: auto;
-            white-space: pre-wrap;
-            font-family: Consolas, Monaco, monospace;
-            font-size: 12px;
-            line-height: 1.5;
-        }
+        body { font-family: Inter, 'Segoe UI', system-ui, sans-serif; background: #f8fafc; color: #0f172a; }
+        .wrap { max-width: 1180px; margin: 0 auto; padding: 20px; }
+        h1 { margin: 0 0 8px; font-size: 30px; }
+        .muted { color: #475569; margin-bottom: 18px; }
+        .section { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+        .section h2 { margin: 0 0 12px; font-size: 20px; }
+        .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+        .chip { background: #eef2ff; color: #1e3a8a; border: 1px solid #c7d2fe; border-radius: 999px; padding: 4px 10px; font-size: 12px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #e2e8f0; padding: 8px; text-align: left; vertical-align: top; font-size: 13px; }
+        th { background: #f8fafc; }
+        code { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1px 6px; }
+        .empty { color: #64748b; font-style: italic; }
+        .error { background: #fff1f2; border: 1px solid #fecdd3; color: #9f1239; border-radius: 10px; padding: 10px; }
     </style>
-    <script src="https://unpkg.com/@asyncapi/web-component@1.0.0/lib/asyncapi-web-component.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 </head>
 <body>
-    <div id="container">
-        <asyncapi-component
-            schema-url="asyncapi.yaml?v=1"
-            cssImportPath="https://unpkg.com/@asyncapi/react-component@1.4.2/styles/default.min.css"
-            config='{"show":{"sidebar":true}}'>
-        </asyncapi-component>
-    </div>
-    <div id="fallback">
-        <h2>AsyncAPI Source (Fallback View)</h2>
-        <p>The interactive AsyncAPI renderer did not initialize in this browser context. Showing source from <code>asyncapi.yaml</code>.</p>
-        <pre id="yamlView">Loading...</pre>
-    </div>
-    <script>
-        (function() {
-            function showFallback() {
-                var container = document.getElementById('container');
-                var fallback = document.getElementById('fallback');
-                var yamlView = document.getElementById('yamlView');
-                if (container) container.style.display = 'none';
-                if (fallback) fallback.style.display = 'block';
-                fetch('asyncapi.yaml?v=1')
-                    .then(function(r) { return r.text(); })
-                    .then(function(t) { if (yamlView) yamlView.textContent = t; })
-                    .catch(function() { if (yamlView) yamlView.textContent = 'Unable to load asyncapi.yaml'; });
-            }
+    <div class="wrap">
+        <h1 id="title">AsyncAPI Reference</h1>
+        <div id="subtitle" class="muted">Loading...</div>
 
-            // If the web component does not render visible content soon, show fallback.
-            setTimeout(function() {
-                var comp = document.querySelector('asyncapi-component');
-                var rendered = comp && (comp.shadowRoot || comp.children.length > 0);
-                if (!rendered) {
-                    showFallback();
+        <div class="section">
+            <h2>Overview</h2>
+            <div id="overview" class="muted">Loading spec information...</div>
+        </div>
+
+        <div class="section">
+            <h2>Servers</h2>
+            <table id="serversTable">
+                <thead><tr><th>Name</th><th>URL</th><th>Protocol</th><th>Description</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>Channels</h2>
+            <table id="channelsTable">
+                <thead><tr><th>Channel</th><th>Direction</th><th>Operation</th><th>Message</th><th>Description</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>Messages</h2>
+            <div id="messages" class="chips"></div>
+        </div>
+
+        <div class="section">
+            <h2>Schemas</h2>
+            <div id="schemas" class="chips"></div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        function text(v) { return v == null ? '' : String(v); }
+        function byId(id) { return document.getElementById(id); }
+
+        function addChip(container, value) {
+            var span = document.createElement('span');
+            span.className = 'chip';
+            span.textContent = value;
+            container.appendChild(span);
+        }
+
+        function fillTableRows(tbody, rows) {
+            tbody.innerHTML = '';
+            if (!rows.length) {
+                var tr = document.createElement('tr');
+                var td = document.createElement('td');
+                td.colSpan = 5;
+                td.className = 'empty';
+                td.textContent = 'No entries available.';
+                tr.appendChild(td);
+                tbody.appendChild(tr);
+                return;
+            }
+            rows.forEach(function(cols) {
+                var tr = document.createElement('tr');
+                cols.forEach(function(c) {
+                    var td = document.createElement('td');
+                    td.innerHTML = c;
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+        }
+
+        fetch('asyncapi.yaml?v=2')
+            .then(function(r) { return r.text(); })
+            .then(function(yamlText) {
+                var spec = jsyaml.load(yamlText) || {};
+                var info = spec.info || {};
+
+                byId('title').textContent = text(info.title || 'AsyncAPI Reference');
+                byId('subtitle').textContent = 'Version: ' + text(info.version || 'N/A');
+                byId('overview').textContent = text(info.description || 'No description provided.');
+
+                var servers = spec.servers || {};
+                var serverRows = Object.keys(servers).map(function(name) {
+                    var s = servers[name] || {};
+                    return [
+                        '<code>' + name + '</code>',
+                        '<code>' + text(s.url) + '</code>',
+                        text(s.protocol),
+                        text(s.description || '')
+                    ];
+                });
+                fillTableRows(byId('serversTable').querySelector('tbody'), serverRows);
+
+                var channels = spec.channels || {};
+                var channelRows = [];
+                Object.keys(channels).forEach(function(ch) {
+                    var c = channels[ch] || {};
+                    if (c.publish) {
+                        var msgRef = c.publish.message && c.publish.message.$ref ? c.publish.message.$ref : (c.publish.message && c.publish.message.name) || '';
+                        channelRows.push([
+                            '<code>' + ch + '</code>',
+                            'Publish',
+                            '<code>' + text(c.publish.operationId || '') + '</code>',
+                            '<code>' + text(msgRef) + '</code>',
+                            text(c.description || '')
+                        ]);
+                    }
+                    if (c.subscribe) {
+                        var msgRef2 = c.subscribe.message && c.subscribe.message.$ref ? c.subscribe.message.$ref : (c.subscribe.message && c.subscribe.message.name) || '';
+                        channelRows.push([
+                            '<code>' + ch + '</code>',
+                            'Subscribe',
+                            '<code>' + text(c.subscribe.operationId || '') + '</code>',
+                            '<code>' + text(msgRef2) + '</code>',
+                            text(c.description || '')
+                        ]);
+                    }
+                });
+                fillTableRows(byId('channelsTable').querySelector('tbody'), channelRows);
+
+                var msgBox = byId('messages');
+                var msgs = (spec.components && spec.components.messages) || {};
+                var msgNames = Object.keys(msgs);
+                if (msgNames.length) {
+                    msgNames.forEach(function(n) { addChip(msgBox, n); });
+                } else {
+                    msgBox.innerHTML = '<span class="empty">No messages defined.</span>';
                 }
-            }, 3000);
-        })();
+
+                var schemaBox = byId('schemas');
+                var schemas = (spec.components && spec.components.schemas) || {};
+                var schemaNames = Object.keys(schemas);
+                if (schemaNames.length) {
+                    schemaNames.forEach(function(n) { addChip(schemaBox, n); });
+                } else {
+                    schemaBox.innerHTML = '<span class="empty">No schemas defined.</span>';
+                }
+            })
+            .catch(function(err) {
+                document.body.innerHTML = '<div class="wrap"><div class="error">Failed to render AsyncAPI reference: ' + text(err) + '</div></div>';
+            });
+    })();
     </script>
 </body>
 </html>"""
@@ -1173,13 +1279,7 @@ def main():
         f.write(asyncapi_redoc_html)
     print("Generated docs/asyncapi-render.html")
 
-    asyncapi_ref_body = """
-<div style="padding:10px 14px; border-bottom:1px solid #e5e7eb; font-size:13px; color:#334155;">
-    If the embedded view does not load, open in a new tab:
-    <a href="https://studio.asyncapi.com/?url=https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/asyncapi.yaml" target="_blank" rel="noopener noreferrer">AsyncAPI Studio</a>
-</div>
-<iframe src="https://studio.asyncapi.com/?url=https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/asyncapi.yaml" title="AsyncAPI Reference" class="api-ref-iframe"></iframe>
-"""
+    asyncapi_ref_body = """<iframe src="asyncapi-render.html?v=2" title="AsyncAPI Reference" class="api-ref-iframe"></iframe>"""
     asyncapi_ref_html = """<!DOCTYPE html>
 <html lang="en" class="layout-api-ref-page">
 <head>
