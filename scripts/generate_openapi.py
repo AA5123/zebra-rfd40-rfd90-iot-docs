@@ -209,7 +209,9 @@ OPERATION_DESCRIPTIONS = {
         "**Example:**\n"
         "- Command: `zebra/CTRL/clients/cmnd/RFD40-12345678`\n"
         "- Response: `zebra/CTRL/clients/resp/RFD40-12345678`\n\n"
-        "Ensure these topic paths match your configured endpoint topics."
+        "Ensure these topic paths match your configured endpoint topics.\n\n"
+        "---\n\n"
+        "📄 [Download get_status as PDF](command-pdfs/get_status_formatted.pdf)"
     ),
     "get_version": (
         "Retrieves the **scanner's identity card** — model, serial number, SKU, and all firmware versions.\n\n"
