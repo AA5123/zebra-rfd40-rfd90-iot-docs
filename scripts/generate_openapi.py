@@ -177,6 +177,7 @@ OPERATION_DESCRIPTIONS = {
     "get_status": (
         "Retrieves **real-time health and status** of the scanner — battery, temperature, "
         "radio, power, clock sync, and terminal connection.\n\n"
+        "> \ud83d\udcc4 **[Download get_status as PDF](command-pdfs/get_status_formatted.pdf)**\n\n"
         "**Command details:**\n\n"
         "- Pattern Name: Reader Health and Status Retrieval\n"
         "- Communication Type: Bidirectional (Cloud to Device, Device to Cloud)\n"
@@ -209,9 +210,7 @@ OPERATION_DESCRIPTIONS = {
         "**Example:**\n"
         "- Command: `zebra/CTRL/clients/cmnd/RFD40-12345678`\n"
         "- Response: `zebra/CTRL/clients/resp/RFD40-12345678`\n\n"
-        "Ensure these topic paths match your configured endpoint topics.\n\n"
-        "---\n\n"
-        "📄 [Download get_status as PDF](command-pdfs/get_status_formatted.pdf)"
+        "Ensure these topic paths match your configured endpoint topics."
     ),
     "get_version": (
         "Retrieves the **scanner's identity card** — model, serial number, SKU, and all firmware versions.\n\n"
