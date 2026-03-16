@@ -1114,6 +1114,19 @@ def main():
         html, body { margin: 0; padding: 0; height: 100%; }
         body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; }
         #container { height: 100%; }
+        asyncapi-component { display: block; height: 100%; min-height: 100%; }
+        #fallback { display: none; padding: 16px; }
+        #fallback pre {
+            background: #f7f9fb;
+            border: 1px solid #d9dde3;
+            border-radius: 8px;
+            padding: 12px;
+            overflow: auto;
+            white-space: pre-wrap;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 12px;
+            line-height: 1.5;
+        }
     </style>
     <script src="https://unpkg.com/@asyncapi/web-component@1.0.0/lib/asyncapi-web-component.js"></script>
 </head>
@@ -1125,6 +1138,35 @@ def main():
             config='{"show":{"sidebar":true}}'>
         </asyncapi-component>
     </div>
+    <div id="fallback">
+        <h2>AsyncAPI Source (Fallback View)</h2>
+        <p>The interactive AsyncAPI renderer did not initialize in this browser context. Showing source from <code>asyncapi.yaml</code>.</p>
+        <pre id="yamlView">Loading...</pre>
+    </div>
+    <script>
+        (function() {
+            function showFallback() {
+                var container = document.getElementById('container');
+                var fallback = document.getElementById('fallback');
+                var yamlView = document.getElementById('yamlView');
+                if (container) container.style.display = 'none';
+                if (fallback) fallback.style.display = 'block';
+                fetch('asyncapi.yaml?v=1')
+                    .then(function(r) { return r.text(); })
+                    .then(function(t) { if (yamlView) yamlView.textContent = t; })
+                    .catch(function() { if (yamlView) yamlView.textContent = 'Unable to load asyncapi.yaml'; });
+            }
+
+            // If the web component does not render visible content soon, show fallback.
+            setTimeout(function() {
+                var comp = document.querySelector('asyncapi-component');
+                var rendered = comp && (comp.shadowRoot || comp.children.length > 0);
+                if (!rendered) {
+                    showFallback();
+                }
+            }, 3000);
+        })();
+    </script>
 </body>
 </html>"""
     with open(os.path.join(DOCS_DIR, "asyncapi-render.html"), "w", encoding="utf-8") as f:
