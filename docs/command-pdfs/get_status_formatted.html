@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>get_status Command Spec</title>
 <style>
-@page { size: A4; margin: 38mm 16mm 34mm 16mm; }
+@page { size: A4; margin: 16mm; }
 * { box-sizing: border-box; }
 
 /* ── Base ── */
@@ -152,56 +152,6 @@ tr:hover td { background: #e8eef5; }
 tr, td, th { page-break-inside: avoid; }
 h2, h3 { page-break-inside: avoid; }
 
-/* ── Fixed print header/footer (repeats every page) ── */
-.print-header {
-    display: none;
-    position: fixed;
-    top: -32mm;
-    left: 0;
-    right: 0;
-    height: 14mm;
-    font-family: "Segoe UI", "Calibri", Arial, sans-serif;
-    font-size: 8pt;
-    color: #1f3b5c;
-    border-bottom: 2.5px solid #1f3b5c;
-    padding-bottom: 4px;
-}
-.print-header-inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    height: 100%;
-}
-.print-header .ph-brand {
-    font-weight: 700;
-    font-size: 9pt;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-}
-.print-header .ph-title {
-    font-size: 7.5pt;
-    color: #546a7b;
-    font-style: italic;
-}
-.print-footer {
-    display: none;
-    position: fixed;
-    bottom: -28mm;
-    left: 0;
-    right: 0;
-    height: 12mm;
-    font-family: "Segoe UI", "Calibri", Arial, sans-serif;
-    font-size: 7.5pt;
-    color: #546a7b;
-    border-top: 2px solid #1f3b5c;
-    padding-top: 4px;
-}
-.print-footer-inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
 /* ── Download button (screen only) ── */
 .download-bar {
     display: flex;
@@ -226,23 +176,10 @@ h2, h3 { page-break-inside: avoid; }
 @media print {
     .download-bar { display: none; }
     .doc-header-bar { display: none; }
-    .doc-footer-bar { display: none; }
-    .print-header { display: block; }
-    .print-footer { display: block; }
 }
 </style>
 </head>
 <body>
-<!-- Fixed print header (every page) -->
-<div class="print-header"><div class="print-header-inner">
-    <span class="ph-brand">ZEBRA TECHNOLOGIES</span>
-    <span class="ph-title">get_status &mdash; RFD40 / RFD90 IoT Connector API Reference</span>
-</div></div>
-<!-- Fixed print footer (every page) -->
-<div class="print-footer"><div class="print-footer-inner">
-    <span>API Version: V1.1 &nbsp;|&nbsp; Document Version: 1.0.0 &nbsp;|&nbsp; Last Updated: 2026-03-12</span>
-    <span>Zebra Confidential</span>
-</div></div>
 <div class="download-bar">
   <a href="get_status_formatted.pdf" download title="Download as PDF">
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 20h14v-2H5v2zm7-18v12.17l3.59-3.58L17 12l-5 5-5-5 1.41-1.41L12 14.17V2z"/></svg>
