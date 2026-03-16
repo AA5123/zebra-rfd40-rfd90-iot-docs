@@ -1173,7 +1173,13 @@ def main():
         f.write(asyncapi_redoc_html)
     print("Generated docs/asyncapi-render.html")
 
-    asyncapi_ref_body = """<iframe src="asyncapi-render.html?v=1" title="AsyncAPI Reference" class="api-ref-iframe"></iframe>"""
+    asyncapi_ref_body = """
+<div style="padding:10px 14px; border-bottom:1px solid #e5e7eb; font-size:13px; color:#334155;">
+    If the embedded view does not load, open in a new tab:
+    <a href="https://studio.asyncapi.com/?url=https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/asyncapi.yaml" target="_blank" rel="noopener noreferrer">AsyncAPI Studio</a>
+</div>
+<iframe src="https://studio.asyncapi.com/?url=https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/asyncapi.yaml" title="AsyncAPI Reference" class="api-ref-iframe"></iframe>
+"""
     asyncapi_ref_html = """<!DOCTYPE html>
 <html lang="en" class="layout-api-ref-page">
 <head>
