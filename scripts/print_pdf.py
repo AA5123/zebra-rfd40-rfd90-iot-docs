@@ -212,8 +212,8 @@ def main():
                 "printBackground": True,
                 "paperWidth": 8.27,   # A4 in inches
                 "paperHeight": 11.69,
-                "marginTop": 0.87,    # ~22mm for header
-                "marginBottom": 0.79, # ~20mm for footer
+                "marginTop": 1.1,     # ~28mm for header clearance
+                "marginBottom": 1.0,  # ~25mm for footer clearance
                 "marginLeft": 0.55,
                 "marginRight": 0.55,
                 "preferCSSPageSize": False,
