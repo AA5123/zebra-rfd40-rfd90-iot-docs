@@ -1,102 +1,221 @@
 asyncapi: 2.4.0
 
 info:
-  title: RFD40 / RFD90 IoT Connector API (MQTT)
-  version: v2
+  title: RFD40 / RFD90 IoT Connector Device Status API (MQTT)
+  version: v1
   description: |
-    **MQTT API** for Zebra RFD40/90 handheld RFID readers. All communication is via MQTT publish/subscribe — no HTTP.
-    - **Publish** command payloads (JSON) to the command topic.
-    - **Subscribe** to response, event, and data topics for replies and streams.
-    See the [MQTT Communication Protocol](mqtt-protocol.html) for topic setup.
+    Device Status flow for RFD40/90 over MQTT.
+    - Publish `get_status` to the command topic.
+    - Subscribe to the response topic for health and status data.
 
 servers:
   mqttBroker:
-    url: mqtt://localhost:1883
+    url: localhost:1883
     protocol: mqtt
-    description: Your MQTT broker. Use the URL configured in the device endpoint (e.g. port 8883 for TLS).
+    description: MQTT broker configured in the reader endpoint.
 
 channels:
-  commandTopic:
-    description: "**Publish** commands here. Topic format: {tenantId}/CTRL/clients/cmnd/{deviceSerialNo}"
+  '{tenantId}/CTRL/clients/cmnd/{deviceSerialNo}':
+    description: Publish `get_status` commands (Cloud to Device).
+    parameters:
+      tenantId:
+        description: Tenant identifier.
+        schema:
+          type: string
+      deviceSerialNo:
+        description: Reader serial number.
+        schema:
+          type: string
     publish:
-      operationId: publishCommand
-      summary: Publish a command
+      operationId: publishGetStatus
+      summary: Publish get_status command
       message:
-        name: Command
-        title: MQTT command payload
-        contentType: application/json
-        payload:
+        $ref: '#/components/messages/GetStatusCommand'
+
+  '{tenantId}/CTRL/clients/resp/{deviceSerialNo}':
+    description: Subscribe for get_status command responses (Device to Cloud).
+    parameters:
+      tenantId:
+        description: Tenant identifier.
+        schema:
+          type: string
+      deviceSerialNo:
+        description: Reader serial number.
+        schema:
+          type: string
+    subscribe:
+      operationId: subscribeGetStatusResponse
+      summary: Receive get_status responses
+      message:
+        $ref: '#/components/messages/GetStatusResponse'
+
+components:
+  messages:
+    GetStatusCommand:
+      name: GetStatusCommand
+      title: MQTT get_status command payload
+      contentType: application/json
+      correlationId:
+        location: $message.payload#/requestId
+      payload:
+        $ref: '#/components/schemas/GetStatusCommandPayload'
+      examples:
+        - name: getStatusRequest
+          payload:
+            command: get_status
+            requestId: req-1
+
+    GetStatusResponse:
+      name: GetStatusResponse
+      title: MQTT get_status response payload
+      contentType: application/json
+      correlationId:
+        location: $message.payload#/requestId
+      payload:
+        $ref: '#/components/schemas/GetStatusResponsePayload'
+      examples:
+        - name: getStatusSuccess
+          payload:
+            command: get_status
+            requestId: req-1
+            apiVersion: V1.1
+            deviceStatus:
+              powerSource: USB
+              radioActivity: INACTIVE
+              radioConnection: CONNECTED
+              hostname: RFD40-212735201D0053.local
+              systemTime: '2024-02-26T13:45:53.728Z'
+              temperature: 32
+              ntp:
+                offset: 0
+                reach: 0
+              terminalConnection:
+                status: connected
+                type: USB
+              batteryStatus:
+                capacity: 6400
+                stateOfHealth: GOOD
+                chargePercentage: 100
+                chargeStatus: 1
+            response:
+              code: 0
+              description: Success
+
+  schemas:
+    GetStatusCommandPayload:
+      type: object
+      required:
+        - command
+        - requestId
+      properties:
+        command:
+          type: string
+          enum:
+            - get_status
+          description: Must be `get_status`.
+        requestId:
+          type: string
+          description: Client-generated request ID used for response correlation.
+      additionalProperties: false
+
+    GetStatusResponsePayload:
+      type: object
+      required:
+        - command
+        - requestId
+        - apiVersion
+        - response
+      properties:
+        command:
+          type: string
+          enum:
+            - get_status
+        requestId:
+          type: string
+        apiVersion:
+          type: string
+          enum:
+            - V1.0
+            - V1.1
+        deviceStatus:
+          $ref: '#/components/schemas/DeviceStatus'
+        response:
+          $ref: '#/components/schemas/CommandResponse'
+      additionalProperties: true
+
+    DeviceStatus:
+      type: object
+      properties:
+        powerSource:
+          type: string
+          enum:
+            - DC
+            - WALLCHARGER
+            - USB
+            - CRADLE
+        radioActivity:
+          type: string
+          enum:
+            - INACTIVE
+            - ACTIVE
+        radioConnection:
+          type: string
+          enum:
+            - CONNECTED
+            - DISCONNECTED
+        hostname:
+          type: string
+        systemTime:
+          type: string
+          format: date-time
+        temperature:
+          type: integer
+        ntp:
           type: object
-          required: [command, requestId]
           properties:
-            command:
+            offset:
+              type: integer
+            reach:
+              type: integer
+        terminalConnection:
+          type: object
+          properties:
+            status:
               type: string
-              description: Command name (e.g. get_status, set_operating_mode, get_post_filter)
-            requestId:
+              enum:
+                - connected
+                - disconnected
+            type:
               type: string
-              description: Client-defined ID for correlating with the response
-          additionalProperties: true
-        examples:
-          - name: get_status
-            payload: { command: get_status, requestId: "req-1" }
-          - name: set_operating_mode
-            payload: { command: set_operating_mode, requestId: "req-2", operatingMode: { operatingModes: { profiles: BALANCED_PERFORMANCE } } }
-
-  commandResponseTopic:
-    description: "**Subscribe** for command responses. Topic: {tenantId}/CTRL/clients/resp/{deviceSerialNo}"
-    subscribe:
-      operationId: subscribeCommandResponse
-      summary: Receive command responses
-      message:
-        name: Command response
-        contentType: application/json
-        payload:
+              enum:
+                - BLUETOOTH
+                - CIO
+                - USB
+        batteryStatus:
           type: object
           properties:
-            command: { type: string }
-            requestId: { type: string }
-            response: { type: object, properties: { code: { type: integer }, description: { type: string } } }
-          additionalProperties: true
+            capacity:
+              type: integer
+            stateOfHealth:
+              type: string
+              enum:
+                - GOOD
+                - AVERAGE
+                - POOR
+            chargePercentage:
+              type: integer
+            chargeStatus:
+              type: integer
+              description: 0=not connected, 1=charging, 2=full.
+      additionalProperties: true
 
-  eventsTopic:
-    description: "**Subscribe** for alerts and events. Topic: {tenantId}/CTRL/clients/event/{deviceSerialNo}"
-    subscribe:
-      operationId: subscribeEvents
-      summary: Receive events and alerts
-      message:
-        name: Event / Alert
-        contentType: application/json
-        payload:
-          type: object
-          properties:
-            id: { type: string }
-            timestamp: { type: string }
-            type: { type: string }
-            priority: { type: string }
-            description: { type: string }
-          additionalProperties: true
-
-  dataTopic:
-    description: "**Subscribe** for tag/barcode data. Topic: {tenantId}/DATA/clients/data1event/{deviceSerialNo}"
-    subscribe:
-      operationId: subscribeData
-      summary: Receive tag and barcode data
-      message:
-        name: Tag / barcode data event
-        contentType: application/json
-        payload:
-          type: object
-          description: Tag read data (EPC, TID, RSSI, etc.) or barcode decode.
-          additionalProperties: true
-
-  lwtTopic:
-    description: "**Subscribe** for Last Will (device disconnect). Topic: {tenantId}/CTRL/clients/rfid/{deviceSerialNo}"
-    subscribe:
-      operationId: subscribeLwt
-      summary: Last Will and Testament
-      message:
-        name: LWT
-        contentType: application/json
-        payload:
-          type: object
-          additionalProperties: true
+    CommandResponse:
+      type: object
+      required:
+        - code
+        - description
+      properties:
+        code:
+          type: integer
+        description:
+          type: string

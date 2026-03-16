@@ -387,6 +387,7 @@ def build_toc_from_content():
             children.append(child)
         items.append({"href": html_name, "label": title, "children": children})
     items.append({"href": "api-reference.html", "label": "3. API Reference"})
+    items.append({"href": "asyncapi-reference.html", "label": "4. AsyncAPI Reference"})
     return items
 
 
@@ -688,6 +689,7 @@ def main():
   <li><a href="introduction.html">1. Introduction</a> — About the document, supported devices, key capabilities, related docs, and support.</li>
   <li><a href="quick-start-guide.html">2. Quick Start Guide</a> — Prerequisites, setup, endpoint configuration, and first inventory.</li>
   <li><a href="api-reference.html">3. API Reference</a> — Complete reference documentation for supported reader APIs.</li>
+    <li><a href="asyncapi-reference.html">4. AsyncAPI Reference</a> — MQTT channels, messages, and payload contracts rendered from asyncapi.yaml.</li>
 </ul>
 <h2>Command PDFs</h2>
 <ul>
@@ -1101,6 +1103,71 @@ def main():
     with open(os.path.join(DOCS_DIR, "api-reference.html"), "w", encoding="utf-8") as f:
         f.write(api_ref_html)
     print("Generated docs/api-reference.html")
+
+    asyncapi_redoc_html = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AsyncAPI Reference - RFD40 / RFD90 IOT developer guide</title>
+    <style>
+        html, body { margin: 0; padding: 0; height: 100%; }
+        body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; }
+        #container { height: 100%; }
+    </style>
+    <script src="https://unpkg.com/@asyncapi/web-component@1.0.0/lib/asyncapi-web-component.js"></script>
+</head>
+<body>
+    <div id="container">
+        <asyncapi-component
+            schema-url="asyncapi.yaml?v=1"
+            cssImportPath="https://unpkg.com/@asyncapi/react-component@1.4.2/styles/default.min.css"
+            config='{"show":{"sidebar":true}}'>
+        </asyncapi-component>
+    </div>
+</body>
+</html>"""
+    with open(os.path.join(DOCS_DIR, "asyncapi-render.html"), "w", encoding="utf-8") as f:
+        f.write(asyncapi_redoc_html)
+    print("Generated docs/asyncapi-render.html")
+
+    asyncapi_ref_body = """<iframe src="asyncapi-render.html?v=1" title="AsyncAPI Reference" class="api-ref-iframe"></iframe>"""
+    asyncapi_ref_html = """<!DOCTYPE html>
+<html lang="en" class="layout-api-ref-page">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>4. AsyncAPI Reference - RFD40 / RFD90 IOT developer guide</title>
+    <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/docs.css" />
+    <link rel="stylesheet" href="css/api-reference.css" />
+    <style>
+                html, body { height: 100%; margin: 0; overflow: hidden; }
+                .layout-api-ref { height: 100%; min-height: 0; overflow: hidden; display: flex; flex-direction: row; }
+                .layout-api-ref .main-api-ref { flex: 1; min-height: 0; height: 100%; display: flex; flex-direction: column; overflow: hidden; padding: 0; }
+                .layout-api-ref .api-ref-iframe { flex: 1; min-height: 0; height: 100%; width: 100%; border: none; display: block; }
+    </style>
+</head>
+<body>
+        <header class="doc-header">
+                <button id="toc-toggle" class="toc-toggle" type="button" aria-label="Hide navigation" aria-expanded="true">◀</button>
+                <div class="doc-header-title">RFD40 / RFD90 IOT developer guide</div>
+        </header>
+        <div id="toc-backdrop" class="toc-backdrop" aria-hidden="true"></div>
+        <div class="layout-shell">
+    <div class="layout layout-api-ref">
+""" + sidebar("asyncapi-reference.html") + """
+        <main class="main main-api-ref">
+""" + asyncapi_ref_body + """
+        </main>
+    </div>
+        </div>
+""" + NAV_SCRIPT + """
+</body>
+</html>"""
+    with open(os.path.join(DOCS_DIR, "asyncapi-reference.html"), "w", encoding="utf-8") as f:
+        f.write(asyncapi_ref_html)
+    print("Generated docs/asyncapi-reference.html")
 
     openapi_path = os.path.join(DOCS_DIR, "openapi.yaml")
     with open(openapi_path, "r", encoding="utf-8") as f:

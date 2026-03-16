@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AsyncAPI Reference - RFD40 / RFD90 IOT developer guide</title>
+    <style>
+        html, body { margin: 0; padding: 0; height: 100%; }
+        body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; }
+        #container { height: 100%; }
+    </style>
+    <script src="https://unpkg.com/@asyncapi/web-component@1.0.0/lib/asyncapi-web-component.js"></script>
+</head>
+<body>
+    <div id="container">
+        <asyncapi-component
+            schema-url="asyncapi.yaml?v=1"
+            cssImportPath="https://unpkg.com/@asyncapi/react-component@1.4.2/styles/default.min.css"
+            config='{"show":{"sidebar":true}}'>
+        </asyncapi-component>
+    </div>
+</body>
+</html>
