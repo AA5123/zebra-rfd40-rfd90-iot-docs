@@ -806,6 +806,13 @@ def main():
     }
 
     function addCopyToElement(root) {
+      /* Inject a style tag into this shadow root to force pre background */
+      if (!root.querySelector('style[data-copy-style]')) {
+        var style = document.createElement('style');
+        style.setAttribute('data-copy-style', '1');
+        style.textContent = 'pre { background: #f6f8fa !important; background-color: #f6f8fa !important; }';
+        if (root.appendChild) root.appendChild(style);
+      }
       /* <pre> blocks (response examples) */
       var pres = root.querySelectorAll('pre');
       for (var i = 0; i < pres.length; i++) {
