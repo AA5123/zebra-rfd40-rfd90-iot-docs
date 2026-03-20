@@ -810,7 +810,7 @@ def main():
       if (!root.querySelector('style[data-copy-style]')) {
         var style = document.createElement('style');
         style.setAttribute('data-copy-style', '1');
-        style.textContent = 'pre { background: #f6f8fa !important; background-color: #f6f8fa !important; }';
+        style.textContent = 'pre { background: #f6f8fa !important; background-color: #f6f8fa !important; } .descr-expand-toggle, .arrow, [class*="toggle"] { display: none !important; } .schema-description-expander { display: none !important; }';
         if (root.appendChild) root.appendChild(style);
       }
       /* <pre> blocks (response examples) */
