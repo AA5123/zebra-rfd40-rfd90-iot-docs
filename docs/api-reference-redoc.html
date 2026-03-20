@@ -62,11 +62,14 @@
           '.endpoint-head .method { display: none !important; }',
           '.path { display: none !important; }',
           /* Compact example boxes - reduce wasted space */
-          'textarea.request-body-param-user-input { min-height: 60px !important; max-height: 200px !important; height: auto !important; resize: vertical !important; }',
-          '.example-panel pre { margin: 0 !important; padding: 8px 12px !important; }',
-          '.example-panel { margin-bottom: 8px !important; }',
-          '.json { max-height: 300px !important; overflow: auto !important; }',
-          'pre { max-height: 300px !important; overflow: auto !important; }',
+          'textarea.request-body-param-user-input { min-height: 40px !important; max-height: 180px !important; height: auto !important; resize: vertical !important; }',
+          '.example-panel pre, .request-body-container pre, .response-body-container pre { margin: 0 !important; padding: 8px 12px !important; max-height: 250px !important; overflow: auto !important; }',
+          '.example-panel, .req-resp-container { margin-bottom: 6px !important; }',
+          'pre { max-height: 250px !important; overflow: auto !important; padding: 8px 12px !important; }',
+          'pre.code-sample { max-height: 250px !important; }',
+          '.tab-panel { padding: 4px 0 !important; }',
+          '.request-body-container, .response-body-container { padding: 4px 0 !important; }',
+          '.tree { max-height: 250px !important; overflow: auto !important; }',
         ].join('\n');
         rd.shadowRoot.appendChild(style);
       }
