@@ -5,435 +5,72 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>API Reference - RFD40 / RFD90 IOT developer guide</title>
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/redoc-zebra.css?v=12" />
+  <link rel="stylesheet" href="css/redoc-zebra.css?v=14" />
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; height: 100%; }
     body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: #fff; }
+    rapi-doc { width: 100%; height: 100%; }
+    rapi-doc::part(section-operation-summary) { font-size: 1.1rem; }
   </style>
 </head>
 <body>
-  <div id="redoc-container"></div>
+  <rapi-doc
+    spec-url="openapi.yaml"
+    render-style="read"
+    show-header="false"
+    show-side-nav="true"
+    nav-bg-color="#ffffff"
+    nav-text-color="#333333"
+    nav-hover-bg-color="#f2f3f3"
+    nav-hover-text-color="#0073bb"
+    nav-accent-color="#0073bb"
+    primary-color="#2563eb"
+    bg-color="#ffffff"
+    text-color="#333333"
+    header-color="#1e293b"
+    font-size="regular"
+    regular-font="Inter, Segoe UI, system-ui, sans-serif"
+    mono-font="Consolas, Monaco, monospace"
+    schema-style="table"
+    schema-expand-level="1"
+    default-schema-tab="example"
+    show-method-in-nav-bar="false"
+    use-path-in-nav-bar="false"
+    allow-try="false"
+    allow-server-selection="false"
+    allow-authentication="false"
+  >
+  </rapi-doc>
 
-  <script src="https://cdn.jsdelivr.net/npm/redoc@2.2.0/bundles/redoc.standalone.js"></script>
+  <script type="module" src="https://unpkg.com/rapidoc/dist/rapidoc-min.js"></script>
   <script>
   (function() {
-    var el = document.getElementById('redoc-container');
-    var methods = ['post', 'get', 'put', 'delete', 'patch', 'options', 'head'];
-
-    function collectAll(root) {
-      var list = [];
-      function walk(r) {
-        if (r.shadowRoot) walk(r.shadowRoot);
-        list.push(r);
-        for (var i = 0; i < r.children.length; i++) walk(r.children[i]);
-      }
-      walk(root);
-      return list;
-    }
-
-    function isMethodText(text) {
-      return methods.indexOf(String(text || '').trim().toLowerCase()) !== -1;
-    }
-
-    function hideMethodBadges() {
-      if (!el) return;
-      // Identify the sidebar (first child of Redoc wrapper) so we skip it
-      var wrap = el.children[0];
-      var sidebarEl = wrap && wrap.children.length > 0 ? wrap.children[0] : null;
-      var all = collectAll(el);
-      for (var i = 0; i < all.length; i++) {
-        var node = all[i];
-        if (node.nodeType !== 1) continue;
-        // Never hide anything inside the Redoc sidebar/menu
-        if (sidebarEl && sidebarEl.contains(node)) continue;
-        var className = String(node.className || '').toLowerCase();
-        var dataMethod = String(node.getAttribute && node.getAttribute('data-method') || '').toLowerCase();
-        var txt = String(node.textContent || '').trim();
-        if (isMethodText(node.textContent) || dataMethod || className.indexOf('http-verb') !== -1 || className.indexOf('method') !== -1) {
-          node.style.setProperty('display', 'none', 'important');
-          continue;
-        }
-        var looksResponseClass = className.indexOf('response') !== -1 || className.indexOf('status') !== -1 || className.indexOf('code') !== -1;
-        var hasHttpCodeText = /(^|\W)[1-5][0-9]{2}(\W|$)/.test(txt);
-        var hasHttpLabelText = /(^|\W)(?:success|ok|responses?)(\W|$)/i.test(txt);
-        if (node.childElementCount === 0 && /default/i.test(txt)) {
-          node.textContent = txt.replace(/default/gi, 'Response');
-          txt = node.textContent;
-        }
-        if (looksResponseClass && (hasHttpCodeText || hasHttpLabelText)) {
-          node.style.setProperty('display', 'none', 'important');
-          continue;
-        }
-        if (node.childElementCount === 0 && /^(?:[1-5][0-9]{2}|success|ok|responses?)$/i.test(txt)) {
-          var tag = String(node.tagName || '').toUpperCase();
-          if (tag !== 'CODE' && tag !== 'PRE' && tag !== 'KBD') {
-            node.style.setProperty('display', 'none', 'important');
-          }
-        }
-      }
-      if (typeof document.createTreeWalker === 'function') {
-        function walkRoot(r) {
-          if (r.shadowRoot) walkRoot(r.shadowRoot);
-          var tw = document.createTreeWalker(r, NodeFilter.SHOW_TEXT, null, false);
-          var t;
-          while ((t = tw.nextNode())) {
-            var raw = String(t.textContent || '').trim();
-            if (!t.parentNode || t.parentNode.nodeType !== 1) continue;
-            // Skip nodes inside the sidebar
-            if (sidebarEl && sidebarEl.contains(t.parentNode)) continue;
-            if (isMethodText(raw)) {
-              t.parentNode.style.setProperty('display', 'none', 'important');
-              continue;
-            }
-            if (/^(?:[1-5][0-9]{2}|success|ok|responses?)$/i.test(raw)) {
-              var pTag = String(t.parentNode.tagName || '').toUpperCase();
-              if (pTag !== 'CODE' && pTag !== 'PRE' && pTag !== 'KBD') {
-                t.parentNode.style.setProperty('display', 'none', 'important');
-              }
-            }
-            if (/default/i.test(raw)) {
-              t.textContent = String(t.textContent || '').replace(/default/gi, 'Response');
-            }
-          }
-          for (var k = 0; k < r.children.length; k++) walkRoot(r.children[k]);
-        }
-        walkRoot(el);
-      }
-    }
-
-    var HIDE_VERB_CSS = '.http-verb,[class*="http-verb"],[class*="HttpVerb"],[data-method],[class*="Method"],[class*="method"],[class*="response-status"],[class*="ResponseStatus"],[class*="status-code"],[class*="StatusCode"],[class*="response-code"],[class*="ResponseCode"],[class*="http-status"],[class*="ResponseCodeBlock"]{display:none!important}';
-
-    function injectShadowStyles(root) {
-      if (!root) return;
-      if (root.shadowRoot) {
-        if (!root.shadowRoot.querySelector('style[data-mqtt-hide-verb]')) {
-          var s = document.createElement('style');
-          s.setAttribute('data-mqtt-hide-verb', '1');
-          s.textContent = HIDE_VERB_CSS;
-          root.shadowRoot.appendChild(s);
-        }
-        for (var i = 0; i < root.shadowRoot.children.length; i++) injectShadowStyles(root.shadowRoot.children[i]);
-      }
-      for (var i = 0; i < root.children.length; i++) injectShadowStyles(root.children[i]);
-    }
-
-    function runHide() {
-      try { hideMethodBadges(); } catch(e) {}
-      try { injectShadowStyles(el); } catch(e) {}
-      try { styleSidebar(); } catch(e) {}
-      try { cleanSidebarLabels(); } catch(e) {}
-      try { indentNestedProps(); } catch(e) {}
-      try { forceSingleColumn(); } catch(e) {}
-    }
-
-    /* Force single-column layout: move code samples inline below description
-       instead of Redoc's default dark right panel.
-       Strategy: 1) Inject aggressive CSS  2) Find dark-background divs by computed
-       brightness and force their parent flex container to column direction. */
-    function forceSingleColumn() {
-      /* --- 1. Inject CSS override (runs once) --- */
-      if (!document.getElementById('sc-force-col')) {
-        var s = document.createElement('style');
-        s.id = 'sc-force-col';
-        s.textContent = [
-          '#redoc-container > div > div:nth-child(2) { width:100%!important; max-width:100%!important; }',
-          '#redoc-container > div > div:nth-child(2) > div > div { flex-direction:column!important; }',
-          '#redoc-container > div > div:nth-child(2) > div > div > div { width:100%!important; max-width:100%!important; min-width:0!important; flex:1 1 100%!important; }',
-          '#redoc-container > div > div:nth-child(2) > div > div > div > div { width:100%!important; max-width:100%!important; min-width:0!important; flex:1 1 100%!important; }',
-          '#redoc-container > div > div:nth-child(2) > div > div > div > div > div { width:100%!important; max-width:100%!important; min-width:0!important; }',
+    /* After RapiDoc loads, hide HTTP method badges (POST/GET) since this is MQTT */
+    function hideHttpMethods() {
+      var rd = document.querySelector('rapi-doc');
+      if (!rd || !rd.shadowRoot) return;
+      var style = rd.shadowRoot.querySelector('style[data-mqtt-hide]');
+      if (!style) {
+        style = document.createElement('style');
+        style.setAttribute('data-mqtt-hide', '1');
+        style.textContent = [
+          '.method-fg { display: none !important; }',
+          '.req-res-title .method { display: none !important; }',
+          '.nav-bar-tag-and-paths .method { display: none !important; }',
+          '[class*="method"] { display: none !important; }',
+          '.endpoint-head .method { display: none !important; }',
+          '.path { display: none !important; }',
         ].join('\n');
-        document.head.appendChild(s);
-      }
-
-      /* --- 2. Find dark panels by brightness and fix them --- */
-      var wrap = el.children[0];
-      if (!wrap) return;
-      var content = wrap.children.length > 1 ? wrap.children[1] : null;
-      if (!content) return;
-      content.style.setProperty('width', '100%', 'important');
-      content.style.setProperty('max-width', '100%', 'important');
-      var allDivs = content.getElementsByTagName('div');
-      for (var i = 0; i < allDivs.length; i++) {
-        var node = allDivs[i];
-        if (node.getAttribute('data-sc-col')) continue;
-        var bg = window.getComputedStyle(node).backgroundColor;
-        if (!bg) continue;
-        var m = bg.match(/rgba?\(\s*(\d+),\s*(\d+),\s*(\d+)/);
-        if (!m) continue;
-        var brightness = (parseInt(m[1]) * 299 + parseInt(m[2]) * 587 + parseInt(m[3]) * 114) / 1000;
-        if (brightness > 80) continue;
-        /* This is a dark panel. Check it is sizeable (not a tiny badge) */
-        if (node.offsetWidth < 100 || node.offsetHeight < 50) continue;
-        node.setAttribute('data-sc-col', '1');
-        /* Force parent to column layout */
-        var parent = node.parentElement;
-        if (parent && parent !== content) {
-          parent.style.setProperty('flex-direction', 'column', 'important');
-          parent.style.setProperty('display', 'flex', 'important');
-          /* Fix all sibling widths */
-          for (var j = 0; j < parent.children.length; j++) {
-            parent.children[j].style.setProperty('width', '100%', 'important');
-            parent.children[j].style.setProperty('max-width', '100%', 'important');
-            parent.children[j].style.setProperty('min-width', '0', 'important');
-            parent.children[j].style.setProperty('flex', '1 1 100%', 'important');
-          }
-        }
-        /* Restyle dark panel to light */
-        node.style.setProperty('background', '#f7f9fb', 'important');
-        node.style.setProperty('color', '#1e293b', 'important');
-        node.style.setProperty('padding', '16px 24px', 'important');
-        node.style.setProperty('margin-top', '12px', 'important');
-        node.style.setProperty('border-radius', '8px', 'important');
-        /* Fix pre blocks */
-        var pres = node.querySelectorAll('pre');
-        for (var p = 0; p < pres.length; p++) {
-          pres[p].style.setProperty('background', '#f0f4f8', 'important');
-          pres[p].style.setProperty('color', '#1e293b', 'important');
-          pres[p].style.setProperty('border', '1px solid #d9dde3', 'important');
-          pres[p].style.setProperty('border-radius', '6px', 'important');
-        }
-        /* Fix light-on-dark text */
-        var textElems = node.querySelectorAll('*');
-        for (var t = 0; t < textElems.length; t++) {
-          var tc = window.getComputedStyle(textElems[t]).color;
-          var tm = tc.match(/rgba?\(\s*(\d+),\s*(\d+),\s*(\d+)/);
-          if (tm) {
-            var tb = (parseInt(tm[1]) * 299 + parseInt(tm[2]) * 587 + parseInt(tm[3]) * 114) / 1000;
-            if (tb > 160) textElems[t].style.setProperty('color', '#1e293b', 'important');
-          }
-        }
+        rd.shadowRoot.appendChild(style);
       }
     }
-
-    /* Indent nested schema property blocks in the content area.
-       Redoc renders child properties inside nested <table> elements
-       wrapped in <div> containers. We walk the content panel and
-       apply increasing left-margin based on nesting depth. */
-    function indentNestedProps() {
-      /* Content panel is the second child of the Redoc wrapper */
-      var wrap = el.children[0];
-      if (!wrap) return;
-      var content = wrap.children.length > 1 ? wrap.children[1] : null;
-      if (!content) return;
-      var tables = content.querySelectorAll('table');
-      for (var i = 0; i < tables.length; i++) {
-        var tbl = tables[i];
-        /* Count nesting depth: how many ancestor <table> elements inside content */
-        var depth = 0;
-        var p = tbl.parentElement;
-        while (p && p !== content) {
-          if (p.tagName === 'TABLE') depth++;
-          p = p.parentElement;
-        }
-        if (depth > 0) {
-          var ml = Math.min(depth, 4) * 24;
-          tbl.style.setProperty('margin-left', ml + 'px', 'important');
-          tbl.style.setProperty('border-left', '3px solid #d0d7de', 'important');
-          tbl.style.setProperty('padding-left', '12px', 'important');
-        }
-      }
-    }
-
-    /* Trim sidebar operation labels to just the command name (e.g. "get_version - Retrieves..." → "get_version") */
-    function cleanSidebarLabels() {
-      var nav = el.querySelector('[role="navigation"]') || el.querySelector('nav');
-      if (!nav) return;
-      var links = nav.querySelectorAll('a, label');
-      for (var i = 0; i < links.length; i++) {
-        var node = links[i];
-        var text = (node.textContent || '').trim();
-        /* Only clean items that look like "command_name - description" */
-        var dashIdx = text.indexOf(' - ');
-        if (dashIdx > 0 && dashIdx < 40 && /^[a-z_]+$/.test(text.substring(0, dashIdx).trim())) {
-          /* Find the text node and truncate it */
-          var walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT, null, false);
-          var t;
-          while ((t = walker.nextNode())) {
-            var raw = (t.textContent || '').trim();
-            var idx = raw.indexOf(' - ');
-            if (idx > 0 && idx < 40) {
-              t.textContent = raw.substring(0, idx);
-            }
-          }
-        }
-      }
-    }
-
-    /* AWS EC2-style tree sidebar — visual styling only.
-       Redoc handles all expand/collapse and navigation natively.
-       We only add: triangles, indentation padding, hide badges/SVGs. */
-    function styleSidebar() {
-      if (window._awsLock) return;
-      window._awsLock = true;
-      try {
-        var root = el.querySelector('[role="menu"]') || el.querySelector('ul[role="menu"]');
-        if (!root) {
-          var nav = el.querySelector('[role="navigation"]') || el.querySelector('nav');
-          root = nav ? (nav.querySelector('ul') || nav) : null;
-        }
-        if (!root) return;
-        var currentHash = decodeURIComponent(window.location.hash || '').toLowerCase();
-        var items = root.querySelectorAll('li[role="menuitem"]') || root.querySelectorAll('li');
-        if (!items || items.length === 0) items = root.querySelectorAll('li');
-        for (var i = 0; i < items.length; i++) {
-          var li = items[i];
-          var depth = 0;
-          var p = li.parentElement;
-          while (p && p !== root) {
-            if (p.tagName === 'UL') depth++;
-            p = p.parentElement;
-          }
-          var label = li.querySelector(':scope > label') || li.querySelector(':scope > a');
-          if (!label) continue;
-
-          /* Detect active item via URL hash */
-          var isActive = false;
-          if (depth >= 2) {
-            var cmdMatch = (label.textContent || '').match(/([a-z][a-z_]+)/);
-            if (cmdMatch && currentHash.indexOf(cmdMatch[1]) !== -1) isActive = true;
-          } else if (depth === 1) {
-            var tagSlug = (label.textContent || '').trim().replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-+|-+$/g, '').toLowerCase();
-            if (tagSlug && currentHash.indexOf(tagSlug) !== -1) isActive = true;
-          }
-
-          /* Hide SVGs (Redoc arrows) */
-          var svgs = label.querySelectorAll('svg');
-          for (var s = 0; s < svgs.length; s++) {
-            svgs[s].style.setProperty('display', 'none', 'important');
-          }
-          /* Hide operation badges */
-          var badges = label.querySelectorAll('.operation-type, [class*="operation-type"]');
-          for (var b = 0; b < badges.length; b++) {
-            badges[b].style.setProperty('display', 'none', 'important');
-          }
-
-          /* Child UL check */
-          var childUl = null;
-          for (var c = 0; c < li.children.length; c++) {
-            if (li.children[c].tagName === 'UL') { childUl = li.children[c]; break; }
-          }
-          var hasKids = childUl && childUl.children.length > 0;
-
-          /* Detect expanded state: check aria-expanded, class names, AND child UL visibility */
-          var expanded = false;
-          if (li.getAttribute('aria-expanded') === 'true') {
-            expanded = true;
-          } else if (li.classList.contains('-expanded') || li.className.indexOf('expanded') !== -1 || li.className.indexOf('open') !== -1) {
-            expanded = true;
-          } else if (hasKids) {
-            /* Fallback: check if child UL is actually visible */
-            var ulStyle = window.getComputedStyle(childUl);
-            expanded = ulStyle.display !== 'none' && ulStyle.visibility !== 'hidden' && ulStyle.height !== '0px';
-          }
-
-          /* Base label styles */
-          label.style.setProperty('display', 'flex', 'important');
-          label.style.setProperty('align-items', 'baseline', 'important');
-          label.style.setProperty('font-family', '"Inter","Segoe UI",system-ui,sans-serif', 'important');
-          label.style.setProperty('font-weight', isActive && depth >= 1 ? '600' : '400', 'important');
-          label.style.setProperty('color', isActive && depth >= 1 ? '#0073bb' : '#16191f', 'important');
-          label.style.setProperty('text-transform', 'none', 'important');
-          label.style.setProperty('letter-spacing', 'normal', 'important');
-          label.style.setProperty('opacity', '1', 'important');
-          label.style.setProperty('background', isActive && depth >= 2 ? '#f0f4ff' : 'transparent', 'important');
-          li.style.setProperty('border', 'none', 'important');
-          li.style.setProperty('overflow', 'visible', 'important');
-
-          /* Triangle — reuse existing, only create if missing */
-          var tri = label.querySelector('.aws-tri');
-
-          if (depth === 0) {
-            /* Tag groups (Management Interface, Control Interface, etc.)
-               These are NOT collapsible in Redoc — they are always-open section headers.
-               Style as uppercase section labels with NO triangle and NO pointer cursor. */
-            label.style.setProperty('padding', '10px 12px 4px 16px', 'important');
-            label.style.setProperty('font-size', '11.5px', 'important');
-            label.style.setProperty('font-weight', '700', 'important');
-            label.style.setProperty('color', '#545b64', 'important');
-            label.style.setProperty('text-transform', 'uppercase', 'important');
-            label.style.setProperty('letter-spacing', '0.04em', 'important');
-            label.style.setProperty('cursor', 'default', 'important');
-            li.style.setProperty('margin-top', '10px', 'important');
-            li.style.setProperty('margin-bottom', '0', 'important');
-            li.style.setProperty('padding', '0', 'important');
-            /* Remove any triangle from group headings */
-            if (tri) tri.remove();
-
-          } else if (depth === 1) {
-            /* Tags (Management - Device Status, etc.) — these ARE collapsible in Redoc */
-            label.style.setProperty('font-size', '13.5px', 'important');
-            label.style.setProperty('cursor', 'pointer', 'important');
-            li.style.setProperty('margin', '0', 'important');
-            li.style.setProperty('padding', '0', 'important');
-            if (hasKids) {
-              label.style.setProperty('padding', '3px 12px 3px 28px', 'important');
-              var w1 = expanded ? '\u25BC' : '\u25B6';
-              if (!tri) {
-                tri = document.createElement('span');
-                tri.className = 'aws-tri';
-                tri.style.cssText = 'font-size:0.5em;color:#545b64;margin-right:7px;flex-shrink:0;width:0.8em;display:inline-block;pointer-events:none;';
-                label.insertBefore(tri, label.firstChild);
-              }
-              if (tri.textContent !== w1) tri.textContent = w1;
-            } else {
-              label.style.setProperty('padding', '3px 12px 3px 44px', 'important');
-              if (tri) tri.remove();
-            }
-
-          } else {
-            /* Depth 2+: Operations — use physical spacer <span> for indent.
-               CSS padding gets overridden by styled-components, but DOM elements
-               cannot be removed. Same proven technique as the depth-1 triangles. */
-            var spacer = label.querySelector('.aws-indent');
-            if (!spacer) {
-              spacer = document.createElement('span');
-              spacer.className = 'aws-indent';
-              spacer.style.cssText = 'display:inline-block;min-width:36px;width:36px;flex-shrink:0;pointer-events:none;';
-              spacer.textContent = ' ';
-              label.insertBefore(spacer, label.firstChild);
-            }
-            label.style.setProperty('font-size', '13px', 'important');
-            label.style.setProperty('cursor', 'pointer', 'important');
-            li.style.setProperty('margin', '0', 'important');
-            li.style.setProperty('padding', '0', 'important');
-            if (tri) tri.remove();
-          }
-
-
-        }
-      } finally {
-        setTimeout(function() { window._awsLock = false; }, 20);
-      }
-    }
-
-    var specUrl = 'openapi.yaml?v=' + Date.now();
-    Redoc.init(specUrl, {
-      theme: {
-        colors: { primary: { main: '#2563eb' }, success: { main: '#059669' }, warning: { main: '#d97706' }, error: { main: '#dc2626' } },
-        typography: { fontFamily: '"Inter", "Segoe UI", system-ui, sans-serif', headings: { fontFamily: '"Inter", "Segoe UI", system-ui, sans-serif' }, code: { fontFamily: 'Consolas, Monaco, monospace' } },
-        sidebar: { backgroundColor: '#ffffff', textColor: '#333333', activeTextColor: '#0073bb', groupItems: { activeBackgroundColor: '#f2f3f3', activeTextColor: '#0073bb' } },
-        rightPanel: { backgroundColor: '#f7f9fb', textColor: '#1e293b' }
-      },
-      pathInMiddlePanel: true,
-      hideDownloadButton: false,
-      hideLoading: true,
-      noAutoAuth: true
-    }, el, function() { setTimeout(runHide, 50); });
-
-    [0, 100, 200, 500, 1200, 2500, 5000].forEach(function(ms) { setTimeout(runHide, ms); });
-    var pollCount = 0;
+    /* Poll until RapiDoc shadow DOM is ready */
+    var attempts = 0;
     var poll = setInterval(function() {
-      runHide();
-      if (++pollCount >= 20) clearInterval(poll);
+      hideHttpMethods();
+      if (++attempts > 30) clearInterval(poll);
     }, 500);
-    if (typeof MutationObserver !== 'undefined') {
-      var obs = new MutationObserver(function() { setTimeout(runHide, 50); });
-      obs.observe(el, { childList: true, subtree: true });
-    }
-    window.addEventListener('hashchange', function() { setTimeout(runHide, 50); });
-    var _scrollT;
-    document.addEventListener('scroll', function() { clearTimeout(_scrollT); _scrollT = setTimeout(runHide, 150); }, true);
   })();
   </script>
 </body>
