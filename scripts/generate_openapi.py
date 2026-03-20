@@ -177,7 +177,7 @@ OPERATION_DESCRIPTIONS = {
     "get_status": (
         "Retrieves **real-time health and status** of the scanner — battery, temperature, "
         "radio, power, clock sync, and terminal connection.\n\n"
-        "**Download pdf:** \ud83d\udcc4 [Download get_status as PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_status_formatted.pdf)\n\n"
+        "**Download pdf:** \U0001F4C4 [Download get_status as PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_status_formatted.pdf)\n\n"
         "**Command details:**\n\n"
         "- Pattern Name: Reader Health and Status Retrieval\n"
         "- Communication Type: Bidirectional (Cloud to Device, Device to Cloud)\n"

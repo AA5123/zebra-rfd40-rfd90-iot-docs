@@ -7,7 +7,7 @@
   "examples":[
     {
   "command": "get_status",
-  "requestId": "abc123",
+  "requestId": "abcd123",
   "apiVersion": "V1.1",
   "deviceStatus": {
     "powerSource": "USB",
@@ -45,7 +45,7 @@
     },
     "requestId": {
       "type": "string",
-      "example": "abc123",
+      "example": "abcd123",
       "description": "Echoes back the requestId you sent, so you can match this response to your original request."
     },
     "apiVersion": {
