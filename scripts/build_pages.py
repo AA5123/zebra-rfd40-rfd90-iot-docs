@@ -826,32 +826,32 @@ def main():
         })(pre, btn);
         pre.appendChild(btn);
       }
-      /* <textarea> blocks (request body examples) */
+      /* <textarea> blocks (request body examples) — replace with read-only <pre> to match response style */
       var tas = root.querySelectorAll('textarea');
       for (var j = 0; j < tas.length; j++) {
         var ta = tas[j];
         if (ta.getAttribute('data-copy-added')) continue;
         ta.setAttribute('data-copy-added', '1');
-        /* Auto-resize */
-        ta.style.height = 'auto';
-        ta.style.height = Math.min(ta.scrollHeight + 4, 180) + 'px';
-        ta.style.minHeight = '40px';
-        ta.style.maxHeight = '180px';
-        ta.style.overflow = 'auto';
-        ta.style.resize = 'vertical';
-        /* Copy button - insert right above the textarea */
+        /* Create a <pre> to replace the textarea */
+        var pre2 = document.createElement('pre');
+        pre2.textContent = ta.value;
+        pre2.style.cssText = 'position:relative;background:#f8f9fa;border:1px solid #e2e8f0;border-radius:6px;padding:12px 16px;font-family:Consolas,Monaco,monospace;font-size:13px;white-space:pre-wrap;word-break:break-word;max-height:250px;overflow:auto;margin:0;';
+        pre2.setAttribute('data-copy-added', '1');
+        /* Copy button */
         var btn2 = document.createElement('button');
         btn2.textContent = 'Copy';
-        btn2.style.cssText = 'float:right;margin:0 0 4px 0;padding:3px 10px;font-size:11px;cursor:pointer;background:#e2e8f0;border:1px solid #cbd5e1;border-radius:4px;color:#334155;';
-        btn2.onclick = (function(textarea, button) {
+        btn2.style.cssText = 'position:absolute;top:4px;right:4px;padding:3px 10px;font-size:11px;cursor:pointer;background:#e2e8f0;border:1px solid #cbd5e1;border-radius:4px;color:#334155;z-index:10;';
+        btn2.onclick = (function(text, button) {
           return function() {
-            navigator.clipboard.writeText(textarea.value);
+            navigator.clipboard.writeText(text);
             button.textContent = 'Copied!';
             setTimeout(function(){ button.textContent = 'Copy'; }, 1500);
           };
-        })(ta, btn2);
+        })(ta.value, btn2);
+        pre2.appendChild(btn2);
+        /* Replace textarea with pre */
         if (ta.parentElement) {
-          ta.parentElement.insertBefore(btn2, ta);
+          ta.parentElement.replaceChild(pre2, ta);
         }
       }
     }
