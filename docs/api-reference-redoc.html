@@ -164,15 +164,6 @@
         ta.style.display = 'none';
         ta.parentElement.insertBefore(fakePre, ta);
       }
-      /* Hide the small ▶ description expand arrows (but NOT the + object expand toggles) */
-      var spans = root.querySelectorAll('span');
-      for (var s = 0; s < spans.length; s++) {
-        var sp = spans[s];
-        var txt = sp.textContent.trim();
-        if (txt === '▶' || txt === '▼' || txt === '►' || txt === '▾') {
-          sp.style.display = 'none';
-        }
-      }
     }
 
     /* MutationObserver: catch lazily rendered content (operations render on scroll) */
