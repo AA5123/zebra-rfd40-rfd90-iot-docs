@@ -826,6 +826,72 @@ def main():
       try { styleSidebar(); } catch(e) {}
       try { cleanSidebarLabels(); } catch(e) {}
       try { indentNestedProps(); } catch(e) {}
+      try { forceSingleColumn(); } catch(e) {}
+    }
+
+    /* Force single-column layout: move code samples inline below description
+       instead of Redoc's default dark right panel. */
+    function forceSingleColumn() {
+      var wrap = el.children[0];
+      if (!wrap) return;
+      var content = wrap.children.length > 1 ? wrap.children[1] : null;
+      if (!content) return;
+      content.style.setProperty('width', '100%', 'important');
+      content.style.setProperty('max-width', '100%', 'important');
+      var allDivs = content.querySelectorAll('div');
+      for (var i = 0; i < allDivs.length; i++) {
+        var d = allDivs[i];
+        var cs = window.getComputedStyle(d);
+        if (cs.display !== 'flex' && cs.display !== '-webkit-flex') continue;
+        if (cs.flexDirection === 'column') continue;
+        var kids = [];
+        for (var k = 0; k < d.children.length; k++) {
+          if (d.children[k].tagName === 'DIV') kids.push(d.children[k]);
+        }
+        if (kids.length !== 2) continue;
+        var rightChild = kids[1];
+        var rightBg = window.getComputedStyle(rightChild).backgroundColor;
+        var hasPre = rightChild.querySelector('pre') !== null;
+        var hasSampleText = /sample|example|payload/i.test(rightChild.textContent || '');
+        var isDarkBg = rightBg && rightBg !== 'rgba(0, 0, 0, 0)' && rightBg !== 'transparent' && rightBg !== 'rgb(255, 255, 255)';
+        if (hasPre || hasSampleText || isDarkBg) {
+          d.style.setProperty('flex-direction', 'column', 'important');
+          d.style.setProperty('flex-wrap', 'nowrap', 'important');
+          kids[0].style.setProperty('width', '100%', 'important');
+          kids[0].style.setProperty('max-width', '100%', 'important');
+          kids[0].style.setProperty('flex', '1 1 100%', 'important');
+          rightChild.style.setProperty('width', '100%', 'important');
+          rightChild.style.setProperty('max-width', '100%', 'important');
+          rightChild.style.setProperty('flex', '1 1 100%', 'important');
+          rightChild.style.setProperty('background', '#f7f9fb', 'important');
+          rightChild.style.setProperty('color', '#1e293b', 'important');
+          rightChild.style.setProperty('padding', '16px 24px', 'important');
+          rightChild.style.setProperty('border-radius', '8px', 'important');
+          rightChild.style.setProperty('margin-top', '12px', 'important');
+          var pres = rightChild.querySelectorAll('pre');
+          for (var p = 0; p < pres.length; p++) {
+            pres[p].style.setProperty('background', '#f0f4f8', 'important');
+            pres[p].style.setProperty('color', '#1e293b', 'important');
+            pres[p].style.setProperty('border', '1px solid #d9dde3', 'important');
+            pres[p].style.setProperty('border-radius', '6px', 'important');
+            pres[p].style.setProperty('padding', '12px 16px', 'important');
+          }
+          var allElems = rightChild.querySelectorAll('span, div, button, li, h3, h4, h5, a, p, label');
+          for (var s = 0; s < allElems.length; s++) {
+            var elem = allElems[s];
+            var clr = window.getComputedStyle(elem).color;
+            if (clr && (clr.indexOf('226') !== -1 || clr.indexOf('255') !== -1 || clr.indexOf('248') !== -1 || clr.indexOf('229') !== -1)) {
+              elem.style.setProperty('color', '#1e293b', 'important');
+            }
+          }
+          var tabs = rightChild.querySelectorAll('[class*="tab"], [class*="Tab"], button');
+          for (var t = 0; t < tabs.length; t++) {
+            tabs[t].style.setProperty('color', '#1e293b', 'important');
+            tabs[t].style.setProperty('background', 'transparent', 'important');
+            tabs[t].style.setProperty('border-color', '#d9dde3', 'important');
+          }
+        }
+      }
     }
 
     /* Indent nested schema property blocks in the content area.
@@ -1035,7 +1101,7 @@ def main():
         colors: { primary: { main: '#2563eb' }, success: { main: '#059669' }, warning: { main: '#d97706' }, error: { main: '#dc2626' } },
         typography: { fontFamily: '"Inter", "Segoe UI", system-ui, sans-serif', headings: { fontFamily: '"Inter", "Segoe UI", system-ui, sans-serif' }, code: { fontFamily: 'Consolas, Monaco, monospace' } },
         sidebar: { backgroundColor: '#ffffff', textColor: '#333333', activeTextColor: '#0073bb', groupItems: { activeBackgroundColor: '#f2f3f3', activeTextColor: '#0073bb' } },
-        rightPanel: { backgroundColor: '#1e293b', textColor: '#e2e8f0' }
+        rightPanel: { backgroundColor: '#f7f9fb', textColor: '#1e293b' }
       },
       pathInMiddlePanel: true,
       hideDownloadButton: false,
