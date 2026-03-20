@@ -80,11 +80,27 @@
       if (++attempts > 30) clearInterval(poll);
     }, 500);
 
-    /* Process all pre and textarea blocks: add copy, resize */
+    /* Process all pre and textarea blocks: add copy, resize.
+       Recursively walks shadow roots since RapiDoc nests components. */
     function processAllBlocks() {
       var rd = document.querySelector('rapi-doc');
-      if (!rd || !rd.shadowRoot) return;
-      addCopyToElement(rd.shadowRoot);
+      if (!rd) return;
+      walkShadowRoots(rd);
+    }
+
+    function walkShadowRoots(node) {
+      if (node.shadowRoot) {
+        addCopyToElement(node.shadowRoot);
+        var children = node.shadowRoot.querySelectorAll('*');
+        for (var c = 0; c < children.length; c++) {
+          if (children[c].shadowRoot) walkShadowRoots(children[c]);
+        }
+      }
+      /* Also check child elements in case they have shadow roots */
+      var kids = node.querySelectorAll('*');
+      for (var k = 0; k < kids.length; k++) {
+        if (kids[k].shadowRoot) walkShadowRoots(kids[k]);
+      }
     }
 
     function addCopyToElement(root) {
@@ -150,6 +166,13 @@
         processAllBlocks();
       });
       observer.observe(rd.shadowRoot, { childList: true, subtree: true });
+      /* Also observe nested shadow roots */
+      var all = rd.shadowRoot.querySelectorAll('*');
+      for (var i = 0; i < all.length; i++) {
+        if (all[i].shadowRoot) {
+          observer.observe(all[i].shadowRoot, { childList: true, subtree: true });
+        }
+      }
     }
     startObserver();
   })();
