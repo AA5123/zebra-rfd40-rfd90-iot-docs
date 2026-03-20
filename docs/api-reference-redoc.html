@@ -97,10 +97,11 @@
       }
     }
 
-    /* Add copy buttons to all <pre> code blocks inside RapiDoc */
+    /* Add copy buttons to all <pre> and <textarea> blocks inside RapiDoc */
     function addCopyButtons() {
       var rd = document.querySelector('rapi-doc');
       if (!rd || !rd.shadowRoot) return;
+      /* Copy buttons for <pre> blocks (response examples) */
       var pres = rd.shadowRoot.querySelectorAll('pre');
       for (var i = 0; i < pres.length; i++) {
         var pre = pres[i];
@@ -112,7 +113,7 @@
         btn.style.cssText = 'position:absolute;top:4px;right:4px;padding:3px 10px;font-size:11px;cursor:pointer;background:#e2e8f0;border:1px solid #cbd5e1;border-radius:4px;color:#334155;z-index:10;';
         btn.addEventListener('click', (function(target) {
           return function() {
-            var text = target.textContent.replace(/^Copy/, '').trim();
+            var text = target.textContent.replace(/^Copy$|^Copied!$/m, '').trim();
             navigator.clipboard.writeText(text).then(function() {
               target.querySelector('.copy-btn').textContent = 'Copied!';
               setTimeout(function() { target.querySelector('.copy-btn').textContent = 'Copy'; }, 1500);
@@ -120,6 +121,27 @@
           };
         })(pre));
         pre.appendChild(btn);
+      }
+      /* Copy buttons for <textarea> blocks (request body examples) */
+      var tas = rd.shadowRoot.querySelectorAll('textarea');
+      for (var j = 0; j < tas.length; j++) {
+        var ta = tas[j];
+        var parent = ta.parentElement;
+        if (!parent || parent.querySelector('.copy-btn-ta')) continue;
+        parent.style.position = 'relative';
+        var btn2 = document.createElement('button');
+        btn2.className = 'copy-btn-ta';
+        btn2.textContent = 'Copy';
+        btn2.style.cssText = 'position:absolute;top:4px;right:4px;padding:3px 10px;font-size:11px;cursor:pointer;background:#e2e8f0;border:1px solid #cbd5e1;border-radius:4px;color:#334155;z-index:10;';
+        btn2.addEventListener('click', (function(textarea, button) {
+          return function() {
+            navigator.clipboard.writeText(textarea.value).then(function() {
+              button.textContent = 'Copied!';
+              setTimeout(function() { button.textContent = 'Copy'; }, 1500);
+            });
+          };
+        })(ta, btn2));
+        parent.appendChild(btn2);
       }
     }
   })();
