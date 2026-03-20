@@ -757,21 +757,19 @@ def main():
         style = document.createElement('style');
         style.setAttribute('data-mqtt-hide', '1');
         style.textContent = [
+          /* Hide HTTP method badges */
+          '.m-btn.primary { display: none !important; }',
           '.method-fg { display: none !important; }',
           '.req-res-title .method { display: none !important; }',
-          '.nav-bar-tag-and-paths .method { display: none !important; }',
-          '[class*="method"] { display: none !important; }',
           '.endpoint-head .method { display: none !important; }',
+          '.nav-bar-tag .method { display: none !important; }',
           '.path { display: none !important; }',
-          /* Compact example boxes - reduce wasted space */
-          'textarea.request-body-param-user-input { min-height: 40px !important; max-height: 180px !important; height: auto !important; resize: vertical !important; }',
-          '.example-panel pre, .request-body-container pre, .response-body-container pre { margin: 0 !important; padding: 8px 12px !important; max-height: 250px !important; overflow: auto !important; }',
-          '.example-panel, .req-resp-container { margin-bottom: 6px !important; }',
-          'pre { max-height: 250px !important; overflow: auto !important; padding: 8px 12px !important; }',
-          'pre.code-sample { max-height: 250px !important; }',
-          '.tab-panel { padding: 4px 0 !important; }',
-          '.request-body-container, .response-body-container { padding: 4px 0 !important; }',
-          '.tree { max-height: 250px !important; overflow: auto !important; }',
+          /* Compact request/response body examples */
+          'textarea { min-height: 40px !important; max-height: 180px !important; height: auto !important; resize: vertical !important; font-size: 13px !important; padding: 8px !important; }',
+          'pre { max-height: 250px !important; overflow: auto !important; padding: 8px 12px !important; font-size: 13px !important; }',
+          '.tab-content { padding: 0 !important; }',
+          '.tab-panels { padding: 0 !important; }',
+          '.table-title { padding: 6px 0 !important; }',
         ].join('\\n');
         rd.shadowRoot.appendChild(style);
       }
@@ -781,8 +779,25 @@ def main():
     var poll = setInterval(function() {
       hideHttpMethods();
       addCopyButtons();
-      if (++attempts > 30) clearInterval(poll);
+      autoSizeTextareas();
+      if (++attempts > 60) clearInterval(poll);
     }, 500);
+
+    /* Auto-resize textareas to fit their content instead of fixed big height */
+    function autoSizeTextareas() {
+      var rd = document.querySelector('rapi-doc');
+      if (!rd || !rd.shadowRoot) return;
+      var tas = rd.shadowRoot.querySelectorAll('textarea');
+      for (var i = 0; i < tas.length; i++) {
+        var ta = tas[i];
+        ta.style.height = 'auto';
+        ta.style.height = Math.min(ta.scrollHeight + 4, 180) + 'px';
+        ta.style.minHeight = '40px';
+        ta.style.maxHeight = '180px';
+        ta.style.overflow = 'auto';
+        ta.style.resize = 'vertical';
+      }
+    }
 
     /* Add copy buttons to all <pre> code blocks inside RapiDoc */
     function addCopyButtons() {
