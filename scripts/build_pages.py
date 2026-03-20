@@ -826,38 +826,33 @@ def main():
         })(pre, btn);
         pre.appendChild(btn);
       }
-      /* <textarea> blocks (request body examples) — make read-only, compact, with copy button */
+      /* <textarea> blocks (request body examples) — replace with read-only <pre> */
       var tas = root.querySelectorAll('textarea');
       for (var j = 0; j < tas.length; j++) {
         var ta = tas[j];
         if (ta.getAttribute('data-copy-added')) continue;
         ta.setAttribute('data-copy-added', '1');
-        /* Make read-only */
-        ta.readOnly = true;
-        ta.setAttribute('readonly', 'readonly');
-        /* Style to match response pre blocks */
-        ta.style.cssText = 'background:#f8f9fa;border:1px solid #e2e8f0;border-radius:6px;padding:12px 16px;font-family:Consolas,Monaco,monospace;font-size:13px;width:100%;resize:none;cursor:default;color:#333;line-height:1.5;box-sizing:border-box;';
-        /* Auto-size to content */
-        ta.style.height = 'auto';
-        ta.style.height = Math.min(ta.scrollHeight + 8, 250) + 'px';
-        ta.style.overflow = ta.scrollHeight > 250 ? 'auto' : 'hidden';
-        /* Wrap textarea in a relative container for copy button positioning */
-        var wrapper = document.createElement('div');
-        wrapper.style.cssText = 'position:relative;width:100%;';
-        ta.parentElement.insertBefore(wrapper, ta);
-        wrapper.appendChild(ta);
-        /* Copy button inside wrapper */
+        var val = ta.value || ta.textContent || '';
+        /* Create a <pre> to replace the textarea visually */
+        var fakePre = document.createElement('pre');
+        fakePre.textContent = val;
+        fakePre.style.cssText = 'position:relative;background:#f8f9fa;border:1px solid #e2e8f0;border-radius:6px;padding:12px 50px 12px 16px;font-family:Consolas,Monaco,monospace;font-size:13px;white-space:pre-wrap;word-break:break-word;color:#333;line-height:1.5;margin:0;overflow:auto;max-height:250px;';
+        fakePre.setAttribute('data-copy-added','1');
+        /* Copy button inside the pre */
         var btn2 = document.createElement('button');
         btn2.textContent = 'Copy';
-        btn2.style.cssText = 'position:absolute;top:6px;right:6px;padding:3px 10px;font-size:11px;cursor:pointer;background:#e2e8f0;border:1px solid #cbd5e1;border-radius:4px;color:#334155;z-index:10;';
-        btn2.onclick = (function(textarea, button) {
+        btn2.style.cssText = 'position:absolute;top:4px;right:4px;padding:3px 10px;font-size:11px;cursor:pointer;background:#e2e8f0;border:1px solid #cbd5e1;border-radius:4px;color:#334155;z-index:10;';
+        btn2.onclick = (function(text, button) {
           return function() {
-            navigator.clipboard.writeText(textarea.value);
+            navigator.clipboard.writeText(text);
             button.textContent = 'Copied!';
             setTimeout(function(){ button.textContent = 'Copy'; }, 1500);
           };
-        })(ta, btn2);
-        wrapper.appendChild(btn2);
+        })(val, btn2);
+        fakePre.appendChild(btn2);
+        /* Hide textarea and insert pre in its place */
+        ta.style.display = 'none';
+        ta.parentElement.insertBefore(fakePre, ta);
       }
     }
 
