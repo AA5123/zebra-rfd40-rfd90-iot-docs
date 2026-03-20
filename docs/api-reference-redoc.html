@@ -61,6 +61,12 @@
           '[class*="method"] { display: none !important; }',
           '.endpoint-head .method { display: none !important; }',
           '.path { display: none !important; }',
+          /* Compact example boxes - reduce wasted space */
+          'textarea.request-body-param-user-input { min-height: 60px !important; max-height: 200px !important; height: auto !important; resize: vertical !important; }',
+          '.example-panel pre { margin: 0 !important; padding: 8px 12px !important; }',
+          '.example-panel { margin-bottom: 8px !important; }',
+          '.json { max-height: 300px !important; overflow: auto !important; }',
+          'pre { max-height: 300px !important; overflow: auto !important; }',
         ].join('\n');
         rd.shadowRoot.appendChild(style);
       }
@@ -69,8 +75,35 @@
     var attempts = 0;
     var poll = setInterval(function() {
       hideHttpMethods();
+      addCopyButtons();
       if (++attempts > 30) clearInterval(poll);
     }, 500);
+
+    /* Add copy buttons to all <pre> code blocks inside RapiDoc */
+    function addCopyButtons() {
+      var rd = document.querySelector('rapi-doc');
+      if (!rd || !rd.shadowRoot) return;
+      var pres = rd.shadowRoot.querySelectorAll('pre');
+      for (var i = 0; i < pres.length; i++) {
+        var pre = pres[i];
+        if (pre.querySelector('.copy-btn')) continue;
+        pre.style.position = 'relative';
+        var btn = document.createElement('button');
+        btn.className = 'copy-btn';
+        btn.textContent = 'Copy';
+        btn.style.cssText = 'position:absolute;top:4px;right:4px;padding:3px 10px;font-size:11px;cursor:pointer;background:#e2e8f0;border:1px solid #cbd5e1;border-radius:4px;color:#334155;z-index:10;';
+        btn.addEventListener('click', (function(target) {
+          return function() {
+            var text = target.textContent.replace(/^Copy/, '').trim();
+            navigator.clipboard.writeText(text).then(function() {
+              target.querySelector('.copy-btn').textContent = 'Copied!';
+              setTimeout(function() { target.querySelector('.copy-btn').textContent = 'Copy'; }, 1500);
+            });
+          };
+        })(pre));
+        pre.appendChild(btn);
+      }
+    }
   })();
   </script>
 </body>
