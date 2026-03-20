@@ -836,7 +836,7 @@ def main():
         /* Create a <pre> to replace the textarea visually */
         var fakePre = document.createElement('pre');
         fakePre.textContent = val;
-        fakePre.style.cssText = 'position:relative;background:#f8f9fa;border:1px solid #e2e8f0;border-radius:6px;padding:12px 50px 12px 16px;font-family:Consolas,Monaco,monospace;font-size:13px;white-space:pre-wrap;word-break:break-word;color:#333;line-height:1.5;margin:0;overflow:auto;max-height:250px;';
+        fakePre.style.cssText = 'position:relative;background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:12px 50px 12px 16px;font-family:Consolas,Monaco,monospace;font-size:13px;white-space:pre-wrap;word-break:break-word;color:#333;line-height:1.5;margin:0;overflow:auto;max-height:250px;';
         fakePre.setAttribute('data-copy-added','1');
         /* Copy button inside the pre */
         var btn2 = document.createElement('button');
