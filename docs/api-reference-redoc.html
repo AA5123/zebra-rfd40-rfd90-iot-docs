@@ -128,65 +128,79 @@
     }
 
     /* Force single-column layout: move code samples inline below description
-       instead of Redoc's default dark right panel. */
+       instead of Redoc's default dark right panel.
+       Strategy: 1) Inject aggressive CSS  2) Find dark-background divs by computed
+       brightness and force their parent flex container to column direction. */
     function forceSingleColumn() {
+      /* --- 1. Inject CSS override (runs once) --- */
+      if (!document.getElementById('sc-force-col')) {
+        var s = document.createElement('style');
+        s.id = 'sc-force-col';
+        s.textContent = [
+          '#redoc-container > div > div:nth-child(2) { width:100%!important; max-width:100%!important; }',
+          '#redoc-container > div > div:nth-child(2) > div > div { flex-direction:column!important; }',
+          '#redoc-container > div > div:nth-child(2) > div > div > div { width:100%!important; max-width:100%!important; min-width:0!important; flex:1 1 100%!important; }',
+          '#redoc-container > div > div:nth-child(2) > div > div > div > div { width:100%!important; max-width:100%!important; min-width:0!important; flex:1 1 100%!important; }',
+          '#redoc-container > div > div:nth-child(2) > div > div > div > div > div { width:100%!important; max-width:100%!important; min-width:0!important; }',
+        ].join('\n');
+        document.head.appendChild(s);
+      }
+
+      /* --- 2. Find dark panels by brightness and fix them --- */
       var wrap = el.children[0];
       if (!wrap) return;
       var content = wrap.children.length > 1 ? wrap.children[1] : null;
       if (!content) return;
       content.style.setProperty('width', '100%', 'important');
       content.style.setProperty('max-width', '100%', 'important');
-      var allDivs = content.querySelectorAll('div');
+      var allDivs = content.getElementsByTagName('div');
       for (var i = 0; i < allDivs.length; i++) {
-        var d = allDivs[i];
-        var cs = window.getComputedStyle(d);
-        if (cs.display !== 'flex' && cs.display !== '-webkit-flex') continue;
-        if (cs.flexDirection === 'column') continue;
-        var kids = [];
-        for (var k = 0; k < d.children.length; k++) {
-          if (d.children[k].tagName === 'DIV') kids.push(d.children[k]);
+        var node = allDivs[i];
+        if (node.getAttribute('data-sc-col')) continue;
+        var bg = window.getComputedStyle(node).backgroundColor;
+        if (!bg) continue;
+        var m = bg.match(/rgba?\(\s*(\d+),\s*(\d+),\s*(\d+)/);
+        if (!m) continue;
+        var brightness = (parseInt(m[1]) * 299 + parseInt(m[2]) * 587 + parseInt(m[3]) * 114) / 1000;
+        if (brightness > 80) continue;
+        /* This is a dark panel. Check it is sizeable (not a tiny badge) */
+        if (node.offsetWidth < 100 || node.offsetHeight < 50) continue;
+        node.setAttribute('data-sc-col', '1');
+        /* Force parent to column layout */
+        var parent = node.parentElement;
+        if (parent && parent !== content) {
+          parent.style.setProperty('flex-direction', 'column', 'important');
+          parent.style.setProperty('display', 'flex', 'important');
+          /* Fix all sibling widths */
+          for (var j = 0; j < parent.children.length; j++) {
+            parent.children[j].style.setProperty('width', '100%', 'important');
+            parent.children[j].style.setProperty('max-width', '100%', 'important');
+            parent.children[j].style.setProperty('min-width', '0', 'important');
+            parent.children[j].style.setProperty('flex', '1 1 100%', 'important');
+          }
         }
-        if (kids.length !== 2) continue;
-        var rightChild = kids[1];
-        var rightBg = window.getComputedStyle(rightChild).backgroundColor;
-        var hasPre = rightChild.querySelector('pre') !== null;
-        var hasSampleText = /sample|example|payload/i.test(rightChild.textContent || '');
-        var isDarkBg = rightBg && rightBg !== 'rgba(0, 0, 0, 0)' && rightBg !== 'transparent' && rightBg !== 'rgb(255, 255, 255)';
-        if (hasPre || hasSampleText || isDarkBg) {
-          d.style.setProperty('flex-direction', 'column', 'important');
-          d.style.setProperty('flex-wrap', 'nowrap', 'important');
-          kids[0].style.setProperty('width', '100%', 'important');
-          kids[0].style.setProperty('max-width', '100%', 'important');
-          kids[0].style.setProperty('flex', '1 1 100%', 'important');
-          rightChild.style.setProperty('width', '100%', 'important');
-          rightChild.style.setProperty('max-width', '100%', 'important');
-          rightChild.style.setProperty('flex', '1 1 100%', 'important');
-          rightChild.style.setProperty('background', '#f7f9fb', 'important');
-          rightChild.style.setProperty('color', '#1e293b', 'important');
-          rightChild.style.setProperty('padding', '16px 24px', 'important');
-          rightChild.style.setProperty('border-radius', '8px', 'important');
-          rightChild.style.setProperty('margin-top', '12px', 'important');
-          var pres = rightChild.querySelectorAll('pre');
-          for (var p = 0; p < pres.length; p++) {
-            pres[p].style.setProperty('background', '#f0f4f8', 'important');
-            pres[p].style.setProperty('color', '#1e293b', 'important');
-            pres[p].style.setProperty('border', '1px solid #d9dde3', 'important');
-            pres[p].style.setProperty('border-radius', '6px', 'important');
-            pres[p].style.setProperty('padding', '12px 16px', 'important');
-          }
-          var allElems = rightChild.querySelectorAll('span, div, button, li, h3, h4, h5, a, p, label');
-          for (var s = 0; s < allElems.length; s++) {
-            var elem = allElems[s];
-            var clr = window.getComputedStyle(elem).color;
-            if (clr && (clr.indexOf('226') !== -1 || clr.indexOf('255') !== -1 || clr.indexOf('248') !== -1 || clr.indexOf('229') !== -1)) {
-              elem.style.setProperty('color', '#1e293b', 'important');
-            }
-          }
-          var tabs = rightChild.querySelectorAll('[class*="tab"], [class*="Tab"], button');
-          for (var t = 0; t < tabs.length; t++) {
-            tabs[t].style.setProperty('color', '#1e293b', 'important');
-            tabs[t].style.setProperty('background', 'transparent', 'important');
-            tabs[t].style.setProperty('border-color', '#d9dde3', 'important');
+        /* Restyle dark panel to light */
+        node.style.setProperty('background', '#f7f9fb', 'important');
+        node.style.setProperty('color', '#1e293b', 'important');
+        node.style.setProperty('padding', '16px 24px', 'important');
+        node.style.setProperty('margin-top', '12px', 'important');
+        node.style.setProperty('border-radius', '8px', 'important');
+        /* Fix pre blocks */
+        var pres = node.querySelectorAll('pre');
+        for (var p = 0; p < pres.length; p++) {
+          pres[p].style.setProperty('background', '#f0f4f8', 'important');
+          pres[p].style.setProperty('color', '#1e293b', 'important');
+          pres[p].style.setProperty('border', '1px solid #d9dde3', 'important');
+          pres[p].style.setProperty('border-radius', '6px', 'important');
+        }
+        /* Fix light-on-dark text */
+        var textElems = node.querySelectorAll('*');
+        for (var t = 0; t < textElems.length; t++) {
+          var tc = window.getComputedStyle(textElems[t]).color;
+          var tm = tc.match(/rgba?\(\s*(\d+),\s*(\d+),\s*(\d+)/);
+          if (tm) {
+            var tb = (parseInt(tm[1]) * 299 + parseInt(tm[2]) * 587 + parseInt(tm[3]) * 114) / 1000;
+            if (tb > 160) textElems[t].style.setProperty('color', '#1e293b', 'important');
           }
         }
       }
