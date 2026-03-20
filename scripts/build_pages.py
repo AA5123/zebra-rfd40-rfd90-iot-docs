@@ -810,7 +810,7 @@ def main():
       if (!root.querySelector('style[data-copy-style]')) {
         var style = document.createElement('style');
         style.setAttribute('data-copy-style', '1');
-        style.textContent = 'pre { background: #f6f8fa !important; background-color: #f6f8fa !important; } .descr-expand-toggle, .schema-description-expander { display: none !important; }';
+        style.textContent = 'pre { background: #f6f8fa !important; background-color: #f6f8fa !important; }';
         if (root.appendChild) root.appendChild(style);
       }
       /* <pre> blocks (response examples) */
@@ -862,6 +862,15 @@ def main():
         /* Hide textarea and insert pre in its place */
         ta.style.display = 'none';
         ta.parentElement.insertBefore(fakePre, ta);
+      }
+      /* Hide the small ▶ description expand arrows (but NOT the + object expand toggles) */
+      var spans = root.querySelectorAll('span');
+      for (var s = 0; s < spans.length; s++) {
+        var sp = spans[s];
+        var txt = sp.textContent.trim();
+        if (txt === '▶' || txt === '▼' || txt === '►' || txt === '▾') {
+          sp.style.display = 'none';
+        }
       }
     }
 
