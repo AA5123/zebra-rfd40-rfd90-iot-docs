@@ -812,10 +812,12 @@ def main():
         var pre = pres[i];
         if (pre.getAttribute('data-copy-added')) continue;
         pre.setAttribute('data-copy-added', '1');
-        pre.style.cssText += ';position:relative !important;background:#f6f8fa !important;';
+        pre.style.setProperty('position', 'relative', 'important');
+        pre.style.setProperty('background', '#f6f8fa', 'important');
+        pre.style.setProperty('background-color', '#f6f8fa', 'important');
         var btn = document.createElement('button');
         btn.textContent = 'Copy';
-        btn.setAttribute('style', 'position:absolute !important;top:4px !important;right:4px !important;padding:3px 10px !important;font-size:11px !important;cursor:pointer !important;background:#e2e8f0 !important;border:1px solid #cbd5e1 !important;border-radius:4px !important;color:#334155 !important;z-index:10 !important;');
+        btn.setAttribute('style', 'position:absolute !important;top:4px !important;right:4px !important;padding:3px 10px !important;font-size:11px !important;cursor:pointer !important;background:#3b82f6 !important;border:1px solid #2563eb !important;border-radius:4px !important;color:#fff !important;z-index:10 !important;');
         btn.onclick = (function(el, b) {
           return function() {
             var t = el.textContent.replace('Copy','').replace('Copied!','').trim();
@@ -841,7 +843,7 @@ def main():
         /* Copy button inside the pre */
         var btn2 = document.createElement('button');
         btn2.textContent = 'Copy';
-        btn2.setAttribute('style', 'position:absolute !important;top:4px !important;right:4px !important;padding:3px 10px !important;font-size:11px !important;cursor:pointer !important;background:#e2e8f0 !important;border:1px solid #cbd5e1 !important;border-radius:4px !important;color:#334155 !important;z-index:10 !important;');
+        btn2.setAttribute('style', 'position:absolute !important;top:4px !important;right:4px !important;padding:3px 10px !important;font-size:11px !important;cursor:pointer !important;background:#3b82f6 !important;border:1px solid #2563eb !important;border-radius:4px !important;color:#fff !important;z-index:10 !important;');
         btn2.onclick = (function(text, button) {
           return function() {
             navigator.clipboard.writeText(text);
