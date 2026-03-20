@@ -828,13 +828,11 @@ def main():
       var tas = rd.shadowRoot.querySelectorAll('textarea');
       for (var j = 0; j < tas.length; j++) {
         var ta = tas[j];
-        var parent = ta.parentElement;
-        if (!parent || parent.querySelector('.copy-btn-ta')) continue;
-        parent.style.position = 'relative';
+        if (ta.previousElementSibling && ta.previousElementSibling.classList.contains('copy-btn-ta')) continue;
         var btn2 = document.createElement('button');
         btn2.className = 'copy-btn-ta';
         btn2.textContent = 'Copy';
-        btn2.style.cssText = 'position:absolute;top:4px;right:4px;padding:3px 10px;font-size:11px;cursor:pointer;background:#e2e8f0;border:1px solid #cbd5e1;border-radius:4px;color:#334155;z-index:10;';
+        btn2.style.cssText = 'display:block;margin:0 0 4px auto;padding:3px 10px;font-size:11px;cursor:pointer;background:#e2e8f0;border:1px solid #cbd5e1;border-radius:4px;color:#334155;';
         btn2.addEventListener('click', (function(textarea, button) {
           return function() {
             navigator.clipboard.writeText(textarea.value).then(function() {
@@ -843,7 +841,7 @@ def main():
             });
           };
         })(ta, btn2));
-        parent.appendChild(btn2);
+        ta.parentElement.insertBefore(btn2, ta);
       }
     }
   })();
