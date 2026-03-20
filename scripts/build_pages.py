@@ -774,76 +774,86 @@ def main():
         rd.shadowRoot.appendChild(style);
       }
     }
-    /* Poll until RapiDoc shadow DOM is ready */
+    /* Poll for initial setup */
     var attempts = 0;
     var poll = setInterval(function() {
       hideHttpMethods();
-      addCopyButtons();
-      autoSizeTextareas();
-      if (++attempts > 60) clearInterval(poll);
+      processAllBlocks();
+      if (++attempts > 30) clearInterval(poll);
     }, 500);
 
-    /* Auto-resize textareas to fit their content instead of fixed big height */
-    function autoSizeTextareas() {
+    /* Process all pre and textarea blocks: add copy, resize */
+    function processAllBlocks() {
       var rd = document.querySelector('rapi-doc');
       if (!rd || !rd.shadowRoot) return;
-      var tas = rd.shadowRoot.querySelectorAll('textarea');
-      for (var i = 0; i < tas.length; i++) {
-        var ta = tas[i];
+      addCopyToElement(rd.shadowRoot);
+    }
+
+    function addCopyToElement(root) {
+      /* <pre> blocks (response examples) */
+      var pres = root.querySelectorAll('pre');
+      for (var i = 0; i < pres.length; i++) {
+        var pre = pres[i];
+        if (pre.getAttribute('data-copy-added')) continue;
+        pre.setAttribute('data-copy-added', '1');
+        pre.style.position = 'relative';
+        var btn = document.createElement('button');
+        btn.textContent = 'Copy';
+        btn.style.cssText = 'position:absolute;top:4px;right:4px;padding:3px 10px;font-size:11px;cursor:pointer;background:#e2e8f0;border:1px solid #cbd5e1;border-radius:4px;color:#334155;z-index:10;';
+        btn.onclick = (function(el, b) {
+          return function() {
+            var t = el.textContent.replace('Copy','').replace('Copied!','').trim();
+            navigator.clipboard.writeText(t);
+            b.textContent = 'Copied!';
+            setTimeout(function(){ b.textContent = 'Copy'; }, 1500);
+          };
+        })(pre, btn);
+        pre.appendChild(btn);
+      }
+      /* <textarea> blocks (request body examples) */
+      var tas = root.querySelectorAll('textarea');
+      for (var j = 0; j < tas.length; j++) {
+        var ta = tas[j];
+        if (ta.getAttribute('data-copy-added')) continue;
+        ta.setAttribute('data-copy-added', '1');
+        /* Auto-resize */
         ta.style.height = 'auto';
         ta.style.height = Math.min(ta.scrollHeight + 4, 180) + 'px';
         ta.style.minHeight = '40px';
         ta.style.maxHeight = '180px';
         ta.style.overflow = 'auto';
         ta.style.resize = 'vertical';
+        /* Copy button - insert right above the textarea */
+        var btn2 = document.createElement('button');
+        btn2.textContent = 'Copy';
+        btn2.style.cssText = 'float:right;margin:0 0 4px 0;padding:3px 10px;font-size:11px;cursor:pointer;background:#e2e8f0;border:1px solid #cbd5e1;border-radius:4px;color:#334155;';
+        btn2.onclick = (function(textarea, button) {
+          return function() {
+            navigator.clipboard.writeText(textarea.value);
+            button.textContent = 'Copied!';
+            setTimeout(function(){ button.textContent = 'Copy'; }, 1500);
+          };
+        })(ta, btn2);
+        if (ta.parentElement) {
+          ta.parentElement.insertBefore(btn2, ta);
+        }
       }
     }
 
-    /* Add copy buttons to all <pre> and <textarea> blocks inside RapiDoc */
-    function addCopyButtons() {
+    /* MutationObserver: catch lazily rendered content (operations render on scroll) */
+    function startObserver() {
       var rd = document.querySelector('rapi-doc');
-      if (!rd || !rd.shadowRoot) return;
-      /* Copy buttons for <pre> blocks (response examples) */
-      var pres = rd.shadowRoot.querySelectorAll('pre');
-      for (var i = 0; i < pres.length; i++) {
-        var pre = pres[i];
-        if (pre.querySelector('.copy-btn')) continue;
-        pre.style.position = 'relative';
-        var btn = document.createElement('button');
-        btn.className = 'copy-btn';
-        btn.textContent = 'Copy';
-        btn.style.cssText = 'position:absolute;top:4px;right:4px;padding:3px 10px;font-size:11px;cursor:pointer;background:#e2e8f0;border:1px solid #cbd5e1;border-radius:4px;color:#334155;z-index:10;';
-        btn.addEventListener('click', (function(target) {
-          return function() {
-            var text = target.textContent.replace(/^Copy$|^Copied!$/m, '').trim();
-            navigator.clipboard.writeText(text).then(function() {
-              target.querySelector('.copy-btn').textContent = 'Copied!';
-              setTimeout(function() { target.querySelector('.copy-btn').textContent = 'Copy'; }, 1500);
-            });
-          };
-        })(pre));
-        pre.appendChild(btn);
+      if (!rd || !rd.shadowRoot) {
+        setTimeout(startObserver, 300);
+        return;
       }
-      /* Copy buttons for <textarea> blocks (request body examples) */
-      var tas = rd.shadowRoot.querySelectorAll('textarea');
-      for (var j = 0; j < tas.length; j++) {
-        var ta = tas[j];
-        if (ta.previousElementSibling && ta.previousElementSibling.classList.contains('copy-btn-ta')) continue;
-        var btn2 = document.createElement('button');
-        btn2.className = 'copy-btn-ta';
-        btn2.textContent = 'Copy';
-        btn2.style.cssText = 'display:block;margin:0 0 4px auto;padding:3px 10px;font-size:11px;cursor:pointer;background:#e2e8f0;border:1px solid #cbd5e1;border-radius:4px;color:#334155;';
-        btn2.addEventListener('click', (function(textarea, button) {
-          return function() {
-            navigator.clipboard.writeText(textarea.value).then(function() {
-              button.textContent = 'Copied!';
-              setTimeout(function() { button.textContent = 'Copy'; }, 1500);
-            });
-          };
-        })(ta, btn2));
-        ta.parentElement.insertBefore(btn2, ta);
-      }
+      var observer = new MutationObserver(function() {
+        hideHttpMethods();
+        processAllBlocks();
+      });
+      observer.observe(rd.shadowRoot, { childList: true, subtree: true });
     }
+    startObserver();
   })();
   </script>
 </body>
