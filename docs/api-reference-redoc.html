@@ -36,7 +36,8 @@
     regular-font="Inter, Segoe UI, system-ui, sans-serif"
     mono-font="Consolas, Monaco, monospace"
     schema-style="table"
-    schema-expand-level="1"
+    schema-expand-level="999"
+    schema-description-expanded="true"
     default-schema-tab="example"
     show-method-in-nav-bar="false"
     use-path-in-nav-bar="false"
@@ -73,8 +74,15 @@
           '.table-title { padding: 6px 0 !important; }',
           /* Force enum/constraint sections to always show expanded, hide toggle arrow */
           '.descr-expand-toggle { display: none !important; }',
-          '.expanded-descr { display: inline !important; }',
+          '.expanded-descr { display: block !important; }',
           '.item-constraint { display: inline !important; }',
+          /* Hide any small triangle/arrow toggle used for enum expansion */
+          '.tr-descr-expand-icon { display: none !important; }',
+          '.enum-toggle { display: none !important; }',
+          /* Force all collapsed content visible */
+          '.tr-descr-more { display: block !important; }',
+          '[class*="descr-expand"] { display: none !important; }',
+          '[class*="descr-more"], [class*="descr-detail"] { display: block !important; }',
         ].join('\n');
         rd.shadowRoot.appendChild(style);
       }
@@ -87,21 +95,16 @@
       expandInRoot(rd.shadowRoot);
     }
     function expandInRoot(root) {
-      /* Click any collapsed enum toggles to force them open */
-      var toggles = root.querySelectorAll('.descr-expand-toggle');
-      for (var i = 0; i < toggles.length; i++) {
-        var t = toggles[i];
-        /* Only click if the sibling expanded-descr is still hidden */
-        var sibling = t.nextElementSibling;
-        if (sibling && (sibling.style.display === 'none' || getComputedStyle(sibling).display === 'none')) {
-          t.click();
-        }
-      }
-      /* Also force any hidden constraint/enum containers to show */
-      var hidden = root.querySelectorAll('.expanded-descr, [class*="constraint"]');
-      for (var j = 0; j < hidden.length; j++) {
-        if (hidden[j].style.display === 'none') {
-          hidden[j].style.display = 'inline';
+      /* Find all small clickable arrows/toggles near descriptions and click them */
+      /* RapiDoc uses various elements: span, div with triangles ▹ ▸ ▾ or SVG icons */
+      var allEls = root.querySelectorAll('span, div, a, button');
+      for (var i = 0; i < allEls.length; i++) {
+        var el = allEls[i];
+        var text = (el.textContent || '').trim();
+        /* Match triangle characters used as expand toggles */
+        if ((text === '▹' || text === '▸' || text === '▶' || text === '▷' || text === '⯈') && el.offsetWidth < 30) {
+          el.click();
+          el.style.display = 'none';
         }
       }
       /* Walk nested shadow roots */
