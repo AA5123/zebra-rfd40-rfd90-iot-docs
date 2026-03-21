@@ -15,6 +15,7 @@
     body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: #fff; }
     rapi-doc { width: 100%; height: 100%; }
     rapi-doc::part(section-operation-summary) { font-size: 1.1rem; }
+    rapi-doc::part(schema-multiline-toggle) { display: none !important; }
   </style>
 </head>
 <body>
@@ -85,9 +86,30 @@
     var attempts = 0;
     var poll = setInterval(function() {
       hideHttpMethods();
+      hideMultilineToggle();
       processAllBlocks();
       if (++attempts > 30) clearInterval(poll);
     }, 500);
+
+    /* Hide "Multiline description" toggle in all shadow roots */
+    function hideMultilineToggle() {
+      var rd = document.querySelector('rapi-doc');
+      if (!rd) return;
+      injectHideStyle(rd.shadowRoot);
+    }
+    function injectHideStyle(root) {
+      if (!root) return;
+      if (!root.querySelector('style[data-hide-multiline]')) {
+        var s = document.createElement('style');
+        s.setAttribute('data-hide-multiline', '1');
+        s.textContent = '.schema-multiline-toggle { display: none !important; } .descr-expand-toggle { display: none !important; }';
+        if (root.appendChild) root.appendChild(s);
+      }
+      var els = root.querySelectorAll('*');
+      for (var i = 0; i < els.length; i++) {
+        if (els[i].shadowRoot) injectHideStyle(els[i].shadowRoot);
+      }
+    }
 
     /* Process all pre and textarea blocks: add copy, resize.
        Recursively walks shadow roots since RapiDoc nests components. */
@@ -181,6 +203,7 @@
       }
       var observer = new MutationObserver(function() {
         hideHttpMethods();
+        hideMultilineToggle();
         processAllBlocks();
       });
       observer.observe(rd.shadowRoot, { childList: true, subtree: true });
