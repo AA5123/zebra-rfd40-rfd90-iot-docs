@@ -90,44 +90,15 @@
       if (++attempts > 60) clearInterval(poll);
     }, 500);
 
-    /* Hide "Multiline description" toggle - persistent interval that never stops */
+    /* Keep forcing the RapiDoc property to hide the toggle */
     setInterval(function() {
       var rd = document.querySelector('rapi-doc');
-      if (!rd || !rd.shadowRoot) return;
-      /* Force the property so RapiDoc never renders the toggle */
+      if (!rd) return;
       rd.allowSchemaDescriptionExpandToggle = 'false';
       rd.setAttribute('allow-schema-description-expand-toggle', 'false');
-      deepHide(rd.shadowRoot);
-    }, 300);
-
-    function deepHide(root) {
-      if (!root) return;
-      try {
-        /* Inject CSS */
-        if (!root.querySelector('style[data-hide-ml]')) {
-          var s = document.createElement('style');
-          s.setAttribute('data-hide-ml', '1');
-          s.textContent = '.schema-multiline-toggle { display:none!important; } .descr-expand-toggle { display:none!important; } [class*="multiline"] { display:none!important; }';
-          root.appendChild(s);
-        }
-        /* Direct element hide by class */
-        var byClass = root.querySelectorAll('.schema-multiline-toggle, [class*="multiline-toggle"], .descr-expand-toggle');
-        for (var c = 0; c < byClass.length; c++) byClass[c].style.cssText = 'display:none!important';
-        /* Hide by text content match */
-        var all = root.querySelectorAll('*');
-        for (var i = 0; i < all.length; i++) {
-          var el = all[i];
-          var t = (el.textContent || '').trim().toLowerCase();
-          if (t === 'multiline description' || t === 'single line description') {
-            el.style.cssText = 'display:none!important';
-            /* Also hide the parent in case it's a wrapper */
-            if (el.parentElement) el.parentElement.style.cssText += ';overflow:hidden';
-          }
-          /* Recurse into nested shadow roots */
-          if (el.shadowRoot) deepHide(el.shadowRoot);
-        }
-      } catch(e) {}
-    }
+      /* Also trigger processAllBlocks to inject CSS into new shadow roots */
+      processAllBlocks();
+    }, 500);
 
     /* Process all pre and textarea blocks: add copy, resize.
        Recursively walks shadow roots since RapiDoc nests components. */
@@ -153,6 +124,13 @@
     }
 
     function addCopyToElement(root) {
+      /* Hide "Multiline description" / "Single line description" toggle in this shadow root */
+      if (!root.querySelector('style[data-hide-ml]')) {
+        var mlStyle = document.createElement('style');
+        mlStyle.setAttribute('data-hide-ml', '1');
+        mlStyle.textContent = '.schema-multiline-toggle, .toolbar-item.schema-multiline-toggle, [class*="multiline-toggle"], .descr-expand-toggle { display:none!important; visibility:hidden!important; height:0!important; overflow:hidden!important; }';
+        if (root.appendChild) root.appendChild(mlStyle);
+      }
       /* Inject a style tag into this shadow root to force pre background */
       if (!root.querySelector('style[data-copy-style]')) {
         var style = document.createElement('style');
