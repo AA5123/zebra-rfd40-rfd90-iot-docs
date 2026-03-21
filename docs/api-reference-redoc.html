@@ -86,45 +86,42 @@
     var attempts = 0;
     var poll = setInterval(function() {
       hideHttpMethods();
-      hideMultilineToggle();
       processAllBlocks();
       if (++attempts > 60) clearInterval(poll);
     }, 500);
 
-    /* Hide "Multiline description" toggle in all shadow roots */
-    function hideMultilineToggle() {
+    /* Hide "Multiline description" toggle - persistent interval that never stops */
+    setInterval(function() {
       var rd = document.querySelector('rapi-doc');
-      if (!rd) return;
-      walkAndHide(rd.shadowRoot);
-    }
-    function walkAndHide(root) {
+      if (!rd || !rd.shadowRoot) return;
+      deepHide(rd.shadowRoot);
+    }, 300);
+
+    function deepHide(root) {
       if (!root) return;
-      /* Inject CSS into this shadow root */
-      if (!root.querySelector('style[data-hide-multiline]')) {
-        var s = document.createElement('style');
-        s.setAttribute('data-hide-multiline', '1');
-        s.textContent = '.schema-multiline-toggle, .toolbar-item.schema-multiline-toggle, [part*="schema-multiline-toggle"], [class*="multiline-toggle"], .descr-expand-toggle { display: none !important; visibility: hidden !important; width: 0 !important; height: 0 !important; overflow: hidden !important; }';
-        if (root.appendChild) root.appendChild(s);
-      }
-      /* Also directly hide any matching elements */
-      var targets = root.querySelectorAll('.schema-multiline-toggle, [class*="multiline-toggle"], .descr-expand-toggle');
-      for (var t = 0; t < targets.length; t++) {
-        targets[t].style.display = 'none';
-        targets[t].style.visibility = 'hidden';
-      }
-      /* Also find by text content "Multiline description" or "Single line description" */
-      var allEls = root.querySelectorAll('div, span, a, button');
-      for (var j = 0; j < allEls.length; j++) {
-        var txt = (allEls[j].textContent || '').trim();
-        if (txt === 'Multiline description' || txt === 'Single line description') {
-          allEls[j].style.display = 'none';
+      try {
+        /* Inject CSS */
+        if (!root.querySelector('style[data-hide-ml]')) {
+          var s = document.createElement('style');
+          s.setAttribute('data-hide-ml', '1');
+          s.textContent = '.schema-multiline-toggle { display:none!important; } .descr-expand-toggle { display:none!important; } [class*="multiline"] { display:none!important; }';
+          root.appendChild(s);
         }
-      }
-      /* Walk nested shadow roots */
-      var els = root.querySelectorAll('*');
-      for (var i = 0; i < els.length; i++) {
-        if (els[i].shadowRoot) walkAndHide(els[i].shadowRoot);
-      }
+        /* Direct element hide by class */
+        var byClass = root.querySelectorAll('.schema-multiline-toggle, [class*="multiline-toggle"], .descr-expand-toggle');
+        for (var c = 0; c < byClass.length; c++) byClass[c].style.cssText = 'display:none!important';
+        /* Hide by text content match */
+        var all = root.querySelectorAll('*');
+        for (var i = 0; i < all.length; i++) {
+          var el = all[i];
+          var t = (el.textContent || '').trim();
+          if (t === 'Multiline description' || t === 'Single line description') {
+            el.style.cssText = 'display:none!important';
+          }
+          /* Recurse into nested shadow roots */
+          if (el.shadowRoot) deepHide(el.shadowRoot);
+        }
+      } catch(e) {}
     }
 
     /* Process all pre and textarea blocks: add copy, resize.
@@ -219,7 +216,6 @@
       }
       var observer = new MutationObserver(function() {
         hideHttpMethods();
-        hideMultilineToggle();
         processAllBlocks();
       });
       observer.observe(rd.shadowRoot, { childList: true, subtree: true });
