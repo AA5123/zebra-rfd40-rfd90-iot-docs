@@ -71,14 +71,51 @@
           '.tab-content { padding: 0 !important; }',
           '.tab-panels { padding: 0 !important; }',
           '.table-title { padding: 6px 0 !important; }',
+          /* Force enum/constraint sections to always show expanded, hide toggle arrow */
+          '.descr-expand-toggle { display: none !important; }',
+          '.expanded-descr { display: inline !important; }',
+          '.item-constraint { display: inline !important; }',
         ].join('\n');
         rd.shadowRoot.appendChild(style);
       }
     }
+
+    /* Auto-expand all enum/constraint toggles in RapiDoc shadow DOM */
+    function expandAllEnums() {
+      var rd = document.querySelector('rapi-doc');
+      if (!rd || !rd.shadowRoot) return;
+      expandInRoot(rd.shadowRoot);
+    }
+    function expandInRoot(root) {
+      /* Click any collapsed enum toggles to force them open */
+      var toggles = root.querySelectorAll('.descr-expand-toggle');
+      for (var i = 0; i < toggles.length; i++) {
+        var t = toggles[i];
+        /* Only click if the sibling expanded-descr is still hidden */
+        var sibling = t.nextElementSibling;
+        if (sibling && (sibling.style.display === 'none' || getComputedStyle(sibling).display === 'none')) {
+          t.click();
+        }
+      }
+      /* Also force any hidden constraint/enum containers to show */
+      var hidden = root.querySelectorAll('.expanded-descr, [class*="constraint"]');
+      for (var j = 0; j < hidden.length; j++) {
+        if (hidden[j].style.display === 'none') {
+          hidden[j].style.display = 'inline';
+        }
+      }
+      /* Walk nested shadow roots */
+      var all = root.querySelectorAll('*');
+      for (var k = 0; k < all.length; k++) {
+        if (all[k].shadowRoot) expandInRoot(all[k].shadowRoot);
+      }
+    }
+
     /* Poll for initial setup */
     var attempts = 0;
     var poll = setInterval(function() {
       hideHttpMethods();
+      expandAllEnums();
       processAllBlocks();
       if (++attempts > 30) clearInterval(poll);
     }, 500);
@@ -175,6 +212,7 @@
       }
       var observer = new MutationObserver(function() {
         hideHttpMethods();
+        expandAllEnums();
         processAllBlocks();
       });
       observer.observe(rd.shadowRoot, { childList: true, subtree: true });
