@@ -94,6 +94,9 @@
     setInterval(function() {
       var rd = document.querySelector('rapi-doc');
       if (!rd || !rd.shadowRoot) return;
+      /* Force the property so RapiDoc never renders the toggle */
+      rd.allowSchemaDescriptionExpandToggle = 'false';
+      rd.setAttribute('allow-schema-description-expand-toggle', 'false');
       deepHide(rd.shadowRoot);
     }, 300);
 
@@ -114,9 +117,11 @@
         var all = root.querySelectorAll('*');
         for (var i = 0; i < all.length; i++) {
           var el = all[i];
-          var t = (el.textContent || '').trim();
-          if (t === 'Multiline description' || t === 'Single line description') {
+          var t = (el.textContent || '').trim().toLowerCase();
+          if (t === 'multiline description' || t === 'single line description') {
             el.style.cssText = 'display:none!important';
+            /* Also hide the parent in case it's a wrapper */
+            if (el.parentElement) el.parentElement.style.cssText += ';overflow:hidden';
           }
           /* Recurse into nested shadow roots */
           if (el.shadowRoot) deepHide(el.shadowRoot);
