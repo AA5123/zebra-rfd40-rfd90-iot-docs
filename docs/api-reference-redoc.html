@@ -38,6 +38,7 @@
     schema-style="table"
     schema-expand-level="999"
     schema-description-expanded="true"
+    allow-schema-description-expand-toggle="false"
     default-schema-tab="example"
     show-method-in-nav-bar="false"
     use-path-in-nav-bar="false"
@@ -72,45 +73,8 @@
           '.tab-content { padding: 0 !important; }',
           '.tab-panels { padding: 0 !important; }',
           '.table-title { padding: 6px 0 !important; }',
-          /* Force enum/constraint sections to always show expanded, hide toggle arrow */
-          '.descr-expand-toggle { display: none !important; }',
-          '.expanded-descr { display: block !important; }',
-          '.item-constraint { display: inline !important; }',
-          /* Hide any small triangle/arrow toggle used for enum expansion */
-          '.tr-descr-expand-icon { display: none !important; }',
-          '.enum-toggle { display: none !important; }',
-          /* Force all collapsed content visible */
-          '.tr-descr-more { display: block !important; }',
-          '[class*="descr-expand"] { display: none !important; }',
-          '[class*="descr-more"], [class*="descr-detail"] { display: block !important; }',
         ].join('\n');
         rd.shadowRoot.appendChild(style);
-      }
-    }
-
-    /* Auto-expand all enum/constraint toggles in RapiDoc shadow DOM */
-    function expandAllEnums() {
-      var rd = document.querySelector('rapi-doc');
-      if (!rd || !rd.shadowRoot) return;
-      expandInRoot(rd.shadowRoot);
-    }
-    function expandInRoot(root) {
-      /* Find all small clickable arrows/toggles near descriptions and click them */
-      /* RapiDoc uses various elements: span, div with triangles ▹ ▸ ▾ or SVG icons */
-      var allEls = root.querySelectorAll('span, div, a, button');
-      for (var i = 0; i < allEls.length; i++) {
-        var el = allEls[i];
-        var text = (el.textContent || '').trim();
-        /* Match triangle characters used as expand toggles */
-        if ((text === '▹' || text === '▸' || text === '▶' || text === '▷' || text === '⯈') && el.offsetWidth < 30) {
-          el.click();
-          el.style.display = 'none';
-        }
-      }
-      /* Walk nested shadow roots */
-      var all = root.querySelectorAll('*');
-      for (var k = 0; k < all.length; k++) {
-        if (all[k].shadowRoot) expandInRoot(all[k].shadowRoot);
       }
     }
 
@@ -118,7 +82,6 @@
     var attempts = 0;
     var poll = setInterval(function() {
       hideHttpMethods();
-      expandAllEnums();
       processAllBlocks();
       if (++attempts > 30) clearInterval(poll);
     }, 500);
@@ -215,7 +178,6 @@
       }
       var observer = new MutationObserver(function() {
         hideHttpMethods();
-        expandAllEnums();
         processAllBlocks();
       });
       observer.observe(rd.shadowRoot, { childList: true, subtree: true });
