@@ -1,5 +1,6 @@
 {
   "title": "delete_wifi_profile",
+  "x-tag": "Network Configuration",
   "x-stoplight": {
     "id": "upvt1oh35f4zg"
   },

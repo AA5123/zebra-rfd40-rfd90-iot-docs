@@ -1,5 +1,6 @@
 {
   "title": "delete_certificate",
+  "x-tag": "Certificate Management",
   "x-stoplight": {
     "id": "6uhhq6oxnpm8t"
   },

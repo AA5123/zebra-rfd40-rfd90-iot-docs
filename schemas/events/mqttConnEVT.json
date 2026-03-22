@@ -1,5 +1,6 @@
 {
   "title": "epConnection",
+  "x-tag": "MQTT Connectivity",
   "x-stoplight": {
     "id": "ey6vjtuwborhz"
   },

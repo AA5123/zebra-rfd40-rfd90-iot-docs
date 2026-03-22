@@ -1,5 +1,6 @@
 {
   "title": "get_installed_certificate",
+  "x-tag": "Certificate Management",
   "x-stoplight": {
     "id": "9bjcurdina4tr"
   },

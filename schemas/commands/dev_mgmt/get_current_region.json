@@ -1,5 +1,6 @@
 {
   "title": "get_current_region",
+  "x-tag": "Device Status",
   "x-stoplight": {
     "id": "v4uqym3mk9bt0"
   },

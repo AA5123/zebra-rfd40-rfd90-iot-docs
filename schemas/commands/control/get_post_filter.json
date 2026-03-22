@@ -1,5 +1,6 @@
 {
   "title": "get_post_filter",
+  "x-tag": "Tag Filtering",
   "description": "This operation is used to fetch the post filter applied to filter tag data in RFID devices. The post filter ensures that only relevant tag data is processed based on specified criteria.",
   "x-stoplight": {
     "id": "1meg5nwox19b8"

@@ -1,5 +1,6 @@
 {
   "title": "get_eth",
+  "x-tag": "Network Configuration",
   "x-stoplight": {
     "id": "np1ehj39n4xp4"
   },

@@ -1,5 +1,6 @@
 {
   "title": "set_config",
+  "x-tag": "Device Configuration",
   "x-stoplight": {
     "id": "zzhmsbj9vbslf"
   },

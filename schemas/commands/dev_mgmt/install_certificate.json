@@ -1,5 +1,6 @@
 {
   "title": "install_certificate",
+  "x-tag": "Certificate Management",
   "type": "object",
   "x-stoplight": {
     "id": "8ji89je0bi6sq"

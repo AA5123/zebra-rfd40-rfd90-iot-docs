@@ -1,5 +1,6 @@
 {
   "title": "set_wifi",
+  "x-tag": "Network Configuration",
   "x-stoplight": {
     "id": "wk91qymmt9ye2"
   },

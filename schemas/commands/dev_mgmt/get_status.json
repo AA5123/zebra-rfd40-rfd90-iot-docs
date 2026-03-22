@@ -1,5 +1,6 @@
 {
   "title": "get_status",
+  "x-tag": "Device Status",
   "x-stoplight": {
     "id": "2a0e5dee1bcgq"
   },

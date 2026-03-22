@@ -1,5 +1,6 @@
 {
   "title": "get_operating_mode",
+  "x-tag": "Operating Mode",
   "x-stoplight": {
     "id": "bfmkzfpkuc5h1"
   },

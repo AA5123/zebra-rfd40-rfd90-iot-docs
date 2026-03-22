@@ -1,5 +1,6 @@
 {
   "title": "get_version",
+  "x-tag": "Device Status",
   "x-stoplight": {
     "id": "6t1zk44tshzm1"
   },

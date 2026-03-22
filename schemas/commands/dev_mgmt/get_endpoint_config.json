@@ -1,5 +1,6 @@
 {
   "title": "get_endpoint_config",
+  "x-tag": "MQTT Endpoint Configuration",
   "x-stoplight": {
     "id": "n4h9ertlb1qn8"
   },

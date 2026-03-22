@@ -1,5 +1,6 @@
 {
   "title": "heartBeatEvent",
+  "x-tag": "Device Health",
   "description": "This event represents a heartbeat signal sent periodically from a device or system to indicate its active status and provide essential metadata like uptime and event details.",
   "x-stoplight": {
     "id": "ey6vjtuwborhz"
