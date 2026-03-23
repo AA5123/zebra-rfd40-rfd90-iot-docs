@@ -341,63 +341,74 @@ def build_openapi():
         if isinstance(description, str):
             description = re.sub(r"\n\n\*\*Supported readers:\*\*\s*RFD40,\s*RFD90\s*$", "", description).strip()
 
-        # Build request body
-        req_examples = extract_examples(req_schema, title, example_data)
-        req_schema_clean = extract_schema(req_schema, req_path)
-        req_content = OrderedDict()
-        req_content["application/json"] = OrderedDict()
-        req_content["application/json"]["schema"] = req_schema_clean
-        if req_examples:
-            req_content["application/json"]["examples"] = req_examples
-
         # Build the operation
         op = OrderedDict()
         op["tags"] = [tag_name]
         op["summary"] = op_name
         if description:
             op["description"] = description
-        op["requestBody"] = OrderedDict([
-            ("required", True),
-            ("content", req_content),
-        ])
 
-        # Build response
-        resp_path = get_response_path(op_name, source)
-        if resp_path and os.path.exists(resp_path):
-            try:
-                resp_schema = load_json(resp_path)
-                resp_title = resp_schema.get("title", op_name)
-                resp_examples = extract_examples(resp_schema, resp_title, example_data)
+        if source == "events":
+            # Events: payload goes under Response (device publishes this), no Request Body
+            evt_examples = extract_examples(req_schema, title, example_data)
+            evt_schema_clean = extract_schema(req_schema, req_path)
+            evt_content = OrderedDict()
+            evt_content["application/json"] = OrderedDict()
+            evt_content["application/json"]["schema"] = evt_schema_clean
+            if evt_examples:
+                evt_content["application/json"]["examples"] = evt_examples
 
-                resp_schema_clean = extract_schema(resp_schema, resp_path)
-                resp_content = OrderedDict()
-                resp_content["application/json"] = OrderedDict()
-                resp_content["application/json"]["schema"] = resp_schema_clean
-                if resp_examples:
-                    resp_content["application/json"]["examples"] = resp_examples
-
-                resp_desc = RESPONSE_DESCRIPTIONS.get(op_name, f"{op_name} response")
-
-                op["responses"] = OrderedDict([
-                    ("default", OrderedDict([
-                        ("description", resp_desc),
-                        ("content", resp_content),
-                    ])),
-                ])
-            except (json.JSONDecodeError, Exception):
-                op["responses"] = OrderedDict([
-                    ("200", OrderedDict([("description", "Success")])),
-                ])
-        elif source == "events":
-            # Events: show a description-only response
             op["responses"] = OrderedDict([
-                ("200", OrderedDict([
-                    ("description", "This is an asynchronous event published by the device. No request/response cycle."),
+                ("default", OrderedDict([
+                    ("description", f"{op_name} event payload"),
+                    ("content", evt_content),
                 ])),
             ])
         else:
-            op["responses"] = OrderedDict([
-                ("200", OrderedDict([("description", "Success")])),
+            # Commands: payload goes under Request Body, response from response/ folder
+            req_examples = extract_examples(req_schema, title, example_data)
+            req_schema_clean = extract_schema(req_schema, req_path)
+            req_content = OrderedDict()
+            req_content["application/json"] = OrderedDict()
+            req_content["application/json"]["schema"] = req_schema_clean
+            if req_examples:
+                req_content["application/json"]["examples"] = req_examples
+
+            op["requestBody"] = OrderedDict([
+                ("required", True),
+                ("content", req_content),
+            ])
+
+            # Build response
+            resp_path = get_response_path(op_name, source)
+            if resp_path and os.path.exists(resp_path):
+                try:
+                    resp_schema = load_json(resp_path)
+                    resp_title = resp_schema.get("title", op_name)
+                    resp_examples = extract_examples(resp_schema, resp_title, example_data)
+
+                    resp_schema_clean = extract_schema(resp_schema, resp_path)
+                    resp_content = OrderedDict()
+                    resp_content["application/json"] = OrderedDict()
+                    resp_content["application/json"]["schema"] = resp_schema_clean
+                    if resp_examples:
+                        resp_content["application/json"]["examples"] = resp_examples
+
+                    resp_desc = RESPONSE_DESCRIPTIONS.get(op_name, f"{op_name} response")
+
+                    op["responses"] = OrderedDict([
+                        ("default", OrderedDict([
+                            ("description", resp_desc),
+                            ("content", resp_content),
+                        ])),
+                    ])
+                except (json.JSONDecodeError, Exception):
+                    op["responses"] = OrderedDict([
+                        ("200", OrderedDict([("description", "Success")])),
+                    ])
+            else:
+                op["responses"] = OrderedDict([
+                    ("200", OrderedDict([("description", "Success")])),
             ])
 
         paths[f"/{op_name}"] = OrderedDict([("post", op)])

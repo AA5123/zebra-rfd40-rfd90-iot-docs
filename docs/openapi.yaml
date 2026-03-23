@@ -5304,7 +5304,7 @@
                     "Network Configuration"
                 ],
                 "summary": "get_wifi",
-                "description": "This command is used to retrieve wifi configuration details",
+                "description": "Retrieves the **current Wi-Fi configuration** of the scanner — connected network, IP address, signal, and security settings.\n\n**Command details:**\n\n- Pattern Name: Wi-Fi Configuration Retrieval\n- Communication Type: Bidirectional (Cloud to Device, Device to Cloud)\n- MQTT Version: 3.1.1\n- API Version: V1.1\n- Document Version: 1.0.0\n- Last Updated: 2026-03-12\n- Applies To: RFD40 Series, RFD90 Series\n\n**Response fields:**\n\n| Field | What it tells you |\n|---|---|\n| `interfaceName` | Wi-Fi interface identifier (e.g. `wlan0`) |\n| `status` | Whether the Wi-Fi interface is Enabled or Disabled |\n| `hostname` | The scanner's network hostname |\n| `macAddress` | Wi-Fi MAC address |\n| `accessPoint.essid` | The SSID of the connected Wi-Fi network |\n| `accessPoint.status` | Connection state — Connected or Disconnected |\n| `accessPoint.securityType` | Security protocol — WPA2Personal, WPA2Enterprise, WPA3Personal, Open |\n| `accessPoint.isPreferred` | Whether this is the preferred network |\n| `accessPoint.autoConn` | Whether the scanner auto-connects to this network |\n| `ipv4Configuration.ipAddress` | Current IP address assigned to the scanner |\n| `ipv4Configuration.subnetMask` | Subnet mask |\n| `ipv4Configuration.gateway` | Default gateway |\n| `ipv4Configuration.enableDhcp` | Whether DHCP is enabled or using static IP |\n| `ipv4Configuration.dnsServer` | DNS server address |\n\n**Typical use cases:**\n- Network troubleshooting — verify the scanner is connected to the correct SSID with a valid IP.\n- Fleet monitoring — check Wi-Fi status across all scanners from a central dashboard.\n- Security audit — confirm scanners are using WPA2/WPA3 Enterprise, not open networks.\n\n**MQTT topics for this command:**\n\n- Command topic (Cloud to Device):\n  `<tenantId>/CTRL/clients/cmnd/<deviceSerial>`\n- Response topic (Device to Cloud):\n  `<tenantId>/CTRL/clients/resp/<deviceSerial>`\n\n**Example:**\n- Command: `zebra/CTRL/clients/cmnd/RFD40-12345678`\n- Response: `zebra/CTRL/clients/resp/RFD40-12345678`\n\nEnsure these topic paths match your configured endpoint topics.",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -10667,121 +10667,118 @@
                 ],
                 "summary": "heartBeatEVT",
                 "description": "This event represents a heartbeat signal sent periodically from a device or system to indicate its active status and provide essential metadata like uptime and event details.",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "eventName": {
-                                        "type": "string",
-                                        "example": "heartbeat",
-                                        "description": "Name of the event, indicating it is a heartbeat signal."
-                                    },
-                                    "timestamp": {
-                                        "type": "string",
-                                        "example": "2019-08-24T14:15:22Z",
-                                        "description": "The timestamp when the event was generated, in ISO 8601 format."
-                                    },
-                                    "eventNumber": {
-                                        "type": "integer",
-                                        "example": 120,
-                                        "description": "A unique identifier or sequence number for the event."
-                                    },
-                                    "upTime": {
-                                        "type": "string",
-                                        "example": "5 days 4hr 3min",
-                                        "description": "The uptime duration of the system when the event was generated."
-                                    },
-                                    "data": {
-                                        "anyOf": [
-                                            {
-                                                "type": "object",
-                                                "properties": {
-                                                    "rfidStatus": {
-                                                        "type": "string",
-                                                        "enum": [
-                                                            "INPROGRESS",
-                                                            "STOPPED"
-                                                        ],
-                                                        "description": "The current status of the RFID scanning process."
-                                                    },
-                                                    "tagCount": {
-                                                        "type": "integer",
-                                                        "description": "The total number of RFID tags scanned in the current operation."
-                                                    },
-                                                    "scanCount": {
-                                                        "type": "integer",
-                                                        "description": "The total number of scan attempts made during the operation."
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "type": "object",
-                                                "properties": {
-                                                    "status": {
-                                                        "type": "string",
-                                                        "enum": [
-                                                            "LOW",
-                                                            "CRITICAL",
-                                                            "CHARGING",
-                                                            "FULL",
-                                                            "HIGH"
-                                                        ],
-                                                        "example": "LOW",
-                                                        "description": "The current status of the battery, which indicates its operational state."
-                                                    },
-                                                    "stateOfHealth": {
-                                                        "type": "string",
-                                                        "enum": [
-                                                            "LOW",
-                                                            "FULL",
-                                                            "CRITICAL",
-                                                            "HIGH",
-                                                            "CHARGING"
-                                                        ],
-                                                        "description": "The overall health of the battery, which reflects its long-term capacity and performance."
-                                                    },
-                                                    "chargePercentage": {
-                                                        "type": "integer",
-                                                        "maximum": 100,
-                                                        "description": "The current charge level of the battery, represented as a percentage."
-                                                    }
-                                                }
-                                            }
-                                        ],
-                                        "description": "Additional data associated with the heartbeat event, referencing different event types."
-                                    }
-                                }
-                            },
-                            "examples": {
-                                "example1": {
-                                    "value": {
-                                        "eventName": "heartbeat",
-                                        "timestamp": "2019-08-24T14:15:22Z",
-                                        "eventNumber": 120,
+                "responses": {
+                    "default": {
+                        "description": "heartBeatEVT event payload",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "eventName": {
+                                            "type": "string",
+                                            "example": "heartbeat",
+                                            "description": "Name of the event, indicating it is a heartbeat signal."
+                                        },
+                                        "timestamp": {
+                                            "type": "string",
+                                            "example": "2019-08-24T14:15:22Z",
+                                            "description": "The timestamp when the event was generated, in ISO 8601 format."
+                                        },
+                                        "eventNumber": {
+                                            "type": "integer",
+                                            "example": 120,
+                                            "description": "A unique identifier or sequence number for the event."
+                                        },
+                                        "upTime": {
+                                            "type": "string",
+                                            "example": "5 days 4hr 3min",
+                                            "description": "The uptime duration of the system when the event was generated."
+                                        },
                                         "data": {
-                                            "inventoryStatus": {
-                                                "rfidStatus": "INPROGRESS",
-                                                "tagCount": 45,
-                                                "scanCount": 128
-                                            },
-                                            "batteryAlert": {
-                                                "status": "HIGH",
-                                                "stateOfHealth": "FULL",
-                                                "chargePercentage": 85
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "rfidStatus": {
+                                                            "type": "string",
+                                                            "enum": [
+                                                                "INPROGRESS",
+                                                                "STOPPED"
+                                                            ],
+                                                            "description": "The current status of the RFID scanning process."
+                                                        },
+                                                        "tagCount": {
+                                                            "type": "integer",
+                                                            "description": "The total number of RFID tags scanned in the current operation."
+                                                        },
+                                                        "scanCount": {
+                                                            "type": "integer",
+                                                            "description": "The total number of scan attempts made during the operation."
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "status": {
+                                                            "type": "string",
+                                                            "enum": [
+                                                                "LOW",
+                                                                "CRITICAL",
+                                                                "CHARGING",
+                                                                "FULL",
+                                                                "HIGH"
+                                                            ],
+                                                            "example": "LOW",
+                                                            "description": "The current status of the battery, which indicates its operational state."
+                                                        },
+                                                        "stateOfHealth": {
+                                                            "type": "string",
+                                                            "enum": [
+                                                                "LOW",
+                                                                "FULL",
+                                                                "CRITICAL",
+                                                                "HIGH",
+                                                                "CHARGING"
+                                                            ],
+                                                            "description": "The overall health of the battery, which reflects its long-term capacity and performance."
+                                                        },
+                                                        "chargePercentage": {
+                                                            "type": "integer",
+                                                            "maximum": 100,
+                                                            "description": "The current charge level of the battery, represented as a percentage."
+                                                        }
+                                                    }
+                                                }
+                                            ],
+                                            "description": "Additional data associated with the heartbeat event, referencing different event types."
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "example1": {
+                                        "value": {
+                                            "eventName": "heartbeat",
+                                            "timestamp": "2019-08-24T14:15:22Z",
+                                            "eventNumber": 120,
+                                            "data": {
+                                                "inventoryStatus": {
+                                                    "rfidStatus": "INPROGRESS",
+                                                    "tagCount": 45,
+                                                    "scanCount": 128
+                                                },
+                                                "batteryAlert": {
+                                                    "status": "HIGH",
+                                                    "stateOfHealth": "FULL",
+                                                    "chargePercentage": 85
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                },
-                "responses": {
-                    "default": {
-                        "description": "This is an asynchronous event published by the device. No request/response cycle."
                     }
                 }
             }
@@ -10793,153 +10790,150 @@
                 ],
                 "summary": "alert_short",
                 "description": "Short form of alerts, does not contain details about the alert. This is mainly meant for SOTI.",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "id": {
-                                        "type": "string",
-                                        "enum": [
-                                            "FIRMWARE_DOWNLOAD_FAIL",
-                                            "FIRMWARE_DOWNLOAD_SUCCESS",
-                                            "BATTERY_LOW_SET",
-                                            "BATTERY_LOW_CLEAR",
-                                            "BATTERY_CRITICAL_SET",
-                                            "BATTERY_FULL",
-                                            "TEMPERATURE_HIGH_SET",
-                                            "TEMPERATURE_HIGH_CLEAR",
-                                            "TEMPERATURE_CRITICAL_SET",
-                                            "TEMPERATURE_CRITICAL_CLEAR",
-                                            "NETWORK_INTERFACE_CHANGE",
-                                            "FIRMWARE_UPDATE_FAIL",
-                                            "FIRMWARE_UPDATE_SUCCESS",
-                                            "WIFI_CONFIG_SUCCESS",
-                                            "WIFI_CONFIG_FAIL",
-                                            "ETH_CONFIG_SUCCESS",
-                                            "ETH_CONFIG_FAIL",
-                                            "POWER_SOURCE_UPDATE",
-                                            "MQTT_INSTALL_CERTIFICATE_SUCCESS",
-                                            "MQTT_INSTALL_CERTIFICATE_FAIL",
-                                            "MQTT_CLIENT_CERT_DOWNLOAD_FAIL",
-                                            "MQTT_CLIENT_CERT_DOWNLOAD_SUCCESS",
-                                            "MQTT_ROOT_CERT_DOWNLOAD_FAIL",
-                                            "MQTT_ROOT_CERT_DOWNLOAD_SUCCESS",
-                                            "WIFI_INSTALL_CERTIFICATE_SUCCESS",
-                                            "WIFI_INSTALL_CERTIFICATE_FAIL",
-                                            "WIFI_CLIENT_CERT_DOWNLOAD_FAIL",
-                                            "WIFI_CLIENT_CERT_DOWNLOAD_SUCCESS",
-                                            "WIFI_ROOT_CERT_DOWNLOAD_FAIL",
-                                            "WIFI_ROOT_CERT_DOWNLOAD_SUCCESS",
-                                            "FILESTORE_INSTALL_CERTIFICATE_SUCCESS",
-                                            "FILESTORE_INSTALL_CERTIFICATE_FAIL",
-                                            "FILESTORE_CLIENT_CERT_DOWNLOAD_FAIL",
-                                            "FILESTORE_CLIENT_CERT_DOWNLOAD_SUCCESS",
-                                            "FILESTORE_ROOT_CERT_DOWNLOAD_FAIL",
-                                            "FILESTORE_ROOT_CERT_DOWNLOAD_SUCCESS"
-                                        ],
-                                        "example": "FIRMWARE_DOWNLOAD_SUCCESS",
-                                        "description": "The unique identifier for the alert, representing the specific type of event or notification."
+                "responses": {
+                    "default": {
+                        "description": "alert_short event payload",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "enum": [
+                                                "FIRMWARE_DOWNLOAD_FAIL",
+                                                "FIRMWARE_DOWNLOAD_SUCCESS",
+                                                "BATTERY_LOW_SET",
+                                                "BATTERY_LOW_CLEAR",
+                                                "BATTERY_CRITICAL_SET",
+                                                "BATTERY_FULL",
+                                                "TEMPERATURE_HIGH_SET",
+                                                "TEMPERATURE_HIGH_CLEAR",
+                                                "TEMPERATURE_CRITICAL_SET",
+                                                "TEMPERATURE_CRITICAL_CLEAR",
+                                                "NETWORK_INTERFACE_CHANGE",
+                                                "FIRMWARE_UPDATE_FAIL",
+                                                "FIRMWARE_UPDATE_SUCCESS",
+                                                "WIFI_CONFIG_SUCCESS",
+                                                "WIFI_CONFIG_FAIL",
+                                                "ETH_CONFIG_SUCCESS",
+                                                "ETH_CONFIG_FAIL",
+                                                "POWER_SOURCE_UPDATE",
+                                                "MQTT_INSTALL_CERTIFICATE_SUCCESS",
+                                                "MQTT_INSTALL_CERTIFICATE_FAIL",
+                                                "MQTT_CLIENT_CERT_DOWNLOAD_FAIL",
+                                                "MQTT_CLIENT_CERT_DOWNLOAD_SUCCESS",
+                                                "MQTT_ROOT_CERT_DOWNLOAD_FAIL",
+                                                "MQTT_ROOT_CERT_DOWNLOAD_SUCCESS",
+                                                "WIFI_INSTALL_CERTIFICATE_SUCCESS",
+                                                "WIFI_INSTALL_CERTIFICATE_FAIL",
+                                                "WIFI_CLIENT_CERT_DOWNLOAD_FAIL",
+                                                "WIFI_CLIENT_CERT_DOWNLOAD_SUCCESS",
+                                                "WIFI_ROOT_CERT_DOWNLOAD_FAIL",
+                                                "WIFI_ROOT_CERT_DOWNLOAD_SUCCESS",
+                                                "FILESTORE_INSTALL_CERTIFICATE_SUCCESS",
+                                                "FILESTORE_INSTALL_CERTIFICATE_FAIL",
+                                                "FILESTORE_CLIENT_CERT_DOWNLOAD_FAIL",
+                                                "FILESTORE_CLIENT_CERT_DOWNLOAD_SUCCESS",
+                                                "FILESTORE_ROOT_CERT_DOWNLOAD_FAIL",
+                                                "FILESTORE_ROOT_CERT_DOWNLOAD_SUCCESS"
+                                            ],
+                                            "example": "FIRMWARE_DOWNLOAD_SUCCESS",
+                                            "description": "The unique identifier for the alert, representing the specific type of event or notification."
+                                        },
+                                        "timestamp": {
+                                            "type": "string",
+                                            "format": "time",
+                                            "description": "The time when the alert was generated, formatted as a string."
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "enum": [
+                                                "NOTIFICATION",
+                                                "ALERT"
+                                            ],
+                                            "description": "The category of the message, indicating whether it is a notification or an alert."
+                                        },
+                                        "priority": {
+                                            "type": "string",
+                                            "enum": [
+                                                "HIGH",
+                                                "LOW",
+                                                "CRITICAL"
+                                            ],
+                                            "description": "The urgency level of the alert, specifying its priority as HIGH, LOW, or CRITICAL."
+                                        },
+                                        "messageID": {
+                                            "type": "string",
+                                            "example": "ZEBRA_RFID_HH_ALERTS",
+                                            "enum": [
+                                                "ZEBRA_RFID_HH_ALERTS"
+                                            ],
+                                            "description": "The identifier for the message type, used to categorize the source or purpose of the alert."
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "firmware download started",
+                                            "description": "A brief human-readable text describing the alert or notification."
+                                        }
                                     },
-                                    "timestamp": {
-                                        "type": "string",
-                                        "format": "time",
-                                        "description": "The time when the alert was generated, formatted as a string."
-                                    },
-                                    "type": {
-                                        "type": "string",
-                                        "enum": [
-                                            "NOTIFICATION",
-                                            "ALERT"
-                                        ],
-                                        "description": "The category of the message, indicating whether it is a notification or an alert."
-                                    },
-                                    "priority": {
-                                        "type": "string",
-                                        "enum": [
-                                            "HIGH",
-                                            "LOW",
-                                            "CRITICAL"
-                                        ],
-                                        "description": "The urgency level of the alert, specifying its priority as HIGH, LOW, or CRITICAL."
-                                    },
-                                    "messageID": {
-                                        "type": "string",
-                                        "example": "ZEBRA_RFID_HH_ALERTS",
-                                        "enum": [
-                                            "ZEBRA_RFID_HH_ALERTS"
-                                        ],
-                                        "description": "The identifier for the message type, used to categorize the source or purpose of the alert."
-                                    },
-                                    "description": {
-                                        "type": "string",
-                                        "example": "firmware download started",
-                                        "description": "A brief human-readable text describing the alert or notification."
-                                    }
+                                    "required": [
+                                        "id",
+                                        "timestamp",
+                                        "type",
+                                        "priority",
+                                        "messageID",
+                                        "description"
+                                    ]
                                 },
-                                "required": [
-                                    "id",
-                                    "timestamp",
-                                    "type",
-                                    "priority",
-                                    "messageID",
-                                    "description"
-                                ]
-                            },
-                            "examples": {
-                                "Firmware download success": {
-                                    "description": "Alert indicating successful firmware download",
-                                    "value": {
-                                        "id": "FIRMWARE_DOWNLOAD_SUCCESS",
-                                        "timestamp": "22:54:25",
-                                        "type": "ALERT",
-                                        "priority": "LOW",
-                                        "messageID": "ZEBRA_RFID_HH_ALERTS",
-                                        "description": "firmware download completed successfully"
-                                    }
-                                },
-                                "Battery critical set": {
-                                    "description": "Alert indicating battery level is critically low",
-                                    "value": {
-                                        "id": "BATTERY_CRITICAL_SET",
-                                        "timestamp": "14:30:15",
-                                        "type": "ALERT",
-                                        "priority": "CRITICAL",
-                                        "messageID": "ZEBRA_RFID_HH_ALERTS",
-                                        "description": "battery level is critically low"
-                                    }
-                                },
-                                "WiFi config fail": {
-                                    "description": "Notification indicating WiFi configuration failure",
-                                    "value": {
-                                        "id": "WIFI_CONFIG_FAIL",
-                                        "timestamp": "09:15:42",
-                                        "type": "NOTIFICATION",
-                                        "priority": "HIGH",
-                                        "messageID": "ZEBRA_RFID_HH_ALERTS",
-                                        "description": "WiFi configuration failed"
-                                    }
-                                },
-                                "MQTT install certificate success": {
-                                    "description": "Notification indicating successful MQTT certificate installation",
-                                    "value": {
-                                        "id": "MQTT_INSTALL_CERTIFICATE_SUCCESS",
-                                        "timestamp": "11:45:18",
-                                        "type": "NOTIFICATION",
-                                        "priority": "LOW",
-                                        "messageID": "ZEBRA_RFID_HH_ALERTS",
-                                        "description": "MQTT certificate installed successfully"
+                                "examples": {
+                                    "Firmware download success": {
+                                        "description": "Alert indicating successful firmware download",
+                                        "value": {
+                                            "id": "FIRMWARE_DOWNLOAD_SUCCESS",
+                                            "timestamp": "22:54:25",
+                                            "type": "ALERT",
+                                            "priority": "LOW",
+                                            "messageID": "ZEBRA_RFID_HH_ALERTS",
+                                            "description": "firmware download completed successfully"
+                                        }
+                                    },
+                                    "Battery critical set": {
+                                        "description": "Alert indicating battery level is critically low",
+                                        "value": {
+                                            "id": "BATTERY_CRITICAL_SET",
+                                            "timestamp": "14:30:15",
+                                            "type": "ALERT",
+                                            "priority": "CRITICAL",
+                                            "messageID": "ZEBRA_RFID_HH_ALERTS",
+                                            "description": "battery level is critically low"
+                                        }
+                                    },
+                                    "WiFi config fail": {
+                                        "description": "Notification indicating WiFi configuration failure",
+                                        "value": {
+                                            "id": "WIFI_CONFIG_FAIL",
+                                            "timestamp": "09:15:42",
+                                            "type": "NOTIFICATION",
+                                            "priority": "HIGH",
+                                            "messageID": "ZEBRA_RFID_HH_ALERTS",
+                                            "description": "WiFi configuration failed"
+                                        }
+                                    },
+                                    "MQTT install certificate success": {
+                                        "description": "Notification indicating successful MQTT certificate installation",
+                                        "value": {
+                                            "id": "MQTT_INSTALL_CERTIFICATE_SUCCESS",
+                                            "timestamp": "11:45:18",
+                                            "type": "NOTIFICATION",
+                                            "priority": "LOW",
+                                            "messageID": "ZEBRA_RFID_HH_ALERTS",
+                                            "description": "MQTT certificate installed successfully"
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                },
-                "responses": {
-                    "default": {
-                        "description": "This is an asynchronous event published by the device. No request/response cycle."
                     }
                 }
             }
@@ -10951,427 +10945,424 @@
                 ],
                 "summary": "alerts",
                 "description": "Represents a system-generated alert or notification event. Note: Some event types such as antenna, temperature, usage, GPI, and user app info are not supported.",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "type": {
-                                        "type": "string",
-                                        "enum": [
-                                            "EVENT",
-                                            "NOTIFICATION",
-                                            "EXCEPTION",
-                                            "ALERT"
-                                        ],
-                                        "description": "Specifies the type of alert or message being generated, such as an event, notification, exception, or alert."
-                                    },
-                                    "timestamp": {
-                                        "type": "string",
-                                        "format": "time",
-                                        "example": "22:54:25",
-                                        "description": "Indicates the time at which the alert was generated, formatted as a time string."
-                                    },
-                                    "state": {
-                                        "type": "string",
-                                        "enum": [
-                                            "SET",
-                                            "CLEAR",
-                                            "ONESHOT"
-                                        ],
-                                        "description": "Represents the state of the alert. 'SET' indicates an active alert, 'CLEAR' indicates the alert has been resolved, and 'ONESHOT' is a one-time alert."
-                                    },
-                                    "id": {
-                                        "type": "string",
-                                        "enum": [
-                                            "BATTERY_LOW",
-                                            "BATTERY_CRIT",
-                                            "BATTERY_FULL",
-                                            "FIRMWARE_UPDATE",
-                                            "FILE_DOWNLOAD",
-                                            "GPI_EVENT",
-                                            "NETWORK_EVENT",
-                                            "ANTENNA_EVENT",
-                                            "TEMPERATURE"
-                                        ],
-                                        "example": "BATTERY_LOW",
-                                        "description": "A unique identifier for the alert type, such as a low battery warning or a temperature event."
-                                    },
-                                    "priority": {
-                                        "type": "string",
-                                        "example": "CRITICAL",
-                                        "enum": [
-                                            "CRITICAL",
-                                            "HIGH",
-                                            "MEDIUM",
-                                            "LOW"
-                                        ],
-                                        "description": "Defines the priority level of the alert, ranging from critical to low."
-                                    },
-                                    "alertDetails": {
-                                        "anyOf": [
-                                            {
-                                                "type": "object",
-                                                "properties": {
-                                                    "fwUpdateStatus": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "updateStatus": {
-                                                                "type": "string",
-                                                                "enum": [
-                                                                    "started",
-                                                                    "updating",
-                                                                    "successfull",
-                                                                    "failed",
-                                                                    "skipped"
-                                                                ],
-                                                                "example": "in progress",
-                                                                "description": "Current status of the firmware update process."
-                                                            },
-                                                            "overallProgress": {
-                                                                "type": "number",
-                                                                "example": 20,
-                                                                "description": "Percent of update completed."
-                                                            },
-                                                            "stage": {
-                                                                "type": "string",
-                                                                "description": "Individual image update steps or description.",
-                                                                "example": "updating scanner fw"
-                                                            }
-                                                        },
-                                                        "required": [
-                                                            "updateStatus",
-                                                            "overallProgress",
-                                                            "stage"
-                                                        ]
-                                                    },
-                                                    "downloadInfo": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "fileType": {
-                                                                "type": "string",
-                                                                "enum": [
-                                                                    "FILE_TYPE_FW",
-                                                                    "FILE_TYPE_CERT"
-                                                                ],
-                                                                "example": "FILE_TYPE_FW",
-                                                                "description": "Specifies the type of file being downloaded. Options include firmware files (FILE_TYPE_FW) and certificate files (FILE_TYPE_CERT)."
-                                                            },
-                                                            "fileName": {
-                                                                "type": "string",
-                                                                "description": "The name of the file being downloaded."
-                                                            },
-                                                            "status": {
-                                                                "type": "string",
-                                                                "enum": [
-                                                                    "DOWNLOAD SUCCESS",
-                                                                    "DOWNLOAD FAIL",
-                                                                    "SAVE FAIL",
-                                                                    "SAVE SUCCESS"
-                                                                ],
-                                                                "description": "Indicates the status of the file download or save operation."
-                                                            }
-                                                        },
-                                                        "required": [
-                                                            "fileType",
-                                                            "fileName",
-                                                            "status"
-                                                        ]
-                                                    },
-                                                    "temperatueInfo": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "nge": {
-                                                                "type": "number",
-                                                                "description": "Represents the numeric value for the Next Generation Event (specific context needed)."
-                                                            },
-                                                            "pa": {
-                                                                "type": "number",
-                                                                "description": "Indicates the pressure altitude value in numeric format."
-                                                            },
-                                                            "ambient": {
-                                                                "type": "number",
-                                                                "description": "Refers to the ambient temperature in numeric format."
-                                                            }
-                                                        },
-                                                        "required": [
-                                                            "nge",
-                                                            "pa",
-                                                            "ambient"
-                                                        ]
-                                                    },
-                                                    "networkInfo": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "networkInterface": {
-                                                                "type": "object",
-                                                                "description": "Details of the network interfaces on the device.",
-                                                                "properties": {
-                                                                    "ethStatus": {
-                                                                        "type": "array",
-                                                                        "description": "List of Ethernet interface statuses.",
-                                                                        "items": {
-                                                                            "type": "object",
-                                                                            "properties": {
-                                                                                "interface": {
-                                                                                    "type": "string",
-                                                                                    "description": "Name of the Ethernet interface.",
-                                                                                    "example": "eth0"
-                                                                                },
-                                                                                "status": {
-                                                                                    "type": "string",
-                                                                                    "description": "Connection status of the Ethernet interface.",
-                                                                                    "enum": [
-                                                                                        "CONNECTED",
-                                                                                        "DISCONNECTED"
-                                                                                    ],
-                                                                                    "example": "CONNECTED"
-                                                                                },
-                                                                                "linkStatus": {
-                                                                                    "type": "string",
-                                                                                    "description": "Link status of the Ethernet interface.",
-                                                                                    "enum": [
-                                                                                        "UP",
-                                                                                        "DOWN"
-                                                                                    ],
-                                                                                    "example": "UP"
-                                                                                },
-                                                                                "linkSpeed": {
-                                                                                    "type": "string",
-                                                                                    "description": "Speed of the Ethernet link."
-                                                                                },
-                                                                                "ipV4Address": {
-                                                                                    "type": "string",
-                                                                                    "description": "IPv4 address assigned to the Ethernet interface.",
-                                                                                    "example": "192.168.0.165"
-                                                                                },
-                                                                                "ipV6Address": {
-                                                                                    "type": "string",
-                                                                                    "description": "IPv6 address assigned to the Ethernet interface.",
-                                                                                    "example": "fe80::f299:9d51:864c:cff"
-                                                                                }
-                                                                            },
-                                                                            "required": [
-                                                                                "interface",
-                                                                                "status",
-                                                                                "linkStatus",
-                                                                                "linkSpeed",
-                                                                                "ipV4Address",
-                                                                                "ipV6Address"
-                                                                            ]
-                                                                        }
-                                                                    },
-                                                                    "wifiStatus": {
-                                                                        "type": "array",
-                                                                        "description": "List of WiFi interface statuses.",
-                                                                        "items": {
-                                                                            "type": "object",
-                                                                            "properties": {
-                                                                                "interface": {
-                                                                                    "type": "string",
-                                                                                    "description": "Name of the WiFi interface.",
-                                                                                    "example": "wlan0"
-                                                                                },
-                                                                                "status": {
-                                                                                    "type": "string",
-                                                                                    "description": "Connection status of the WiFi interface.",
-                                                                                    "enum": [
-                                                                                        "CONNECTED",
-                                                                                        "DISCONNECTED"
-                                                                                    ],
-                                                                                    "example": "CONNECTED"
-                                                                                },
-                                                                                "ssid": {
-                                                                                    "type": "string",
-                                                                                    "description": "SSID of the connected WiFi network."
-                                                                                },
-                                                                                "ipV4Address": {
-                                                                                    "type": "string",
-                                                                                    "description": "IPv4 address assigned to the WiFi interface.",
-                                                                                    "example": "192.168.0.145"
-                                                                                },
-                                                                                "ipV6Address": {
-                                                                                    "type": "string",
-                                                                                    "description": "IPv6 address assigned to the WiFi interface.",
-                                                                                    "example": "fe80::f299:9d51:86c:cff14"
-                                                                                }
-                                                                            },
-                                                                            "required": [
-                                                                                "interface",
-                                                                                "status",
-                                                                                "ssid",
-                                                                                "ipV4Address",
-                                                                                "ipV6Address"
-                                                                            ]
-                                                                        }
-                                                                    }
-                                                                }
-                                                            },
-                                                            "btRemoteDevice": {
-                                                                "type": "object",
-                                                                "description": "Details of connected Bluetooth remote devices.",
-                                                                "required": [
-                                                                    "deviceName",
-                                                                    "deviceMac"
-                                                                ],
-                                                                "properties": {
-                                                                    "deviceName": {
-                                                                        "type": "string",
-                                                                        "description": "Name of the Bluetooth remote device.",
-                                                                        "default": "TestLaptop"
-                                                                    },
-                                                                    "deviceMac": {
-                                                                        "type": "string",
-                                                                        "description": "MAC address of the Bluetooth remote device.",
-                                                                        "example": "00:11:22:A3:B1:D2"
-                                                                    }
-                                                                }
-                                                            }
-                                                        },
-                                                        "required": [
-                                                            "networkInterface"
-                                                        ]
-                                                    },
-                                                    "exception": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "type": {
-                                                                "type": "string",
-                                                                "enum": [
-                                                                    "RADIO",
-                                                                    "SCANNER",
-                                                                    "SYSTEM"
-                                                                ],
-                                                                "description": "Specifies the category of the error."
-                                                            },
-                                                            "code": {
-                                                                "type": "integer",
-                                                                "description": "A numeric code representing the specific error."
-                                                            },
-                                                            "message": {
-                                                                "type": "string",
-                                                                "description": "A detailed message describing the error."
-                                                            }
-                                                        }
-                                                    },
-                                                    "batteryAlert": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "status": {
-                                                                "type": "string",
-                                                                "enum": [
-                                                                    "LOW",
-                                                                    "CRITICAL",
-                                                                    "CHARGING",
-                                                                    "FULL",
-                                                                    "HIGH"
-                                                                ],
-                                                                "example": "LOW",
-                                                                "description": "The current status of the battery, which indicates its operational state."
-                                                            },
-                                                            "stateOfHealth": {
-                                                                "type": "string",
-                                                                "enum": [
-                                                                    "LOW",
-                                                                    "FULL",
-                                                                    "CRITICAL",
-                                                                    "HIGH",
-                                                                    "CHARGING"
-                                                                ],
-                                                                "description": "The overall health of the battery, which reflects its long-term capacity and performance."
-                                                            },
-                                                            "chargePercentage": {
-                                                                "type": "integer",
-                                                                "maximum": 100,
-                                                                "description": "The current charge level of the battery, represented as a percentage."
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        ],
-                                        "description": "Contains additional details about the alert, which may vary depending on the specific alert type."
-                                    }
-                                },
-                                "required": [
-                                    "type",
-                                    "timestamp",
-                                    "state",
-                                    "id",
-                                    "priority"
-                                ]
-                            },
-                            "examples": {
-                                "example1": {
-                                    "value": {
-                                        "type": "EVENT",
-                                        "timestamp": "22:54:25",
-                                        "state": "SET",
-                                        "id": "BATTERY_LOW",
-                                        "priority": "CRITICAL",
+                "responses": {
+                    "default": {
+                        "description": "alerts event payload",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "enum": [
+                                                "EVENT",
+                                                "NOTIFICATION",
+                                                "EXCEPTION",
+                                                "ALERT"
+                                            ],
+                                            "description": "Specifies the type of alert or message being generated, such as an event, notification, exception, or alert."
+                                        },
+                                        "timestamp": {
+                                            "type": "string",
+                                            "format": "time",
+                                            "example": "22:54:25",
+                                            "description": "Indicates the time at which the alert was generated, formatted as a time string."
+                                        },
+                                        "state": {
+                                            "type": "string",
+                                            "enum": [
+                                                "SET",
+                                                "CLEAR",
+                                                "ONESHOT"
+                                            ],
+                                            "description": "Represents the state of the alert. 'SET' indicates an active alert, 'CLEAR' indicates the alert has been resolved, and 'ONESHOT' is a one-time alert."
+                                        },
+                                        "id": {
+                                            "type": "string",
+                                            "enum": [
+                                                "BATTERY_LOW",
+                                                "BATTERY_CRIT",
+                                                "BATTERY_FULL",
+                                                "FIRMWARE_UPDATE",
+                                                "FILE_DOWNLOAD",
+                                                "GPI_EVENT",
+                                                "NETWORK_EVENT",
+                                                "ANTENNA_EVENT",
+                                                "TEMPERATURE"
+                                            ],
+                                            "example": "BATTERY_LOW",
+                                            "description": "A unique identifier for the alert type, such as a low battery warning or a temperature event."
+                                        },
+                                        "priority": {
+                                            "type": "string",
+                                            "example": "CRITICAL",
+                                            "enum": [
+                                                "CRITICAL",
+                                                "HIGH",
+                                                "MEDIUM",
+                                                "LOW"
+                                            ],
+                                            "description": "Defines the priority level of the alert, ranging from critical to low."
+                                        },
                                         "alertDetails": {
-                                            "fwUpdateStatus": {
-                                                "updateStatus": "updating",
-                                                "overallProgress": 20,
-                                                "stage": "updating scanner fw"
-                                            },
-                                            "downloadInfo": {
-                                                "fileType": "FILE_TYPE_FW",
-                                                "fileName": "string",
-                                                "status": "DOWNLOAD SUCCESS"
-                                            },
-                                            "antennaEvent": [
+                                            "anyOf": [
                                                 {
-                                                    "antenna": {
-                                                        "status": "connected",
-                                                        "port": 3
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "fwUpdateStatus": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "updateStatus": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "started",
+                                                                        "updating",
+                                                                        "successfull",
+                                                                        "failed",
+                                                                        "skipped"
+                                                                    ],
+                                                                    "example": "in progress",
+                                                                    "description": "Current status of the firmware update process."
+                                                                },
+                                                                "overallProgress": {
+                                                                    "type": "number",
+                                                                    "example": 20,
+                                                                    "description": "Percent of update completed."
+                                                                },
+                                                                "stage": {
+                                                                    "type": "string",
+                                                                    "description": "Individual image update steps or description.",
+                                                                    "example": "updating scanner fw"
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "updateStatus",
+                                                                "overallProgress",
+                                                                "stage"
+                                                            ]
+                                                        },
+                                                        "downloadInfo": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "fileType": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "FILE_TYPE_FW",
+                                                                        "FILE_TYPE_CERT"
+                                                                    ],
+                                                                    "example": "FILE_TYPE_FW",
+                                                                    "description": "Specifies the type of file being downloaded. Options include firmware files (FILE_TYPE_FW) and certificate files (FILE_TYPE_CERT)."
+                                                                },
+                                                                "fileName": {
+                                                                    "type": "string",
+                                                                    "description": "The name of the file being downloaded."
+                                                                },
+                                                                "status": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "DOWNLOAD SUCCESS",
+                                                                        "DOWNLOAD FAIL",
+                                                                        "SAVE FAIL",
+                                                                        "SAVE SUCCESS"
+                                                                    ],
+                                                                    "description": "Indicates the status of the file download or save operation."
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "fileType",
+                                                                "fileName",
+                                                                "status"
+                                                            ]
+                                                        },
+                                                        "temperatueInfo": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "nge": {
+                                                                    "type": "number",
+                                                                    "description": "Represents the numeric value for the Next Generation Event (specific context needed)."
+                                                                },
+                                                                "pa": {
+                                                                    "type": "number",
+                                                                    "description": "Indicates the pressure altitude value in numeric format."
+                                                                },
+                                                                "ambient": {
+                                                                    "type": "number",
+                                                                    "description": "Refers to the ambient temperature in numeric format."
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "nge",
+                                                                "pa",
+                                                                "ambient"
+                                                            ]
+                                                        },
+                                                        "networkInfo": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "networkInterface": {
+                                                                    "type": "object",
+                                                                    "description": "Details of the network interfaces on the device.",
+                                                                    "properties": {
+                                                                        "ethStatus": {
+                                                                            "type": "array",
+                                                                            "description": "List of Ethernet interface statuses.",
+                                                                            "items": {
+                                                                                "type": "object",
+                                                                                "properties": {
+                                                                                    "interface": {
+                                                                                        "type": "string",
+                                                                                        "description": "Name of the Ethernet interface.",
+                                                                                        "example": "eth0"
+                                                                                    },
+                                                                                    "status": {
+                                                                                        "type": "string",
+                                                                                        "description": "Connection status of the Ethernet interface.",
+                                                                                        "enum": [
+                                                                                            "CONNECTED",
+                                                                                            "DISCONNECTED"
+                                                                                        ],
+                                                                                        "example": "CONNECTED"
+                                                                                    },
+                                                                                    "linkStatus": {
+                                                                                        "type": "string",
+                                                                                        "description": "Link status of the Ethernet interface.",
+                                                                                        "enum": [
+                                                                                            "UP",
+                                                                                            "DOWN"
+                                                                                        ],
+                                                                                        "example": "UP"
+                                                                                    },
+                                                                                    "linkSpeed": {
+                                                                                        "type": "string",
+                                                                                        "description": "Speed of the Ethernet link."
+                                                                                    },
+                                                                                    "ipV4Address": {
+                                                                                        "type": "string",
+                                                                                        "description": "IPv4 address assigned to the Ethernet interface.",
+                                                                                        "example": "192.168.0.165"
+                                                                                    },
+                                                                                    "ipV6Address": {
+                                                                                        "type": "string",
+                                                                                        "description": "IPv6 address assigned to the Ethernet interface.",
+                                                                                        "example": "fe80::f299:9d51:864c:cff"
+                                                                                    }
+                                                                                },
+                                                                                "required": [
+                                                                                    "interface",
+                                                                                    "status",
+                                                                                    "linkStatus",
+                                                                                    "linkSpeed",
+                                                                                    "ipV4Address",
+                                                                                    "ipV6Address"
+                                                                                ]
+                                                                            }
+                                                                        },
+                                                                        "wifiStatus": {
+                                                                            "type": "array",
+                                                                            "description": "List of WiFi interface statuses.",
+                                                                            "items": {
+                                                                                "type": "object",
+                                                                                "properties": {
+                                                                                    "interface": {
+                                                                                        "type": "string",
+                                                                                        "description": "Name of the WiFi interface.",
+                                                                                        "example": "wlan0"
+                                                                                    },
+                                                                                    "status": {
+                                                                                        "type": "string",
+                                                                                        "description": "Connection status of the WiFi interface.",
+                                                                                        "enum": [
+                                                                                            "CONNECTED",
+                                                                                            "DISCONNECTED"
+                                                                                        ],
+                                                                                        "example": "CONNECTED"
+                                                                                    },
+                                                                                    "ssid": {
+                                                                                        "type": "string",
+                                                                                        "description": "SSID of the connected WiFi network."
+                                                                                    },
+                                                                                    "ipV4Address": {
+                                                                                        "type": "string",
+                                                                                        "description": "IPv4 address assigned to the WiFi interface.",
+                                                                                        "example": "192.168.0.145"
+                                                                                    },
+                                                                                    "ipV6Address": {
+                                                                                        "type": "string",
+                                                                                        "description": "IPv6 address assigned to the WiFi interface.",
+                                                                                        "example": "fe80::f299:9d51:86c:cff14"
+                                                                                    }
+                                                                                },
+                                                                                "required": [
+                                                                                    "interface",
+                                                                                    "status",
+                                                                                    "ssid",
+                                                                                    "ipV4Address",
+                                                                                    "ipV6Address"
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                },
+                                                                "btRemoteDevice": {
+                                                                    "type": "object",
+                                                                    "description": "Details of connected Bluetooth remote devices.",
+                                                                    "required": [
+                                                                        "deviceName",
+                                                                        "deviceMac"
+                                                                    ],
+                                                                    "properties": {
+                                                                        "deviceName": {
+                                                                            "type": "string",
+                                                                            "description": "Name of the Bluetooth remote device.",
+                                                                            "default": "TestLaptop"
+                                                                        },
+                                                                        "deviceMac": {
+                                                                            "type": "string",
+                                                                            "description": "MAC address of the Bluetooth remote device.",
+                                                                            "example": "00:11:22:A3:B1:D2"
+                                                                        }
+                                                                    }
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "networkInterface"
+                                                            ]
+                                                        },
+                                                        "exception": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "type": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "RADIO",
+                                                                        "SCANNER",
+                                                                        "SYSTEM"
+                                                                    ],
+                                                                    "description": "Specifies the category of the error."
+                                                                },
+                                                                "code": {
+                                                                    "type": "integer",
+                                                                    "description": "A numeric code representing the specific error."
+                                                                },
+                                                                "message": {
+                                                                    "type": "string",
+                                                                    "description": "A detailed message describing the error."
+                                                                }
+                                                            }
+                                                        },
+                                                        "batteryAlert": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "status": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "LOW",
+                                                                        "CRITICAL",
+                                                                        "CHARGING",
+                                                                        "FULL",
+                                                                        "HIGH"
+                                                                    ],
+                                                                    "example": "LOW",
+                                                                    "description": "The current status of the battery, which indicates its operational state."
+                                                                },
+                                                                "stateOfHealth": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "LOW",
+                                                                        "FULL",
+                                                                        "CRITICAL",
+                                                                        "HIGH",
+                                                                        "CHARGING"
+                                                                    ],
+                                                                    "description": "The overall health of the battery, which reflects its long-term capacity and performance."
+                                                                },
+                                                                "chargePercentage": {
+                                                                    "type": "integer",
+                                                                    "maximum": 100,
+                                                                    "description": "The current charge level of the battery, represented as a percentage."
+                                                                }
+                                                            }
+                                                        }
                                                     }
                                                 }
                                             ],
-                                            "networkInfo": {
-                                                "networkInterface": {
-                                                    "ethStatus": [
-                                                        {
-                                                            "interface": "eth0",
-                                                            "status": "CONNECTED",
-                                                            "linkStatus": "UP",
-                                                            "linkSpeed": "string",
-                                                            "ipV4Address": "192.168.0.165",
-                                                            "ipV6Address": "fe80::f299:9d51:864c:cff"
-                                                        }
-                                                    ],
-                                                    "wifiStatus": [
-                                                        {
-                                                            "interface": "wlan0",
-                                                            "status": "CONNECTED",
-                                                            "ssid": "string",
-                                                            "ipV4Address": "192.168.0.145",
-                                                            "ipV6Address": "fe80::f299:9d51:86c:cff14"
-                                                        }
-                                                    ]
+                                            "description": "Contains additional details about the alert, which may vary depending on the specific alert type."
+                                        }
+                                    },
+                                    "required": [
+                                        "type",
+                                        "timestamp",
+                                        "state",
+                                        "id",
+                                        "priority"
+                                    ]
+                                },
+                                "examples": {
+                                    "example1": {
+                                        "value": {
+                                            "type": "EVENT",
+                                            "timestamp": "22:54:25",
+                                            "state": "SET",
+                                            "id": "BATTERY_LOW",
+                                            "priority": "CRITICAL",
+                                            "alertDetails": {
+                                                "fwUpdateStatus": {
+                                                    "updateStatus": "updating",
+                                                    "overallProgress": 20,
+                                                    "stage": "updating scanner fw"
                                                 },
-                                                "btRemoteDevice": {
-                                                    "deviceName": "TestLaptop",
-                                                    "deviceMac": "00:11:22:A3:B1:D2"
+                                                "downloadInfo": {
+                                                    "fileType": "FILE_TYPE_FW",
+                                                    "fileName": "string",
+                                                    "status": "DOWNLOAD SUCCESS"
+                                                },
+                                                "antennaEvent": [
+                                                    {
+                                                        "antenna": {
+                                                            "status": "connected",
+                                                            "port": 3
+                                                        }
+                                                    }
+                                                ],
+                                                "networkInfo": {
+                                                    "networkInterface": {
+                                                        "ethStatus": [
+                                                            {
+                                                                "interface": "eth0",
+                                                                "status": "CONNECTED",
+                                                                "linkStatus": "UP",
+                                                                "linkSpeed": "string",
+                                                                "ipV4Address": "192.168.0.165",
+                                                                "ipV6Address": "fe80::f299:9d51:864c:cff"
+                                                            }
+                                                        ],
+                                                        "wifiStatus": [
+                                                            {
+                                                                "interface": "wlan0",
+                                                                "status": "CONNECTED",
+                                                                "ssid": "string",
+                                                                "ipV4Address": "192.168.0.145",
+                                                                "ipV6Address": "fe80::f299:9d51:86c:cff14"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "btRemoteDevice": {
+                                                        "deviceName": "TestLaptop",
+                                                        "deviceMac": "00:11:22:A3:B1:D2"
+                                                    }
+                                                },
+                                                "batteryAlert": {
+                                                    "status": "LOW",
+                                                    "stateOfHealth": "LOW",
+                                                    "chargePercentage": 100
                                                 }
-                                            },
-                                            "batteryAlert": {
-                                                "status": "LOW",
-                                                "stateOfHealth": "LOW",
-                                                "chargePercentage": 100
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                },
-                "responses": {
-                    "default": {
-                        "description": "This is an asynchronous event published by the device. No request/response cycle."
                     }
                 }
             }
@@ -11383,118 +11374,120 @@
                 ],
                 "summary": "exceptionEVT",
                 "description": "This event captures details about exception events in the IOTC system, including metadata and component-specific errors.",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "eventName": {
-                                        "type": "string",
-                                        "example": "exception",
-                                        "description": "The name of the event indicating an exception occurred."
-                                    },
-                                    "timestamp": {
-                                        "type": "string",
-                                        "example": "2019-08-24T14:15:22Z",
-                                        "description": "The ISO 8601 formatted timestamp of when the event occurred."
-                                    },
-                                    "eventNumber": {
-                                        "type": "number",
-                                        "example": 120,
-                                        "description": "A unique numerical identifier for the event."
-                                    },
-                                    "upTime": {
-                                        "type": "string",
-                                        "example": "5 days 4hr 3min",
-                                        "description": "The duration for which the system has been running since the last restart."
-                                    },
-                                    "details": {
-                                        "type": "object",
-                                        "properties": {
-                                            "exceptions": {
-                                                "anyOf": [
-                                                    {
-                                                        "description": "A collection of diagnostic, error, or warning events.",
-                                                        "properties": {
-                                                            "radio": {
-                                                                "type": "object",
-                                                                "description": "Represents diagnostic, error, or warning events related to the radio module.",
-                                                                "properties": {
-                                                                    "code": {
-                                                                        "type": "number",
-                                                                        "example": 51,
-                                                                        "description": "A numeric code representing a specific radio-related issue or state."
-                                                                    },
-                                                                    "message": {
-                                                                        "type": "string",
-                                                                        "example": "radio is not responsive",
-                                                                        "description": "A human-readable message describing the radio issue or state."
+                "responses": {
+                    "default": {
+                        "description": "exceptionEVT event payload",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "eventName": {
+                                            "type": "string",
+                                            "example": "exception",
+                                            "description": "The name of the event indicating an exception occurred."
+                                        },
+                                        "timestamp": {
+                                            "type": "string",
+                                            "example": "2019-08-24T14:15:22Z",
+                                            "description": "The ISO 8601 formatted timestamp of when the event occurred."
+                                        },
+                                        "eventNumber": {
+                                            "type": "number",
+                                            "example": 120,
+                                            "description": "A unique numerical identifier for the event."
+                                        },
+                                        "upTime": {
+                                            "type": "string",
+                                            "example": "5 days 4hr 3min",
+                                            "description": "The duration for which the system has been running since the last restart."
+                                        },
+                                        "details": {
+                                            "type": "object",
+                                            "properties": {
+                                                "exceptions": {
+                                                    "anyOf": [
+                                                        {
+                                                            "description": "A collection of diagnostic, error, or warning events.",
+                                                            "properties": {
+                                                                "radio": {
+                                                                    "type": "object",
+                                                                    "description": "Represents diagnostic, error, or warning events related to the radio module.",
+                                                                    "properties": {
+                                                                        "code": {
+                                                                            "type": "number",
+                                                                            "example": 51,
+                                                                            "description": "A numeric code representing a specific radio-related issue or state."
+                                                                        },
+                                                                        "message": {
+                                                                            "type": "string",
+                                                                            "example": "radio is not responsive",
+                                                                            "description": "A human-readable message describing the radio issue or state."
+                                                                        }
                                                                     }
-                                                                }
-                                                            },
-                                                            "scanner": {
-                                                                "type": "object",
-                                                                "description": "Represents diagnostic, error, or warning events related to the scanner module.",
-                                                                "properties": {
-                                                                    "code": {
-                                                                        "type": "number",
-                                                                        "example": 0,
-                                                                        "description": "A numeric code representing a specific scanner-related issue or state."
-                                                                    },
-                                                                    "message": {
-                                                                        "type": "string",
-                                                                        "example": "scanner is connected and scanning in progress",
-                                                                        "description": "A human-readable message describing the scanner issue or state."
+                                                                },
+                                                                "scanner": {
+                                                                    "type": "object",
+                                                                    "description": "Represents diagnostic, error, or warning events related to the scanner module.",
+                                                                    "properties": {
+                                                                        "code": {
+                                                                            "type": "number",
+                                                                            "example": 0,
+                                                                            "description": "A numeric code representing a specific scanner-related issue or state."
+                                                                        },
+                                                                        "message": {
+                                                                            "type": "string",
+                                                                            "example": "scanner is connected and scanning in progress",
+                                                                            "description": "A human-readable message describing the scanner issue or state."
+                                                                        }
                                                                     }
-                                                                }
-                                                            },
-                                                            "system": {
-                                                                "type": "object",
-                                                                "description": "Represents diagnostic, error, or warning events related to the system.",
-                                                                "properties": {
-                                                                    "code": {
-                                                                        "type": "number",
-                                                                        "example": 12,
-                                                                        "description": "A numeric code representing a specific system-related issue or state."
-                                                                    },
-                                                                    "message": {
-                                                                        "type": "string",
-                                                                        "example": "running out of memory",
-                                                                        "description": "A human-readable message describing the system issue or state."
+                                                                },
+                                                                "system": {
+                                                                    "type": "object",
+                                                                    "description": "Represents diagnostic, error, or warning events related to the system.",
+                                                                    "properties": {
+                                                                        "code": {
+                                                                            "type": "number",
+                                                                            "example": 12,
+                                                                            "description": "A numeric code representing a specific system-related issue or state."
+                                                                        },
+                                                                        "message": {
+                                                                            "type": "string",
+                                                                            "example": "running out of memory",
+                                                                            "description": "A human-readable message describing the system issue or state."
+                                                                        }
                                                                     }
                                                                 }
                                                             }
                                                         }
-                                                    }
-                                                ],
-                                                "type": "object"
+                                                    ],
+                                                    "type": "object"
+                                                }
                                             }
                                         }
                                     }
-                                }
-                            },
-                            "examples": {
-                                "example1": {
-                                    "value": {
-                                        "eventName": "exception",
-                                        "timestamp": "2019-08-24T14:15:22Z",
-                                        "eventNumber": 120,
-                                        "upTime": "5 days 4hr 3min",
-                                        "details": {
-                                            "exceptions": {
-                                                "radio": {
-                                                    "code": 51,
-                                                    "message": "radio is not responsive"
-                                                },
-                                                "scanner": {
-                                                    "code": 0,
-                                                    "message": "scanner is connected and scanning in progress "
-                                                },
-                                                "system": {
-                                                    "code": 12,
-                                                    "message": "running out of memory "
+                                },
+                                "examples": {
+                                    "example1": {
+                                        "value": {
+                                            "eventName": "exception",
+                                            "timestamp": "2019-08-24T14:15:22Z",
+                                            "eventNumber": 120,
+                                            "upTime": "5 days 4hr 3min",
+                                            "details": {
+                                                "exceptions": {
+                                                    "radio": {
+                                                        "code": 51,
+                                                        "message": "radio is not responsive"
+                                                    },
+                                                    "scanner": {
+                                                        "code": 0,
+                                                        "message": "scanner is connected and scanning in progress "
+                                                    },
+                                                    "system": {
+                                                        "code": 12,
+                                                        "message": "running out of memory "
+                                                    }
                                                 }
                                             }
                                         }
@@ -11502,11 +11495,6 @@
                                 }
                             }
                         }
-                    }
-                },
-                "responses": {
-                    "default": {
-                        "description": "This is an asynchronous event published by the device. No request/response cycle."
                     }
                 }
             }
@@ -11518,81 +11506,78 @@
                 ],
                 "summary": "mqttConnEVT",
                 "description": "This event provides details about the connection state of a device, including its metadata and protocol versions.",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "connectionState": {
-                                        "type": "string",
-                                        "example": "CONNECTED",
-                                        "enum": [
-                                            "CONNECTED",
-                                            "DISCONNECTED"
-                                        ],
-                                        "description": "Indicates the connection status of the device. Possible values are 'CONNECTED' or 'DISCONNECTED'."
-                                    },
-                                    "timestamp": {
-                                        "type": "string",
-                                        "example": "12:17:56",
-                                        "format": "time",
-                                        "description": "The time at which the MQTT connection event occurred, formatted as HH:MM:SS."
-                                    },
-                                    "deviceModel": {
-                                        "type": "string",
-                                        "example": "RFD40",
-                                        "enum": [
-                                            "RFD40",
-                                            "RFD90"
-                                        ],
-                                        "description": "Specifies the model of the device involved in the MQTT connection event. Supported models are 'RFD40' and 'RFD90'."
-                                    },
-                                    "deviceSerialNo": {
-                                        "type": "string",
-                                        "example": "RFD40-24190525100354",
-                                        "description": "The unique serial number of the device involved in the MQTT connection event."
-                                    },
-                                    "apiVersion": {
-                                        "type": "number",
-                                        "example": "1.0",
-                                        "description": "The version of the API in use during the MQTT connection event."
-                                    },
-                                    "mqttVersion": {
-                                        "type": "number",
-                                        "example": "3.1.1",
-                                        "description": "The version of the MQTT protocol being used for the connection."
-                                    }
-                                }
-                            },
-                            "examples": {
-                                "example1": {
-                                    "value": {
-                                        "connectionState": "CONNECTED",
-                                        "timestamp": "12:17:56",
-                                        "deviceModel": "RFD40",
-                                        "deviceSerialNo": "RFD40-24190525100354",
-                                        "apiVersion": "1.0",
-                                        "mqttVersion": "3.1.1"
+                "responses": {
+                    "default": {
+                        "description": "mqttConnEVT event payload",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "connectionState": {
+                                            "type": "string",
+                                            "example": "CONNECTED",
+                                            "enum": [
+                                                "CONNECTED",
+                                                "DISCONNECTED"
+                                            ],
+                                            "description": "Indicates the connection status of the device. Possible values are 'CONNECTED' or 'DISCONNECTED'."
+                                        },
+                                        "timestamp": {
+                                            "type": "string",
+                                            "example": "12:17:56",
+                                            "format": "time",
+                                            "description": "The time at which the MQTT connection event occurred, formatted as HH:MM:SS."
+                                        },
+                                        "deviceModel": {
+                                            "type": "string",
+                                            "example": "RFD40",
+                                            "enum": [
+                                                "RFD40",
+                                                "RFD90"
+                                            ],
+                                            "description": "Specifies the model of the device involved in the MQTT connection event. Supported models are 'RFD40' and 'RFD90'."
+                                        },
+                                        "deviceSerialNo": {
+                                            "type": "string",
+                                            "example": "RFD40-24190525100354",
+                                            "description": "The unique serial number of the device involved in the MQTT connection event."
+                                        },
+                                        "apiVersion": {
+                                            "type": "number",
+                                            "example": "1.0",
+                                            "description": "The version of the API in use during the MQTT connection event."
+                                        },
+                                        "mqttVersion": {
+                                            "type": "number",
+                                            "example": "3.1.1",
+                                            "description": "The version of the MQTT protocol being used for the connection."
+                                        }
                                     }
                                 },
-                                "example2": {
-                                    "value": {
-                                        "connectionState": "DISCONNECTED",
-                                        "deviceModel": "RFD40",
-                                        "deviceSerialNo": "RFD40-24190525100354",
-                                        "apiVersion": 1.2,
-                                        "mqttVersion": 3.0999999
+                                "examples": {
+                                    "example1": {
+                                        "value": {
+                                            "connectionState": "CONNECTED",
+                                            "timestamp": "12:17:56",
+                                            "deviceModel": "RFD40",
+                                            "deviceSerialNo": "RFD40-24190525100354",
+                                            "apiVersion": "1.0",
+                                            "mqttVersion": "3.1.1"
+                                        }
+                                    },
+                                    "example2": {
+                                        "value": {
+                                            "connectionState": "DISCONNECTED",
+                                            "deviceModel": "RFD40",
+                                            "deviceSerialNo": "RFD40-24190525100354",
+                                            "apiVersion": 1.2,
+                                            "mqttVersion": 3.0999999
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                },
-                "responses": {
-                    "default": {
-                        "description": "This is an asynchronous event published by the device. No request/response cycle."
                     }
                 }
             }
@@ -11879,209 +11864,206 @@
                 ],
                 "summary": "dataEVT",
                 "description": "Data Events capture and represent the structured information related to various events generated by the system. These events may include tag data, barcode data, and other relevant event-related details. They are utilized for tracking, monitoring, and analyzing system operations and behaviors in real-time or during post-event reviews.",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "type": {
-                                        "type": "string",
-                                        "description": "Type of operating mode (e.g., BALANCED_PERFORMANCE, FAST_READ, etc.)",
-                                        "enum": [
-                                            "FAST_READ",
-                                            "CYCLE_COUNT",
-                                            "DENSE_READERS",
-                                            "OPTIMAL_BATTERY",
-                                            "BALANCED_PERFORMANCE",
-                                            "ADVANCED"
-                                        ],
-                                        "example": "BALANCED_PERFORMANCE"
-                                    },
-                                    "timestamp": {
-                                        "type": "string",
-                                        "description": "Timestamp of the event in ISO-8601 format"
-                                    },
-                                    "data": {
-                                        "type": "object",
-                                        "properties": {
-                                            "tagData": {
-                                                "type": "array",
-                                                "description": "Contains a collection of tag data events.",
-                                                "items": {
-                                                    "type": "object",
-                                                    "description": "Tag Data Events",
-                                                    "properties": {
-                                                        "EPCid": {
-                                                            "description": "EPCID refers to the Electronic Product Code Identifier, a unique identifier encoded on an RFID tag to identify a specific physical object.\n\nThe EPCID is a critical component in RFID systems, as it provides a globally unique identifier for items in the supply chain. It is encoded in the RFID tag's memory and is used to distinguish one item from another, even if they are of the same type or category.\n\nThe EPCID is typically represented as a hexadecimal string and follows the EPCglobal standard, which ensures interoperability across different RFID systems and organizations. This identifier can be used for tracking, inventory management, and authentication purposes.\n\nEPCID will be reported as a hex string.",
-                                                            "example": "b06a",
-                                                            "type": "string"
-                                                        },
-                                                        "EPC": {
-                                                            "description": "The EPC (Electronic Product Code) memory bank is a section of memory on an RFID tag that stores the unique identifier for the tagged object. This identifier is used to distinguish one item from another in a supply chain or inventory system.\n\nThe EPC memory bank typically contains a globally unique identifier encoded as a hexadecimal string, following the EPCglobal standard. This standard ensures interoperability across different RFID systems and organizations. The EPC memory bank is critical for tracking, inventory management, and authentication purposes.\n\nThe data in the EPC memory bank is often used in conjunction with other memory banks, such as TID and USER, to provide comprehensive information about the tagged object. The EPC memory bank is read during the inventory process and is essential for identifying and managing items in real-time.\n\nEPC will be reported as hex string.",
-                                                            "example": "b06a",
-                                                            "type": "string"
-                                                        },
-                                                        "TID": {
-                                                            "type": "string",
-                                                            "description": "The TID (Tag Identifier) memory bank is a section of memory on an RFID tag that contains a unique identifier assigned by the tag manufacturer. This identifier is typically immutable and is used to uniquely identify the tag regardless of the data stored in other memory banks. The TID memory bank may also include additional information about the tag, such as the manufacturer ID and model number. The data in this bank is encoded as a hexadecimal string and is often used for authentication or anti-counterfeiting purposes.\n\nTID will be reported as hex string.",
-                                                            "example": "e20060030178529d"
-                                                        },
-                                                        "USER": {
-                                                            "description": "The \"USER\" memory bank in RFID tags is a user-defined memory area that can store custom data.\nThis memory bank is typically used for application-specific purposes, allowing users to write\nand read data relevant to their use case. The data is represented as a hexadecimal string,\nproviding a compact and efficient format for storage and transmission. The size and structure\nof the USER memory bank may vary depending on the RFID tag's specifications. It is commonly\nused in scenarios such as asset tracking, inventory management, and custom identification\nsystems. Ensure proper handling of the data to maintain data integrity and security.\n\nUSER will be reported as hex string.",
-                                                            "example": "12343333123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678",
-                                                            "type": "string"
-                                                        },
-                                                        "RESERVED": {
-                                                            "type": "string",
-                                                            "description": "The RESERVED memory bank is a section of memory on an RFID tag that is typically used for storing passwords or other security-related data. It may include the kill password and access password, which are used to control access to the tag and to permanently disable it, respectively. The data in this bank is encoded as a hexadecimal string and is often protected or restricted based on the tag's configuration.\n\nRESERVED will be reported as hex string.",
-                                                            "example": "12343333123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678"
-                                                        },
-                                                        "PC": {
-                                                            "type": "string",
-                                                            "description": "\"PC\" will report the PC bits of the inventoried tag as a hex string.",
-                                                            "example": "3000"
-                                                        },
-                                                        "CRC": {
-                                                            "type": "string",
-                                                            "description": "\"CRC\" will report the CRC bits of the inventoried tag as a hex string.",
-                                                            "example": "b06a"
-                                                        },
-                                                        "channel": {
-                                                            "type": "number",
-                                                            "description": "\"CHANNEL” will report the channel (in MHz) the reader was using when the tag was inventoried. This value will only be reported if each individual tag read is reported (in other words, if reportFilter duration is set to 0). Otherwise, it will not be reported.",
-                                                            "example": 911.75
-                                                        },
-                                                        "eventNum": {
-                                                            "type": "number",
-                                                            "description": "Event Number",
-                                                            "example": 1
-                                                        },
-                                                        "format": {
-                                                            "type": "string",
-                                                            "description": "The format of idHex is EPC",
-                                                            "example": "epc"
-                                                        },
-                                                        "peakRssi": {
-                                                            "type": "number",
-                                                            "description": "“RSSI” will report the rssi (in dbm) of the inventoried tag. If the tag is only reported occasionally (see set_tag_filter), this tag will be the peak rssi since the last reported read.",
-                                                            "example": -39
-                                                        },
-                                                        "phase": {
-                                                            "type": "number",
-                                                            "description": "\"PHASE” will report the phase (in degrees) of the inventoried tag. This value will only be reported if each individual tag read is reported (in other words, if reportFilter duration is set to 0). Otherwise, it will not be reported.",
-                                                            "example": 0
-                                                        },
-                                                        "seenCount": {
-                                                            "type": "number",
-                                                            "description": "“SEEN_COUNT” will report the number of times the tag has been inventoried since the previous report. This value will always be 1 if each individual tag read is reported (in other words, if reportFilter duration is set to 0).",
-                                                            "example": 1
-                                                        },
-                                                        "XPC": {
-                                                            "type": "string",
-                                                            "description": "\"XPC\" will report the XPC bits of the inventoried tag, if present, as a hex string."
-                                                        },
-                                                        "accessResults": {
-                                                            "type": "array",
-                                                            "description": "accessResults contains an array of strings, with each element in the array containing the result of the access operation specified in the operating mode. For read operations, the string contains the data read from the tag and for write operations, it contains \"SUCCESS\" for successfull operations or an error message.\n",
-                                                            "items": {
+                "responses": {
+                    "default": {
+                        "description": "dataEVT event payload",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "description": "Type of operating mode (e.g., BALANCED_PERFORMANCE, FAST_READ, etc.)",
+                                            "enum": [
+                                                "FAST_READ",
+                                                "CYCLE_COUNT",
+                                                "DENSE_READERS",
+                                                "OPTIMAL_BATTERY",
+                                                "BALANCED_PERFORMANCE",
+                                                "ADVANCED"
+                                            ],
+                                            "example": "BALANCED_PERFORMANCE"
+                                        },
+                                        "timestamp": {
+                                            "type": "string",
+                                            "description": "Timestamp of the event in ISO-8601 format"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "tagData": {
+                                                    "type": "array",
+                                                    "description": "Contains a collection of tag data events.",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "description": "Tag Data Events",
+                                                        "properties": {
+                                                            "EPCid": {
+                                                                "description": "EPCID refers to the Electronic Product Code Identifier, a unique identifier encoded on an RFID tag to identify a specific physical object.\n\nThe EPCID is a critical component in RFID systems, as it provides a globally unique identifier for items in the supply chain. It is encoded in the RFID tag's memory and is used to distinguish one item from another, even if they are of the same type or category.\n\nThe EPCID is typically represented as a hexadecimal string and follows the EPCglobal standard, which ensures interoperability across different RFID systems and organizations. This identifier can be used for tracking, inventory management, and authentication purposes.\n\nEPCID will be reported as a hex string.",
+                                                                "example": "b06a",
+                                                                "type": "string"
+                                                            },
+                                                            "EPC": {
+                                                                "description": "The EPC (Electronic Product Code) memory bank is a section of memory on an RFID tag that stores the unique identifier for the tagged object. This identifier is used to distinguish one item from another in a supply chain or inventory system.\n\nThe EPC memory bank typically contains a globally unique identifier encoded as a hexadecimal string, following the EPCglobal standard. This standard ensures interoperability across different RFID systems and organizations. The EPC memory bank is critical for tracking, inventory management, and authentication purposes.\n\nThe data in the EPC memory bank is often used in conjunction with other memory banks, such as TID and USER, to provide comprehensive information about the tagged object. The EPC memory bank is read during the inventory process and is essential for identifying and managing items in real-time.\n\nEPC will be reported as hex string.",
+                                                                "example": "b06a",
+                                                                "type": "string"
+                                                            },
+                                                            "TID": {
                                                                 "type": "string",
-                                                                "example": "SUCCESS"
+                                                                "description": "The TID (Tag Identifier) memory bank is a section of memory on an RFID tag that contains a unique identifier assigned by the tag manufacturer. This identifier is typically immutable and is used to uniquely identify the tag regardless of the data stored in other memory banks. The TID memory bank may also include additional information about the tag, such as the manufacturer ID and model number. The data in this bank is encoded as a hexadecimal string and is often used for authentication or anti-counterfeiting purposes.\n\nTID will be reported as hex string.",
+                                                                "example": "e20060030178529d"
+                                                            },
+                                                            "USER": {
+                                                                "description": "The \"USER\" memory bank in RFID tags is a user-defined memory area that can store custom data.\nThis memory bank is typically used for application-specific purposes, allowing users to write\nand read data relevant to their use case. The data is represented as a hexadecimal string,\nproviding a compact and efficient format for storage and transmission. The size and structure\nof the USER memory bank may vary depending on the RFID tag's specifications. It is commonly\nused in scenarios such as asset tracking, inventory management, and custom identification\nsystems. Ensure proper handling of the data to maintain data integrity and security.\n\nUSER will be reported as hex string.",
+                                                                "example": "12343333123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678",
+                                                                "type": "string"
+                                                            },
+                                                            "RESERVED": {
+                                                                "type": "string",
+                                                                "description": "The RESERVED memory bank is a section of memory on an RFID tag that is typically used for storing passwords or other security-related data. It may include the kill password and access password, which are used to control access to the tag and to permanently disable it, respectively. The data in this bank is encoded as a hexadecimal string and is often protected or restricted based on the tag's configuration.\n\nRESERVED will be reported as hex string.",
+                                                                "example": "12343333123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678"
+                                                            },
+                                                            "PC": {
+                                                                "type": "string",
+                                                                "description": "\"PC\" will report the PC bits of the inventoried tag as a hex string.",
+                                                                "example": "3000"
+                                                            },
+                                                            "CRC": {
+                                                                "type": "string",
+                                                                "description": "\"CRC\" will report the CRC bits of the inventoried tag as a hex string.",
+                                                                "example": "b06a"
+                                                            },
+                                                            "channel": {
+                                                                "type": "number",
+                                                                "description": "\"CHANNEL” will report the channel (in MHz) the reader was using when the tag was inventoried. This value will only be reported if each individual tag read is reported (in other words, if reportFilter duration is set to 0). Otherwise, it will not be reported.",
+                                                                "example": 911.75
+                                                            },
+                                                            "eventNum": {
+                                                                "type": "number",
+                                                                "description": "Event Number",
+                                                                "example": 1
+                                                            },
+                                                            "format": {
+                                                                "type": "string",
+                                                                "description": "The format of idHex is EPC",
+                                                                "example": "epc"
+                                                            },
+                                                            "peakRssi": {
+                                                                "type": "number",
+                                                                "description": "“RSSI” will report the rssi (in dbm) of the inventoried tag. If the tag is only reported occasionally (see set_tag_filter), this tag will be the peak rssi since the last reported read.",
+                                                                "example": -39
+                                                            },
+                                                            "phase": {
+                                                                "type": "number",
+                                                                "description": "\"PHASE” will report the phase (in degrees) of the inventoried tag. This value will only be reported if each individual tag read is reported (in other words, if reportFilter duration is set to 0). Otherwise, it will not be reported.",
+                                                                "example": 0
+                                                            },
+                                                            "seenCount": {
+                                                                "type": "number",
+                                                                "description": "“SEEN_COUNT” will report the number of times the tag has been inventoried since the previous report. This value will always be 1 if each individual tag read is reported (in other words, if reportFilter duration is set to 0).",
+                                                                "example": 1
+                                                            },
+                                                            "XPC": {
+                                                                "type": "string",
+                                                                "description": "\"XPC\" will report the XPC bits of the inventoried tag, if present, as a hex string."
+                                                            },
+                                                            "accessResults": {
+                                                                "type": "array",
+                                                                "description": "accessResults contains an array of strings, with each element in the array containing the result of the access operation specified in the operating mode. For read operations, the string contains the data read from the tag and for write operations, it contains \"SUCCESS\" for successfull operations or an error message.\n",
+                                                                "items": {
+                                                                    "type": "string",
+                                                                    "example": "SUCCESS"
+                                                                }
+                                                            },
+                                                            "userDefined": {
+                                                                "type": "string",
+                                                                "description": "userdefined string value to be included on every event"
+                                                            },
+                                                            "firstSeenTime": {
+                                                                "type": "number",
+                                                                "description": "\"FIRST_SEEN_TIME\" will report the timestamp (in milliseconds since epoch) when the RFID tag was first seen by the reader."
+                                                            },
+                                                            "lastSeenTime": {
+                                                                "description": "\"LAST_SEEN_TIME\" will report the timestamp (in milliseconds since epoch) when the RFID tag was last seen by the reader.",
+                                                                "type": "number"
+                                                            },
+                                                            "MAC": {
+                                                                "description": "The MAC address of the reader that inventoried the tag. This will be reported only if the MAC address is enabled in the operating mode.",
+                                                                "type": "string"
+                                                            },
+                                                            "HOSTNAME": {
+                                                                "description": "The hostname of the reader that inventoried the tag. This will be reported only if the hostname is enabled in the operating mode.",
+                                                                "type": "string"
                                                             }
                                                         },
-                                                        "userDefined": {
-                                                            "type": "string",
-                                                            "description": "userdefined string value to be included on every event"
+                                                        "required": [
+                                                            "eventNum",
+                                                            "format"
+                                                        ]
+                                                    }
+                                                },
+                                                "barcodeData": {
+                                                    "type": "array",
+                                                    "description": "Contains a collection of barcode data events.",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "description": "Scanned barcode Data Events",
+                                                        "properties": {
+                                                            "symbology": {
+                                                                "type": "string",
+                                                                "description": "The type of barcode symbology used in the scanned barcode (e.g., CODE_39).",
+                                                                "enum": [
+                                                                    "CODE_39"
+                                                                ]
+                                                            },
+                                                            "decodedBarcode": {
+                                                                "type": "string",
+                                                                "description": "The decoded string value from the scanned barcode."
+                                                            }
                                                         },
-                                                        "firstSeenTime": {
-                                                            "type": "number",
-                                                            "description": "\"FIRST_SEEN_TIME\" will report the timestamp (in milliseconds since epoch) when the RFID tag was first seen by the reader."
-                                                        },
-                                                        "lastSeenTime": {
-                                                            "description": "\"LAST_SEEN_TIME\" will report the timestamp (in milliseconds since epoch) when the RFID tag was last seen by the reader.",
-                                                            "type": "number"
-                                                        },
-                                                        "MAC": {
-                                                            "description": "The MAC address of the reader that inventoried the tag. This will be reported only if the MAC address is enabled in the operating mode.",
-                                                            "type": "string"
-                                                        },
-                                                        "HOSTNAME": {
-                                                            "description": "The hostname of the reader that inventoried the tag. This will be reported only if the hostname is enabled in the operating mode.",
-                                                            "type": "string"
-                                                        }
-                                                    },
-                                                    "required": [
-                                                        "eventNum",
-                                                        "format"
-                                                    ]
-                                                }
-                                            },
-                                            "barcodeData": {
-                                                "type": "array",
-                                                "description": "Contains a collection of barcode data events.",
-                                                "items": {
-                                                    "type": "object",
-                                                    "description": "Scanned barcode Data Events",
-                                                    "properties": {
-                                                        "symbology": {
-                                                            "type": "string",
-                                                            "description": "The type of barcode symbology used in the scanned barcode (e.g., CODE_39).",
-                                                            "enum": [
-                                                                "CODE_39"
-                                                            ]
-                                                        },
-                                                        "decodedBarcode": {
-                                                            "type": "string",
-                                                            "description": "The decoded string value from the scanned barcode."
-                                                        }
-                                                    },
-                                                    "required": [
-                                                        "decodedBarcode"
-                                                    ]
+                                                        "required": [
+                                                            "decodedBarcode"
+                                                        ]
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
+                                    },
+                                    "required": [
+                                        "timestamp"
+                                    ]
                                 },
-                                "required": [
-                                    "timestamp"
-                                ]
-                            },
-                            "examples": {
-                                "example1": {
-                                    "value": {
-                                        "type": "BALANCED_PERFORMANCE",
-                                        "timestamp": "2019-08-24T14:15:22Z",
-                                        "data": {
-                                            "tagData": [
-                                                {
-                                                    "EPCid": "BEDD11112222333344445555",
-                                                    "EPC": "BEDD11112222333344445555",
-                                                    "TID": "E2003412013BFD000B4E16D21D030143000D5FFBFFFFDC60",
-                                                    "USER": "12343333123456781234567812345678123456781234567812345678123456781234567812345678",
-                                                    "channel": 911.75,
-                                                    "eventNum": 1,
-                                                    "peakRssi": -39,
-                                                    "phase": 0,
-                                                    "seenCount": 1,
-                                                    "accessResults": [
-                                                        "READ-EPC-SUCCESS",
-                                                        "READ-TID-SUCCESS",
-                                                        "WRITE-USER-No Response from Tag"
-                                                    ]
-                                                }
-                                            ]
+                                "examples": {
+                                    "example1": {
+                                        "value": {
+                                            "type": "BALANCED_PERFORMANCE",
+                                            "timestamp": "2019-08-24T14:15:22Z",
+                                            "data": {
+                                                "tagData": [
+                                                    {
+                                                        "EPCid": "BEDD11112222333344445555",
+                                                        "EPC": "BEDD11112222333344445555",
+                                                        "TID": "E2003412013BFD000B4E16D21D030143000D5FFBFFFFDC60",
+                                                        "USER": "12343333123456781234567812345678123456781234567812345678123456781234567812345678",
+                                                        "channel": 911.75,
+                                                        "eventNum": 1,
+                                                        "peakRssi": -39,
+                                                        "phase": 0,
+                                                        "seenCount": 1,
+                                                        "accessResults": [
+                                                            "READ-EPC-SUCCESS",
+                                                            "READ-TID-SUCCESS",
+                                                            "WRITE-USER-No Response from Tag"
+                                                        ]
+                                                    }
+                                                ]
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                },
-                "responses": {
-                    "default": {
-                        "description": "This is an asynchronous event published by the device. No request/response cycle."
                     }
                 }
             }
