@@ -533,7 +533,6 @@ tr:nth-child(even) td {{ background: #f4f7fb; }}
 .download-bar a svg {{ fill: #fff; width: 16px; height: 16px; }}
 @media print {{
     .download-bar {{ display: none; }}
-    .doc-header-bar {{ display: none; }}
 }}
 
 /* ── Print rules ── */
@@ -579,6 +578,7 @@ def try_generate_pdf(browser: str, html_path: Path, pdf_path: Path) -> Tuple[boo
         "--no-first-run",
         "--no-default-browser-check",
         "--disable-extensions",
+        "--no-pdf-header-footer",
         f"--print-to-pdf={str(pdf_path)}",
         html_path.resolve().as_uri(),
     ]
