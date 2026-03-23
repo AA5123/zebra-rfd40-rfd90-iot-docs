@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>alerts Command Spec</title>
+<style>
+@page { size: A4; margin: 14mm; }
+* { box-sizing: border-box; }
+body {
+    font-family: "Segoe UI", "Calibri", Arial, sans-serif;
+    margin: 0;
+    color: #111;
+    font-size: 11pt;
+    line-height: 1.45;
+}
+h1, h2, h3 { margin: 0 0 10px; }
+h1 {
+    font-size: 26pt;
+    letter-spacing: 0.2px;
+    margin-bottom: 6px;
+}
+h2 {
+    margin-top: 28px;
+    border-top: 2px solid #d9dde3;
+    padding-top: 10px;
+    font-size: 16pt;
+    page-break-after: avoid;
+}
+h3 {
+    margin-top: 16px;
+    font-size: 12pt;
+    color: #1f3b5c;
+    page-break-after: avoid;
+}
+h4 { margin: 12px 0 6px; font-size: 11pt; }
+p { margin: 8px 0; }
+ul { margin: 6px 0 10px 20px; padding: 0; }
+li { margin: 3px 0; }
+pre, code { font-family: Consolas, "Courier New", monospace; }
+code {
+    background: #f3f5f8;
+    border: 1px solid #dce3ea;
+    border-radius: 4px;
+    padding: 1px 4px;
+    font-size: 90%;
+}
+pre {
+    background: #f7f9fb;
+    border: 1px solid #d9dde3;
+    border-radius: 8px;
+    padding: 10px 12px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 8px;
+    table-layout: fixed;
+}
+th, td {
+    border: 1px solid #d6dbe1;
+    padding: 7px 8px;
+    vertical-align: top;
+    font-size: 10pt;
+    word-break: break-word;
+}
+th {
+    background: #eef3f8;
+    text-align: left;
+    font-weight: 600;
+}
+tr:nth-child(even) td { background: #fcfdff; }
+.meta {
+    color: #3f536b;
+    margin-bottom: 14px;
+    font-size: 10.5pt;
+}
+/* Keep rows and headings together while printing */
+tr, td, th { page-break-inside: avoid; }
+h2, h3 { page-break-inside: avoid; }
+</style>
+</head>
+<body>
+<h1>alerts</h1>
+<div class="meta">Command: <code>alerts</code></div>
+<h2>Description</h2>
+<p>Represents a system-generated alert or notification event. Note: Some event types such as antenna, temperature, usage, GPI, and user app info are not supported.</p>
+<p><strong>Download pdf:</strong> 📄 [Download alerts as PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/alerts.pdf)</p>
+<h2>Request</h2>
+<h3>Request Fields</h3><p>No fields available.</p>
+<h3>Request Examples</h3><p>No examples available.</p>
+<h2>Response</h2>
+<h3>Response Fields</h3>
+<table>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>type</code></td><td>string (enum)</td><td>Yes</td><td>Specifies the type of alert or message being generated, such as an event, notification, exception, or alert.</td><td><code></code></td></tr>
+<tr><td><code>timestamp</code></td><td>string</td><td>Yes</td><td>Indicates the time at which the alert was generated, formatted as a time string.</td><td><code>22:54:25</code></td></tr>
+<tr><td><code>state</code></td><td>string (enum)</td><td>Yes</td><td>Represents the state of the alert. &#x27;SET&#x27; indicates an active alert, &#x27;CLEAR&#x27; indicates the alert has been resolved, and &#x27;ONESHOT&#x27; is a one-time alert.</td><td><code></code></td></tr>
+<tr><td><code>id</code></td><td>string (enum)</td><td>Yes</td><td>A unique identifier for the alert type, such as a low battery warning or a temperature event.</td><td><code>BATTERY_LOW</code></td></tr>
+<tr><td><code>priority</code></td><td>string (enum)</td><td>Yes</td><td>Defines the priority level of the alert, ranging from critical to low.</td><td><code>CRITICAL</code></td></tr>
+<tr><td><code>alertDetails</code></td><td>object</td><td>No</td><td>Contains additional details about the alert, which may vary depending on the specific alert type.</td><td><code></code></td></tr>
+</tbody></table>
+<h3>Response Examples</h3>
+<h4>example1</h4>
+<pre><code>{
+  &quot;type&quot;: &quot;EVENT&quot;,
+  &quot;timestamp&quot;: &quot;22:54:25&quot;,
+  &quot;state&quot;: &quot;SET&quot;,
+  &quot;id&quot;: &quot;BATTERY_LOW&quot;,
+  &quot;priority&quot;: &quot;CRITICAL&quot;,
+  &quot;alertDetails&quot;: {
+    &quot;fwUpdateStatus&quot;: {
+      &quot;updateStatus&quot;: &quot;updating&quot;,
+      &quot;overallProgress&quot;: 20,
+      &quot;stage&quot;: &quot;updating scanner fw&quot;
+    },
+    &quot;downloadInfo&quot;: {
+      &quot;fileType&quot;: &quot;FILE_TYPE_FW&quot;,
+      &quot;fileName&quot;: &quot;string&quot;,
+      &quot;status&quot;: &quot;DOWNLOAD SUCCESS&quot;
+    },
+    &quot;antennaEvent&quot;: [
+      {
+        &quot;antenna&quot;: {
+          &quot;status&quot;: &quot;connected&quot;,
+          &quot;port&quot;: 3
+        }
+      }
+    ],
+    &quot;networkInfo&quot;: {
+      &quot;networkInterface&quot;: {
+        &quot;ethStatus&quot;: [
+          {
+            &quot;interface&quot;: &quot;eth0&quot;,
+            &quot;status&quot;: &quot;CONNECTED&quot;,
+            &quot;linkStatus&quot;: &quot;UP&quot;,
+            &quot;linkSpeed&quot;: &quot;string&quot;,
+            &quot;ipV4Address&quot;: &quot;192.168.0.165&quot;,
+            &quot;ipV6Address&quot;: &quot;fe80::f299:9d51:864c:cff&quot;
+          }
+        ],
+        &quot;wifiStatus&quot;: [
+          {
+            &quot;interface&quot;: &quot;wlan0&quot;,
+            &quot;status&quot;: &quot;CONNECTED&quot;,
+            &quot;ssid&quot;: &quot;string&quot;,
+            &quot;ipV4Address&quot;: &quot;192.168.0.145&quot;,
+            &quot;ipV6Address&quot;: &quot;fe80::f299:9d51:86c:cff14&quot;
+          }
+        ]
+      },
+      &quot;btRemoteDevice&quot;: {
+        &quot;deviceName&quot;: &quot;TestLaptop&quot;,
+        &quot;deviceMac&quot;: &quot;00:11:22:A3:B1:D2&quot;
+      }
+    },
+    &quot;batteryAlert&quot;: {
+      &quot;status&quot;: &quot;LOW&quot;,
+      &quot;stateOfHealth&quot;: &quot;LOW&quot;,
+      &quot;chargePercentage&quot;: 100
+    }
+  }
+}</code></pre>
+</body>
+</html>

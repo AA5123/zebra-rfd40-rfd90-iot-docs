@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>get_wifi Command Spec</title>
+<style>
+@page { size: A4; margin: 14mm; }
+* { box-sizing: border-box; }
+body {
+    font-family: "Segoe UI", "Calibri", Arial, sans-serif;
+    margin: 0;
+    color: #111;
+    font-size: 11pt;
+    line-height: 1.45;
+}
+h1, h2, h3 { margin: 0 0 10px; }
+h1 {
+    font-size: 26pt;
+    letter-spacing: 0.2px;
+    margin-bottom: 6px;
+}
+h2 {
+    margin-top: 28px;
+    border-top: 2px solid #d9dde3;
+    padding-top: 10px;
+    font-size: 16pt;
+    page-break-after: avoid;
+}
+h3 {
+    margin-top: 16px;
+    font-size: 12pt;
+    color: #1f3b5c;
+    page-break-after: avoid;
+}
+h4 { margin: 12px 0 6px; font-size: 11pt; }
+p { margin: 8px 0; }
+ul { margin: 6px 0 10px 20px; padding: 0; }
+li { margin: 3px 0; }
+pre, code { font-family: Consolas, "Courier New", monospace; }
+code {
+    background: #f3f5f8;
+    border: 1px solid #dce3ea;
+    border-radius: 4px;
+    padding: 1px 4px;
+    font-size: 90%;
+}
+pre {
+    background: #f7f9fb;
+    border: 1px solid #d9dde3;
+    border-radius: 8px;
+    padding: 10px 12px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 8px;
+    table-layout: fixed;
+}
+th, td {
+    border: 1px solid #d6dbe1;
+    padding: 7px 8px;
+    vertical-align: top;
+    font-size: 10pt;
+    word-break: break-word;
+}
+th {
+    background: #eef3f8;
+    text-align: left;
+    font-weight: 600;
+}
+tr:nth-child(even) td { background: #fcfdff; }
+.meta {
+    color: #3f536b;
+    margin-bottom: 14px;
+    font-size: 10.5pt;
+}
+/* Keep rows and headings together while printing */
+tr, td, th { page-break-inside: avoid; }
+h2, h3 { page-break-inside: avoid; }
+</style>
+</head>
+<body>
+<h1>get_wifi</h1>
+<div class="meta">Command: <code>get_wifi</code></div>
+<h2>Description</h2>
+<p>Retrieves the <strong>current Wi-Fi configuration</strong> of the scanner — connected network, IP address, signal, and security settings.</p>
+<h3>Command details:</h3>
+<ul>
+<li>Pattern Name: Wi-Fi Configuration Retrieval</li>
+<li>Communication Type: Bidirectional (Cloud to Device, Device to Cloud)</li>
+<li>MQTT Version: 3.1.1</li>
+<li>API Version: V1.1</li>
+<li>Document Version: 1.0.0</li>
+<li>Last Updated: 2026-03-12</li>
+<li>Applies To: RFD40 Series, RFD90 Series</li>
+</ul>
+<h3>Response fields:</h3>
+<table><thead><tr><th>Field</th><th>What it tells you</th></tr></thead><tbody>
+<tr><td><code>interfaceName</code></td><td>Wi-Fi interface identifier (e.g. <code>wlan0</code>)</td></tr>
+<tr><td><code>status</code></td><td>Whether the Wi-Fi interface is Enabled or Disabled</td></tr>
+<tr><td><code>hostname</code></td><td>The scanner&#x27;s network hostname</td></tr>
+<tr><td><code>macAddress</code></td><td>Wi-Fi MAC address</td></tr>
+<tr><td><code>accessPoint.essid</code></td><td>The SSID of the connected Wi-Fi network</td></tr>
+<tr><td><code>accessPoint.status</code></td><td>Connection state — Connected or Disconnected</td></tr>
+<tr><td><code>accessPoint.securityType</code></td><td>Security protocol — WPA2Personal, WPA2Enterprise, WPA3Personal, Open</td></tr>
+<tr><td><code>accessPoint.isPreferred</code></td><td>Whether this is the preferred network</td></tr>
+<tr><td><code>accessPoint.autoConn</code></td><td>Whether the scanner auto-connects to this network</td></tr>
+<tr><td><code>ipv4Configuration.ipAddress</code></td><td>Current IP address assigned to the scanner</td></tr>
+<tr><td><code>ipv4Configuration.subnetMask</code></td><td>Subnet mask</td></tr>
+<tr><td><code>ipv4Configuration.gateway</code></td><td>Default gateway</td></tr>
+<tr><td><code>ipv4Configuration.enableDhcp</code></td><td>Whether DHCP is enabled or using static IP</td></tr>
+<tr><td><code>ipv4Configuration.dnsServer</code></td><td>DNS server address</td></tr>
+</tbody></table>
+<h3>Typical use cases:</h3>
+<ul>
+<li>Network troubleshooting — verify the scanner is connected to the correct SSID with a valid IP.</li>
+<li>Fleet monitoring — check Wi-Fi status across all scanners from a central dashboard.</li>
+<li>Security audit — confirm scanners are using WPA2/WPA3 Enterprise, not open networks.</li>
+</ul>
+<h3>MQTT topics for this command:</h3>
+<ul>
+<li>Command topic (Cloud to Device):</li>
+</ul>
+<p><code>&lt;tenantId&gt;/CTRL/clients/cmnd/&lt;deviceSerial&gt;</code></p>
+<ul>
+<li>Response topic (Device to Cloud):</li>
+</ul>
+<p><code>&lt;tenantId&gt;/CTRL/clients/resp/&lt;deviceSerial&gt;</code></p>
+<h3>Example:</h3>
+<ul>
+<li>Command: <code>zebra/CTRL/clients/cmnd/RFD40-12345678</code></li>
+<li>Response: <code>zebra/CTRL/clients/resp/RFD40-12345678</code></li>
+</ul>
+<p>Ensure these topic paths match your configured endpoint topics.</p>
+<p><strong>Download pdf:</strong> 📄 [Download get_wifi as PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_wifi.pdf)</p>
+<h2>Request</h2>
+<h3>Request Fields</h3>
+<table>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>command</code></td><td>string</td><td>Yes</td><td>Command issued to get all the wifi profiles saved in device</td><td><code>get_wifi</code></td></tr>
+<tr><td><code>requestId</code></td><td>string</td><td>Yes</td><td>A unique identifier for the request, allowing tracking and debugging of the operation.</td><td><code>abc123</code></td></tr>
+</tbody></table>
+<h3>Request Examples</h3>
+<h4>Generated Example</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;get_wifi&quot;,
+  &quot;requestId&quot;: &quot;abc123&quot;
+}</code></pre>
+<h2>Response</h2>
+<h3>Response Fields</h3>
+<table>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>command</code></td><td>string</td><td>Yes</td><td></td><td><code>get_wifi</code></td></tr>
+<tr><td><code>requestId</code></td><td>string</td><td>Yes</td><td></td><td><code>abc123</code></td></tr>
+<tr><td><code>apiVersion</code></td><td>string (enum)</td><td>Yes</td><td></td><td><code>V1.1</code></td></tr>
+<tr><td><code>wifiProfiles</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>wifiProfiles.wifiConfig</code></td><td>array</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>response</code></td><td>object</td><td>Yes</td><td>Status of the command execution — check <code>code</code> to confirm success (0) or identify the error.</td><td><code></code></td></tr>
+<tr><td><code>response.code</code></td><td>integer</td><td>Yes</td><td>Response code indicating success or failure.<ul><li><strong>0</strong> — Success</li><li><strong>1</strong> — Command payload accepted</li><li><strong>2</strong> — Invalid payload</li><li><strong>3</strong> — Not able to retrieve information</li><li><strong>4</strong> — Firmware update in progress</li><li><strong>5</strong> — Can&#x27;t reboot, inventory in progress</li><li><strong>6</strong> — Region is not configured</li><li><strong>7</strong> — Interface is not available</li><li><strong>8</strong> — Insufficient flash size</li><li><strong>9</strong> — File not found</li><li><strong>10</strong> — Configuration already exists</li><li><strong>11</strong> — Inventory in progress</li><li><strong>12</strong> — No radio operation in progress</li><li><strong>13</strong> — Firmware update failed</li><li><strong>14</strong> — Battery too low for firmware update</li><li><strong>15</strong> — WIFI: SSID not found</li><li><strong>16</strong> — WIFI: Cannot delete active SSID</li><li><strong>17</strong> — WIFI: SSID missing</li><li><strong>18</strong> — WIFI: SSID already exists</li><li><strong>19</strong> — WIFI: SSID count overflow</li><li><strong>20</strong> — WiFi is not supported</li><li><strong>21</strong> — Certificate not found</li><li><strong>22</strong> — Advanced configuration not set</li><li><strong>23</strong> — Invalid enum value</li><li><strong>24</strong> — Max 32 prefilters limit exceeded</li><li><strong>25</strong> — Max 3 publish topics exceeded</li><li><strong>26</strong> — Max 1 subscribe topic exceeded</li><li><strong>27</strong> — Invalid tenant ID length</li><li><strong>28</strong> — Tag match pattern length exceeded</li></ul></td><td><code>0</code></td></tr>
+<tr><td><code>response.description</code></td><td>string</td><td>Yes</td><td>Human-readable description of the response code (e.g. &quot;Success&quot;, &quot;Invalid payload&quot;).</td><td><code>Success</code></td></tr>
+</tbody></table>
+<h3>Response Examples</h3>
+<h4>WPA2 Personal connection</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;get_wifi&quot;,
+  &quot;requestId&quot;: &quot;abc123&quot;,
+  &quot;apiVersion&quot;: &quot;V1.1&quot;,
+  &quot;wifiConfig&quot;: {
+    &quot;interfaceDetails&quot;: {
+      &quot;interfaceName&quot;: &quot;wlan0&quot;,
+      &quot;status&quot;: &quot;Enabled&quot;,
+      &quot;hostname&quot;: &quot;RFD40-22326520100477&quot;,
+      &quot;macAddress&quot;: &quot;48:A4:93:BD:4A:FC&quot;,
+      &quot;accessPoint&quot;: {
+        &quot;essid&quot;: &quot;IOT_TESTAP&quot;,
+        &quot;status&quot;: &quot;Connected&quot;,
+        &quot;securityType&quot;: &quot;WPA2Personal&quot;,
+        &quot;isPreferred&quot;: true,
+        &quot;autoConn&quot;: true
+      },
+      &quot;ipv4Configuration&quot;: {
+        &quot;ipAddress&quot;: &quot;192.168.0.104&quot;,
+        &quot;subnetMask&quot;: &quot;255.255.255.0&quot;,
+        &quot;gateway&quot;: &quot;192.168.0.1&quot;,
+        &quot;enableDhcp&quot;: true,
+        &quot;dnsServer&quot;: &quot;1.0.168.192&quot;,
+        &quot;domainName&quot;: &quot;zebra.com&quot;
+      }
+    }
+  },
+  &quot;response&quot;: {
+    &quot;code&quot;: 0,
+    &quot;description&quot;: &quot;Success&quot;
+  }
+}</code></pre>
+<h4>WPA2 Enterprise connection</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;get_wifi&quot;,
+  &quot;requestId&quot;: &quot;abc002&quot;,
+  &quot;apiVersion&quot;: &quot;V1.1&quot;,
+  &quot;wifiProfiles&quot;: {
+    &quot;wifiConfig&quot;: [
+      {
+        &quot;interfaceDetails&quot;: {
+          &quot;interfaceName&quot;: &quot;wlan0&quot;,
+          &quot;status&quot;: &quot;ENABLED&quot;,
+          &quot;hostname&quot;: &quot;RFD40-22326520100477&quot;,
+          &quot;macAddress&quot;: &quot;E0-D0-45-3D-38-3F&quot;,
+          &quot;accessPoint&quot;: {
+            &quot;essid&quot;: &quot;SECURE_AP&quot;,
+            &quot;status&quot;: &quot;CONNECTED&quot;,
+            &quot;securityType&quot;: &quot;WPA2Enterprise&quot;,
+            &quot;isPreferred&quot;: true,
+            &quot;autoConn&quot;: true
+          },
+          &quot;ipv4Configuration&quot;: {
+            &quot;ipAddress&quot;: &quot;172.16.10.88&quot;,
+            &quot;subnetMask&quot;: &quot;255.255.255.0&quot;,
+            &quot;gateway&quot;: &quot;172.16.10.1&quot;,
+            &quot;enableDhcp&quot;: true,
+            &quot;dnsServer&quot;: &quot;172.16.10.5&quot;,
+            &quot;domainName&quot;: &quot;secure.corp&quot;
+          },
+          &quot;securityDetails&quot;: {
+            &quot;WPA2Enterprise&quot;: {
+              &quot;authentication&quot;: &quot;tls&quot;,
+              &quot;passphrase&quot;: &quot;XXXXXXXX&quot;,
+              &quot;certificate&quot;: [
+                {
+                  &quot;key&quot;: &quot;ca_cert&quot;,
+                  &quot;value&quot;: &quot;wifi_root_certificate&quot;
+                },
+                {
+                  &quot;key&quot;: &quot;client_cert&quot;,
+                  &quot;value&quot;: &quot;wifi&quot;
+                },
+                {
+                  &quot;key&quot;: &quot;client_key&quot;,
+                  &quot;value&quot;: &quot;wifi&quot;
+                }
+              ],
+              &quot;protocol&quot;: &quot;WPA2_Enterprise_CCMP&quot;
+            }
+          }
+        }
+      }
+    ]
+  },
+  &quot;response&quot;: {
+    &quot;code&quot;: 0,
+    &quot;description&quot;: &quot;Success&quot;
+  }
+}</code></pre>
+<h4>WPA3 Enterprise connection</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;get_wifi&quot;,
+  &quot;requestId&quot;: &quot;abc003&quot;,
+  &quot;apiVersion&quot;: &quot;V1.1&quot;,
+  &quot;wifiProfiles&quot;: {
+    &quot;wifiConfig&quot;: [
+      {
+        &quot;interfaceDetails&quot;: {
+          &quot;interfaceName&quot;: &quot;wlan0&quot;,
+          &quot;status&quot;: &quot;ENABLED&quot;,
+          &quot;hostname&quot;: &quot;RFD40-22326520100477&quot;,
+          &quot;macAddress&quot;: &quot;E0-D0-45-3D-38-4A&quot;,
+          &quot;accessPoint&quot;: {
+            &quot;essid&quot;: &quot;WPA3_ENTERPRISE&quot;,
+            &quot;status&quot;: &quot;CONNECTED&quot;,
+            &quot;securityType&quot;: &quot;WPA3Enterprise&quot;,
+            &quot;isPreferred&quot;: false,
+            &quot;autoConn&quot;: false
+          },
+          &quot;ipv4Configuration&quot;: {
+            &quot;ipAddress&quot;: &quot;192.168.100.200&quot;,
+            &quot;subnetMask&quot;: &quot;255.255.255.0&quot;,
+            &quot;gateway&quot;: &quot;192.168.100.1&quot;,
+            &quot;enableDhcp&quot;: true,
+            &quot;dnsServer&quot;: &quot;192.168.100.10&quot;,
+            &quot;domainName&quot;: &quot;wpa3.enterprise.com&quot;
+          },
+          &quot;securityDetails&quot;: {
+            &quot;WPA3Enterprise&quot;: {
+              &quot;authentication&quot;: &quot;ttls&quot;,
+              &quot;innerAuthentication&quot;: &quot;mschapv2&quot;,
+              &quot;identity&quot;: &quot;XXXXXXXX&quot;,
+              &quot;anonymousIdentity&quot;: &quot;XXXXXXXX&quot;,
+              &quot;password&quot;: &quot;XXXXXXXX&quot;,
+              &quot;certificate&quot;: [
+                {
+                  &quot;key&quot;: &quot;ca_cert&quot;,
+                  &quot;value&quot;: &quot;wpa3_ca_cert&quot;
+                }
+              ],
+              &quot;protocol&quot;: &quot;WPA3_Enterprise_GCMP_256_SHA256&quot;
+            }
+          }
+        }
+      }
+    ]
+  },
+  &quot;response&quot;: {
+    &quot;code&quot;: 0,
+    &quot;description&quot;: &quot;Success&quot;
+  }
+}</code></pre>
+<h4>Open network connection</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;get_wifi&quot;,
+  &quot;requestId&quot;: &quot;open_network&quot;,
+  &quot;apiVersion&quot;: &quot;V1.1&quot;,
+  &quot;wifiProfiles&quot;: {
+    &quot;wifiConfig&quot;: [
+      {
+        &quot;interfaceDetails&quot;: {
+          &quot;interfaceName&quot;: &quot;wlan0&quot;,
+          &quot;status&quot;: &quot;ENABLED&quot;,
+          &quot;hostname&quot;: &quot;RFD40-22326520100477&quot;,
+          &quot;macAddress&quot;: &quot;E0-D0-45-3D-38-5B&quot;,
+          &quot;accessPoint&quot;: {
+            &quot;essid&quot;: &quot;PUBLIC_WIFI&quot;,
+            &quot;status&quot;: &quot;CONNECTED&quot;,
+            &quot;securityType&quot;: &quot;Open&quot;,
+            &quot;isPreferred&quot;: false,
+            &quot;autoConn&quot;: false
+          },
+          &quot;ipv4Configuration&quot;: {
+            &quot;ipAddress&quot;: &quot;203.0.113.45&quot;,
+            &quot;subnetMask&quot;: &quot;255.255.255.0&quot;,
+            &quot;gateway&quot;: &quot;203.0.113.1&quot;,
+            &quot;enableDhcp&quot;: true,
+            &quot;dnsServer&quot;: &quot;8.8.8.8&quot;,
+            &quot;domainName&quot;: &quot;public.wifi&quot;
+          }
+        }
+      }
+    ]
+  },
+  &quot;response&quot;: {
+    &quot;code&quot;: 0,
+    &quot;description&quot;: &quot;Success&quot;
+  }
+}</code></pre>
+<h4>WiFi interface disabled</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;get_wifi&quot;,
+  &quot;requestId&quot;: &quot;abc005&quot;,
+  &quot;apiVersion&quot;: &quot;V1.1&quot;,
+  &quot;wifiConfig&quot;: {
+    &quot;interfaceDetails&quot;: {
+      &quot;interfaceName&quot;: &quot;wlan0&quot;,
+      &quot;status&quot;: &quot;DISABLED&quot;,
+      &quot;hostname&quot;: &quot;RFD40-22326520100477&quot;,
+      &quot;macAddress&quot;: &quot;E0-D0-45-3D-38-3F&quot;
+    }
+  },
+  &quot;response&quot;: {
+    &quot;code&quot;: 7,
+    &quot;description&quot;: &quot;Interface is not available&quot;
+  }
+}</code></pre>
+</body>
+</html>

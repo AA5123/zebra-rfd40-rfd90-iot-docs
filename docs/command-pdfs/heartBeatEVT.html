@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>heartBeatEVT Command Spec</title>
+<style>
+@page { size: A4; margin: 14mm; }
+* { box-sizing: border-box; }
+body {
+    font-family: "Segoe UI", "Calibri", Arial, sans-serif;
+    margin: 0;
+    color: #111;
+    font-size: 11pt;
+    line-height: 1.45;
+}
+h1, h2, h3 { margin: 0 0 10px; }
+h1 {
+    font-size: 26pt;
+    letter-spacing: 0.2px;
+    margin-bottom: 6px;
+}
+h2 {
+    margin-top: 28px;
+    border-top: 2px solid #d9dde3;
+    padding-top: 10px;
+    font-size: 16pt;
+    page-break-after: avoid;
+}
+h3 {
+    margin-top: 16px;
+    font-size: 12pt;
+    color: #1f3b5c;
+    page-break-after: avoid;
+}
+h4 { margin: 12px 0 6px; font-size: 11pt; }
+p { margin: 8px 0; }
+ul { margin: 6px 0 10px 20px; padding: 0; }
+li { margin: 3px 0; }
+pre, code { font-family: Consolas, "Courier New", monospace; }
+code {
+    background: #f3f5f8;
+    border: 1px solid #dce3ea;
+    border-radius: 4px;
+    padding: 1px 4px;
+    font-size: 90%;
+}
+pre {
+    background: #f7f9fb;
+    border: 1px solid #d9dde3;
+    border-radius: 8px;
+    padding: 10px 12px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 8px;
+    table-layout: fixed;
+}
+th, td {
+    border: 1px solid #d6dbe1;
+    padding: 7px 8px;
+    vertical-align: top;
+    font-size: 10pt;
+    word-break: break-word;
+}
+th {
+    background: #eef3f8;
+    text-align: left;
+    font-weight: 600;
+}
+tr:nth-child(even) td { background: #fcfdff; }
+.meta {
+    color: #3f536b;
+    margin-bottom: 14px;
+    font-size: 10.5pt;
+}
+/* Keep rows and headings together while printing */
+tr, td, th { page-break-inside: avoid; }
+h2, h3 { page-break-inside: avoid; }
+</style>
+</head>
+<body>
+<h1>heartBeatEVT</h1>
+<div class="meta">Command: <code>heartBeatEVT</code></div>
+<h2>Description</h2>
+<p>This event represents a heartbeat signal sent periodically from a device or system to indicate its active status and provide essential metadata like uptime and event details.</p>
+<p><strong>Download pdf:</strong> 📄 [Download heartBeatEVT as PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/heartBeatEVT.pdf)</p>
+<h2>Request</h2>
+<h3>Request Fields</h3><p>No fields available.</p>
+<h3>Request Examples</h3><p>No examples available.</p>
+<h2>Response</h2>
+<h3>Response Fields</h3>
+<table>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>eventName</code></td><td>string</td><td>No</td><td>Name of the event, indicating it is a heartbeat signal.</td><td><code>heartbeat</code></td></tr>
+<tr><td><code>timestamp</code></td><td>string</td><td>No</td><td>The timestamp when the event was generated, in ISO 8601 format.</td><td><code>2019-08-24T14:15:22Z</code></td></tr>
+<tr><td><code>eventNumber</code></td><td>integer</td><td>No</td><td>A unique identifier or sequence number for the event.</td><td><code>120</code></td></tr>
+<tr><td><code>upTime</code></td><td>string</td><td>No</td><td>The uptime duration of the system when the event was generated.</td><td><code>5 days 4hr 3min</code></td></tr>
+<tr><td><code>data</code></td><td>object</td><td>No</td><td>Additional data associated with the heartbeat event, referencing different event types.</td><td><code></code></td></tr>
+</tbody></table>
+<h3>Response Examples</h3>
+<h4>example1</h4>
+<pre><code>{
+  &quot;eventName&quot;: &quot;heartbeat&quot;,
+  &quot;timestamp&quot;: &quot;2019-08-24T14:15:22Z&quot;,
+  &quot;eventNumber&quot;: 120,
+  &quot;data&quot;: {
+    &quot;inventoryStatus&quot;: {
+      &quot;rfidStatus&quot;: &quot;INPROGRESS&quot;,
+      &quot;tagCount&quot;: 45,
+      &quot;scanCount&quot;: 128
+    },
+    &quot;batteryAlert&quot;: {
+      &quot;status&quot;: &quot;HIGH&quot;,
+      &quot;stateOfHealth&quot;: &quot;FULL&quot;,
+      &quot;chargePercentage&quot;: 85
+    }
+  }
+}</code></pre>
+</body>
+</html>

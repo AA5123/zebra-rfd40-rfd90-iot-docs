@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>set_operating_mode Command Spec</title>
+<style>
+@page { size: A4; margin: 14mm; }
+* { box-sizing: border-box; }
+body {
+    font-family: "Segoe UI", "Calibri", Arial, sans-serif;
+    margin: 0;
+    color: #111;
+    font-size: 11pt;
+    line-height: 1.45;
+}
+h1, h2, h3 { margin: 0 0 10px; }
+h1 {
+    font-size: 26pt;
+    letter-spacing: 0.2px;
+    margin-bottom: 6px;
+}
+h2 {
+    margin-top: 28px;
+    border-top: 2px solid #d9dde3;
+    padding-top: 10px;
+    font-size: 16pt;
+    page-break-after: avoid;
+}
+h3 {
+    margin-top: 16px;
+    font-size: 12pt;
+    color: #1f3b5c;
+    page-break-after: avoid;
+}
+h4 { margin: 12px 0 6px; font-size: 11pt; }
+p { margin: 8px 0; }
+ul { margin: 6px 0 10px 20px; padding: 0; }
+li { margin: 3px 0; }
+pre, code { font-family: Consolas, "Courier New", monospace; }
+code {
+    background: #f3f5f8;
+    border: 1px solid #dce3ea;
+    border-radius: 4px;
+    padding: 1px 4px;
+    font-size: 90%;
+}
+pre {
+    background: #f7f9fb;
+    border: 1px solid #d9dde3;
+    border-radius: 8px;
+    padding: 10px 12px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 8px;
+    table-layout: fixed;
+}
+th, td {
+    border: 1px solid #d6dbe1;
+    padding: 7px 8px;
+    vertical-align: top;
+    font-size: 10pt;
+    word-break: break-word;
+}
+th {
+    background: #eef3f8;
+    text-align: left;
+    font-weight: 600;
+}
+tr:nth-child(even) td { background: #fcfdff; }
+.meta {
+    color: #3f536b;
+    margin-bottom: 14px;
+    font-size: 10.5pt;
+}
+/* Keep rows and headings together while printing */
+tr, td, th { page-break-inside: avoid; }
+h2, h3 { page-break-inside: avoid; }
+</style>
+</head>
+<body>
+<h1>set_operating_mode</h1>
+<div class="meta">Command: <code>set_operating_mode</code></div>
+<h2>Description</h2>
+<p>This operation is used to configure the operating mode of RFID devices. Note: When RFD40/90 sled is configured to FAST_READ profile, data events are not currently supported.</p>
+<p><strong>Download pdf:</strong> 📄 [Download set_operating_mode as PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/set_operating_mode.pdf)</p>
+<h2>Request</h2>
+<h3>Request Fields</h3>
+<table>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>command</code></td><td>string (enum)</td><td>Yes</td><td>Specifies the name of the command to be executed. In this case, it is set_operating_mode.</td><td><code></code></td></tr>
+<tr><td><code>requestId</code></td><td>string</td><td>Yes</td><td>A unique identifier for the request. This ensures traceability and prevents duplicate processing of the same request.</td><td><code>1286</code></td></tr>
+<tr><td><code>operatingMode</code></td><td>object</td><td>No</td><td>Represents the reader operating mode.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes</code></td><td>object</td><td>No</td><td>Represents the reader operating mode.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.profiles</code></td><td>string (enum)</td><td>No</td><td>The type of mode of operation FAST_READ: Configures the radio for maximum read speed within short range. (Currently not supported) CYCLE_COUNT: Configures the radio to read as many unique tags as possible. DENSE_READERS: Used when multiple readers in proximity. OPTIMAL_BATTERY: Gives best battery life. BALANCED_PERFORMANCE: Maintains balance between performance and battery life. ADVANCED: Allows custom link profile settings in the advancedConfigurations.In this case, advancedConfigurations must be configured.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.advancedConfigurations</code></td><td>object</td><td>No</td><td>To be set when profiles is ADVANCED. In other cases, link profile will be mapped internally.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.advancedConfigurations.transmitPower</code></td><td>number</td><td>No</td><td></td><td><code>27</code></td></tr>
+<tr><td><code>operatingMode.operatingModes.advancedConfigurations.linkProfile</code></td><td>string (enum)</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.advancedConfigurations.session</code></td><td>string (enum)</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.advancedConfigurations.dynamicPower</code></td><td>boolean</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.accessOperations</code></td><td>array</td><td>No</td><td>Supports read, write, lock and kill operations on tag memory banks (EPC, TID, USER, etc.).</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.radioStartConditions</code></td><td>object</td><td>No</td><td>Configures how and at what time intervals inventory of tags should be started. If this configuration is absent, by default radio will immediately begin inventorying tags upon receiving a &quot;start&quot; command.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.radioStartConditions.trigger</code></td><td>string (enum)</td><td>No</td><td>Represents the trigger configuration to start the inventory operation.  - <code>PRESSED</code>: Inventory starts when the trigger is pressed. - <code>RELEASED</code>: Inventory starts when the trigger is released. - <code>IMMEDIATE</code>: Inventory starts immediately without requiring a trigger action.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.radioStartConditions.startDelay</code></td><td>integer</td><td>No</td><td>Specifies the delay (in milliseconds) before starting the inventory operation.  This delay applies to any trigger configuration when set to a value greater than 0.  For example, if set to 3000 milliseconds, the inventory will start 3 seconds after the trigger action.</td><td><code>3000</code></td></tr>
+<tr><td><code>operatingMode.operatingModes.radioStartConditions.repeat</code></td><td>boolean</td><td>No</td><td>Determines whether the inventory operation can be repeated using the trigger.  If enabled, pressing the trigger will start reading tags, and releasing it will stop the read operation (not abort).  Pressing the trigger again will restart the inventory operation. If disabled, pressing the trigger after stopping the inventory will not restart the operation.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.radioStopConditions</code></td><td>object</td><td>No</td><td>Configures how and under what conditions the inventory of tags should stop. If this configuration is absent, the radio will continue inventorying tags until a &quot;stop&quot; command is issued.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.radioStopConditions.trigger</code></td><td>string (enum)</td><td>No</td><td>Represents the trigger configuration to stop the inventory operation.  - <code>PRESSED</code>: Inventory stops when the trigger is pressed. - <code>RELEASED</code>: Inventory stops when the trigger is released. - <code>IMMEDIATE</code>: Inventory stops immediately without requiring a trigger action.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.radioStopConditions.tagCount</code></td><td>integer</td><td>No</td><td>Specifies the number of unique tags to be read before stopping the inventory.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.radioStopConditions.stopTimeout</code></td><td>integer</td><td>No</td><td>Specifies the duration (in milliseconds) after which the inventory operation will stop.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.radioStopConditions.inventoryCount</code></td><td>integer</td><td>No</td><td>Specifies the number of inventory cycles to complete before stopping.  Each cycle represents a full scan for tags in the field.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.query</code></td><td>object</td><td>No</td><td>Configures the query parameters for inventory operations including session, target, and tag population to optimize tag selection and reading.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.query.session</code></td><td>string (enum)</td><td>No</td><td>Session field (see EPC Gen2 Spec). Determines the session used for inventory operations.  Sessions are used to manage tag states and collisions during inventory.  SESSION_0 is typically used for single inventory rounds, while SESSION_1, SESSION_2, and SESSION_3  are used for multi-round inventories with varying persistence levels.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.query.inventoryState</code></td><td>string (enum)</td><td>No</td><td>Target field (see EPC Gen2 Spec). Specifies the inventory state of tags to be selected.  &#x27;STATE_A&#x27; and &#x27;STATE_B&#x27; represent the two possible states of a tag&#x27;s inventory flag.  &#x27;STATE_AB&#x27; flips between states to optimize tag selection during inventory rounds.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.query.slFlag</code></td><td>string (enum)</td><td>No</td><td>Sel field (see EPC Gen2 Spec). Indicates the SL (Select) flag used to filter tags.  &#x27;ALL&#x27; selects all tags regardless of SL flag state.  &#x27;ASSERTED&#x27; selects only tags with an asserted SL flag, while &#x27;DEASSERTED&#x27; selects tags with a deasserted SL flag.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.query.tagPopulation</code></td><td>integer</td><td>No</td><td>Estimates tag count to optimize reading. This value helps the reader adjust its settings  (e.g., Q parameter) to improve inventory performance for the expected number of tags in the field.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.select</code></td><td>array</td><td>No</td><td>Configures the pre-filtering of tags during inventory operations. This allows for selective reading of tags based on specific criteria, optimizing inventory performance. Supports up to 32 select filters.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.tagMetaDataToEnable</code></td><td>object</td><td>No</td><td>Specifies which metadata fields of the tag should be reported when it is read. Each field can be enabled or disabled based on the application&#x27;s requirements. Note: For RFD4090 devices, XPC and CRC metadata fields are not supported.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.tagMetaDataToEnable.RSSI</code></td><td>boolean</td><td>No</td><td>Indicates whether to report the RSSI.  RSSI provides the strength of the signal received from the tag, which can be useful for determining tag proximity.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.tagMetaDataToEnable.PHASE</code></td><td>boolean</td><td>No</td><td>Indicates whether to report the phase angle of the tag&#x27;s signal.  Phase information is often used for advanced applications like tag localization or movement tracking.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.tagMetaDataToEnable.SEENCOUNT</code></td><td>boolean</td><td>No</td><td>Indicates whether to report the number of times the tag was detected during inventory.  This helps in understanding tag visibility and read consistency over multiple scans.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.tagMetaDataToEnable.CHANNEL</code></td><td>boolean</td><td>No</td><td>Indicates whether to report the communication channel used to read the tag.  This is useful in environments with multiple channels or frequency hopping to identify the channel of operation.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.tagMetaDataToEnable.PC</code></td><td>boolean</td><td>No</td><td>Indicates whether to report the Protocol Control (PC) word.  The PC word contains information about the tag&#x27;s memory structure and encoding, such as the length of the EPC.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.tagMetaDataToEnable.XPC</code></td><td>boolean</td><td>No</td><td>Indicates whether to report the Extended Protocol Control (XPC) word.  XPC provides additional protocol-related information for advanced tags, such as custom memory configurations.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.tagMetaDataToEnable.CRC</code></td><td>boolean</td><td>No</td><td>Indicates whether to report the CRC value.  CRC is used to verify the integrity of the tag&#x27;s data and ensure error-free communication.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.tagMetaDataToEnable.EPC</code></td><td>boolean</td><td>No</td><td>Indicates whether to report the EPC.  EPC is the unique identifier stored in the tag&#x27;s memory, typically used for item identification.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.tagMetaDataToEnable.TID</code></td><td>boolean</td><td>No</td><td>Indicates whether to report the TID.  TID is a factory-programmed, unique identifier for the tag, often used for authentication or anti-counterfeiting.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.tagMetaDataToEnable.USER</code></td><td>boolean</td><td>No</td><td>Indicates whether to report the User memory bank data.  The User memory bank can store custom data defined by the application, such as additional product information.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.tagMetaDataToEnable.MAC</code></td><td>boolean</td><td>No</td><td>Indicates whether to report the MAC address of the reader.  This is useful for identifying the specific reader that performed the tag read in networked environments.</td><td><code></code></td></tr>
+<tr><td><code>operatingMode.operatingModes.tagMetaDataToEnable.HOSTNAME</code></td><td>boolean</td><td>No</td><td>Indicates whether to report the hostname of the reader.  Hostnames are helpful in networked environments where readers are identified by their assigned names.</td><td><code></code></td></tr>
+</tbody></table>
+<h3>Request Examples</h3>
+<h4>Set operating mode</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;set_operating_mode&quot;,
+  &quot;requestId&quot;: &quot;1286&quot;,
+  &quot;operatingMode&quot;: {
+    &quot;operatingModes&quot;: {
+      &quot;profiles&quot;: &quot;ADVANCED&quot;,
+      &quot;advancedConfigurations&quot;: {
+        &quot;transmitPower&quot;: 300,
+        &quot;linkProfile&quot;: &quot;M2_240K&quot;,
+        &quot;session&quot;: &quot;SESSION_1&quot;,
+        &quot;dynamicPower&quot;: true
+      },
+      &quot;accessOperations&quot;: [
+        {
+          &quot;operationType&quot;: &quot;READ&quot;,
+          &quot;config&quot;: {
+            &quot;memoryBank&quot;: &quot;EPC&quot;,
+            &quot;offset&quot;: 1,
+            &quot;length&quot;: 2
+          }
+        },
+        {
+          &quot;operationType&quot;: &quot;READ&quot;,
+          &quot;config&quot;: {
+            &quot;memoryBank&quot;: &quot;TID&quot;,
+            &quot;offset&quot;: 2,
+            &quot;length&quot;: 2
+          }
+        },
+        {
+          &quot;operationType&quot;: &quot;WRITE&quot;,
+          &quot;config&quot;: {
+            &quot;memoryBank&quot;: &quot;USER&quot;,
+            &quot;offset&quot;: 2,
+            &quot;length&quot;: 2,
+            &quot;data&quot;: &quot;FFFFEEEE&quot;,
+            &quot;password&quot;: &quot;0000&quot;
+          }
+        },
+        {
+          &quot;operationType&quot;: &quot;ACCESS&quot;,
+          &quot;config&quot;: {
+            &quot;password&quot;: &quot;0000&quot;
+          }
+        },
+        {
+          &quot;operationType&quot;: &quot;LOCK&quot;,
+          &quot;config&quot;: {
+            &quot;password&quot;: &quot;0000&quot;,
+            &quot;lockMemBank&quot;: &quot;TID&quot;,
+            &quot;lockAction&quot;: &quot;UNLOCK&quot;
+          }
+        }
+      ],
+      &quot;radioStartConditions&quot;: {
+        &quot;trigger&quot;: &quot;IMMEDIATE&quot;,
+        &quot;startDelay&quot;: 3000,
+        &quot;repeat&quot;: false
+      },
+      &quot;radioStopConditions&quot;: {
+        &quot;trigger&quot;: &quot;IMMEDIATE&quot;,
+        &quot;tagCount&quot;: 10,
+        &quot;stopTimeout&quot;: 10000,
+        &quot;inventoryCount&quot;: 0
+      },
+      &quot;query&quot;: {
+        &quot;session&quot;: &quot;SESSION_1&quot;,
+        &quot;inventoryState&quot;: &quot;STATE_B&quot;,
+        &quot;slFlag&quot;: &quot;ALL&quot;,
+        &quot;tagPopulation&quot;: 30
+      },
+      &quot;select&quot;: [
+        {
+          &quot;enable&quot;: true,
+          &quot;tagPattern&quot;: &quot;2222EEEEFFFF1111AAAABBBB&quot;,
+          &quot;memoryBank&quot;: &quot;EPC&quot;,
+          &quot;offset&quot;: 32,
+          &quot;action&quot;: &quot;INV_B_NOT_INV_A_OR_DSRT_SL_NOT_ASRT_SL&quot;,
+          &quot;target&quot;: &quot;SESSION_1&quot;,
+          &quot;length&quot;: 16
+        }
+      ],
+      &quot;tagMetaDataToEnable&quot;: {
+        &quot;RSSI&quot;: false,
+        &quot;PHASE&quot;: false,
+        &quot;SEENCOUNT&quot;: false,
+        &quot;CHANNEL&quot;: false,
+        &quot;PC&quot;: false,
+        &quot;XPC&quot;: true,
+        &quot;CRC&quot;: true,
+        &quot;EPC&quot;: true,
+        &quot;TID&quot;: true,
+        &quot;USER&quot;: true,
+        &quot;MAC&quot;: true,
+        &quot;HOSTNAME&quot;: true
+      }
+    }
+  }
+}</code></pre>
+<h4>Profile setting</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;set_operating_mode&quot;,
+  &quot;requestId&quot;: &quot;1286&quot;,
+  &quot;operatingMode&quot;: {
+    &quot;operatingModes&quot;: {
+      &quot;profiles&quot;: &quot;BALANCED_PERFORMANCE&quot;
+    }
+  }
+}</code></pre>
+<h4>Access operations</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;set_operating_mode&quot;,
+  &quot;requestId&quot;: &quot;1286&quot;,
+  &quot;operatingMode&quot;: {
+    &quot;operatingModes&quot;: {
+      &quot;accessOperations&quot;: [
+        {
+          &quot;operationType&quot;: &quot;READ&quot;,
+          &quot;config&quot;: {
+            &quot;memoryBank&quot;: &quot;EPC&quot;,
+            &quot;offset&quot;: 2,
+            &quot;length&quot;: 3
+          }
+        },
+        {
+          &quot;operationType&quot;: &quot;READ&quot;,
+          &quot;config&quot;: {
+            &quot;memoryBank&quot;: &quot;TID&quot;,
+            &quot;offset&quot;: 1,
+            &quot;length&quot;: 2
+          }
+        },
+        {
+          &quot;operationType&quot;: &quot;WRITE&quot;,
+          &quot;config&quot;: {
+            &quot;memoryBank&quot;: &quot;USER&quot;,
+            &quot;offset&quot;: 2,
+            &quot;length&quot;: 2,
+            &quot;data&quot;: &quot;FFFFEEEE&quot;,
+            &quot;password&quot;: &quot;0000&quot;
+          }
+        },
+        {
+          &quot;operationType&quot;: &quot;ACCESS&quot;,
+          &quot;config&quot;: {
+            &quot;password&quot;: &quot;0000&quot;
+          }
+        },
+        {
+          &quot;operationType&quot;: &quot;LOCK&quot;,
+          &quot;config&quot;: {
+            &quot;password&quot;: &quot;0000&quot;,
+            &quot;lockMemBank&quot;: &quot;EPC&quot;,
+            &quot;lockAction&quot;: &quot;UNLOCK&quot;
+          }
+        }
+      ]
+    }
+  }
+}</code></pre>
+<h4>Radio start/stop conditions</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;set_operating_mode&quot;,
+  &quot;requestId&quot;: &quot;1286&quot;,
+  &quot;operatingMode&quot;: {
+    &quot;operatingModes&quot;: {
+      &quot;radioStartConditions&quot;: {
+        &quot;trigger&quot;: &quot;IMMEDIATE&quot;,
+        &quot;startDelay&quot;: 5000,
+        &quot;repeat&quot;: false
+      },
+      &quot;radioStopConditions&quot;: {
+        &quot;trigger&quot;: &quot;IMMEDIATE&quot;,
+        &quot;tagCount&quot;: 10,
+        &quot;stopTimeout&quot;: 10000,
+        &quot;inventoryCount&quot;: 0
+      }
+    }
+  }
+}</code></pre>
+<h4>Query settings</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;set_operating_mode&quot;,
+  &quot;requestId&quot;: &quot;1286&quot;,
+  &quot;operatingMode&quot;: {
+    &quot;operatingModes&quot;: {
+      &quot;query&quot;: {
+        &quot;session&quot;: &quot;SESSION_1&quot;,
+        &quot;inventoryState&quot;: &quot;STATE_B&quot;,
+        &quot;slFlag&quot;: &quot;ALL&quot;,
+        &quot;tagPopulation&quot;: 30
+      }
+    }
+  }
+}</code></pre>
+<h4>Select settings</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;set_operating_mode&quot;,
+  &quot;requestId&quot;: &quot;1286&quot;,
+  &quot;operatingMode&quot;: {
+    &quot;operatingModes&quot;: {
+      &quot;select&quot;: [
+        {
+          &quot;enable&quot;: true,
+          &quot;tagPattern&quot;: &quot;2222EEEEFFFF1111AAAABBBB&quot;,
+          &quot;memoryBank&quot;: &quot;EPC&quot;,
+          &quot;offset&quot;: 32,
+          &quot;action&quot;: &quot;INV_B_NOT_INV_A_OR_DSRT_SL_NOT_ASRT_SL&quot;,
+          &quot;target&quot;: &quot;SESSION_SL&quot;,
+          &quot;length&quot;: 16
+        }
+      ]
+    }
+  }
+}</code></pre>
+<h4>Query and select settings</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;set_operating_mode&quot;,
+  &quot;requestId&quot;: &quot;8f07804c-4af1-41c8-9959-417b0aa8047d&quot;,
+  &quot;operatingMode&quot;: {
+    &quot;operatingModes&quot;: {
+      &quot;profiles&quot;: &quot;BALANCED_PERFORMANCE&quot;,
+      &quot;query&quot;: {
+        &quot;session&quot;: &quot;SESSION_1&quot;,
+        &quot;inventoryState&quot;: &quot;STATE_B&quot;,
+        &quot;slFlag&quot;: &quot;ALL&quot;,
+        &quot;tagPopulation&quot;: 40
+      },
+      &quot;select&quot;: [
+        {
+          &quot;enable&quot;: true,
+          &quot;tagPattern&quot;: &quot;FFFFEEEE3435363742426666&quot;,
+          &quot;memoryBank&quot;: &quot;EPC&quot;,
+          &quot;offset&quot;: 32,
+          &quot;action&quot;: &quot;INV_B_NOT_INV_A_OR_DSRT_SL_NOT_ASRT_SL&quot;,
+          &quot;target&quot;: &quot;SESSION_1&quot;,
+          &quot;length&quot;: 96
+        }
+      ]
+    }
+  }
+}</code></pre>
+<h4>Tag metadata settings</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;set_operating_mode&quot;,
+  &quot;requestId&quot;: &quot;1286&quot;,
+  &quot;operatingMode&quot;: {
+    &quot;operatingModes&quot;: {
+      &quot;tagMetaDataToEnable&quot;: {
+        &quot;RSSI&quot;: true,
+        &quot;PHASE&quot;: true,
+        &quot;SEENCOUNT&quot;: true,
+        &quot;CHANNEL&quot;: true,
+        &quot;PC&quot;: false,
+        &quot;XPC&quot;: false,
+        &quot;CRC&quot;: true,
+        &quot;EPC&quot;: true,
+        &quot;TID&quot;: false,
+        &quot;USER&quot;: false,
+        &quot;MAC&quot;: false,
+        &quot;HOSTNAME&quot;: false
+      }
+    }
+  }
+}</code></pre>
+<h2>Response</h2>
+<h3>Response Fields</h3>
+<table>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>command</code></td><td>string</td><td>Yes</td><td></td><td><code>set_operating_mode</code></td></tr>
+<tr><td><code>requestId</code></td><td>string</td><td>Yes</td><td></td><td><code>abc123</code></td></tr>
+<tr><td><code>apiVersion</code></td><td>string (enum)</td><td>Yes</td><td></td><td><code>V1.1</code></td></tr>
+<tr><td><code>response</code></td><td>object</td><td>Yes</td><td>Status of the command execution — check <code>code</code> to confirm success (0) or identify the error.</td><td><code></code></td></tr>
+<tr><td><code>response.code</code></td><td>integer</td><td>Yes</td><td>Response code indicating success or failure.<ul><li><strong>0</strong> — Success</li><li><strong>1</strong> — Command payload accepted</li><li><strong>2</strong> — Invalid payload</li><li><strong>3</strong> — Not able to retrieve information</li><li><strong>4</strong> — Firmware update in progress</li><li><strong>5</strong> — Can&#x27;t reboot, inventory in progress</li><li><strong>6</strong> — Region is not configured</li><li><strong>7</strong> — Interface is not available</li><li><strong>8</strong> — Insufficient flash size</li><li><strong>9</strong> — File not found</li><li><strong>10</strong> — Configuration already exists</li><li><strong>11</strong> — Inventory in progress</li><li><strong>12</strong> — No radio operation in progress</li><li><strong>13</strong> — Firmware update failed</li><li><strong>14</strong> — Battery too low for firmware update</li><li><strong>15</strong> — WIFI: SSID not found</li><li><strong>16</strong> — WIFI: Cannot delete active SSID</li><li><strong>17</strong> — WIFI: SSID missing</li><li><strong>18</strong> — WIFI: SSID already exists</li><li><strong>19</strong> — WIFI: SSID count overflow</li><li><strong>20</strong> — WiFi is not supported</li><li><strong>21</strong> — Certificate not found</li><li><strong>22</strong> — Advanced configuration not set</li><li><strong>23</strong> — Invalid enum value</li><li><strong>24</strong> — Max 32 prefilters limit exceeded</li><li><strong>25</strong> — Max 3 publish topics exceeded</li><li><strong>26</strong> — Max 1 subscribe topic exceeded</li><li><strong>27</strong> — Invalid tenant ID length</li><li><strong>28</strong> — Tag match pattern length exceeded</li></ul></td><td><code>0</code></td></tr>
+<tr><td><code>response.description</code></td><td>string</td><td>Yes</td><td>Human-readable description of the response code (e.g. &quot;Success&quot;, &quot;Invalid payload&quot;).</td><td><code>Success</code></td></tr>
+</tbody></table>
+<h3>Response Examples</h3>
+<h4>example1</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;set_operating_mode&quot;,
+  &quot;requestId&quot;: &quot;abc123&quot;,
+  &quot;apiVersion&quot;: &quot;V1.1&quot;,
+  &quot;response&quot;: {
+    &quot;code&quot;: 0,
+    &quot;description&quot;: &quot;Success&quot;
+  }
+}</code></pre>
+</body>
+</html>

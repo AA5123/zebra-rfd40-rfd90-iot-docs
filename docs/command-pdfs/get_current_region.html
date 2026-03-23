@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>get_current_region Command Spec</title>
+<style>
+@page { size: A4; margin: 14mm; }
+* { box-sizing: border-box; }
+body {
+    font-family: "Segoe UI", "Calibri", Arial, sans-serif;
+    margin: 0;
+    color: #111;
+    font-size: 11pt;
+    line-height: 1.45;
+}
+h1, h2, h3 { margin: 0 0 10px; }
+h1 {
+    font-size: 26pt;
+    letter-spacing: 0.2px;
+    margin-bottom: 6px;
+}
+h2 {
+    margin-top: 28px;
+    border-top: 2px solid #d9dde3;
+    padding-top: 10px;
+    font-size: 16pt;
+    page-break-after: avoid;
+}
+h3 {
+    margin-top: 16px;
+    font-size: 12pt;
+    color: #1f3b5c;
+    page-break-after: avoid;
+}
+h4 { margin: 12px 0 6px; font-size: 11pt; }
+p { margin: 8px 0; }
+ul { margin: 6px 0 10px 20px; padding: 0; }
+li { margin: 3px 0; }
+pre, code { font-family: Consolas, "Courier New", monospace; }
+code {
+    background: #f3f5f8;
+    border: 1px solid #dce3ea;
+    border-radius: 4px;
+    padding: 1px 4px;
+    font-size: 90%;
+}
+pre {
+    background: #f7f9fb;
+    border: 1px solid #d9dde3;
+    border-radius: 8px;
+    padding: 10px 12px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 8px;
+    table-layout: fixed;
+}
+th, td {
+    border: 1px solid #d6dbe1;
+    padding: 7px 8px;
+    vertical-align: top;
+    font-size: 10pt;
+    word-break: break-word;
+}
+th {
+    background: #eef3f8;
+    text-align: left;
+    font-weight: 600;
+}
+tr:nth-child(even) td { background: #fcfdff; }
+.meta {
+    color: #3f536b;
+    margin-bottom: 14px;
+    font-size: 10.5pt;
+}
+/* Keep rows and headings together while printing */
+tr, td, th { page-break-inside: avoid; }
+h2, h3 { page-break-inside: avoid; }
+</style>
+</head>
+<body>
+<h1>get_current_region</h1>
+<div class="meta">Command: <code>get_current_region</code></div>
+<h2>Description</h2>
+<p>Retrieves the <strong>regulatory radio configuration</strong> of the scanner — which country&#x27;s rules it follows, what frequencies it can use, and power limits.</p>
+<h3>Response fields:</h3>
+<table><thead><tr><th>Field</th><th>What it tells you</th></tr></thead><tbody>
+<tr><td><code>country</code></td><td>The country this scanner is configured for (e.g. United States, Germany)</td></tr>
+<tr><td><code>regulatoryStandard</code></td><td>The radio regulation it follows (e.g. FCC for US, ETSI for Europe)</td></tr>
+<tr><td><code>frequencyHopping</code></td><td>Whether the scanner automatically switches between frequency channels</td></tr>
+<tr><td><code>lbtEnabled</code></td><td>Whether Listen Before Talk is enabled (required in some regions like Japan/EU)</td></tr>
+<tr><td><code>maxTxPowerSupported</code></td><td>Maximum allowed transmit power in dBm</td></tr>
+<tr><td><code>minTxPowerSupported</code></td><td>Minimum transmit power in dBm</td></tr>
+<tr><td><code>channelData</code></td><td>List of all available frequency channels (in kHz) the scanner can use</td></tr>
+</tbody></table>
+<h3>Typical use cases:</h3>
+<ul>
+<li>Compliance auditing — verify scanners are configured for the correct country before deployment.</li>
+<li>RF planning — check available channels and power limits for site planning.</li>
+<li>Multi-region management — confirm scanners shipped to different countries have the right region settings.</li>
+</ul>
+<p><strong>Download pdf:</strong> 📄 [Download get_current_region as PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_current_region.pdf)</p>
+<h2>Request</h2>
+<h3>Request Fields</h3>
+<table>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>command</code></td><td>string (enum)</td><td>Yes</td><td>Must be <code>get_current_region</code>. Tells the scanner to return its regulatory radio configuration.</td><td><code>get_current_region</code></td></tr>
+<tr><td><code>requestId</code></td><td>string</td><td>Yes</td><td>A unique ID you assign to this request. The scanner echoes it back in the response so you can match requests to responses.</td><td><code>abc123</code></td></tr>
+</tbody></table>
+<h3>Request Examples</h3>
+<h4>Generated Example</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;get_current_region&quot;,
+  &quot;requestId&quot;: &quot;abc123&quot;
+}</code></pre>
+<h2>Response</h2>
+<h3>Response Fields</h3>
+<table>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>command</code></td><td>string</td><td>Yes</td><td>Echoes back the command name — always <code>get_current_region</code> for this response.</td><td><code>get_current_region</code></td></tr>
+<tr><td><code>requestId</code></td><td>string</td><td>Yes</td><td>Echoes back the requestId you sent, so you can match this response to your original request.</td><td><code>abc123</code></td></tr>
+<tr><td><code>apiVersion</code></td><td>string (enum)</td><td>Yes</td><td>The API version of the IoT Connector responding to this command.</td><td><code>V1.1</code></td></tr>
+<tr><td><code>currentRegion</code></td><td>object</td><td>No</td><td>Regulatory radio configuration — country, regulatory standard, available frequency channels, transmit power limits, frequency hopping, and Listen Before Talk settings. These are factory-set and cannot be changed.</td><td><code></code></td></tr>
+<tr><td><code>currentRegion.frequencyHopping</code></td><td>boolean</td><td>Yes</td><td>Indicates whether frequency hopping is enabled in the region.</td><td><code></code></td></tr>
+<tr><td><code>currentRegion.channelData</code></td><td>array</td><td>Yes</td><td>List of channel frequencies available in the region, represented as strings.</td><td><code></code></td></tr>
+<tr><td><code>currentRegion.country</code></td><td>string</td><td>Yes</td><td>The country for which the device is configured.</td><td><code>USA</code></td></tr>
+<tr><td><code>currentRegion.lbtEnabled</code></td><td>boolean</td><td>Yes</td><td>Specifies if Listen Before Talk (LBT) is enabled for the region.</td><td><code></code></td></tr>
+<tr><td><code>currentRegion.maxTxPowerSupported</code></td><td>number</td><td>Yes</td><td>The maximum transmission power supported in the region, measured in dBm.</td><td><code>29.2</code></td></tr>
+<tr><td><code>currentRegion.minTxPowerSupported</code></td><td>number</td><td>Yes</td><td>The minimum transmission power supported in the region, measured in dBm.</td><td><code>10.0</code></td></tr>
+<tr><td><code>currentRegion.regulatoryStandard</code></td><td>string</td><td>Yes</td><td>The regulatory standard governing the region&#x27;s transmission rules.</td><td><code>ETSI_EU_800M_900M_3_CHANNEL</code></td></tr>
+<tr><td><code>response</code></td><td>object</td><td>Yes</td><td>Status of the command execution — check <code>code</code> to confirm success (0) or identify the error.</td><td><code></code></td></tr>
+<tr><td><code>response.code</code></td><td>integer</td><td>Yes</td><td>Response code indicating success or failure.<ul><li><strong>0</strong> — Success</li><li><strong>1</strong> — Command payload accepted</li><li><strong>2</strong> — Invalid payload</li><li><strong>3</strong> — Not able to retrieve information</li><li><strong>4</strong> — Firmware update in progress</li><li><strong>5</strong> — Can&#x27;t reboot, inventory in progress</li><li><strong>6</strong> — Region is not configured</li><li><strong>7</strong> — Interface is not available</li><li><strong>8</strong> — Insufficient flash size</li><li><strong>9</strong> — File not found</li><li><strong>10</strong> — Configuration already exists</li><li><strong>11</strong> — Inventory in progress</li><li><strong>12</strong> — No radio operation in progress</li><li><strong>13</strong> — Firmware update failed</li><li><strong>14</strong> — Battery too low for firmware update</li><li><strong>15</strong> — WIFI: SSID not found</li><li><strong>16</strong> — WIFI: Cannot delete active SSID</li><li><strong>17</strong> — WIFI: SSID missing</li><li><strong>18</strong> — WIFI: SSID already exists</li><li><strong>19</strong> — WIFI: SSID count overflow</li><li><strong>20</strong> — WiFi is not supported</li><li><strong>21</strong> — Certificate not found</li><li><strong>22</strong> — Advanced configuration not set</li><li><strong>23</strong> — Invalid enum value</li><li><strong>24</strong> — Max 32 prefilters limit exceeded</li><li><strong>25</strong> — Max 3 publish topics exceeded</li><li><strong>26</strong> — Max 1 subscribe topic exceeded</li><li><strong>27</strong> — Invalid tenant ID length</li><li><strong>28</strong> — Tag match pattern length exceeded</li></ul></td><td><code>0</code></td></tr>
+<tr><td><code>response.description</code></td><td>string</td><td>Yes</td><td>Human-readable description of the response code (e.g. &quot;Success&quot;, &quot;Invalid payload&quot;).</td><td><code>Success</code></td></tr>
+</tbody></table>
+<h3>Response Examples</h3>
+<h4>Current region info</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;get_current_region&quot;,
+  &quot;requestId&quot;: &quot;abc123&quot;,
+  &quot;apiVersion&quot;: &quot;V1.1&quot;,
+  &quot;currentRegion&quot;: {
+    &quot;frequencyHopping&quot;: true,
+    &quot;channelData&quot;: [
+      &quot;91575&quot;,
+      &quot;91525&quot;,
+      &quot;90325&quot;,
+      &quot;92675&quot;,
+      &quot;92625&quot;,
+      &quot;90425&quot;,
+      &quot;92725&quot;,
+      &quot;92025&quot;,
+      &quot;91925&quot;,
+      &quot;90925&quot;,
+      &quot;91875&quot;,
+      &quot;91775&quot;,
+      &quot;90525&quot;,
+      &quot;90475&quot;,
+      &quot;92525&quot;,
+      &quot;92175&quot;,
+      &quot;91475&quot;,
+      &quot;90675&quot;,
+      &quot;91375&quot;,
+      &quot;92225&quot;,
+      &quot;91125&quot;,
+      &quot;91175&quot;,
+      &quot;90375&quot;,
+      &quot;90875&quot;,
+      &quot;90575&quot;,
+      &quot;91225&quot;,
+      &quot;90625&quot;,
+      &quot;91725&quot;,
+      &quot;91425&quot;,
+      &quot;90725&quot;,
+      &quot;91825&quot;,
+      &quot;91625&quot;,
+      &quot;91025&quot;,
+      &quot;91075&quot;,
+      &quot;90775&quot;,
+      &quot;92475&quot;,
+      &quot;90975&quot;,
+      &quot;91975&quot;,
+      &quot;91675&quot;,
+      &quot;91325&quot;,
+      &quot;92375&quot;,
+      &quot;90825&quot;,
+      &quot;92575&quot;,
+      &quot;91275&quot;,
+      &quot;92425&quot;,
+      &quot;92125&quot;,
+      &quot;92075&quot;,
+      &quot;92275&quot;,
+      &quot;90275&quot;,
+      &quot;92325&quot;
+    ],
+    &quot;country&quot;: &quot;United States&quot;,
+    &quot;lbtEnabled&quot;: false,
+    &quot;maxTxPowerSupported&quot;: 300,
+    &quot;minTxPowerSupported&quot;: 0,
+    &quot;regulatoryStandard&quot;: &quot;FCC&quot;
+  },
+  &quot;response&quot;: {
+    &quot;code&quot;: 0,
+    &quot;description&quot;: &quot;Success&quot;
+  }
+}</code></pre>
+</body>
+</html>

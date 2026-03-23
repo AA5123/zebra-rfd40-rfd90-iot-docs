@@ -446,10 +446,36 @@ def build_openapi():
 
 
 def main():
-    print("Generating OpenAPI spec from schemas/ ...")
+    import subprocess
+
+    print("Generating OpenAPI spec (pass 1 - for PDF generation) ...")
     openapi, skipped = build_openapi()
 
-    # Write as JSON (Redoc reads JSON fine; extension is .yaml for compatibility)
+    # Write initial spec (PDFs need this to generate)
+    with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
+        json.dump(openapi, f, indent=4, ensure_ascii=False)
+
+    # Auto-generate PDFs for all commands
+    print("\nGenerating command PDFs ...")
+    export_script = os.path.join(SCRIPT_DIR, "export_command_pdf.py")
+    commands = [path.lstrip("/") for path in openapi["paths"]]
+    pdf_count = 0
+    for cmd in commands:
+        result = subprocess.run(
+            [sys.executable, export_script, cmd],
+            cwd=PROJECT_ROOT,
+            capture_output=True, text=True,
+        )
+        if result.returncode == 0 and "Generated PDF" in result.stdout:
+            pdf_count += 1
+        elif result.returncode != 0:
+            print(f"  WARNING: PDF export failed for {cmd}: {result.stderr.strip()}")
+    print(f"  {pdf_count} PDFs generated in docs/command-pdfs/")
+
+    # Rebuild OpenAPI spec (pass 2 - now PDF links will be auto-injected)
+    print("\nRegenerating OpenAPI spec (pass 2 - with PDF links) ...")
+    openapi, skipped = build_openapi()
+
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         json.dump(openapi, f, indent=4, ensure_ascii=False)
 
@@ -468,7 +494,6 @@ def main():
 
     # Auto-rebuild HTML pages
     print("\nRebuilding HTML pages ...")
-    import subprocess
     build_script = os.path.join(SCRIPT_DIR, "build_pages.py")
     subprocess.run([sys.executable, build_script], cwd=PROJECT_ROOT)
 

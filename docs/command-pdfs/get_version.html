@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>get_version Command Spec</title>
+<style>
+@page { size: A4; margin: 14mm; }
+* { box-sizing: border-box; }
+body {
+    font-family: "Segoe UI", "Calibri", Arial, sans-serif;
+    margin: 0;
+    color: #111;
+    font-size: 11pt;
+    line-height: 1.45;
+}
+h1, h2, h3 { margin: 0 0 10px; }
+h1 {
+    font-size: 26pt;
+    letter-spacing: 0.2px;
+    margin-bottom: 6px;
+}
+h2 {
+    margin-top: 28px;
+    border-top: 2px solid #d9dde3;
+    padding-top: 10px;
+    font-size: 16pt;
+    page-break-after: avoid;
+}
+h3 {
+    margin-top: 16px;
+    font-size: 12pt;
+    color: #1f3b5c;
+    page-break-after: avoid;
+}
+h4 { margin: 12px 0 6px; font-size: 11pt; }
+p { margin: 8px 0; }
+ul { margin: 6px 0 10px 20px; padding: 0; }
+li { margin: 3px 0; }
+pre, code { font-family: Consolas, "Courier New", monospace; }
+code {
+    background: #f3f5f8;
+    border: 1px solid #dce3ea;
+    border-radius: 4px;
+    padding: 1px 4px;
+    font-size: 90%;
+}
+pre {
+    background: #f7f9fb;
+    border: 1px solid #d9dde3;
+    border-radius: 8px;
+    padding: 10px 12px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 8px;
+    table-layout: fixed;
+}
+th, td {
+    border: 1px solid #d6dbe1;
+    padding: 7px 8px;
+    vertical-align: top;
+    font-size: 10pt;
+    word-break: break-word;
+}
+th {
+    background: #eef3f8;
+    text-align: left;
+    font-weight: 600;
+}
+tr:nth-child(even) td { background: #fcfdff; }
+.meta {
+    color: #3f536b;
+    margin-bottom: 14px;
+    font-size: 10.5pt;
+}
+/* Keep rows and headings together while printing */
+tr, td, th { page-break-inside: avoid; }
+h2, h3 { page-break-inside: avoid; }
+</style>
+</head>
+<body>
+<h1>get_version</h1>
+<div class="meta">Command: <code>get_version</code></div>
+<h2>Description</h2>
+<p>Retrieves the <strong>scanner&#x27;s identity card</strong> — model, serial number, SKU, and all firmware versions.</p>
+<h3>Command details:</h3>
+<ul>
+<li>Pattern Name: Reader Identity and Firmware Retrieval</li>
+<li>Communication Type: Bidirectional (Cloud to Device, Device to Cloud)</li>
+<li>MQTT Version: 3.1.1</li>
+<li>API Version: V1.1</li>
+<li>Document Version: 1.0.0</li>
+<li>Last Updated: 2026-03-12</li>
+<li>Applies To: RFD40 Series, RFD90 Series</li>
+</ul>
+<h3>Response fields:</h3>
+<table><thead><tr><th>Field</th><th>What it tells you</th></tr></thead><tbody>
+<tr><td><code>firmwareVersion</code></td><td>Main device firmware version</td></tr>
+<tr><td><code>model</code></td><td>Scanner model — RFD40 or RFD90</td></tr>
+<tr><td><code>serialNumber</code></td><td>Unique device serial number</td></tr>
+<tr><td><code>sku</code></td><td>Stock Keeping Unit — encodes model, features, and region (e.g. <code>RFD4031-G10B700-US</code>)</td></tr>
+<tr><td><code>detailedVersions.scannerFirmware</code></td><td>Barcode scanner module firmware</td></tr>
+<tr><td><code>detailedVersions.radioFirmware</code></td><td>RFID radio module firmware</td></tr>
+<tr><td><code>detailedVersions.iotcVersion</code></td><td>IoT Connector software version</td></tr>
+</tbody></table>
+<h3>Typical use cases:</h3>
+<ul>
+<li>Inventory — collect model/serial/SKU across all scanners for asset tracking.</li>
+<li>Firmware management — check which scanners need firmware updates.</li>
+</ul>
+<h3>MQTT topics for this command:</h3>
+<ul>
+<li>Command topic (Cloud to Device):</li>
+</ul>
+<p><code>&lt;tenantId&gt;/CTRL/clients/cmnd/&lt;deviceSerial&gt;</code></p>
+<ul>
+<li>Response topic (Device to Cloud):</li>
+</ul>
+<p><code>&lt;tenantId&gt;/CTRL/clients/resp/&lt;deviceSerial&gt;</code></p>
+<h3>Example:</h3>
+<ul>
+<li>Command: <code>zebra/CTRL/clients/cmnd/RFD40-12345678</code></li>
+<li>Response: <code>zebra/CTRL/clients/resp/RFD40-12345678</code></li>
+</ul>
+<p>Ensure these topic paths match your configured endpoint topics.</p>
+<p><strong>Download pdf:</strong> 📄 [Download get_version as PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_version.pdf)</p>
+<h2>Request</h2>
+<h3>Request Fields</h3>
+<table>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>command</code></td><td>string (enum)</td><td>Yes</td><td>Must be <code>get_version</code>. Tells the scanner to return its identity and firmware information.</td><td><code>get_version</code></td></tr>
+<tr><td><code>requestId</code></td><td>string</td><td>Yes</td><td>A unique ID you assign to this request. The scanner echoes it back in the response so you can match requests to responses.</td><td><code>abc123</code></td></tr>
+</tbody></table>
+<h3>Request Examples</h3>
+<h4>Generated Example</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;get_version&quot;,
+  &quot;requestId&quot;: &quot;abc123&quot;
+}</code></pre>
+<h2>Response</h2>
+<h3>Response Fields</h3>
+<table>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>command</code></td><td>string</td><td>Yes</td><td>Echoes back the command name — always <code>get_version</code> for this response.</td><td><code></code></td></tr>
+<tr><td><code>requestId</code></td><td>string</td><td>Yes</td><td>Echoes back the requestId you sent, so you can match this response to your original request.</td><td><code>abcd123</code></td></tr>
+<tr><td><code>apiVersion</code></td><td>string (enum)</td><td>Yes</td><td>The API version of the IoT Connector responding to this command.</td><td><code>V1.1</code></td></tr>
+<tr><td><code>readerVersion</code></td><td>object</td><td>No</td><td>Scanner identity — model, serial number, SKU, and firmware versions for the main device, barcode scanner, RFID radio, and IoT Connector. These values only change after a firmware update.</td><td><code></code></td></tr>
+<tr><td><code>readerVersion.firmwareVersion</code></td><td>string</td><td>Yes</td><td>The firmware version of the reader.</td><td><code>SAAFKS00-006-R02</code></td></tr>
+<tr><td><code>readerVersion.model</code></td><td>string (enum)</td><td>Yes</td><td>The model of the reader, such as RFD40 or RFD90.</td><td><code>RFD40</code></td></tr>
+<tr><td><code>readerVersion.serialNumber</code></td><td>string</td><td>Yes</td><td>The serial number of the reader.</td><td><code>23053520102096</code></td></tr>
+<tr><td><code>readerVersion.sku</code></td><td>string</td><td>Yes</td><td>The stock keeping unit (SKU) identifier for the reader.</td><td><code>RFD4031-G10B700-US</code></td></tr>
+<tr><td><code>readerVersion.detailedVersions</code></td><td>object</td><td>No</td><td>Detailed version information for the reader.</td><td><code></code></td></tr>
+<tr><td><code>readerVersion.detailedVersions.scannerFirmware</code></td><td>string</td><td>No</td><td>The firmware version of the scanner component.</td><td><code>PAAEOC20-003-R01</code></td></tr>
+<tr><td><code>readerVersion.detailedVersions.radioFirmware</code></td><td>string</td><td>No</td><td>The firmware version of the radio component.</td><td><code>2.0.42.0</code></td></tr>
+<tr><td><code>readerVersion.detailedVersions.iotcVersion</code></td><td>string (enum)</td><td>No</td><td>The version of the IoT Connector (IoTC) software.</td><td><code>V1.1</code></td></tr>
+<tr><td><code>response</code></td><td>object</td><td>Yes</td><td>Status of the command execution — check <code>code</code> to confirm success (0) or identify the error.</td><td><code></code></td></tr>
+<tr><td><code>response.code</code></td><td>integer</td><td>Yes</td><td>Response code indicating success or failure.<ul><li><strong>0</strong> — Success</li><li><strong>1</strong> — Command payload accepted</li><li><strong>2</strong> — Invalid payload</li><li><strong>3</strong> — Not able to retrieve information</li><li><strong>4</strong> — Firmware update in progress</li><li><strong>5</strong> — Can&#x27;t reboot, inventory in progress</li><li><strong>6</strong> — Region is not configured</li><li><strong>7</strong> — Interface is not available</li><li><strong>8</strong> — Insufficient flash size</li><li><strong>9</strong> — File not found</li><li><strong>10</strong> — Configuration already exists</li><li><strong>11</strong> — Inventory in progress</li><li><strong>12</strong> — No radio operation in progress</li><li><strong>13</strong> — Firmware update failed</li><li><strong>14</strong> — Battery too low for firmware update</li><li><strong>15</strong> — WIFI: SSID not found</li><li><strong>16</strong> — WIFI: Cannot delete active SSID</li><li><strong>17</strong> — WIFI: SSID missing</li><li><strong>18</strong> — WIFI: SSID already exists</li><li><strong>19</strong> — WIFI: SSID count overflow</li><li><strong>20</strong> — WiFi is not supported</li><li><strong>21</strong> — Certificate not found</li><li><strong>22</strong> — Advanced configuration not set</li><li><strong>23</strong> — Invalid enum value</li><li><strong>24</strong> — Max 32 prefilters limit exceeded</li><li><strong>25</strong> — Max 3 publish topics exceeded</li><li><strong>26</strong> — Max 1 subscribe topic exceeded</li><li><strong>27</strong> — Invalid tenant ID length</li><li><strong>28</strong> — Tag match pattern length exceeded</li></ul></td><td><code>0</code></td></tr>
+<tr><td><code>response.description</code></td><td>string</td><td>Yes</td><td>Human-readable description of the response code (e.g. &quot;Success&quot;, &quot;Invalid payload&quot;).</td><td><code>Success</code></td></tr>
+</tbody></table>
+<h3>Response Examples</h3>
+<h4>Device version info</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;get_version&quot;,
+  &quot;requestId&quot;: &quot;abc123&quot;,
+  &quot;apiVersion&quot;: &quot;V1.1&quot;,
+  &quot;readerVersion&quot;: {
+    &quot;firmwareVersion&quot;: &quot;PAAFKS00-007-D03&quot;,
+    &quot;model&quot;: &quot;RFD40&quot;,
+    &quot;serialNumber&quot;: &quot;22326520100477&quot;,
+    &quot;sku&quot;: &quot;RFD4031-G10B700-US&quot;,
+    &quot;detailedVersions&quot;: {
+      &quot;scannerFirmware&quot;: &quot;PAAEOC20-003-R01&quot;,
+      &quot;radioFirmware&quot;: &quot;2.0.42.0&quot;,
+      &quot;iotcVersion&quot;: &quot;V1.1&quot;
+    }
+  },
+  &quot;response&quot;: {
+    &quot;code&quot;: 0,
+    &quot;description&quot;: &quot;Success&quot;
+  }
+}</code></pre>
+</body>
+</html>

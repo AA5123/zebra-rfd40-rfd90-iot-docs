@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>config_events Command Spec</title>
+<style>
+@page { size: A4; margin: 14mm; }
+* { box-sizing: border-box; }
+body {
+    font-family: "Segoe UI", "Calibri", Arial, sans-serif;
+    margin: 0;
+    color: #111;
+    font-size: 11pt;
+    line-height: 1.45;
+}
+h1, h2, h3 { margin: 0 0 10px; }
+h1 {
+    font-size: 26pt;
+    letter-spacing: 0.2px;
+    margin-bottom: 6px;
+}
+h2 {
+    margin-top: 28px;
+    border-top: 2px solid #d9dde3;
+    padding-top: 10px;
+    font-size: 16pt;
+    page-break-after: avoid;
+}
+h3 {
+    margin-top: 16px;
+    font-size: 12pt;
+    color: #1f3b5c;
+    page-break-after: avoid;
+}
+h4 { margin: 12px 0 6px; font-size: 11pt; }
+p { margin: 8px 0; }
+ul { margin: 6px 0 10px 20px; padding: 0; }
+li { margin: 3px 0; }
+pre, code { font-family: Consolas, "Courier New", monospace; }
+code {
+    background: #f3f5f8;
+    border: 1px solid #dce3ea;
+    border-radius: 4px;
+    padding: 1px 4px;
+    font-size: 90%;
+}
+pre {
+    background: #f7f9fb;
+    border: 1px solid #d9dde3;
+    border-radius: 8px;
+    padding: 10px 12px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 8px;
+    table-layout: fixed;
+}
+th, td {
+    border: 1px solid #d6dbe1;
+    padding: 7px 8px;
+    vertical-align: top;
+    font-size: 10pt;
+    word-break: break-word;
+}
+th {
+    background: #eef3f8;
+    text-align: left;
+    font-weight: 600;
+}
+tr:nth-child(even) td { background: #fcfdff; }
+.meta {
+    color: #3f536b;
+    margin-bottom: 14px;
+    font-size: 10.5pt;
+}
+/* Keep rows and headings together while printing */
+tr, td, th { page-break-inside: avoid; }
+h2, h3 { page-break-inside: avoid; }
+</style>
+</head>
+<body>
+<h1>config_events</h1>
+<div class="meta">Command: <code>config_events</code></div>
+<h2>Description</h2>
+<p>Enables or disables specific device events. To apply the changes, a device reboot is required. For RFD4090 devices, only the following events are supported: terminalConnection, firmwareUpdate, network, exceptions, ntp, heartbeat, power, battery, and fileDownload.</p>
+<h2>Request</h2>
+<h3>Request Fields</h3>
+<table>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>command</code></td><td>string</td><td>Yes</td><td>Command issued to configure events &amp; alert threshold values</td><td><code>config_events</code></td></tr>
+<tr><td><code>requestId</code></td><td>string</td><td>Yes</td><td>A unique identifier for the request, allowing tracking and debugging of the operation.</td><td><code>abc123</code></td></tr>
+<tr><td><code>eventConfiguration</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.antenna</code></td><td>boolean</td><td>No</td><td>set to true to enable antenna events</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.terminalConnection</code></td><td>boolean</td><td>No</td><td>set to true to enable terminal connection/disconnection events</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.firmwareUpdate</code></td><td>boolean</td><td>No</td><td>set to true to enable fw update events</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.gpi</code></td><td>boolean</td><td>No</td><td>set to true to enable gpi events</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.network</code></td><td>boolean</td><td>No</td><td>set to true to enable network events</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.exceptions</code></td><td>boolean</td><td>No</td><td>set to true to enable exception events</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.ntp</code></td><td>boolean</td><td>No</td><td>set to true to enable battery alerts</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.userApp</code></td><td>boolean</td><td>No</td><td>set to true to enable user app events</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.heartbeat</code></td><td>boolean</td><td>No</td><td>set to true to enable heart beat</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.power</code></td><td>boolean</td><td>No</td><td>set to true to enable power source alerts</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.battery</code></td><td>boolean</td><td>No</td><td>set to true to enable battery alerts</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.temperature</code></td><td>boolean</td><td>No</td><td>set to true to enable temperature alerts</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.fileDownload</code></td><td>boolean</td><td>No</td><td>set to true to enable file download alerts</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.cpuUsage</code></td><td>boolean</td><td>No</td><td>set to true to enable cpu usage alerts</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.flashUsage</code></td><td>boolean</td><td>No</td><td>set to true to enable flash usage alerts</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.ramUsage</code></td><td>boolean</td><td>No</td><td>set to true to enable ram usage alerts</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.heartbeatConfiguration</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.heartbeatConfiguration.interval</code></td><td>integer</td><td>No</td><td>heart beat interval in seconds</td><td><code>100</code></td></tr>
+<tr><td><code>eventConfiguration.heartbeatConfiguration.inventoryStatus</code></td><td>boolean</td><td>No</td><td>set to true to enable inventory status as part of heartbeat message</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.heartbeatConfiguration.batteryStatus</code></td><td>boolean</td><td>No</td><td>set to true to enable battery status as part of heartbeat message</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.heartbeatConfiguration.userApps</code></td><td>boolean</td><td>No</td><td>set to true to enable user app status as part of heartbeat message</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.cpuThreshold</code></td><td>integer</td><td>No</td><td>cpu usage value(%) above which alert will be triggered</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.ramThreshold</code></td><td>integer</td><td>No</td><td>ram usage value(%) above which alert will be triggered</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.flashThreshold</code></td><td>integer</td><td>No</td><td>flash usage value(%) above which alert will be triggered</td><td><code></code></td></tr>
+<tr><td><code>eventConfiguration.temperatureThreshold</code></td><td>integer</td><td>No</td><td>temperature treshold value above which alert will be triggered</td><td><code></code></td></tr>
+</tbody></table>
+<h3>Request Examples</h3>
+<h4>Enable all events</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;config_events&quot;,
+  &quot;requestId&quot;: &quot;abc123&quot;,
+  &quot;eventConfiguration&quot;: {
+    &quot;antenna&quot;: true,
+    &quot;terminalConnection&quot;: true,
+    &quot;firmwareUpdate&quot;: true,
+    &quot;gpi&quot;: true,
+    &quot;network&quot;: true,
+    &quot;exceptions&quot;: true,
+    &quot;ntp&quot;: true,
+    &quot;userApp&quot;: true,
+    &quot;heartbeat&quot;: true,
+    &quot;power&quot;: true,
+    &quot;battery&quot;: true,
+    &quot;temperature&quot;: true,
+    &quot;fileDownload&quot;: true,
+    &quot;cpuUsage&quot;: true,
+    &quot;flashUsage&quot;: true,
+    &quot;ramUsage&quot;: true,
+    &quot;heartbeatConfiguration&quot;: {
+      &quot;interval&quot;: 100,
+      &quot;inventoryStatus&quot;: true,
+      &quot;batteryStatus&quot;: true,
+      &quot;userApps&quot;: true
+    },
+    &quot;cpuThreshold&quot;: 80,
+    &quot;ramThreshold&quot;: 80,
+    &quot;flashThreshold&quot;: 80,
+    &quot;temperatureThreshold&quot;: 55
+  }
+}</code></pre>
+<h4>Selective events</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;config_events&quot;,
+  &quot;requestId&quot;: &quot;abc123&quot;,
+  &quot;eventConfiguration&quot;: {
+    &quot;antenna&quot;: false,
+    &quot;terminalConnection&quot;: true,
+    &quot;firmwareUpdate&quot;: true,
+    &quot;gpi&quot;: false,
+    &quot;network&quot;: true,
+    &quot;exceptions&quot;: false,
+    &quot;ntp&quot;: false,
+    &quot;userApp&quot;: false,
+    &quot;heartbeat&quot;: false,
+    &quot;power&quot;: true,
+    &quot;battery&quot;: true,
+    &quot;temperature&quot;: true,
+    &quot;fileDownload&quot;: true,
+    &quot;cpuUsage&quot;: false,
+    &quot;flashUsage&quot;: false,
+    &quot;ramUsage&quot;: false
+  }
+}</code></pre>
+<h2>Response</h2>
+<h3>Response Fields</h3>
+<table>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>command</code></td><td>string</td><td>Yes</td><td></td><td><code>config_events</code></td></tr>
+<tr><td><code>requestId</code></td><td>string</td><td>Yes</td><td></td><td><code>abc123</code></td></tr>
+<tr><td><code>apiVersion</code></td><td>string (enum)</td><td>Yes</td><td></td><td><code>V1.1</code></td></tr>
+<tr><td><code>response</code></td><td>object</td><td>Yes</td><td>Status of the command execution — check <code>code</code> to confirm success (0) or identify the error.</td><td><code></code></td></tr>
+<tr><td><code>response.code</code></td><td>integer</td><td>Yes</td><td>Response code indicating success or failure.<ul><li><strong>0</strong> — Success</li><li><strong>1</strong> — Command payload accepted</li><li><strong>2</strong> — Invalid payload</li><li><strong>3</strong> — Not able to retrieve information</li><li><strong>4</strong> — Firmware update in progress</li><li><strong>5</strong> — Can&#x27;t reboot, inventory in progress</li><li><strong>6</strong> — Region is not configured</li><li><strong>7</strong> — Interface is not available</li><li><strong>8</strong> — Insufficient flash size</li><li><strong>9</strong> — File not found</li><li><strong>10</strong> — Configuration already exists</li><li><strong>11</strong> — Inventory in progress</li><li><strong>12</strong> — No radio operation in progress</li><li><strong>13</strong> — Firmware update failed</li><li><strong>14</strong> — Battery too low for firmware update</li><li><strong>15</strong> — WIFI: SSID not found</li><li><strong>16</strong> — WIFI: Cannot delete active SSID</li><li><strong>17</strong> — WIFI: SSID missing</li><li><strong>18</strong> — WIFI: SSID already exists</li><li><strong>19</strong> — WIFI: SSID count overflow</li><li><strong>20</strong> — WiFi is not supported</li><li><strong>21</strong> — Certificate not found</li><li><strong>22</strong> — Advanced configuration not set</li><li><strong>23</strong> — Invalid enum value</li><li><strong>24</strong> — Max 32 prefilters limit exceeded</li><li><strong>25</strong> — Max 3 publish topics exceeded</li><li><strong>26</strong> — Max 1 subscribe topic exceeded</li><li><strong>27</strong> — Invalid tenant ID length</li><li><strong>28</strong> — Tag match pattern length exceeded</li></ul></td><td><code>0</code></td></tr>
+<tr><td><code>response.description</code></td><td>string</td><td>Yes</td><td>Human-readable description of the response code (e.g. &quot;Success&quot;, &quot;Invalid payload&quot;).</td><td><code>Success</code></td></tr>
+</tbody></table>
+<h3>Response Examples</h3>
+<h4>example1</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;config_events&quot;,
+  &quot;requestId&quot;: &quot;abc123&quot;,
+  &quot;apiVersion&quot;: &quot;V1.1&quot;,
+  &quot;response&quot;: {
+    &quot;code&quot;: 0,
+    &quot;description&quot;: &quot;Success&quot;
+  }
+}</code></pre>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>mqttConnEVT Command Spec</title>
+<style>
+@page { size: A4; margin: 14mm; }
+* { box-sizing: border-box; }
+body {
+    font-family: "Segoe UI", "Calibri", Arial, sans-serif;
+    margin: 0;
+    color: #111;
+    font-size: 11pt;
+    line-height: 1.45;
+}
+h1, h2, h3 { margin: 0 0 10px; }
+h1 {
+    font-size: 26pt;
+    letter-spacing: 0.2px;
+    margin-bottom: 6px;
+}
+h2 {
+    margin-top: 28px;
+    border-top: 2px solid #d9dde3;
+    padding-top: 10px;
+    font-size: 16pt;
+    page-break-after: avoid;
+}
+h3 {
+    margin-top: 16px;
+    font-size: 12pt;
+    color: #1f3b5c;
+    page-break-after: avoid;
+}
+h4 { margin: 12px 0 6px; font-size: 11pt; }
+p { margin: 8px 0; }
+ul { margin: 6px 0 10px 20px; padding: 0; }
+li { margin: 3px 0; }
+pre, code { font-family: Consolas, "Courier New", monospace; }
+code {
+    background: #f3f5f8;
+    border: 1px solid #dce3ea;
+    border-radius: 4px;
+    padding: 1px 4px;
+    font-size: 90%;
+}
+pre {
+    background: #f7f9fb;
+    border: 1px solid #d9dde3;
+    border-radius: 8px;
+    padding: 10px 12px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 8px;
+    table-layout: fixed;
+}
+th, td {
+    border: 1px solid #d6dbe1;
+    padding: 7px 8px;
+    vertical-align: top;
+    font-size: 10pt;
+    word-break: break-word;
+}
+th {
+    background: #eef3f8;
+    text-align: left;
+    font-weight: 600;
+}
+tr:nth-child(even) td { background: #fcfdff; }
+.meta {
+    color: #3f536b;
+    margin-bottom: 14px;
+    font-size: 10.5pt;
+}
+/* Keep rows and headings together while printing */
+tr, td, th { page-break-inside: avoid; }
+h2, h3 { page-break-inside: avoid; }
+</style>
+</head>
+<body>
+<h1>mqttConnEVT</h1>
+<div class="meta">Command: <code>mqttConnEVT</code></div>
+<h2>Description</h2>
+<p>This event provides details about the connection state of a device, including its metadata and protocol versions.</p>
+<h2>Request</h2>
+<h3>Request Fields</h3><p>No fields available.</p>
+<h3>Request Examples</h3><p>No examples available.</p>
+<h2>Response</h2>
+<h3>Response Fields</h3>
+<table>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>connectionState</code></td><td>string (enum)</td><td>No</td><td>Indicates the connection status of the device. Possible values are &#x27;CONNECTED&#x27; or &#x27;DISCONNECTED&#x27;.</td><td><code>CONNECTED</code></td></tr>
+<tr><td><code>timestamp</code></td><td>string</td><td>No</td><td>The time at which the MQTT connection event occurred, formatted as HH:MM:SS.</td><td><code>12:17:56</code></td></tr>
+<tr><td><code>deviceModel</code></td><td>string (enum)</td><td>No</td><td>Specifies the model of the device involved in the MQTT connection event. Supported models are &#x27;RFD40&#x27; and &#x27;RFD90&#x27;.</td><td><code>RFD40</code></td></tr>
+<tr><td><code>deviceSerialNo</code></td><td>string</td><td>No</td><td>The unique serial number of the device involved in the MQTT connection event.</td><td><code>RFD40-24190525100354</code></td></tr>
+<tr><td><code>apiVersion</code></td><td>number</td><td>No</td><td>The version of the API in use during the MQTT connection event.</td><td><code>1.0</code></td></tr>
+<tr><td><code>mqttVersion</code></td><td>number</td><td>No</td><td>The version of the MQTT protocol being used for the connection.</td><td><code>3.1.1</code></td></tr>
+</tbody></table>
+<h3>Response Examples</h3>
+<h4>example1</h4>
+<pre><code>{
+  &quot;connectionState&quot;: &quot;CONNECTED&quot;,
+  &quot;timestamp&quot;: &quot;12:17:56&quot;,
+  &quot;deviceModel&quot;: &quot;RFD40&quot;,
+  &quot;deviceSerialNo&quot;: &quot;RFD40-24190525100354&quot;,
+  &quot;apiVersion&quot;: &quot;1.0&quot;,
+  &quot;mqttVersion&quot;: &quot;3.1.1&quot;
+}</code></pre>
+<h4>example2</h4>
+<pre><code>{
+  &quot;connectionState&quot;: &quot;DISCONNECTED&quot;,
+  &quot;deviceModel&quot;: &quot;RFD40&quot;,
+  &quot;deviceSerialNo&quot;: &quot;RFD40-24190525100354&quot;,
+  &quot;apiVersion&quot;: 1.2,
+  &quot;mqttVersion&quot;: 3.0999999
+}</code></pre>
+</body>
+</html>

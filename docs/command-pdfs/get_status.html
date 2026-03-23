@@ -88,6 +88,7 @@ h2, h3 { page-break-inside: avoid; }
 <div class="meta">Command: <code>get_status</code></div>
 <h2>Description</h2>
 <p>Retrieves <strong>real-time health and status</strong> of the scanner — battery, temperature, radio, power, clock sync, and terminal connection.</p>
+<p><strong>Download pdf:</strong> 📄 [Download get_status as PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_status_formatted.pdf)</p>
 <h3>Command details:</h3>
 <ul>
 <li>Pattern Name: Reader Health and Status Retrieval</li>
@@ -151,7 +152,7 @@ h2, h3 { page-break-inside: avoid; }
 <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>
 <tbody>
 <tr><td><code>command</code></td><td>string</td><td>Yes</td><td>Echoes back the command name — always <code>get_status</code> for this response.</td><td><code>get_status</code></td></tr>
-<tr><td><code>requestId</code></td><td>string</td><td>Yes</td><td>Echoes back the requestId you sent, so you can match this response to your original request.</td><td><code>abc123</code></td></tr>
+<tr><td><code>requestId</code></td><td>string</td><td>Yes</td><td>Echoes back the requestId you sent, so you can match this response to your original request.</td><td><code>abcd123</code></td></tr>
 <tr><td><code>apiVersion</code></td><td>string (enum)</td><td>Yes</td><td>The API version of the IoT Connector responding to this command.</td><td><code>V1.1</code></td></tr>
 <tr><td><code>deviceStatus</code></td><td>object</td><td>No</td><td>Real-time device health — power source, RFID radio state, temperature, battery level and health, NTP clock sync, and paired terminal (phone/tablet) connection.</td><td><code></code></td></tr>
 <tr><td><code>deviceStatus.powerSource</code></td><td>string (enum)</td><td>Yes</td><td>The source of power for the device (e.g., DC, Wall Charger, USB, or Cradle).</td><td><code>CRADLE</code></td></tr>
@@ -179,7 +180,7 @@ h2, h3 { page-break-inside: avoid; }
 <h4>Device status info</h4>
 <pre><code>{
   &quot;command&quot;: &quot;get_status&quot;,
-  &quot;requestId&quot;: &quot;abc123&quot;,
+  &quot;requestId&quot;: &quot;abcd123&quot;,
   &quot;apiVersion&quot;: &quot;V1.1&quot;,
   &quot;deviceStatus&quot;: {
     &quot;powerSource&quot;: &quot;USB&quot;,

@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>set_config Command Spec</title>
+<style>
+@page { size: A4; margin: 14mm; }
+* { box-sizing: border-box; }
+body {
+    font-family: "Segoe UI", "Calibri", Arial, sans-serif;
+    margin: 0;
+    color: #111;
+    font-size: 11pt;
+    line-height: 1.45;
+}
+h1, h2, h3 { margin: 0 0 10px; }
+h1 {
+    font-size: 26pt;
+    letter-spacing: 0.2px;
+    margin-bottom: 6px;
+}
+h2 {
+    margin-top: 28px;
+    border-top: 2px solid #d9dde3;
+    padding-top: 10px;
+    font-size: 16pt;
+    page-break-after: avoid;
+}
+h3 {
+    margin-top: 16px;
+    font-size: 12pt;
+    color: #1f3b5c;
+    page-break-after: avoid;
+}
+h4 { margin: 12px 0 6px; font-size: 11pt; }
+p { margin: 8px 0; }
+ul { margin: 6px 0 10px 20px; padding: 0; }
+li { margin: 3px 0; }
+pre, code { font-family: Consolas, "Courier New", monospace; }
+code {
+    background: #f3f5f8;
+    border: 1px solid #dce3ea;
+    border-radius: 4px;
+    padding: 1px 4px;
+    font-size: 90%;
+}
+pre {
+    background: #f7f9fb;
+    border: 1px solid #d9dde3;
+    border-radius: 8px;
+    padding: 10px 12px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 8px;
+    table-layout: fixed;
+}
+th, td {
+    border: 1px solid #d6dbe1;
+    padding: 7px 8px;
+    vertical-align: top;
+    font-size: 10pt;
+    word-break: break-word;
+}
+th {
+    background: #eef3f8;
+    text-align: left;
+    font-weight: 600;
+}
+tr:nth-child(even) td { background: #fcfdff; }
+.meta {
+    color: #3f536b;
+    margin-bottom: 14px;
+    font-size: 10.5pt;
+}
+/* Keep rows and headings together while printing */
+tr, td, th { page-break-inside: avoid; }
+h2, h3 { page-break-inside: avoid; }
+</style>
+</head>
+<body>
+<h1>set_config</h1>
+<div class="meta">Command: <code>set_config</code></div>
+<h2>Description</h2>
+<p>Command issued to set the complete device configuration such as current region details, ethernet &amp; wifi configuration, end point configuration,  event and alert configuration</p>
+<p><strong>Download pdf:</strong> 📄 [Download set_config as PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/set_config.pdf)</p>
+<h2>Request</h2>
+<h3>Request Fields</h3>
+<table>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>command</code></td><td>string</td><td>Yes</td><td>Specifies the operation being performed, in this case, setting the reader configuration.</td><td><code>set_config</code></td></tr>
+<tr><td><code>requestId</code></td><td>string</td><td>Yes</td><td>A unique identifier for the request, allowing tracking and debugging of the operation.</td><td><code>abc123</code></td></tr>
+<tr><td><code>configData</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>configData.applyAfterReboot</code></td><td>boolean</td><td>No</td><td>if set to true, configuration changes will be applied after reboot</td><td><code></code></td></tr>
+<tr><td><code>configData.wifiConfig</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>configData.wifiConfig.interfaceName</code></td><td>string</td><td>Yes</td><td>The name of the network interface for which the Wi-Fi configuration is being set.</td><td><code></code></td></tr>
+<tr><td><code>configData.wifiConfig.enableInterface</code></td><td>boolean</td><td>Yes</td><td>Specifies whether the network interface should be enabled or disabled.</td><td><code></code></td></tr>
+<tr><td><code>configData.wifiConfig.operation</code></td><td>string (enum)</td><td>Yes</td><td>The operation to be performed on the Wi-Fi configuration. It can either create a new configuration or modify an existing one.</td><td><code>CREATE</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint</code></td><td>object</td><td>Yes</td><td></td><td><code></code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.connect</code></td><td>boolean</td><td>Yes</td><td>Indicates whether to connect to this profile. If true, disconnects the currently connected profile and connects to the specified one; if false, just saves the profile.</td><td><code></code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.isPreferred</code></td><td>boolean</td><td>Yes</td><td>Marks this profile as the preferred one to always connect to when available.</td><td><code></code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.autoConn</code></td><td>boolean</td><td>No</td><td>Reserved for backward compatibility. It will be removed in the future.</td><td><code></code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.essid</code></td><td>string</td><td>Yes</td><td>The ESSID (network name) of the access point.</td><td><code>ZWireless</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.enableSecurity</code></td><td>boolean</td><td>Yes</td><td>Indicates whether security is enabled for this access point.</td><td><code></code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.ipv4Configuration</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.ipv4Configuration.ipAddress</code></td><td>string</td><td>No</td><td>The IPv4 address to assign to the interface.</td><td><code>192.168.1.81</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.ipv4Configuration.subnetMask</code></td><td>string</td><td>No</td><td>The IPv4 subnet mask.</td><td><code>255.255.255.0</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.ipv4Configuration.gateway</code></td><td>string</td><td>No</td><td>The IPv4 gateway address.</td><td><code>192.168.1.144</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.ipv4Configuration.enableDhcp</code></td><td>boolean</td><td>No</td><td>Specifies whether DHCP is enabled for automatic IP address assignment.</td><td><code></code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.ipv4Configuration.dnsServer</code></td><td>string</td><td>No</td><td>The IPv4 address of the DNS server.</td><td><code>192.168.1.78</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.ipv4Configuration.domainName</code></td><td>string</td><td>No</td><td>The domain name for the network.</td><td><code>example.test.com</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.ipv6Configuration</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.ipv6Configuration.ipAddress</code></td><td>string</td><td>No</td><td>The IPv6 address to assign to the interface.</td><td><code>2a02:1234:420a:100b::99</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.ipv6Configuration.prefix</code></td><td>integer</td><td>No</td><td>The IPv6 address prefix length.</td><td><code>65</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.ipv6Configuration.gateway</code></td><td>string</td><td>No</td><td>The IPv6 gateway address.</td><td><code>192.168.1.144</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.ipv6Configuration.enableAuto</code></td><td>boolean</td><td>No</td><td>Specifies whether automatic IPv6 address assignment (e.g., SLAAC) is enabled.</td><td><code></code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.ipv6Configuration.dnsServer</code></td><td>string</td><td>No</td><td>The IPv6 address of the DNS server.</td><td><code>2001:4860:4860::9999</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.ipv6Configuration.domainName</code></td><td>string</td><td>No</td><td>The domain name for the IPv6 network.</td><td><code>example.com</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityType</code></td><td>string (enum)</td><td>Yes</td><td>The security type for the access point, specifying the authentication and encryption method.</td><td><code>WPA2personal</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails</code></td><td>object</td><td>Yes</td><td></td><td><code></code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA2Personal</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA2Personal.password</code></td><td>string</td><td>Yes</td><td>The password for WPA2-Personal authentication.</td><td><code>test@123</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA3Personal</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA3Personal.password</code></td><td>string</td><td>Yes</td><td>The password for WPA3-Personal authentication.</td><td><code></code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA2Enterprise</code></td><td>object</td><td>No</td><td>WPA2-Enterprise security configuration with optional certificate parameters.</td><td><code></code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA2Enterprise.authentication</code></td><td>string (enum)</td><td>Yes</td><td>Authentication protocol for WPA2-Enterprise.</td><td><code>peap</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA2Enterprise.innerAuthentication</code></td><td>string (enum)</td><td>No</td><td>Inner authentication method to be used within the outer authentication protocol.</td><td><code>tls</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA2Enterprise.identity</code></td><td>string</td><td>No</td><td>The identity (username) for WPA2-Enterprise authentication.</td><td><code>test</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA2Enterprise.anonymousIdentity</code></td><td>string</td><td>No</td><td>The anonymous identity for WPA2-Enterprise authentication.</td><td><code>test</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA2Enterprise.password</code></td><td>string</td><td>No</td><td>The password for WPA2-Enterprise authentication.</td><td><code>test@123</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA2Enterprise.passphrase</code></td><td>string</td><td>No</td><td>The passphrase for WPA2-Enterprise.</td><td><code>test@123</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA2Enterprise.certificate</code></td><td>array</td><td>No</td><td></td><td><code>ap1wpa2e</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA2Enterprise.protocol</code></td><td>string (enum)</td><td>No</td><td>The encryption protocol for WPA2-Enterprise.</td><td><code>WPA2_Enterprise_CCMP</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA3Enterprise</code></td><td>object</td><td>No</td><td>WPA3-Enterprise security configuration with optional certificate parameters.</td><td><code></code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA3Enterprise.authentication</code></td><td>string (enum)</td><td>Yes</td><td>Authentication protocol for WPA3-Enterprise.</td><td><code>peap</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA3Enterprise.innerAuthentication</code></td><td>string (enum)</td><td>No</td><td>Inner authentication method to be used within the outer authentication protocol.</td><td><code>tls</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA3Enterprise.identity</code></td><td>string</td><td>No</td><td>The identity (username) for WPA3-Enterprise authentication.</td><td><code>test</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA3Enterprise.anonymousIdentity</code></td><td>string</td><td>No</td><td>The anonymous identity for WPA3-Enterprise authentication.</td><td><code>test</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA3Enterprise.password</code></td><td>string</td><td>No</td><td>The password for WPA3-Enterprise authentication.</td><td><code>test@123</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA3Enterprise.passphrase</code></td><td>string</td><td>No</td><td>The passphrase for WPA3-Enterprise.</td><td><code>test@123</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA3Enterprise.certificate</code></td><td>array</td><td>No</td><td></td><td><code>ap1wpa2e</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.WPA3Enterprise.protocol</code></td><td>string (enum)</td><td>No</td><td>The encryption protocol for WPA3-Enterprise.</td><td><code>WPA3_Enterprise_CCMP</code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.OWEPublic</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>configData.wifiConfig.accessPoint.security.securityDetails.OWEPublic.authentication</code></td><td>string</td><td>Yes</td><td>Authentication protocol for OWE-Public.</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.operation</code></td><td>string (enum)</td><td>Yes</td><td>Specifies the type of operation to perform, either adding or deleting a configuration.</td><td><code>add</code></td></tr>
+<tr><td><code>configData.epConfig.configuration</code></td><td>object</td><td>Yes</td><td></td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.endpointName</code></td><td>string</td><td>Yes</td><td>Identifies the name of the endpoint, which determines its purpose or function.</td><td><code>mgmt</code></td></tr>
+<tr><td><code>configData.epConfig.configuration.epType</code></td><td>string (enum)</td><td>Yes</td><td>Specifies the type of the endpoint.</td><td><code>MGMT</code></td></tr>
+<tr><td><code>configData.epConfig.configuration.protocol</code></td><td>string (enum)</td><td>Yes</td><td>Defines the communication protocol used by the endpoint.</td><td><code>MQTT</code></td></tr>
+<tr><td><code>configData.epConfig.configuration.activate</code></td><td>boolean</td><td>Yes</td><td>Indicates whether the endpoint is active or inactive.</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.url</code></td><td>string</td><td>Yes</td><td>Specifies the URL associated with the endpoint.</td><td><code>soti.example.com</code></td></tr>
+<tr><td><code>configData.epConfig.configuration.verificationType</code></td><td>string (enum)</td><td>Yes</td><td>Specifies the type of verification used for establishing secure connections.</td><td><code>VERIFY_PEER</code></td></tr>
+<tr><td><code>configData.epConfig.configuration.port</code></td><td>integer</td><td>Yes</td><td>Specifies the port number used for communication.</td><td><code>1883</code></td></tr>
+<tr><td><code>configData.epConfig.configuration.qosCommon</code></td><td>integer</td><td>Yes</td><td>Defines the Quality of Service (QoS) level for the endpoint.</td><td><code>1</code></td></tr>
+<tr><td><code>configData.epConfig.configuration.tenantId</code></td><td>string</td><td>Yes</td><td>Identifies the tenantID associated with the configuration.</td><td><code>ZEBRA</code></td></tr>
+<tr><td><code>configData.epConfig.configuration.mqttParams</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.mqttParams.keepAlive</code></td><td>integer</td><td>No</td><td>Specifies the keep-alive interval in seconds for MQTT connections.</td><td><code>300</code></td></tr>
+<tr><td><code>configData.epConfig.configuration.mqttParams.cleanSession</code></td><td>boolean</td><td>No</td><td>Indicates whether to start a clean session for the MQTT client.</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.mqttParams.reconnectDelayMin</code></td><td>integer</td><td>No</td><td>Specifies the minimum delay in seconds before reconnecting.</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.mqttParams.reconnectDelayMax</code></td><td>integer</td><td>No</td><td>Specifies the maximum delay in seconds before reconnecting.</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.mqttParams.clientId</code></td><td>string</td><td>No</td><td>Specifies the client ID used for MQTT connections.</td><td><code>zebra-rfd40-01</code></td></tr>
+<tr><td><code>configData.epConfig.configuration.mqttParams.username</code></td><td>string</td><td>No</td><td>The username for authentication in MQTT connections.</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.mqttParams.password</code></td><td>string</td><td>No</td><td>The password for authentication in MQTT connections.</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.mqttParams.publishTopics</code></td><td>array</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.mqttParams.subscribeTopics</code></td><td>array</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.securityParams</code></td><td>object</td><td>No</td><td>Defines the security parameters for the endpoint.</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.securityParams.format</code></td><td>string (enum)</td><td>Yes</td><td>Specifies the format of the security certificates. Currently, only PEM is supported.</td><td><code>PEM</code></td></tr>
+<tr><td><code>configData.epConfig.configuration.securityParams.algorithm</code></td><td>string (enum)</td><td>Yes</td><td>Specifies the algorithm used for encryption.</td><td><code>RSA256</code></td></tr>
+<tr><td><code>configData.epConfig.configuration.securityParams.caCertificateFile</code></td><td>string</td><td>Yes</td><td>Specifies the file containing the CA certificates.</td><td><code>cloud-trusted-ca-certs.crt</code></td></tr>
+<tr><td><code>configData.epConfig.configuration.securityParams.clientCert</code></td><td>string</td><td>Yes</td><td>Specifies the file containing the client certificate.</td><td><code>client_cert.pem</code></td></tr>
+<tr><td><code>configData.epConfig.configuration.securityParams.clientKey</code></td><td>string</td><td>Yes</td><td>Specifies the file containing the client private key.</td><td><code>client_key.pem</code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.antenna</code></td><td>boolean</td><td>No</td><td>set to true to enable antenna events</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.terminalConnection</code></td><td>boolean</td><td>No</td><td>set to true to enable terminal connection/disconnection events</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.firmwareUpdate</code></td><td>boolean</td><td>No</td><td>set to true to enable fw update events</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.gpi</code></td><td>boolean</td><td>No</td><td>set to true to enable gpi events</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.network</code></td><td>boolean</td><td>No</td><td>set to true to enable network events</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.exceptions</code></td><td>boolean</td><td>No</td><td>set to true to enable exception events</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.ntp</code></td><td>boolean</td><td>No</td><td>set to true to enable battery alerts</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.userApp</code></td><td>boolean</td><td>No</td><td>set to true to enable user app events</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.heartbeat</code></td><td>boolean</td><td>No</td><td>set to true to enable heart beat</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.power</code></td><td>boolean</td><td>No</td><td>set to true to enable power source alerts</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.battery</code></td><td>boolean</td><td>No</td><td>set to true to enable battery alerts</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.temperature</code></td><td>boolean</td><td>No</td><td>set to true to enable temperature alerts</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.fileDownload</code></td><td>boolean</td><td>No</td><td>set to true to enable file download alerts</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.cpuUsage</code></td><td>boolean</td><td>No</td><td>set to true to enable cpu usage alerts</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.flashUsage</code></td><td>boolean</td><td>No</td><td>set to true to enable flash usage alerts</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.ramUsage</code></td><td>boolean</td><td>No</td><td>set to true to enable ram usage alerts</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.heartbeatConfiguration</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.heartbeatConfiguration.interval</code></td><td>integer</td><td>No</td><td>heart beat interval in seconds</td><td><code>100</code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.heartbeatConfiguration.inventoryStatus</code></td><td>boolean</td><td>No</td><td>set to true to enable inventory status as part of heartbeat message</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.heartbeatConfiguration.batteryStatus</code></td><td>boolean</td><td>No</td><td>set to true to enable battery status as part of heartbeat message</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.heartbeatConfiguration.userApps</code></td><td>boolean</td><td>No</td><td>set to true to enable user app status as part of heartbeat message</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.cpuThreshold</code></td><td>integer</td><td>No</td><td>cpu usage value(%) above which alert will be triggered</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.ramThreshold</code></td><td>integer</td><td>No</td><td>ram usage value(%) above which alert will be triggered</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.flashThreshold</code></td><td>integer</td><td>No</td><td>flash usage value(%) above which alert will be triggered</td><td><code></code></td></tr>
+<tr><td><code>configData.epConfig.configuration.eventConfiguration.temperatureThreshold</code></td><td>integer</td><td>No</td><td>temperature treshold value above which alert will be triggered</td><td><code></code></td></tr>
+</tbody></table>
+<h3>Request Examples</h3>
+<h4>Create wifi profile</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;set_config&quot;,
+  &quot;requestId&quot;: &quot;209543&quot;,
+  &quot;configData&quot;: {
+    &quot;wifiConfig&quot;: {
+      &quot;operation&quot;: &quot;CREATE&quot;,
+      &quot;accessPoint&quot;: {
+        &quot;essid&quot;: &quot;TEST_5G&quot;,
+        &quot;connect&quot;: true,
+        &quot;autoConn&quot;: true,
+        &quot;enableSecurity&quot;: true,
+        &quot;isPreferred&quot;: false,
+        &quot;security&quot;: {
+          &quot;securityType&quot;: &quot;WPA2Personal&quot;,
+          &quot;securityDetails&quot;: {
+            &quot;WPA2Personal&quot;: {
+              &quot;password&quot;: &quot;nov211985&quot;
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+<h4>Modify wifi profile</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;set_config&quot;,
+  &quot;requestId&quot;: &quot;209543&quot;,
+  &quot;configData&quot;: {
+    &quot;wifiConfig&quot;: {
+      &quot;operation&quot;: &quot;MODIFY&quot;,
+      &quot;accessPoint&quot;: {
+        &quot;essid&quot;: &quot;TEST_5G&quot;,
+        &quot;connect&quot;: true,
+        &quot;autoConn&quot;: true,
+        &quot;enableSecurity&quot;: true,
+        &quot;isPreferred&quot;: true,
+        &quot;security&quot;: {
+          &quot;securityType&quot;: &quot;WPA2Personal&quot;,
+          &quot;securityDetails&quot;: {
+            &quot;WPA2Personal&quot;: {
+              &quot;password&quot;: &quot;nov211985&quot;
+            }
+          }
+        }
+      }
+    }
+  }
+}</code></pre>
+<h4>Add mdm endpoint</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;set_config&quot;,
+  &quot;requestId&quot;: &quot;209543&quot;,
+  &quot;configData&quot;: {
+    &quot;applyAfterReboot&quot;: true,
+    &quot;epConfig&quot;: {
+      &quot;operation&quot;: &quot;add&quot;,
+      &quot;configuration&quot;: {
+        &quot;endpointName&quot;: &quot;gmdm&quot;,
+        &quot;epType&quot;: &quot;MDM&quot;,
+        &quot;mqttParams&quot;: {
+          &quot;keepAlive&quot;: 300
+        }
+      }
+    }
+  }
+}</code></pre>
+<h4>Add data endpoint</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;set_config&quot;,
+  &quot;requestId&quot;: &quot;1233&quot;,
+  &quot;configData&quot;: {
+    &quot;epConfig&quot;: {
+      &quot;operation&quot;: &quot;add&quot;,
+      &quot;configuration&quot;: {
+        &quot;endpointName&quot;: &quot;dataEP&quot;,
+        &quot;epType&quot;: &quot;DATA1&quot;,
+        &quot;protocol&quot;: &quot;MQTT&quot;,
+        &quot;activate&quot;: true,
+        &quot;url&quot;: &quot;17L11-GG6663-1&quot;,
+        &quot;verificationType&quot;: &quot;NONE&quot;,
+        &quot;port&quot;: 1883,
+        &quot;qosCommon&quot;: 1,
+        &quot;tenantId&quot;: &quot;ZEBRA&quot;,
+        &quot;mqttParams&quot;: {
+          &quot;keepAlive&quot;: 300,
+          &quot;cleanSession&quot;: true,
+          &quot;reconnectDelayMin&quot;: 50,
+          &quot;reconnectDelayMax&quot;: 500,
+          &quot;clientId&quot;: &quot;zebra-rfd40-01&quot;,
+          &quot;username&quot;: &quot;username&quot;,
+          &quot;password&quot;: &quot;password&quot;
+        }
+      }
+    }
+  }
+}</code></pre>
+<h4>Add control endpoint</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;set_config&quot;,
+  &quot;requestId&quot;: &quot;1234&quot;,
+  &quot;configData&quot;: {
+    &quot;epConfig&quot;: {
+      &quot;operation&quot;: &quot;add&quot;,
+      &quot;configuration&quot;: {
+        &quot;endpointName&quot;: &quot;ctrlEP&quot;,
+        &quot;epType&quot;: &quot;CTRL&quot;,
+        &quot;protocol&quot;: &quot;MQTT&quot;,
+        &quot;activate&quot;: true,
+        &quot;url&quot;: &quot;17L11-GG6663-1&quot;,
+        &quot;verificationType&quot;: &quot;NONE&quot;,
+        &quot;port&quot;: 1883,
+        &quot;qosCommon&quot;: 1,
+        &quot;tenantId&quot;: &quot;zebra&quot;,
+        &quot;mqttParams&quot;: {
+          &quot;keepAlive&quot;: 300,
+          &quot;cleanSession&quot;: true,
+          &quot;reconnectDelayMin&quot;: 50,
+          &quot;reconnectDelayMax&quot;: 500,
+          &quot;clientId&quot;: &quot;zebra-rfd40-01&quot;,
+          &quot;username&quot;: &quot;mqttuser&quot;,
+          &quot;password&quot;: &quot;password&quot;,
+          &quot;publishTopics&quot;: [
+            {
+              &quot;topic&quot;: &quot;MDM/clients/resp&quot;,
+              &quot;qos&quot;: 1,
+              &quot;retain&quot;: false
+            },
+            {
+              &quot;topic&quot;: &quot;MDM/clients/event&quot;,
+              &quot;qos&quot;: 1,
+              &quot;retain&quot;: false
+            },
+            {
+              &quot;topic&quot;: &quot;MDM/clients/rfid&quot;,
+              &quot;qos&quot;: 0,
+              &quot;retain&quot;: true
+            }
+          ],
+          &quot;subscribeTopics&quot;: [
+            {
+              &quot;topic&quot;: &quot;MDM/clients/cmnd&quot;,
+              &quot;qos&quot;: 0,
+              &quot;retain&quot;: false
+            }
+          ]
+        }
+      }
+    }
+  }
+}</code></pre>
+<h4>Complete config setup</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;set_config&quot;,
+  &quot;requestId&quot;: &quot;5678&quot;,
+  &quot;configData&quot;: {
+    &quot;wifiConfig&quot;: {
+      &quot;operation&quot;: &quot;CREATE&quot;,
+      &quot;accessPoint&quot;: {
+        &quot;essid&quot;: &quot;CORP_WIFI&quot;,
+        &quot;connect&quot;: true,
+        &quot;autoConn&quot;: false,
+        &quot;enableSecurity&quot;: true,
+        &quot;isPreferred&quot;: true,
+        &quot;security&quot;: {
+          &quot;securityType&quot;: &quot;WPA2Personal&quot;,
+          &quot;securityDetails&quot;: {
+            &quot;WPA2Personal&quot;: {
+              &quot;password&quot;: &quot;corp_pass_2024&quot;
+            }
+          }
+        }
+      }
+    },
+    &quot;epConfig&quot;: {
+      &quot;operation&quot;: &quot;add&quot;,
+      &quot;configuration&quot;: {
+        &quot;endpointName&quot;: &quot;mgmtEp&quot;,
+        &quot;epType&quot;: &quot;MGMT&quot;,
+        &quot;protocol&quot;: &quot;MQTT&quot;,
+        &quot;activate&quot;: true,
+        &quot;url&quot;: &quot;iot-broker.company.com&quot;,
+        &quot;verificationType&quot;: &quot;NONE&quot;,
+        &quot;port&quot;: 8883,
+        &quot;qosCommon&quot;: 1,
+        &quot;tenantId&quot;: &quot;ZEBRA&quot;,
+        &quot;mqttParams&quot;: {
+          &quot;keepAlive&quot;: 60,
+          &quot;cleanSession&quot;: true,
+          &quot;reconnectDelayMin&quot;: 10,
+          &quot;reconnectDelayMax&quot;: 120,
+          &quot;clientId&quot;: &quot;iot&quot;,
+          &quot;username&quot;: &quot;iotuser&quot;,
+          &quot;password&quot;: &quot;iotpassword&quot;,
+          &quot;publishTopics&quot;: [
+            {
+              &quot;topic&quot;: &quot;IOT/data/resp&quot;,
+              &quot;qos&quot;: 1,
+              &quot;retain&quot;: false
+            }
+          ],
+          &quot;subscribeTopics&quot;: [
+            {
+              &quot;topic&quot;: &quot;IOT/data/cmnd&quot;,
+              &quot;qos&quot;: 1,
+              &quot;retain&quot;: false
+            }
+          ]
+        }
+      }
+    }
+  }
+}</code></pre>
+<h2>Response</h2>
+<h3>Response Fields</h3>
+<table>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>command</code></td><td>string</td><td>Yes</td><td></td><td><code>set_config</code></td></tr>
+<tr><td><code>requestId</code></td><td>string</td><td>Yes</td><td></td><td><code>abc123</code></td></tr>
+<tr><td><code>apiVersion</code></td><td>string (enum)</td><td>Yes</td><td></td><td><code>V1.1</code></td></tr>
+<tr><td><code>cfgResponse</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.ethConfig</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.interfaceName</code></td><td>string</td><td>Yes</td><td>Name of the network interface (e.g., eth0).</td><td><code>eth0</code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.enableInterface</code></td><td>boolean</td><td>Yes</td><td>Indicates whether the network interface is enabled.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.lldp</code></td><td>boolean</td><td>Yes</td><td>Specifies if Link Layer Discovery Protocol (LLDP) is enabled.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.ipv4Configuration</code></td><td>object</td><td>No</td><td>Configuration settings for IPv4.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.ipv4Configuration.ipAddress</code></td><td>string</td><td>No</td><td>The IPv4 address assigned to the interface.</td><td><code>192.168.1.81</code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.ipv4Configuration.subnetMask</code></td><td>string</td><td>No</td><td>The subnet mask associated with the IPv4 address.</td><td><code>255.255.255.0</code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.ipv4Configuration.gateway</code></td><td>string</td><td>No</td><td>The default gateway for the IPv4 network.</td><td><code>192.168.1.144</code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.ipv4Configuration.enableDhcp</code></td><td>boolean</td><td>No</td><td>Indicates whether DHCP is enabled for IPv4.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.ipv4Configuration.dnsServer</code></td><td>string</td><td>No</td><td>The IPv4 address of the DNS server.</td><td><code>192.168.1.78</code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.ipv4Configuration.domainName</code></td><td>string</td><td>No</td><td>The domain name associated with the network.</td><td><code>example.test.com</code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.ipv6Configuration</code></td><td>object</td><td>No</td><td>Configuration settings for IPv6.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.ipv6Configuration.ipAddress</code></td><td>string</td><td>No</td><td>The IPv6 address assigned to the interface.</td><td><code>2a02:1234:420a:100b::99</code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.ipv6Configuration.prefix</code></td><td>integer</td><td>No</td><td>The prefix length for the IPv6 address.</td><td><code>64</code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.ipv6Configuration.gateway</code></td><td>string</td><td>No</td><td>The default gateway for the IPv6 network.</td><td><code>fe80::1643:8376:b32:4a16</code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.ipv6Configuration.enableAuto</code></td><td>boolean</td><td>No</td><td>Indicates whether auto-configuration is enabled for IPv6.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.ipv6Configuration.dnsServer</code></td><td>string</td><td>No</td><td>The IPv6 address of the DNS server.</td><td><code>2001:4860:4860::9999</code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.ipv6Configuration.domainName</code></td><td>string</td><td>No</td><td>The domain name associated with the IPv6 network.</td><td><code>example.com</code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.security</code></td><td>object</td><td>No</td><td>Security configuration for the network interface.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.security.enableSecurity</code></td><td>boolean</td><td>No</td><td>Indicates if security is enabled. If enabled, 802.X parameters must be provided.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.security.EAP802_1X</code></td><td>object</td><td>No</td><td>Extensible Authentication Protocol (EAP) 802.1X settings.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.security.EAP802_1X.authentication</code></td><td>string (enum)</td><td>No</td><td>The authentication method used for EAP 802.1X.</td><td><code>PEAP</code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.security.EAP802_1X.innerAuthentication</code></td><td>string (enum)</td><td>No</td><td>The inner authentication method used within the EAP tunnel.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.ethConfig.security.EAP802_1X.certificate</code></td><td>string</td><td>No</td><td>The certificate used for EAP authentication.</td><td><code>ethCert</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.interfaceName</code></td><td>string</td><td>Yes</td><td>The name of the network interface for which the Wi-Fi configuration is being set.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.enableInterface</code></td><td>boolean</td><td>Yes</td><td>Specifies whether the network interface should be enabled or disabled.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.operation</code></td><td>string (enum)</td><td>Yes</td><td>The operation to be performed on the Wi-Fi configuration. It can either create a new configuration or modify an existing one.</td><td><code>CREATE</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint</code></td><td>object</td><td>Yes</td><td></td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.connect</code></td><td>boolean</td><td>Yes</td><td>Indicates whether to connect to this profile. If true, disconnects the currently connected profile and connects to the specified one; if false, just saves the profile.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.isPreferred</code></td><td>boolean</td><td>Yes</td><td>Marks this profile as the preferred one to always connect to when available.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.autoConn</code></td><td>boolean</td><td>No</td><td>Reserved for backward compatibility. It will be removed in the future.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.essid</code></td><td>string</td><td>Yes</td><td>The ESSID (network name) of the access point.</td><td><code>ZWireless</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.enableSecurity</code></td><td>boolean</td><td>Yes</td><td>Indicates whether security is enabled for this access point.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.ipv4Configuration</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.ipv4Configuration.ipAddress</code></td><td>string</td><td>No</td><td>The IPv4 address to assign to the interface.</td><td><code>192.168.1.81</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.ipv4Configuration.subnetMask</code></td><td>string</td><td>No</td><td>The IPv4 subnet mask.</td><td><code>255.255.255.0</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.ipv4Configuration.gateway</code></td><td>string</td><td>No</td><td>The IPv4 gateway address.</td><td><code>192.168.1.144</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.ipv4Configuration.enableDhcp</code></td><td>boolean</td><td>No</td><td>Specifies whether DHCP is enabled for automatic IP address assignment.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.ipv4Configuration.dnsServer</code></td><td>string</td><td>No</td><td>The IPv4 address of the DNS server.</td><td><code>192.168.1.78</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.ipv4Configuration.domainName</code></td><td>string</td><td>No</td><td>The domain name for the network.</td><td><code>example.test.com</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.ipv6Configuration</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.ipv6Configuration.ipAddress</code></td><td>string</td><td>No</td><td>The IPv6 address to assign to the interface.</td><td><code>2a02:1234:420a:100b::99</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.ipv6Configuration.prefix</code></td><td>integer</td><td>No</td><td>The IPv6 address prefix length.</td><td><code>65</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.ipv6Configuration.gateway</code></td><td>string</td><td>No</td><td>The IPv6 gateway address.</td><td><code>192.168.1.144</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.ipv6Configuration.enableAuto</code></td><td>boolean</td><td>No</td><td>Specifies whether automatic IPv6 address assignment (e.g., SLAAC) is enabled.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.ipv6Configuration.dnsServer</code></td><td>string</td><td>No</td><td>The IPv6 address of the DNS server.</td><td><code>2001:4860:4860::9999</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.ipv6Configuration.domainName</code></td><td>string</td><td>No</td><td>The domain name for the IPv6 network.</td><td><code>example.com</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityType</code></td><td>string (enum)</td><td>Yes</td><td>The security type for the access point, specifying the authentication and encryption method.</td><td><code>WPA2personal</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails</code></td><td>object</td><td>Yes</td><td></td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA2Personal</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA2Personal.password</code></td><td>string</td><td>Yes</td><td>The password for WPA2-Personal authentication.</td><td><code>test@123</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA3Personal</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA3Personal.password</code></td><td>string</td><td>Yes</td><td>The password for WPA3-Personal authentication.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA2Enterprise</code></td><td>object</td><td>No</td><td>WPA2-Enterprise security configuration with optional certificate parameters.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA2Enterprise.authentication</code></td><td>string (enum)</td><td>Yes</td><td>Authentication protocol for WPA2-Enterprise.</td><td><code>peap</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA2Enterprise.innerAuthentication</code></td><td>string (enum)</td><td>No</td><td>Inner authentication method to be used within the outer authentication protocol.</td><td><code>tls</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA2Enterprise.identity</code></td><td>string</td><td>No</td><td>The identity (username) for WPA2-Enterprise authentication.</td><td><code>test</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA2Enterprise.anonymousIdentity</code></td><td>string</td><td>No</td><td>The anonymous identity for WPA2-Enterprise authentication.</td><td><code>test</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA2Enterprise.password</code></td><td>string</td><td>No</td><td>The password for WPA2-Enterprise authentication.</td><td><code>test@123</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA2Enterprise.passphrase</code></td><td>string</td><td>No</td><td>The passphrase for WPA2-Enterprise.</td><td><code>test@123</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA2Enterprise.certificate</code></td><td>array</td><td>No</td><td></td><td><code>ap1wpa2e</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA2Enterprise.protocol</code></td><td>string (enum)</td><td>No</td><td>The encryption protocol for WPA2-Enterprise.</td><td><code>WPA2_Enterprise_CCMP</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA3Enterprise</code></td><td>object</td><td>No</td><td>WPA3-Enterprise security configuration with optional certificate parameters.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA3Enterprise.authentication</code></td><td>string (enum)</td><td>Yes</td><td>Authentication protocol for WPA3-Enterprise.</td><td><code>peap</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA3Enterprise.innerAuthentication</code></td><td>string (enum)</td><td>No</td><td>Inner authentication method to be used within the outer authentication protocol.</td><td><code>tls</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA3Enterprise.identity</code></td><td>string</td><td>No</td><td>The identity (username) for WPA3-Enterprise authentication.</td><td><code>test</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA3Enterprise.anonymousIdentity</code></td><td>string</td><td>No</td><td>The anonymous identity for WPA3-Enterprise authentication.</td><td><code>test</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA3Enterprise.password</code></td><td>string</td><td>No</td><td>The password for WPA3-Enterprise authentication.</td><td><code>test@123</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA3Enterprise.passphrase</code></td><td>string</td><td>No</td><td>The passphrase for WPA3-Enterprise.</td><td><code>test@123</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA3Enterprise.certificate</code></td><td>array</td><td>No</td><td></td><td><code>ap1wpa2e</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.WPA3Enterprise.protocol</code></td><td>string (enum)</td><td>No</td><td>The encryption protocol for WPA3-Enterprise.</td><td><code>WPA3_Enterprise_CCMP</code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.OWEPublic</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiConfigResp.accessPoint.security.securityDetails.OWEPublic.authentication</code></td><td>string</td><td>Yes</td><td>Authentication protocol for OWE-Public.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.operation</code></td><td>string (enum)</td><td>Yes</td><td>Specifies the type of operation to perform, either adding or deleting a configuration.</td><td><code>add</code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration</code></td><td>object</td><td>Yes</td><td></td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.endpointName</code></td><td>string</td><td>Yes</td><td>Identifies the name of the endpoint, which determines its purpose or function.</td><td><code>mgmt</code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.epType</code></td><td>string (enum)</td><td>Yes</td><td>Specifies the type of the endpoint.</td><td><code>MGMT</code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.protocol</code></td><td>string (enum)</td><td>Yes</td><td>Defines the communication protocol used by the endpoint.</td><td><code>MQTT</code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.activate</code></td><td>boolean</td><td>Yes</td><td>Indicates whether the endpoint is active or inactive.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.url</code></td><td>string</td><td>Yes</td><td>Specifies the URL associated with the endpoint.</td><td><code>soti.example.com</code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.verificationType</code></td><td>string (enum)</td><td>Yes</td><td>Specifies the type of verification used for establishing secure connections.</td><td><code>VERIFY_PEER</code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.port</code></td><td>integer</td><td>Yes</td><td>Specifies the port number used for communication.</td><td><code>1883</code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.qosCommon</code></td><td>integer</td><td>Yes</td><td>Defines the Quality of Service (QoS) level for the endpoint.</td><td><code>1</code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.tenantId</code></td><td>string</td><td>Yes</td><td>Identifies the tenantID associated with the configuration.</td><td><code>ZEBRA</code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.mqttParams</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.mqttParams.keepAlive</code></td><td>integer</td><td>No</td><td>Specifies the keep-alive interval in seconds for MQTT connections.</td><td><code>300</code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.mqttParams.cleanSession</code></td><td>boolean</td><td>No</td><td>Indicates whether to start a clean session for the MQTT client.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.mqttParams.reconnectDelayMin</code></td><td>integer</td><td>No</td><td>Specifies the minimum delay in seconds before reconnecting.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.mqttParams.reconnectDelayMax</code></td><td>integer</td><td>No</td><td>Specifies the maximum delay in seconds before reconnecting.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.mqttParams.clientId</code></td><td>string</td><td>No</td><td>Specifies the client ID used for MQTT connections.</td><td><code>zebra-rfd40-01</code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.mqttParams.username</code></td><td>string</td><td>No</td><td>The username for authentication in MQTT connections.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.mqttParams.password</code></td><td>string</td><td>No</td><td>The password for authentication in MQTT connections.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.mqttParams.publishTopics</code></td><td>array</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.mqttParams.subscribeTopics</code></td><td>array</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.securityParams</code></td><td>object</td><td>No</td><td>Defines the security parameters for the endpoint.</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.securityParams.format</code></td><td>string (enum)</td><td>Yes</td><td>Specifies the format of the security certificates. Currently, only PEM is supported.</td><td><code>PEM</code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.securityParams.algorithm</code></td><td>string (enum)</td><td>Yes</td><td>Specifies the algorithm used for encryption.</td><td><code>RSA256</code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.securityParams.caCertificateFile</code></td><td>string</td><td>Yes</td><td>Specifies the file containing the CA certificates.</td><td><code>cloud-trusted-ca-certs.crt</code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.securityParams.clientCert</code></td><td>string</td><td>Yes</td><td>Specifies the file containing the client certificate.</td><td><code>client_cert.pem</code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.securityParams.clientKey</code></td><td>string</td><td>Yes</td><td>Specifies the file containing the client private key.</td><td><code>client_key.pem</code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.antenna</code></td><td>boolean</td><td>No</td><td>set to true to enable antenna events</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.terminalConnection</code></td><td>boolean</td><td>No</td><td>set to true to enable terminal connection/disconnection events</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.firmwareUpdate</code></td><td>boolean</td><td>No</td><td>set to true to enable fw update events</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.gpi</code></td><td>boolean</td><td>No</td><td>set to true to enable gpi events</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.network</code></td><td>boolean</td><td>No</td><td>set to true to enable network events</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.exceptions</code></td><td>boolean</td><td>No</td><td>set to true to enable exception events</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.ntp</code></td><td>boolean</td><td>No</td><td>set to true to enable battery alerts</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.userApp</code></td><td>boolean</td><td>No</td><td>set to true to enable user app events</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.heartbeat</code></td><td>boolean</td><td>No</td><td>set to true to enable heart beat</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.power</code></td><td>boolean</td><td>No</td><td>set to true to enable power source alerts</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.battery</code></td><td>boolean</td><td>No</td><td>set to true to enable battery alerts</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.temperature</code></td><td>boolean</td><td>No</td><td>set to true to enable temperature alerts</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.fileDownload</code></td><td>boolean</td><td>No</td><td>set to true to enable file download alerts</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.cpuUsage</code></td><td>boolean</td><td>No</td><td>set to true to enable cpu usage alerts</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.flashUsage</code></td><td>boolean</td><td>No</td><td>set to true to enable flash usage alerts</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.ramUsage</code></td><td>boolean</td><td>No</td><td>set to true to enable ram usage alerts</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.heartbeatConfiguration</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.heartbeatConfiguration.interval</code></td><td>integer</td><td>No</td><td>heart beat interval in seconds</td><td><code>100</code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.heartbeatConfiguration.inventoryStatus</code></td><td>boolean</td><td>No</td><td>set to true to enable inventory status as part of heartbeat message</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.heartbeatConfiguration.batteryStatus</code></td><td>boolean</td><td>No</td><td>set to true to enable battery status as part of heartbeat message</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.heartbeatConfiguration.userApps</code></td><td>boolean</td><td>No</td><td>set to true to enable user app status as part of heartbeat message</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.cpuThreshold</code></td><td>integer</td><td>No</td><td>cpu usage value(%) above which alert will be triggered</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.ramThreshold</code></td><td>integer</td><td>No</td><td>ram usage value(%) above which alert will be triggered</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.flashThreshold</code></td><td>integer</td><td>No</td><td>flash usage value(%) above which alert will be triggered</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.epConfig.configuration.eventConfiguration.temperatureThreshold</code></td><td>integer</td><td>No</td><td>temperature treshold value above which alert will be triggered</td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiProfiles</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>cfgResponse.wifiProfiles.wifiConfig</code></td><td>array</td><td>No</td><td></td><td><code></code></td></tr>
+<tr><td><code>response</code></td><td>object</td><td>Yes</td><td>Status of the command execution — check <code>code</code> to confirm success (0) or identify the error.</td><td><code></code></td></tr>
+<tr><td><code>response.code</code></td><td>integer</td><td>Yes</td><td>Response code indicating success or failure.<ul><li><strong>0</strong> — Success</li><li><strong>1</strong> — Command payload accepted</li><li><strong>2</strong> — Invalid payload</li><li><strong>3</strong> — Not able to retrieve information</li><li><strong>4</strong> — Firmware update in progress</li><li><strong>5</strong> — Can&#x27;t reboot, inventory in progress</li><li><strong>6</strong> — Region is not configured</li><li><strong>7</strong> — Interface is not available</li><li><strong>8</strong> — Insufficient flash size</li><li><strong>9</strong> — File not found</li><li><strong>10</strong> — Configuration already exists</li><li><strong>11</strong> — Inventory in progress</li><li><strong>12</strong> — No radio operation in progress</li><li><strong>13</strong> — Firmware update failed</li><li><strong>14</strong> — Battery too low for firmware update</li><li><strong>15</strong> — WIFI: SSID not found</li><li><strong>16</strong> — WIFI: Cannot delete active SSID</li><li><strong>17</strong> — WIFI: SSID missing</li><li><strong>18</strong> — WIFI: SSID already exists</li><li><strong>19</strong> — WIFI: SSID count overflow</li><li><strong>20</strong> — WiFi is not supported</li><li><strong>21</strong> — Certificate not found</li><li><strong>22</strong> — Advanced configuration not set</li><li><strong>23</strong> — Invalid enum value</li><li><strong>24</strong> — Max 32 prefilters limit exceeded</li><li><strong>25</strong> — Max 3 publish topics exceeded</li><li><strong>26</strong> — Max 1 subscribe topic exceeded</li><li><strong>27</strong> — Invalid tenant ID length</li><li><strong>28</strong> — Tag match pattern length exceeded</li></ul></td><td><code>0</code></td></tr>
+<tr><td><code>response.description</code></td><td>string</td><td>Yes</td><td>Human-readable description of the response code (e.g. &quot;Success&quot;, &quot;Invalid payload&quot;).</td><td><code>Success</code></td></tr>
+</tbody></table>
+<h3>Response Examples</h3>
+<h4>example1</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;set_config&quot;,
+  &quot;requestId&quot;: &quot;209543&quot;,
+  &quot;apiVersion&quot;: &quot;V1.1&quot;,
+  &quot;cfgResponse&quot;: {
+    &quot;wifiConfig&quot;: {
+      &quot;operation&quot;: &quot;CREATE&quot;,
+      &quot;accessPoint&quot;: {
+        &quot;essid&quot;: &quot;TEST_5G&quot;,
+        &quot;connect&quot;: true,
+        &quot;autoConn&quot;: true,
+        &quot;enableSecurity&quot;: true,
+        &quot;isPreferred&quot;: false,
+        &quot;security&quot;: {
+          &quot;securityType&quot;: &quot;WPA2Personal&quot;,
+          &quot;securityDetails&quot;: {
+            &quot;WPA2Personal&quot;: {
+              &quot;password&quot;: &quot;XXXXXXXX&quot;
+            }
+          }
+        }
+      }
+    }
+  },
+  &quot;response&quot;: {
+    &quot;code&quot;: 0,
+    &quot;description&quot;: &quot;Success&quot;
+  }
+}</code></pre>
+<h4>example2</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;set_config&quot;,
+  &quot;requestId&quot;: &quot;209543&quot;,
+  &quot;apiVersion&quot;: &quot;V1.1&quot;,
+  &quot;cfgResponse&quot;: {
+    &quot;wifiConfig&quot;: {
+      &quot;operation&quot;: &quot;MODIFY&quot;,
+      &quot;accessPoint&quot;: {
+        &quot;essid&quot;: &quot;TEST_5G&quot;,
+        &quot;connect&quot;: true,
+        &quot;autoConn&quot;: true,
+        &quot;enableSecurity&quot;: true,
+        &quot;isPreferred&quot;: true,
+        &quot;security&quot;: {
+          &quot;securityType&quot;: &quot;WPA2Personal&quot;,
+          &quot;securityDetails&quot;: {
+            &quot;WPA2Personal&quot;: {
+              &quot;password&quot;: &quot;XXXXXXXX&quot;
+            }
+          }
+        }
+      }
+    }
+  },
+  &quot;response&quot;: {
+    &quot;code&quot;: 0,
+    &quot;description&quot;: &quot;Success&quot;
+  }
+}</code></pre>
+<h4>example3</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;set_config&quot;,
+  &quot;requestId&quot;: &quot;209543&quot;,
+  &quot;apiVersion&quot;: &quot;V1.1&quot;,
+  &quot;cfgResponse&quot;: {
+    &quot;applyAfterReboot&quot;: true,
+    &quot;epConfig&quot;: {
+      &quot;operation&quot;: &quot;add&quot;,
+      &quot;configuration&quot;: {
+        &quot;endpointName&quot;: &quot;gmdm&quot;,
+        &quot;epType&quot;: &quot;MDM&quot;,
+        &quot;mqttParams&quot;: {
+          &quot;keepAlive&quot;: 300
+        }
+      }
+    }
+  },
+  &quot;response&quot;: {
+    &quot;code&quot;: 0,
+    &quot;description&quot;: &quot;Success&quot;
+  }
+}</code></pre>
+<h4>example4</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;set_config&quot;,
+  &quot;requestId&quot;: &quot;1233&quot;,
+  &quot;apiVersion&quot;: &quot;V1.1&quot;,
+  &quot;cfgResponse&quot;: {
+    &quot;epConfig&quot;: {
+      &quot;operation&quot;: &quot;add&quot;,
+      &quot;configuration&quot;: {
+        &quot;endpointName&quot;: &quot;dataEP&quot;,
+        &quot;epType&quot;: &quot;DATA1&quot;,
+        &quot;protocol&quot;: &quot;MQTT&quot;,
+        &quot;activate&quot;: true,
+        &quot;url&quot;: &quot;17L11-GG6663-1&quot;,
+        &quot;verificationType&quot;: &quot;NONE&quot;,
+        &quot;port&quot;: 1883,
+        &quot;qosCommon&quot;: 1,
+        &quot;tenantId&quot;: &quot;ZEBRA&quot;,
+        &quot;mqttParams&quot;: {
+          &quot;keepAlive&quot;: 300,
+          &quot;cleanSession&quot;: true,
+          &quot;reconnectDelayMin&quot;: 50,
+          &quot;reconnectDelayMax&quot;: 500,
+          &quot;clientId&quot;: &quot;zebra-rfd40-01&quot;,
+          &quot;username&quot;: &quot;XXXXXXXX&quot;,
+          &quot;password&quot;: &quot;XXXXXXXX&quot;
+        }
+      }
+    }
+  },
+  &quot;response&quot;: {
+    &quot;code&quot;: 0,
+    &quot;description&quot;: &quot;Success&quot;
+  }
+}</code></pre>
+<h4>example5</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;set_config&quot;,
+  &quot;requestId&quot;: &quot;1234&quot;,
+  &quot;apiVersion&quot;: &quot;V1.1&quot;,
+  &quot;cfgResponse&quot;: {
+    &quot;epConfig&quot;: {
+      &quot;operation&quot;: &quot;add&quot;,
+      &quot;configuration&quot;: {
+        &quot;endpointName&quot;: &quot;ctrlEP&quot;,
+        &quot;epType&quot;: &quot;CTRL&quot;,
+        &quot;protocol&quot;: &quot;MQTT&quot;,
+        &quot;activate&quot;: true,
+        &quot;url&quot;: &quot;17L11-GG6663-1&quot;,
+        &quot;verificationType&quot;: &quot;NONE&quot;,
+        &quot;port&quot;: 1883,
+        &quot;qosCommon&quot;: 1,
+        &quot;tenantId&quot;: &quot;zebra&quot;,
+        &quot;mqttParams&quot;: {
+          &quot;keepAlive&quot;: 300,
+          &quot;cleanSession&quot;: true,
+          &quot;reconnectDelayMin&quot;: 50,
+          &quot;reconnectDelayMax&quot;: 500,
+          &quot;clientId&quot;: &quot;zebra-rfd40-01&quot;,
+          &quot;username&quot;: &quot;XXXXXXXX&quot;,
+          &quot;password&quot;: &quot;XXXXXXXX&quot;,
+          &quot;publishTopics&quot;: [
+            {
+              &quot;topic&quot;: &quot;MGMT/clients/cmnd&quot;,
+              &quot;qos&quot;: 0,
+              &quot;retain&quot;: false
+            }
+          ],
+          &quot;subscribeTopics&quot;: [
+            {
+              &quot;topic&quot;: &quot;MGMT/clients/resp&quot;,
+              &quot;qos&quot;: 1,
+              &quot;retain&quot;: false
+            },
+            {
+              &quot;topic&quot;: &quot;MGMT/clients/event&quot;,
+              &quot;qos&quot;: 1,
+              &quot;retain&quot;: false
+            },
+            {
+              &quot;topic&quot;: &quot;MGMT/clients/rfid&quot;,
+              &quot;qos&quot;: 2,
+              &quot;retain&quot;: true
+            }
+          ]
+        }
+      }
+    }
+  },
+  &quot;response&quot;: {
+    &quot;code&quot;: 0,
+    &quot;description&quot;: &quot;Success&quot;
+  }
+}</code></pre>
+<h4>example6</h4>
+<pre><code>{
+  &quot;command&quot;: &quot;set_config&quot;,
+  &quot;requestId&quot;: &quot;5678&quot;,
+  &quot;apiVersion&quot;: &quot;V1.1&quot;,
+  &quot;cfgResponse&quot;: {
+    &quot;wifiConfig&quot;: {
+      &quot;operation&quot;: &quot;CREATE&quot;,
+      &quot;accessPoint&quot;: {
+        &quot;essid&quot;: &quot;CORP_WIFI&quot;,
+        &quot;connect&quot;: true,
+        &quot;autoConn&quot;: false,
+        &quot;enableSecurity&quot;: true,
+        &quot;isPreferred&quot;: true,
+        &quot;security&quot;: {
+          &quot;securityType&quot;: &quot;WPA2Personal&quot;,
+          &quot;securityDetails&quot;: {
+            &quot;WPA2Personal&quot;: {
+              &quot;password&quot;: &quot;XXXXXXXX&quot;
+            }
+          }
+        }
+      }
+    },
+    &quot;epConfig&quot;: {
+      &quot;operation&quot;: &quot;add&quot;,
+      &quot;configuration&quot;: {
+        &quot;endpointName&quot;: &quot;mgmtEp&quot;,
+        &quot;epType&quot;: &quot;MGMT&quot;,
+        &quot;protocol&quot;: &quot;MQTT&quot;,
+        &quot;activate&quot;: true,
+        &quot;url&quot;: &quot;iot-broker.company.com&quot;,
+        &quot;verificationType&quot;: &quot;NONE&quot;,
+        &quot;port&quot;: 8883,
+        &quot;qosCommon&quot;: 1,
+        &quot;tenantId&quot;: &quot;ZEBRA&quot;,
+        &quot;mqttParams&quot;: {
+          &quot;keepAlive&quot;: 60,
+          &quot;cleanSession&quot;: true,
+          &quot;reconnectDelayMin&quot;: 10,
+          &quot;reconnectDelayMax&quot;: 120,
+          &quot;clientId&quot;: &quot;iot&quot;,
+          &quot;username&quot;: &quot;XXXXXXXX&quot;,
+          &quot;password&quot;: &quot;XXXXXXXX&quot;,
+          &quot;publishTopics&quot;: [
+            {
+              &quot;topic&quot;: &quot;IOT/data/cmnd&quot;,
+              &quot;qos&quot;: 1,
+              &quot;retain&quot;: false
+            }
+          ],
+          &quot;subscribeTopics&quot;: [
+            {
+              &quot;topic&quot;: &quot;IOT/data/resp&quot;,
+              &quot;qos&quot;: 1,
+              &quot;retain&quot;: false
+            }
+          ]
+        }
+      }
+    }
+  },
+  &quot;response&quot;: {
+    &quot;code&quot;: 0,
+    &quot;description&quot;: &quot;Success&quot;
+  }
+}</code></pre>
+</body>
+</html>
