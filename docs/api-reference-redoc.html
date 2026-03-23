@@ -189,5 +189,204 @@
     startObserver();
   })();
   </script>
+
+  <script>
+  /* ── Collapsible x-tagGroups tree sidebar ── */
+  (function() {
+    var TAG_GROUPS = null;
+    var treeApplied = false;
+
+    /* Fetch x-tagGroups from the spec */
+    fetch('openapi.yaml').then(function(r){ return r.json(); }).then(function(spec){
+      TAG_GROUPS = spec['x-tagGroups'] || [];
+    }).catch(function(){});
+
+    /* Build a map: tag_name -> group_name */
+    function buildTagGroupMap() {
+      var map = {};
+      if (!TAG_GROUPS) return map;
+      for (var i = 0; i < TAG_GROUPS.length; i++) {
+        var g = TAG_GROUPS[i];
+        var tags = g.tags || [];
+        for (var j = 0; j < tags.length; j++) {
+          map[tags[j]] = g.name;
+        }
+      }
+      return map;
+    }
+
+    function applyTreeSidebar() {
+      if (treeApplied || !TAG_GROUPS || TAG_GROUPS.length === 0) return;
+      var rd = document.querySelector('rapi-doc');
+      if (!rd || !rd.shadowRoot) return;
+
+      /* Find the nav-bar: it's inside shadow DOM */
+      var navBar = rd.shadowRoot.querySelector('.nav-bar');
+      if (!navBar) navBar = rd.shadowRoot.querySelector('nav');
+      if (!navBar) return;
+
+      /* Find all tag-level nav items. RapiDoc uses .nav-bar-tag or similar */
+      var tagItems = navBar.querySelectorAll('.nav-bar-tag');
+      if (tagItems.length === 0) return;
+
+      /* Also check for the "OPERATIONS" heading and hide it */
+      var opHeaders = navBar.querySelectorAll('.nav-bar-tag-and-paths');
+      var allNavSections = opHeaders.length > 0 ? opHeaders : null;
+
+      /* Build group map */
+      var tagGroupMap = buildTagGroupMap();
+
+      /* Collect tag elements by their text → nav element */
+      var tagNavMap = {};
+      for (var t = 0; t < tagItems.length; t++) {
+        var el = tagItems[t];
+        var tagText = (el.textContent || '').trim().split('\n')[0].trim();
+        /* RapiDoc tag items may have method badges appended */
+        tagText = tagText.replace(/^(GET|POST|PUT|DELETE|PATCH)\s*/i, '').trim();
+        tagNavMap[tagText] = el;
+      }
+
+      /* Inject CSS for the tree sidebar */
+      var css = rd.shadowRoot.querySelector('style[data-tree-nav]');
+      if (!css) {
+        css = document.createElement('style');
+        css.setAttribute('data-tree-nav', '1');
+        css.textContent = [
+          '.nav-group-header {',
+          '  font-size: 11px; font-weight: 700; letter-spacing: 0.8px;',
+          '  text-transform: uppercase; color: #555; padding: 12px 12px 4px;',
+          '  cursor: pointer; user-select: none; display: flex; align-items: center;',
+          '}',
+          '.nav-group-header:hover { color: #0073bb; }',
+          '.nav-group-header .tri {',
+          '  display: inline-block; width: 0; height: 0;',
+          '  border-top: 5px solid transparent; border-bottom: 5px solid transparent;',
+          '  border-left: 6px solid #888; margin-right: 6px; transition: transform 0.15s;',
+          '}',
+          '.nav-group-header.open .tri { transform: rotate(90deg); }',
+          '.nav-group-body { overflow: hidden; }',
+          '.nav-group-body.collapsed { display: none; }',
+          /* Indent tag items under groups */
+          '.nav-group-body .nav-bar-tag { padding-left: 24px !important; }',
+          '.nav-group-body .nav-bar-tag-and-paths { margin-left: 0; }',
+          /* Indent operation items under tags */
+          '.nav-group-body .nav-bar-path { padding-left: 36px !important; }',
+          /* Make tag items collapsible too */
+          '.nav-bar-tag { cursor: pointer; }',
+          /* Hide the default OPERATIONS header */
+          '.nav-bar-section-title { display: none !important; }',
+        ].join('\n');
+        rd.shadowRoot.appendChild(css);
+      }
+
+      /* Find the container where nav items live */
+      /* RapiDoc puts tag sections in .nav-scroll or directly in nav-bar */
+      var navScroll = navBar.querySelector('.nav-scroll') || navBar;
+
+      /* Collect all current tag-and-paths sections so we can reorder them */
+      var sections = navScroll.querySelectorAll('.nav-bar-tag-and-paths');
+      if (sections.length === 0) {
+        /* Try alternate selectors */
+        sections = navScroll.querySelectorAll('[class*="nav-bar-tag"]');
+      }
+      if (sections.length === 0) return;
+
+      /* Map section elements to their tag name */
+      var sectionByTag = {};
+      var allSections = [];
+      for (var s = 0; s < sections.length; s++) {
+        var sec = sections[s];
+        var tagEl = sec.querySelector('.nav-bar-tag') || sec;
+        var txt = (tagEl.textContent || '').trim().split('\n')[0].trim();
+        txt = txt.replace(/^(GET|POST|PUT|DELETE|PATCH)\s*/i, '').trim();
+        sectionByTag[txt] = sec;
+        allSections.push(sec);
+      }
+
+      /* Create grouped structure */
+      var frag = document.createDocumentFragment();
+
+      for (var gi = 0; gi < TAG_GROUPS.length; gi++) {
+        var group = TAG_GROUPS[gi];
+        var header = document.createElement('div');
+        header.className = 'nav-group-header open';
+        header.innerHTML = '<span class="tri"></span>' + group.name.toUpperCase();
+
+        var body = document.createElement('div');
+        body.className = 'nav-group-body';
+
+        /* Toggle collapse on header click */
+        (function(h, b) {
+          h.addEventListener('click', function() {
+            h.classList.toggle('open');
+            b.classList.toggle('collapsed');
+          });
+        })(header, body);
+
+        var tagsInGroup = group.tags || [];
+        for (var ti = 0; ti < tagsInGroup.length; ti++) {
+          var tagName = tagsInGroup[ti];
+          if (sectionByTag[tagName]) {
+            body.appendChild(sectionByTag[tagName]);
+            delete sectionByTag[tagName];
+          }
+        }
+
+        frag.appendChild(header);
+        frag.appendChild(body);
+      }
+
+      /* Any remaining sections go into "Other" */
+      var remaining = Object.keys(sectionByTag);
+      if (remaining.length > 0) {
+        var otherHeader = document.createElement('div');
+        otherHeader.className = 'nav-group-header open';
+        otherHeader.innerHTML = '<span class="tri"></span>OTHER';
+        var otherBody = document.createElement('div');
+        otherBody.className = 'nav-group-body';
+        otherHeader.addEventListener('click', function() {
+          otherHeader.classList.toggle('open');
+          otherBody.classList.toggle('collapsed');
+        });
+        for (var ri = 0; ri < remaining.length; ri++) {
+          otherBody.appendChild(sectionByTag[remaining[ri]]);
+        }
+        frag.appendChild(otherHeader);
+        frag.appendChild(otherBody);
+      }
+
+      /* Remove old sections and insert grouped ones */
+      /* Find a reference point — usually after the overview/info section */
+      var overviewSection = navScroll.querySelector('.nav-bar-info');
+      for (var ai = allSections.length - 1; ai >= 0; ai--) {
+        if (allSections[ai].parentNode) {
+          allSections[ai].parentNode.removeChild(allSections[ai]);
+        }
+      }
+
+      /* Also remove the "OPERATIONS" label if present */
+      var opLabel = navScroll.querySelector('.nav-bar-section-title');
+      if (opLabel && opLabel.parentNode) {
+        opLabel.parentNode.removeChild(opLabel);
+      }
+
+      /* Insert the grouped tree */
+      if (overviewSection && overviewSection.nextSibling) {
+        navScroll.insertBefore(frag, overviewSection.nextSibling);
+      } else {
+        navScroll.appendChild(frag);
+      }
+
+      treeApplied = true;
+    }
+
+    /* Poll until RapiDoc nav is ready */
+    var treeAttempts = 0;
+    var treePoll = setInterval(function() {
+      applyTreeSidebar();
+      if (treeApplied || ++treeAttempts > 60) clearInterval(treePoll);
+    }, 500);
+  })();
+  </script>
 </body>
 </html>
