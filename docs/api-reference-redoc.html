@@ -193,90 +193,66 @@
   <script>
   /* ── Collapsible x-tagGroups tree sidebar ── */
   (function() {
-    var TAG_GROUPS = null;
-    var treeApplied = false;
+    /* Inline tag groups — no fetch needed */
+    var TAG_GROUPS = [
+      { name: 'Management', tags: ['Device Status','Device Configuration','Network Configuration','MQTT Endpoint Configuration','Certificate Management','System Operations'] },
+      { name: 'Control', tags: ['Inventory Control','Operating Mode','Tag Filtering'] },
+      { name: 'Events', tags: ['Device Health','Alerts','Exceptions','MQTT Connectivity','Event Configuration'] },
+      { name: 'Data', tags: ['Tag Data Event'] }
+    ];
 
-    /* Fetch x-tagGroups from the spec */
-    fetch('openapi.yaml').then(function(r){ return r.json(); }).then(function(spec){
-      TAG_GROUPS = spec['x-tagGroups'] || [];
-    }).catch(function(){});
-
-    function applyTreeSidebar() {
-      if (treeApplied || !TAG_GROUPS || TAG_GROUPS.length === 0) return;
-      var rd = document.querySelector('rapi-doc');
-      if (!rd || !rd.shadowRoot) return;
-      var sr = rd.shadowRoot;
+    function applyTreeSidebar(sr) {
+      /* Already applied? Check for our marker */
+      if (sr.querySelector('.nav-group-header')) return false;
 
       /* .nav-scroll is the inner <nav> that holds all tag sections */
       var navScroll = sr.querySelector('.nav-scroll');
-      if (!navScroll) return;
+      if (!navScroll) return false;
 
       /* .nav-bar-tag-and-paths wraps each tag + its operation paths */
       var sections = navScroll.querySelectorAll('.nav-bar-tag-and-paths');
-      if (sections.length === 0) return;
+      if (sections.length === 0) return false;
 
-      /* Map tag display name → its .nav-bar-tag-and-paths element */
+      /* Map tag display name → its section element */
       var sectionByTag = {};
-      var allSections = [];
       for (var s = 0; s < sections.length; s++) {
         var sec = sections[s];
         var tagEl = sec.querySelector('.nav-bar-tag');
         if (!tagEl) continue;
-        /* tag text is inside a child div with pointer-events:none */
-        var txt = '';
-        var innerDiv = tagEl.querySelector('div');
-        if (innerDiv) txt = innerDiv.textContent.trim();
-        if (!txt) txt = tagEl.textContent.trim().split('\n')[0].trim();
-        sectionByTag[txt] = sec;
-        allSections.push(sec);
+        var innerDiv = tagEl.querySelector('div[style]') || tagEl.querySelector('div') || tagEl;
+        var txt = innerDiv.textContent.trim();
+        if (txt) sectionByTag[txt] = sec;
       }
+      if (Object.keys(sectionByTag).length === 0) return false;
 
-      if (allSections.length === 0) return;
-
-      /* Inject tree-nav CSS into shadow root */
+      /* Inject CSS (once) */
       if (!sr.querySelector('style[data-tree-nav]')) {
         var css = document.createElement('style');
         css.setAttribute('data-tree-nav', '1');
-        css.textContent = [
-          /* Hide the default OPERATIONS bar */
-          '#link-operations-top { display: none !important; }',
-          /* Group header */
-          '.nav-group-header {',
-          '  font-size: 11px; font-weight: 700; letter-spacing: 0.8px;',
-          '  text-transform: uppercase; color: #555; padding: 14px 16px 6px;',
-          '  cursor: pointer; user-select: none; display: flex; align-items: center;',
-          '}',
-          '.nav-group-header:first-child { padding-top: 8px; }',
-          '.nav-group-header:hover { color: #0073bb; }',
-          '.nav-group-header .tri {',
-          '  display: inline-block; font-size: 10px; margin-right: 6px;',
-          '  transition: transform 0.15s;',
-          '}',
-          '.nav-group-header.open .tri { transform: rotate(90deg); }',
-          '.nav-group-body { overflow: hidden; }',
-          '.nav-group-body.collapsed { display: none; }',
-          /* Indent tags under groups */
-          '.nav-group-body > .nav-bar-tag-and-paths > .nav-bar-tag { padding-left: 28px !important; }',
-          /* Indent operations under tags */
-          '.nav-group-body > .nav-bar-tag-and-paths .nav-bar-path { padding-left: 44px !important; }',
-        ].join('\n');
+        css.textContent =
+          '#link-operations-top { display: none !important; }' +
+          '.nav-group-header { font-size:11px; font-weight:700; letter-spacing:0.8px; text-transform:uppercase; color:#555; padding:14px 16px 6px; cursor:pointer; user-select:none; display:flex; align-items:center; }' +
+          '.nav-group-header:hover { color:#0073bb; }' +
+          '.nav-group-header .tri { display:inline-block; font-size:10px; margin-right:6px; transition:transform 0.15s; }' +
+          '.nav-group-header.open .tri { transform:rotate(90deg); }' +
+          '.nav-group-body { overflow:hidden; }' +
+          '.nav-group-body.collapsed { display:none; }' +
+          '.nav-group-body > .nav-bar-tag-and-paths > .nav-bar-tag { padding-left:28px !important; }' +
+          '.nav-group-body > .nav-bar-tag-and-paths .nav-bar-path { padding-left:44px !important; }';
         sr.appendChild(css);
       }
 
-      /* Find the OPERATIONS header to insert after (or before the first tag section) */
-      var opsHeader = navScroll.querySelector('#link-operations-top');
-      var insertRef = opsHeader ? opsHeader.nextSibling : allSections[0];
-
       /* Build grouped structure */
+      var opsHeader = navScroll.querySelector('#link-operations-top');
       var frag = document.createDocumentFragment();
+
       for (var gi = 0; gi < TAG_GROUPS.length; gi++) {
         var group = TAG_GROUPS[gi];
         var header = document.createElement('div');
         header.className = 'nav-group-header open';
-        header.innerHTML = '<span class="tri">▶</span>' + group.name.toUpperCase();
+        header.innerHTML = '<span class="tri">\u25B6</span>' + group.name.toUpperCase();
         var body = document.createElement('div');
         body.className = 'nav-group-body';
-
         (function(h, b) {
           h.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -285,51 +261,66 @@
           });
         })(header, body);
 
-        var tags = group.tags || [];
-        for (var ti = 0; ti < tags.length; ti++) {
-          if (sectionByTag[tags[ti]]) {
-            body.appendChild(sectionByTag[tags[ti]]);
-            delete sectionByTag[tags[ti]];
+        for (var ti = 0; ti < group.tags.length; ti++) {
+          var tagName = group.tags[ti];
+          if (sectionByTag[tagName]) {
+            body.appendChild(sectionByTag[tagName]);
+            delete sectionByTag[tagName];
           }
         }
         frag.appendChild(header);
         frag.appendChild(body);
       }
 
-      /* Uncategorized tags */
+      /* Leftover tags */
       var leftover = Object.keys(sectionByTag);
       if (leftover.length > 0) {
         var oh = document.createElement('div');
         oh.className = 'nav-group-header open';
-        oh.innerHTML = '<span class="tri">▶</span>OTHER';
+        oh.innerHTML = '<span class="tri">\u25B6</span>OTHER';
         var ob = document.createElement('div');
         ob.className = 'nav-group-body';
-        oh.addEventListener('click', function(e) {
-          e.stopPropagation(); oh.classList.toggle('open'); ob.classList.toggle('collapsed');
-        });
-        for (var li = 0; li < leftover.length; li++) {
-          ob.appendChild(sectionByTag[leftover[li]]);
-        }
+        oh.addEventListener('click', function(e) { e.stopPropagation(); oh.classList.toggle('open'); ob.classList.toggle('collapsed'); });
+        for (var li = 0; li < leftover.length; li++) ob.appendChild(sectionByTag[leftover[li]]);
         frag.appendChild(oh);
         frag.appendChild(ob);
       }
 
-      /* Insert the grouped tree into the nav */
-      if (insertRef && insertRef.parentNode === navScroll) {
-        navScroll.insertBefore(frag, insertRef);
+      /* Insert before OPERATIONS header or append */
+      if (opsHeader) {
+        navScroll.insertBefore(frag, opsHeader);
       } else {
         navScroll.appendChild(frag);
       }
-
-      treeApplied = true;
+      return true;
     }
 
-    /* Poll until RapiDoc has rendered the nav */
-    var treeAttempts = 0;
-    var treePoll = setInterval(function() {
-      applyTreeSidebar();
-      if (treeApplied || ++treeAttempts > 80) clearInterval(treePoll);
-    }, 400);
+    /* Wait for rapi-doc shadow root, then use MutationObserver */
+    function init() {
+      var rd = document.querySelector('rapi-doc');
+      if (!rd || !rd.shadowRoot) { setTimeout(init, 300); return; }
+      var sr = rd.shadowRoot;
+
+      /* Try immediately */
+      applyTreeSidebar(sr);
+
+      /* Also observe for re-renders (Lit may re-render nav) */
+      var observer = new MutationObserver(function() {
+        applyTreeSidebar(sr);
+      });
+      observer.observe(sr, { childList: true, subtree: true });
+
+      /* Fallback poll for slow initial render */
+      var attempts = 0;
+      var poll = setInterval(function() {
+        if (sr.querySelector('.nav-group-header') || ++attempts > 100) {
+          clearInterval(poll);
+          return;
+        }
+        applyTreeSidebar(sr);
+      }, 300);
+    }
+    init();
   })();
   </script>
 </body>
