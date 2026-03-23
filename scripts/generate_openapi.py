@@ -37,6 +37,9 @@ EVENTS_DIR = os.path.join(SCHEMAS_DIR, "events")
 TAG_CONFIG_PATH = os.path.join(SCHEMAS_DIR, "tag_config.json")
 OP_DESCRIPTIONS_DIR = os.path.join(SCHEMAS_DIR, "operation_descriptions")
 
+COMMAND_PDFS_DIR = os.path.join(PROJECT_ROOT, "docs", "command-pdfs")
+GITHUB_PAGES_BASE = "https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs"
+
 # Files to skip during auto-discovery (legacy/monolithic files)
 SKIP_FILES = {"dev_mgt.json"}
 
@@ -82,6 +85,22 @@ def load_example_descriptions():
     if os.path.exists(path):
         return load_json(path)
     return {}
+
+
+def find_command_pdf(op_name):
+    """
+    Check if a PDF exists for this command in docs/command-pdfs/.
+    Looks for: {op_name}.pdf, {op_name}_formatted.pdf
+    Returns the URL to the best match, or None.
+    """
+    if not os.path.isdir(COMMAND_PDFS_DIR):
+        return None
+    # Prefer _formatted version, fall back to plain
+    for suffix in ["_formatted.pdf", ".pdf"]:
+        filename = op_name + suffix
+        if os.path.exists(os.path.join(COMMAND_PDFS_DIR, filename)):
+            return f"{GITHUB_PAGES_BASE}/{filename}"
+    return None
 
 
 def discover_operations():
@@ -340,6 +359,14 @@ def build_openapi():
         # Remove legacy footer text if present
         if isinstance(description, str):
             description = re.sub(r"\n\n\*\*Supported readers:\*\*\s*RFD40,\s*RFD90\s*$", "", description).strip()
+
+        # Auto-add PDF download link if a PDF exists and description doesn't already have one
+        pdf_url = find_command_pdf(op_name)
+        if pdf_url and isinstance(description, str) and "Download" not in description and "download" not in description:
+            pdf_link = f"\n\n**Download pdf:** \U0001F4C4 [Download {op_name} as PDF]({pdf_url})"
+            description = description + pdf_link
+        elif pdf_url and not description:
+            description = f"**Download pdf:** \U0001F4C4 [Download {op_name} as PDF]({pdf_url})"
 
         # Build the operation
         op = OrderedDict()
