@@ -201,6 +201,10 @@
       { name: 'Data', tags: ['Tag Data Event'] }
     ];
 
+    /* Count how many tags we expect */
+    var EXPECTED_TAGS = 0;
+    for (var _g = 0; _g < TAG_GROUPS.length; _g++) EXPECTED_TAGS += TAG_GROUPS[_g].tags.length;
+
     function applyTreeSidebar(sr) {
       /* Already applied? Check for our marker */
       if (sr.querySelector('.nav-group-header')) return false;
@@ -211,7 +215,8 @@
 
       /* .nav-bar-tag-and-paths wraps each tag + its operation paths */
       var sections = navScroll.querySelectorAll('.nav-bar-tag-and-paths');
-      if (sections.length === 0) return false;
+      /* Wait until ALL tags are rendered — don't apply too early */
+      if (sections.length < EXPECTED_TAGS) return false;
 
       /* Map tag display name → its section element */
       var sectionByTag = {};
@@ -295,19 +300,20 @@
       return true;
     }
 
-    /* Wait for rapi-doc shadow root, then use MutationObserver */
+    /* Wait for rapi-doc shadow root, then use debounced MutationObserver */
     function init() {
       var rd = document.querySelector('rapi-doc');
       if (!rd || !rd.shadowRoot) { setTimeout(init, 300); return; }
       var sr = rd.shadowRoot;
+      var debounceTimer = null;
 
-      /* Try immediately */
-      applyTreeSidebar(sr);
+      function debouncedApply() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(function() { applyTreeSidebar(sr); }, 600);
+      }
 
-      /* Also observe for re-renders (Lit may re-render nav) */
-      var observer = new MutationObserver(function() {
-        applyTreeSidebar(sr);
-      });
+      /* Observe for re-renders (Lit re-renders wipe the DOM) */
+      var observer = new MutationObserver(debouncedApply);
       observer.observe(sr, { childList: true, subtree: true });
 
       /* Fallback poll for slow initial render */
