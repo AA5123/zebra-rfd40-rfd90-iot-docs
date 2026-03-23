@@ -192,8 +192,10 @@
 
   <script>
   /* ── Collapsible x-tagGroups tree sidebar ──
-     Strategy: Instead of moving Lit-managed DOM elements (which Lit undoes on re-render),
-     we HIDE the original nav and BUILD our own nav clone outside Lit's control. */
+     Strategy: Append our tree to .nav-bar (OUTSIDE Lit's ChildPart range) so
+     Lit re-renders of .nav-scroll don't destroy it. Collapse .nav-scroll with
+     CSS (its hidden elements remain in DOM for programmatic click navigation).
+     Style sheet is appended to the shadow root (also outside Lit's range). */
   (function() {
     var TAG_GROUPS = [
       { name: 'Management', tags: ['Device Status','Device Configuration','Network Configuration','MQTT Endpoint Configuration','Certificate Management','System Operations'] },
@@ -202,65 +204,79 @@
       { name: 'Data', tags: ['Tag Data Event'] }
     ];
     var EXPECTED_TAGS = 0;
-    for (var _g = 0; _g < TAG_GROUPS.length; _g++) EXPECTED_TAGS += TAG_GROUPS[_g].tags.length;
-    var applied = false;
+    for (var i = 0; i < TAG_GROUPS.length; i++) EXPECTED_TAGS += TAG_GROUPS[i].tags.length;
 
-    function buildTreeNav(sr) {
-      if (applied) return;
-      var navScroll = sr.querySelector('.nav-scroll');
-      if (!navScroll) return;
+    function injectStyle(sr) {
+      if (sr.querySelector('style[data-tree-nav]')) return;
+      var css = document.createElement('style');
+      css.setAttribute('data-tree-nav', '1');
+      css.textContent = [
+        /* Collapse original .nav-scroll — content still in DOM for click events */
+        '.nav-scroll { flex:0 0 0px !important; height:0 !important; overflow:hidden !important; padding:0 !important; margin:0 !important; min-height:0 !important; border:0 !important; opacity:0 !important; }',
+        /* Tree container fills the nav-bar */
+        '.custom-tree-nav { flex:1 1 auto; overflow-y:auto; padding:8px 0; min-height:0; }',
+        '.custom-tree-nav .grp-hdr { font-size:11px; font-weight:700; letter-spacing:0.8px; text-transform:uppercase; color:#555; padding:14px 16px 6px; cursor:pointer; user-select:none; display:flex; align-items:center; }',
+        '.custom-tree-nav .grp-hdr:hover { color:#0073bb; }',
+        '.custom-tree-nav .tri { display:inline-block; font-size:10px; margin-right:6px; transition:transform 0.15s; }',
+        '.custom-tree-nav .grp-hdr.open .tri { transform:rotate(90deg); }',
+        '.custom-tree-nav .grp-body { overflow:hidden; }',
+        '.custom-tree-nav .grp-body.collapsed { display:none; }',
+        '.custom-tree-nav .tag-link { display:block; padding:6px 8px 6px 28px; color:var(--nav-text-color,#333); text-decoration:none; font-size:var(--font-size-small,13px); cursor:pointer; border-left:3px solid transparent; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }',
+        '.custom-tree-nav .tag-link:hover { background:var(--nav-hover-bg-color,#f2f3f3); color:var(--nav-hover-text-color,#0073bb); }',
+        '.custom-tree-nav .op-link { display:block; padding:4px 8px 4px 44px; color:var(--nav-text-color,#666); text-decoration:none; font-size:12px; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }',
+        '.custom-tree-nav .op-link:hover { background:var(--nav-hover-bg-color,#f2f3f3); color:var(--nav-hover-text-color,#0073bb); }'
+      ].join('\n');
+      /* Append to shadow root directly — outside Lit's template range, survives re-renders */
+      sr.appendChild(css);
+    }
 
-      var sections = navScroll.querySelectorAll('.nav-bar-tag-and-paths');
-      if (sections.length < EXPECTED_TAGS) return;
+    function buildTree(sr) {
+      /* Always ensure CSS is present */
+      injectStyle(sr);
 
-      /* Map tag name → its nav-bar-tag-and-paths element */
-      var sectionByTag = {};
+      /* .nav-bar is a static element in Lit's template — our child appended
+         AFTER Lit's ChildPart end-marker survives re-renders */
+      var navBar = sr.querySelector('.nav-bar');
+      if (!navBar) return false;
+      if (navBar.querySelector('.custom-tree-nav')) return true; /* already built */
+
+      /* Read tag data from original nav (hidden inside .nav-scroll but still in DOM) */
+      var sections = sr.querySelectorAll('.nav-bar-tag-and-paths');
+      if (sections.length < EXPECTED_TAGS) return false;
+
+      var tagMap = {};
       for (var s = 0; s < sections.length; s++) {
         var sec = sections[s];
         var tagEl = sec.querySelector('.nav-bar-tag');
         if (!tagEl) continue;
-        var innerDiv = tagEl.querySelector('div[style]') || tagEl.querySelector('div') || tagEl;
-        var txt = innerDiv.textContent.trim();
-        if (txt) sectionByTag[txt] = sec;
+        var innerDiv = tagEl.querySelector('div') || tagEl;
+        var name = innerDiv.textContent.trim();
+        if (!name) continue;
+        var cid = tagEl.getAttribute('data-content-id') || tagEl.id || '';
+        var ops = [];
+        var paths = sec.querySelectorAll('.nav-bar-path');
+        for (var p = 0; p < paths.length; p++) {
+          var pe = paths[p];
+          var sp = pe.querySelector('span');
+          var opName = sp ? sp.textContent.trim() : pe.textContent.trim();
+          var opId = pe.getAttribute('data-content-id') || '';
+          if (opName) ops.push({ name: opName, id: opId });
+        }
+        tagMap[name] = { cid: cid, ops: ops };
       }
-      if (Object.keys(sectionByTag).length < EXPECTED_TAGS) return;
+      if (Object.keys(tagMap).length < EXPECTED_TAGS) return false;
 
-      /* Hide the OPERATIONS header via CSS */
-      var css = sr.querySelector('style[data-tree-nav]');
-      if (!css) {
-        css = document.createElement('style');
-        css.setAttribute('data-tree-nav', '1');
-        css.textContent =
-          '#link-operations-top { display:none !important; }' +
-          '.custom-tree-nav .nav-group-header { font-size:11px; font-weight:700; letter-spacing:0.8px; text-transform:uppercase; color:#555; padding:14px 16px 6px; cursor:pointer; user-select:none; display:flex; align-items:center; }' +
-          '.custom-tree-nav .nav-group-header:hover { color:#0073bb; }' +
-          '.custom-tree-nav .tri { display:inline-block; font-size:10px; margin-right:6px; transition:transform 0.15s; }' +
-          '.custom-tree-nav .nav-group-header.open .tri { transform:rotate(90deg); }' +
-          '.custom-tree-nav .nav-group-body { overflow:hidden; }' +
-          '.custom-tree-nav .nav-group-body.collapsed { display:none; }' +
-          '.custom-tree-nav .tag-link { display:block; padding:6px 8px 6px 28px; color:var(--nav-text-color,#333); text-decoration:none; font-size:var(--font-size-small,13px); cursor:pointer; border-left:3px solid transparent; }' +
-          '.custom-tree-nav .tag-link:hover { background:var(--nav-hover-bg-color,#f2f3f3); color:var(--nav-hover-text-color,#0073bb); }' +
-          '.custom-tree-nav .tag-link.active { border-left-color:var(--nav-accent-color,#0073bb); color:var(--nav-accent-color,#0073bb); font-weight:600; }' +
-          '.custom-tree-nav .op-link { display:block; padding:4px 8px 4px 44px; color:var(--nav-text-color,#333); text-decoration:none; font-size:var(--font-size-small,13px); cursor:pointer; }' +
-          '.custom-tree-nav .op-link:hover { background:var(--nav-hover-bg-color,#f2f3f3); color:var(--nav-hover-text-color,#0073bb); }' +
-          '.custom-tree-nav .tag-ops { }' +
-          '.custom-tree-nav .tag-ops.collapsed { display:none; }' +
-          /* Hide original tag sections but keep info/overview */
-          '.nav-bar-tag-and-paths { display:none !important; }';
-        sr.appendChild(css);
-      }
-
-      /* Build our own nav tree as a standalone div */
-      var treeDiv = document.createElement('div');
-      treeDiv.className = 'custom-tree-nav';
+      /* ── Build the tree DOM ── */
+      var tree = document.createElement('div');
+      tree.className = 'custom-tree-nav';
 
       for (var gi = 0; gi < TAG_GROUPS.length; gi++) {
-        var group = TAG_GROUPS[gi];
-        var header = document.createElement('div');
-        header.className = 'nav-group-header open';
-        header.innerHTML = '<span class="tri">\u25B6</span>' + group.name.toUpperCase();
+        var g = TAG_GROUPS[gi];
+        var hdr = document.createElement('div');
+        hdr.className = 'grp-hdr open';
+        hdr.innerHTML = '<span class="tri">\u25B6</span>' + g.name.toUpperCase();
         var body = document.createElement('div');
-        body.className = 'nav-group-body';
+        body.className = 'grp-body';
 
         (function(h, b) {
           h.addEventListener('click', function(e) {
@@ -268,103 +284,72 @@
             h.classList.toggle('open');
             b.classList.toggle('collapsed');
           });
-        })(header, body);
+        })(hdr, body);
 
-        for (var ti = 0; ti < group.tags.length; ti++) {
-          var tagName = group.tags[ti];
-          var origSec = sectionByTag[tagName];
-          if (!origSec) continue;
+        for (var ti = 0; ti < g.tags.length; ti++) {
+          var info = tagMap[g.tags[ti]];
+          if (!info) continue;
 
-          /* Create tag link */
-          var tagLink = document.createElement('a');
-          tagLink.className = 'tag-link';
-          tagLink.textContent = tagName;
-          /* Get the tag's content-id for scrolling */
-          var origTag = origSec.querySelector('.nav-bar-tag');
-          var contentId = origTag ? origTag.getAttribute('data-content-id') || origTag.id || '' : '';
-          tagLink.setAttribute('data-content-id', contentId);
-
-          /* Create ops container */
-          var opsDiv = document.createElement('div');
-          opsDiv.className = 'tag-ops';
-
-          /* Copy operation links */
-          var ops = origSec.querySelectorAll('.nav-bar-path');
-          for (var oi = 0; oi < ops.length; oi++) {
-            var opEl = ops[oi];
-            var opLink = document.createElement('a');
-            opLink.className = 'op-link';
-            /* Get the operation text (skip method badge) */
-            var opSpan = opEl.querySelector('span');
-            opLink.textContent = opSpan ? opSpan.textContent.trim() : opEl.textContent.trim();
-            var opContentId = opEl.getAttribute('data-content-id') || '';
-            opLink.setAttribute('data-content-id', opContentId);
-            opsDiv.appendChild(opLink);
-          }
-
-          /* Toggle ops on tag click, also navigate */
-          (function(tl, od, cid) {
+          /* Tag link — uses dynamic lookup at click-time so it works even
+             after Lit re-renders and recreates .nav-bar-tag elements */
+          var tl = document.createElement('a');
+          tl.className = 'tag-link';
+          tl.textContent = g.tags[ti];
+          (function(contentId) {
             tl.addEventListener('click', function(e) {
               e.preventDefault();
               e.stopPropagation();
-              /* Navigate to tag section */
+              if (!contentId) return;
+              var el = sr.querySelector('.nav-bar-tag[data-content-id="' + contentId + '"]');
+              if (el) { el.click(); return; }
               var rd = document.querySelector('rapi-doc');
-              if (rd && cid) {
-                rd.scrollToPath(cid);
-                /* Also try dispatching navigation */
-                var target = sr.querySelector('#link-' + cid);
-                if (target) target.click();
-              }
+              if (rd && rd.scrollTo) rd.scrollTo(contentId);
             });
-          })(tagLink, opsDiv, contentId);
+          })(info.cid);
+          body.appendChild(tl);
 
-          /* Wire operation clicks */
-          var opLinks = opsDiv.querySelectorAll('.op-link');
-          for (var ol = 0; ol < opLinks.length; ol++) {
-            (function(link) {
-              link.addEventListener('click', function(e) {
+          /* Operation links */
+          for (var oi = 0; oi < info.ops.length; oi++) {
+            var ol = document.createElement('a');
+            ol.className = 'op-link';
+            ol.textContent = info.ops[oi].name;
+            (function(opId) {
+              ol.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                var cid = link.getAttribute('data-content-id');
-                if (cid) {
-                  /* Click the original hidden nav element to trigger RapiDoc navigation */
-                  var origPath = sr.querySelector('[data-content-id="' + cid + '"]');
-                  if (origPath) origPath.click();
-                }
+                if (!opId) return;
+                var el = sr.querySelector('.nav-bar-path[data-content-id="' + opId + '"]');
+                if (!el) el = sr.querySelector('[data-content-id="' + opId + '"]');
+                if (el) el.click();
               });
-            })(opLinks[ol]);
+            })(info.ops[oi].id);
+            body.appendChild(ol);
           }
-
-          body.appendChild(tagLink);
-          body.appendChild(opsDiv);
         }
 
-        treeDiv.appendChild(header);
-        treeDiv.appendChild(body);
+        tree.appendChild(hdr);
+        tree.appendChild(body);
       }
 
-      /* Insert our tree nav into the nav-scroll, after the overview section */
-      var opsTop = navScroll.querySelector('#link-operations-top');
-      if (opsTop) {
-        navScroll.insertBefore(treeDiv, opsTop);
-      } else {
-        navScroll.appendChild(treeDiv);
-      }
-
-      applied = true;
+      /* Append to .nav-bar — outside Lit's managed ChildPart range */
+      navBar.appendChild(tree);
+      return true;
     }
 
-    /* Poll until RapiDoc renders all tags, then build tree once */
     function init() {
       var rd = document.querySelector('rapi-doc');
       if (!rd || !rd.shadowRoot) { setTimeout(init, 300); return; }
       var sr = rd.shadowRoot;
 
-      var attempts = 0;
-      var poll = setInterval(function() {
-        if (applied || ++attempts > 200) { clearInterval(poll); return; }
-        buildTreeNav(sr);
-      }, 500);
+      /* Periodic check — builds tree when ready, rebuilds if ever removed */
+      setInterval(function() { buildTree(sr); }, 2000);
+
+      /* MutationObserver for faster reaction to Lit's renders */
+      var timer;
+      new MutationObserver(function() {
+        clearTimeout(timer);
+        timer = setTimeout(function() { buildTree(sr); }, 200);
+      }).observe(sr, { childList: true, subtree: true });
     }
     init();
   })();
