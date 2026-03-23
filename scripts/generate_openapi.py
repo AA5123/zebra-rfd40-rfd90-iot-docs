@@ -35,7 +35,7 @@ RESPONSE_DIR = os.path.join(SCHEMAS_DIR, "response")
 EVENTS_DIR = os.path.join(SCHEMAS_DIR, "events")
 
 TAG_CONFIG_PATH = os.path.join(SCHEMAS_DIR, "tag_config.json")
-OP_DESCRIPTIONS_PATH = os.path.join(SCHEMAS_DIR, "operation_descriptions.json")
+OP_DESCRIPTIONS_DIR = os.path.join(SCHEMAS_DIR, "operation_descriptions")
 
 # Files to skip during auto-discovery (legacy/monolithic files)
 SKIP_FILES = {"dev_mgt.json"}
@@ -64,10 +64,16 @@ def load_tag_config():
 
 
 def load_operation_descriptions():
-    """Load optional operation_descriptions.json."""
-    if os.path.exists(OP_DESCRIPTIONS_PATH):
-        return load_json(OP_DESCRIPTIONS_PATH)
-    return {}
+    """Load operation descriptions from individual .md files in operation_descriptions/."""
+    descriptions = {}
+    if os.path.isdir(OP_DESCRIPTIONS_DIR):
+        for filename in os.listdir(OP_DESCRIPTIONS_DIR):
+            if filename.endswith(".md"):
+                op_name = filename[:-3]  # strip .md
+                filepath = os.path.join(OP_DESCRIPTIONS_DIR, filename)
+                with open(filepath, "r", encoding="utf-8") as f:
+                    descriptions[op_name] = f.read().strip()
+    return descriptions
 
 
 def load_example_descriptions():
