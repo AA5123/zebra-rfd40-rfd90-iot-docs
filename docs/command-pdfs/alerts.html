@@ -60,10 +60,14 @@ h1 {
     font-size: 16pt;
     font-weight: 700;
     letter-spacing: 0.3px;
+    margin-top: 36pt;
     margin-bottom: 4px;
     color: #003d6b;
     padding-bottom: 6px;
     border-bottom: 2px solid #003d6b;
+}
+h1:first-of-type {
+    margin-top: 0;
 }
 h2 {
     margin-top: 24pt;
@@ -106,16 +110,14 @@ strong { color: #1a1a1a; }
 /* ── Code ── */
 pre, code { font-family: "Courier New", Courier, monospace; }
 code {
-    background: #eaecf0;
-    border: 1px solid #c0c4cc;
+    background: #f4f4f4;
     border-radius: 3px;
     padding: 1px 5px;
     font-size: 9.5pt;
     color: #1a1a1a;
 }
 pre {
-    background: #f0f2f5;
-    border: 1px solid #8a94a6;
+    background: #f5f5f5;
     border-left: 4px solid #003d6b;
     border-radius: 4px;
     padding: 12px 14px;
@@ -227,14 +229,14 @@ h2, h3 { page-break-inside: avoid; }
 <h2>Response</h2>
 <h3>Response Fields</h3>
 <table>
-<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>type</code></td><td>string (enum)</td><td>Yes</td><td>Specifies the type of alert or message being generated, such as an event, notification, exception, or alert.</td><td><code></code></td></tr>
-<tr><td><code>timestamp</code></td><td>string</td><td>Yes</td><td>Indicates the time at which the alert was generated, formatted as a time string.</td><td><code>22:54:25</code></td></tr>
-<tr><td><code>state</code></td><td>string (enum)</td><td>Yes</td><td>Represents the state of the alert. &#x27;SET&#x27; indicates an active alert, &#x27;CLEAR&#x27; indicates the alert has been resolved, and &#x27;ONESHOT&#x27; is a one-time alert.</td><td><code></code></td></tr>
-<tr><td><code>id</code></td><td>string (enum)</td><td>Yes</td><td>A unique identifier for the alert type, such as a low battery warning or a temperature event.</td><td><code>BATTERY_LOW</code></td></tr>
-<tr><td><code>priority</code></td><td>string (enum)</td><td>Yes</td><td>Defines the priority level of the alert, ranging from critical to low.</td><td><code>CRITICAL</code></td></tr>
-<tr><td><code>alertDetails</code></td><td>object</td><td>No</td><td>Contains additional details about the alert, which may vary depending on the specific alert type.</td><td><code></code></td></tr>
+<tr><td><code>type</code></td><td>string (enum)</td><td><strong>Yes</strong></td><td>Specifies the type of alert or message being generated, such as an event, notification, exception, or alert.</td></tr>
+<tr><td><code>timestamp</code></td><td>string</td><td><strong>Yes</strong></td><td>Indicates the time at which the alert was generated, formatted as a time string.</td></tr>
+<tr><td><code>state</code></td><td>string (enum)</td><td><strong>Yes</strong></td><td>Represents the state of the alert. &#x27;SET&#x27; indicates an active alert, &#x27;CLEAR&#x27; indicates the alert has been resolved, and &#x27;ONESHOT&#x27; is a one-time alert.</td></tr>
+<tr><td><code>id</code></td><td>string (enum)</td><td><strong>Yes</strong></td><td>A unique identifier for the alert type, such as a low battery warning or a temperature event.</td></tr>
+<tr><td><code>priority</code></td><td>string (enum)</td><td><strong>Yes</strong></td><td>Defines the priority level of the alert, ranging from critical to low.</td></tr>
+<tr><td><code>alertDetails</code></td><td>object</td><td>No</td><td>Contains additional details about the alert, which may vary depending on the specific alert type.</td></tr>
 </tbody></table>
 <h3>Response Examples</h3>
 <h4>example1</h4>

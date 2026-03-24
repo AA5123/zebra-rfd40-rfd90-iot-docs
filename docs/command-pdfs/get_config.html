@@ -60,10 +60,14 @@ h1 {
     font-size: 16pt;
     font-weight: 700;
     letter-spacing: 0.3px;
+    margin-top: 36pt;
     margin-bottom: 4px;
     color: #003d6b;
     padding-bottom: 6px;
     border-bottom: 2px solid #003d6b;
+}
+h1:first-of-type {
+    margin-top: 0;
 }
 h2 {
     margin-top: 24pt;
@@ -106,16 +110,14 @@ strong { color: #1a1a1a; }
 /* ── Code ── */
 pre, code { font-family: "Courier New", Courier, monospace; }
 code {
-    background: #eaecf0;
-    border: 1px solid #c0c4cc;
+    background: #f4f4f4;
     border-radius: 3px;
     padding: 1px 5px;
     font-size: 9.5pt;
     color: #1a1a1a;
 }
 pre {
-    background: #f0f2f5;
-    border: 1px solid #8a94a6;
+    background: #f5f5f5;
     border-left: 4px solid #003d6b;
     border-radius: 4px;
     padding: 12px 14px;
@@ -197,6 +199,8 @@ tr:nth-child(even) td { background: #f7f9fb; }
 .download-bar a svg { fill: #fff; width: 16px; height: 16px; }
 @media print {
     .download-bar { display: none; }
+    .doc-header-bar { display: none; }
+    .doc-footer-bar { display: none; }
 }
 
 /* ── Print rules ── */
@@ -239,10 +243,10 @@ h2, h3 { page-break-inside: avoid; }
 <h2>Request</h2>
 <h3>Request Fields</h3>
 <table>
-<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>command</code></td><td>string (enum)</td><td>No</td><td>Must be <code>get_config</code>. Tells the scanner to return its full configuration.</td><td><code>get_config</code></td></tr>
-<tr><td><code>requestId</code></td><td>string</td><td>No</td><td>A unique ID you assign to this request. The scanner echoes it back in the response so you can match requests to responses.</td><td><code>abc123</code></td></tr>
+<tr><td><code>command</code></td><td>string (enum)</td><td>No</td><td>Must be <code>get_config</code>. Tells the scanner to return its full configuration.</td></tr>
+<tr><td><code>requestId</code></td><td>string</td><td>No</td><td>A unique ID you assign to this request. The scanner echoes it back in the response so you can match requests to responses.</td></tr>
 </tbody></table>
 <h3>Request Examples</h3>
 <h4>Generated Example</h4>
@@ -253,189 +257,189 @@ h2, h3 { page-break-inside: avoid; }
 <h2>Response</h2>
 <h3>Response Fields</h3>
 <table>
-<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>
+<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>command</code></td><td>string</td><td>Yes</td><td>Echoes back the command name — always <code>get_config</code> for this response.</td><td><code>get_config</code></td></tr>
-<tr><td><code>requestId</code></td><td>string</td><td>Yes</td><td>Echoes back the requestId you sent, so you can match this response to your original request.</td><td><code>abc123</code></td></tr>
-<tr><td><code>apiVersion</code></td><td>string</td><td>Yes</td><td>The API version supported by the scanner (currently V1.1).</td><td><code>V1.1</code></td></tr>
-<tr><td><code>currentConfig</code></td><td>object</td><td>No</td><td>Complete device configuration snapshot — contains every configurable section of the scanner in a single object. Each sub-object corresponds to a standalone get command (e.g. readerVersion = get_version, deviceStatus = get_status).</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.readerVersion</code></td><td>object</td><td>No</td><td>Scanner identity — model, serial number, SKU, and firmware versions for the main device, barcode scanner, RFID radio, and IoT Connector. These values only change after a firmware update.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.readerVersion.firmwareVersion</code></td><td>string</td><td>Yes</td><td>The firmware version of the reader.</td><td><code>SAAFKS00-006-R02</code></td></tr>
-<tr><td><code>currentConfig.readerVersion.model</code></td><td>string (enum)</td><td>Yes</td><td>The model of the reader, such as RFD40 or RFD90.</td><td><code>RFD40</code></td></tr>
-<tr><td><code>currentConfig.readerVersion.serialNumber</code></td><td>string</td><td>Yes</td><td>The serial number of the reader.</td><td><code>23053520102096</code></td></tr>
-<tr><td><code>currentConfig.readerVersion.sku</code></td><td>string</td><td>Yes</td><td>The stock keeping unit (SKU) identifier for the reader.</td><td><code>RFD4031-G10B700-US</code></td></tr>
-<tr><td><code>currentConfig.readerVersion.detailedVersions</code></td><td>object</td><td>No</td><td>Detailed version information for the reader.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.readerVersion.detailedVersions.scannerFirmware</code></td><td>string</td><td>No</td><td>The firmware version of the scanner component.</td><td><code>PAAEOC20-003-R01</code></td></tr>
-<tr><td><code>currentConfig.readerVersion.detailedVersions.radioFirmware</code></td><td>string</td><td>No</td><td>The firmware version of the radio component.</td><td><code>2.0.42.0</code></td></tr>
-<tr><td><code>currentConfig.readerVersion.detailedVersions.iotcVersion</code></td><td>string (enum)</td><td>No</td><td>The version of the IoT Connector (IoTC) software.</td><td><code>V1.1</code></td></tr>
-<tr><td><code>currentConfig.deviceStatus</code></td><td>object</td><td>No</td><td>Real-time device health — power source, RFID radio state, temperature, battery level and health, NTP clock sync, and paired terminal (phone/tablet) connection.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.deviceStatus.powerSource</code></td><td>string (enum)</td><td>Yes</td><td>The source of power for the device (e.g., DC, Wall Charger, USB, or Cradle).</td><td><code>CRADLE</code></td></tr>
-<tr><td><code>currentConfig.deviceStatus.radioActivity</code></td><td>string (enum)</td><td>Yes</td><td>The activity status of the device&#x27;s radio (e.g., Active or Inactive).</td><td><code>ACTIVE</code></td></tr>
-<tr><td><code>currentConfig.deviceStatus.radioConnection</code></td><td>string (enum)</td><td>Yes</td><td>The connection status of the device&#x27;s radio (e.g., Connected or Disconnected).</td><td><code>CONNECTED</code></td></tr>
-<tr><td><code>currentConfig.deviceStatus.hostname</code></td><td>string</td><td>Yes</td><td>The hostname of the device on the network.</td><td><code>RFD40-212735201D0053.local</code></td></tr>
-<tr><td><code>currentConfig.deviceStatus.systemTime </code></td><td>string</td><td>Yes</td><td>The system time of the device in ISO 8601 format.</td><td><code>2022-07-01T03:01:31.464Z</code></td></tr>
-<tr><td><code>currentConfig.deviceStatus.temperature</code></td><td>integer</td><td>Yes</td><td>The current temperature of the device in degrees Celsius.</td><td><code>32</code></td></tr>
-<tr><td><code>currentConfig.deviceStatus.ntp</code></td><td>object</td><td>No</td><td>Details about the Network Time Protocol (NTP) synchronization.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.deviceStatus.ntp.offset</code></td><td>integer</td><td>No</td><td>The offset in milliseconds between the device&#x27;s clock and the NTP server.</td><td><code>120</code></td></tr>
-<tr><td><code>currentConfig.deviceStatus.ntp.reach</code></td><td>integer</td><td>No</td><td>The reachability score of the NTP server.</td><td><code>321</code></td></tr>
-<tr><td><code>currentConfig.deviceStatus.terminalConnection</code></td><td>object</td><td>No</td><td>Details about the terminal connection to the device.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.deviceStatus.terminalConnection.status</code></td><td>string (enum)</td><td>No</td><td>The connection status of the terminal (e.g., Connected or Disconnected).</td><td><code>connected</code></td></tr>
-<tr><td><code>currentConfig.deviceStatus.terminalConnection.type</code></td><td>string (enum)</td><td>No</td><td>The type of terminal connection (e.g., Bluetooth, CIO, or USB).</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.deviceStatus.batteryStatus</code></td><td>object</td><td>No</td><td>Information about the battery status of the device.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.deviceStatus.batteryStatus.capacity</code></td><td>integer</td><td>No</td><td>The battery capacity remaining in mAh.</td><td><code>21</code></td></tr>
-<tr><td><code>currentConfig.deviceStatus.batteryStatus.stateOfHealth</code></td><td>string (enum)</td><td>No</td><td>The overall health of the battery (e.g., Good, Average, or Poor).</td><td><code>GOOD</code></td></tr>
-<tr><td><code>currentConfig.deviceStatus.batteryStatus.chargePercentage</code></td><td>integer</td><td>No</td><td>The percentage of battery charge remaining.</td><td><code>23</code></td></tr>
-<tr><td><code>currentConfig.deviceStatus.batteryStatus.chargeStatus</code></td><td>integer</td><td>No</td><td>The charging status of the device battery: 0 - Charger not connected, 1 - Charger connected and charging in progress, 2 - Charger connected and battery is 100%.</td><td><code>1</code></td></tr>
-<tr><td><code>currentConfig.currentRegion</code></td><td>object</td><td>No</td><td>Regulatory radio configuration — country, regulatory standard, available frequency channels, transmit power limits, frequency hopping, and Listen Before Talk settings. These are factory-set and cannot be changed.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.currentRegion.frequencyHopping</code></td><td>boolean</td><td>Yes</td><td>Indicates whether frequency hopping is enabled in the region.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.currentRegion.channelData</code></td><td>array</td><td>Yes</td><td>List of channel frequencies available in the region, represented as strings.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.currentRegion.country</code></td><td>string</td><td>Yes</td><td>The country for which the device is configured.</td><td><code>USA</code></td></tr>
-<tr><td><code>currentConfig.currentRegion.lbtEnabled</code></td><td>boolean</td><td>Yes</td><td>Specifies if Listen Before Talk (LBT) is enabled for the region.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.currentRegion.maxTxPowerSupported</code></td><td>number</td><td>Yes</td><td>The maximum transmission power supported in the region, measured in dBm.</td><td><code>29.2</code></td></tr>
-<tr><td><code>currentConfig.currentRegion.minTxPowerSupported</code></td><td>number</td><td>Yes</td><td>The minimum transmission power supported in the region, measured in dBm.</td><td><code>10.0</code></td></tr>
-<tr><td><code>currentConfig.currentRegion.regulatoryStandard</code></td><td>string</td><td>Yes</td><td>The regulatory standard governing the region&#x27;s transmission rules.</td><td><code>ETSI_EU_800M_900M_3_CHANNEL</code></td></tr>
-<tr><td><code>currentConfig.ethConfig</code></td><td>object</td><td>No</td><td>Detailed schema for Ethernet configuration.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.interfaceName</code></td><td>string</td><td>Yes</td><td>Name of the network interface.</td><td><code>eth0</code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.status</code></td><td>string (enum)</td><td>Yes</td><td>Status of the network interface.</td><td><code>enabled</code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.hostname</code></td><td>string</td><td>Yes</td><td>Hostname assigned to the device.</td><td><code>RFD40AB03</code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.macAddress</code></td><td>string</td><td>Yes</td><td>MAC address of the network interface.</td><td><code>E0-D0-45-3D-38-1D</code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.linkStatus</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.linkStatus.status</code></td><td>string (enum)</td><td>Yes</td><td>Current status of the network link.</td><td><code>up</code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.linkStatus.linkSpeed</code></td><td>string</td><td>Yes</td><td>Speed of the network link.</td><td><code>100Mbps</code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv4Configuration</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv4Configuration.ipAddress</code></td><td>string</td><td>No</td><td>IPv4 address of the network interface.</td><td><code>192.168.1.81</code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv4Configuration.subnetMask</code></td><td>string</td><td>No</td><td>Subnet mask for the IPv4 configuration.</td><td><code>255.255.255.0</code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv4Configuration.gateway</code></td><td>string</td><td>No</td><td>Gateway address for the IPv4 configuration.</td><td><code>192.168.1.144</code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv4Configuration.enableDhcp</code></td><td>boolean (enum)</td><td>No</td><td>Indicates if DHCP is enabled for IPv4 configuration.</td><td><code>enabled</code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv4Configuration.dnsServer</code></td><td>string</td><td>No</td><td>DNS server address for the IPv4 configuration.</td><td><code>192.168.1.78</code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv4Configuration.domainName</code></td><td>string</td><td>No</td><td>Domain name for the IPv4 configuration.</td><td><code>test.soti.com</code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv6Configuration</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv6Configuration.ipAddress</code></td><td>string</td><td>No</td><td>IPv6 address of the network interface.</td><td><code>fe80::1643:8376:b32:4a16</code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv6Configuration.prefix</code></td><td>integer</td><td>No</td><td>Prefix length for the IPv6 configuration.</td><td><code>64</code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv6Configuration.gateway</code></td><td>string</td><td>No</td><td>Gateway address for the IPv6 configuration.</td><td><code>2a02:1234:420a:100b::99</code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv6Configuration.enableAuto</code></td><td>boolean</td><td>No</td><td>Indicates if auto-configuration is enabled for IPv6.</td><td><code>True</code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv6Configuration.dnsServer</code></td><td>string</td><td>No</td><td>DNS server address for the IPv6 configuration.</td><td><code>2001:4860:4860::9999</code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv6Configuration.domainName</code></td><td>string</td><td>No</td><td>Domain name for the IPv6 configuration.</td><td><code>test.soti.com</code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.security</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.security.securityStatus</code></td><td>boolean</td><td>No</td><td>Indicates if security features are enabled.</td><td><code>True</code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.security.EAP802_1X</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.security.EAP802_1X.authentication</code></td><td>string (enum)</td><td>No</td><td>Authentication method for 802.1X security.</td><td><code>PEAP</code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.security.EAP802_1X.innerAuthentication</code></td><td>string (enum)</td><td>No</td><td>Inner authentication method for 802.1X security.</td><td><code>EAP-MS-CHAPv2</code></td></tr>
-<tr><td><code>currentConfig.ethConfig.interfaceDetails.security.EAP802_1X.certificate</code></td><td>string</td><td>No</td><td>Certificate used for 802.1X authentication.</td><td><code>client45</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig</code></td><td>object</td><td>No</td><td>Wi-Fi network configuration — interface status (enabled/disabled), connected access point (SSID, signal, security type), IP addressing (IPv4/IPv6, DHCP or static), and enterprise security credentials (WPA2/WPA3 Personal or Enterprise, certificates).</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.interfaceName</code></td><td>string</td><td>Yes</td><td>The name of the network interface (e.g., wlan0).</td><td><code>wlan0</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.status</code></td><td>string (enum)</td><td>Yes</td><td>The status of the network interface, either &quot;ENABLED&quot; or &quot;DISABLED&quot;.</td><td><code>ENABLED</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.hostname</code></td><td>string</td><td>Yes</td><td>The hostname of the device.</td><td><code>RFD40S123</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.macAddress</code></td><td>string</td><td>Yes</td><td>The MAC address of the network interface.</td><td><code>E0-D0-45-3D-38-1D</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.accessPoint</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.accessPoint.essid</code></td><td>string</td><td>Yes</td><td>The ESSID (network name) of the access point.</td><td><code>Zwireless</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.accessPoint.status</code></td><td>string (enum)</td><td>Yes</td><td>The connection status to the access point, either &quot;CONNECTED&quot; or &quot;DISCONNECTED&quot;.</td><td><code>CONNECTED</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.accessPoint.securityType</code></td><td>string (enum)</td><td>Yes</td><td>The security type used by the access point.</td><td><code>OWEPublic</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.accessPoint.isPreferred</code></td><td>boolean</td><td>Yes</td><td>Indicates whether this access point is preferred for connection.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.accessPoint.autoConn</code></td><td>boolean</td><td>No</td><td>This field is deprecated and kept for backward compatibility.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv4Configuration</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv4Configuration.ipAddress</code></td><td>string</td><td>No</td><td>The IPv4 address of the device.</td><td><code>192.168.1.81</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv4Configuration.subnetMask</code></td><td>string</td><td>No</td><td>The subnet mask of the network.</td><td><code>255.255.255.0</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv4Configuration.gateway</code></td><td>string</td><td>No</td><td>The IPv4 gateway address.</td><td><code>192.168.1.144</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv4Configuration.enableDhcp</code></td><td>boolean</td><td>No</td><td>Indicates if DHCP is enabled for IPv4 configuration.</td><td><code>enabled</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv4Configuration.dnsServer</code></td><td>string</td><td>No</td><td>The IPv4 address of the DNS server.</td><td><code>192.168.1.78</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv4Configuration.domainName</code></td><td>string</td><td>No</td><td>The domain name of the network.</td><td><code>test.soti.com</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv6Configuration</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv6Configuration.ipAddress</code></td><td>string</td><td>No</td><td>The IPv6 address of the device.</td><td><code>fe80::1643:8376:b32:4a16</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv6Configuration.prefix</code></td><td>integer</td><td>No</td><td>The prefix length of the IPv6 address.</td><td><code>64</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv6Configuration.gateway</code></td><td>string</td><td>No</td><td>The IPv6 gateway address.</td><td><code>2a02:1234:420a:100b::99</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv6Configuration.enableAuto</code></td><td>boolean (enum)</td><td>No</td><td>Specifies if automatic IPv6 configuration is enabled.</td><td><code>enabled</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv6Configuration.dnsServer</code></td><td>string</td><td>No</td><td>The IPv6 address of the DNS server.</td><td><code>2001:4860:4860::9999</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv6Configuration.domainName</code></td><td>string</td><td>No</td><td>The domain name of the IPv6 network.</td><td><code>test.soti.com</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Personal</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Personal.password</code></td><td>string</td><td>No</td><td>The password used for WPA2-Personal security.</td><td><code>test@123</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Personal</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Personal.password</code></td><td>string</td><td>No</td><td>The password used for WPA3-Personal security.</td><td><code>test@123</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Enterprise</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Enterprise.authentication</code></td><td>string (enum)</td><td>No</td><td>The authentication method for WPA2-Enterprise.</td><td><code>tls</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Enterprise.innerAuthentication</code></td><td>string (enum)</td><td>No</td><td>The inner authentication protocol for WPA2-Enterprise.</td><td><code>mschapv2</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Enterprise.identity</code></td><td>string</td><td>No</td><td>The identity used for WPA2-Enterprise authentication.</td><td><code>test</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Enterprise.anonymousIdentity</code></td><td>string</td><td>No</td><td>The anonymous identity used for WPA2-Enterprise authentication.</td><td><code>test</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Enterprise.password</code></td><td>string</td><td>No</td><td>The password for WPA2-Enterprise authentication.</td><td><code>test@123</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Enterprise.passphrase</code></td><td>string</td><td>No</td><td>The passphrase for WPA2-Enterprise.</td><td><code>test@321</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Enterprise.certificate</code></td><td>array</td><td>No</td><td>The certificates used for WPA2-Enterprise.</td><td><code>ap1wpa2e</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Enterprise.protocol</code></td><td>string (enum)</td><td>No</td><td>The protocol used for WPA2-Enterprise.</td><td><code>WPA2_Enterprise_CCMP</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Enterprise</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Enterprise.authentication</code></td><td>string (enum)</td><td>No</td><td>The authentication method for WPA3-Enterprise.</td><td><code>tls</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Enterprise.innerAuthentication</code></td><td>string (enum)</td><td>No</td><td>The inner authentication protocol for WPA3-Enterprise.</td><td><code>mschapv2</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Enterprise.identity</code></td><td>string</td><td>No</td><td>The identity used for WPA3-Enterprise authentication.</td><td><code>test</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Enterprise.anonymousIdentity</code></td><td>string</td><td>No</td><td>The anonymous identity used for WPA3-Enterprise authentication.</td><td><code>test</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Enterprise.password</code></td><td>string</td><td>No</td><td>The password for WPA3-Enterprise authentication.</td><td><code>test@123</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Enterprise.passphrase</code></td><td>string</td><td>No</td><td>The passphrase for WPA3-Enterprise.</td><td><code>test@321</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Enterprise.certificate</code></td><td>array</td><td>No</td><td>The certificates used for WPA3-Enterprise.</td><td><code>ap1wpa2e</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Enterprise.protocol</code></td><td>string (enum)</td><td>No</td><td>The protocol used for WPA3-Enterprise.</td><td><code>WPA3_Enterprise_CCMP_256</code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.OWEPublic</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
-<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.OWEPublic.authentication</code></td><td>string</td><td>No</td><td>The authentication method for OWE-Public access.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.installedCerts</code></td><td>object</td><td>No</td><td>Installed TLS/SSL certificates — lists every certificate on the device with its type (client, server, MQTT, Wi-Fi), issuer, subject, validity dates, and public key details. Used for secure MQTT and enterprise Wi-Fi connections.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.installedCerts.certInfo</code></td><td>array</td><td>No</td><td>A list of installed certificates with their details.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig</code></td><td>object</td><td>No</td><td>MQTT endpoint configuration — broker connection details (URL, port, protocol), authentication (username/password, TLS certificates), publish/subscribe topics with QoS levels, keep-alive and reconnect settings, and event configuration (which device events are forwarded to the broker).</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.endpointName</code></td><td>string</td><td>No</td><td>The name of the endpoint, e.g., &quot;MDM&quot; for Mobile Device Management.</td><td><code>MDM</code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.epType</code></td><td>string (enum)</td><td>Yes</td><td>The type of endpoint, specifying its functionality (e.g., Management, Control, etc.).</td><td><code>MGMT</code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.protocol</code></td><td>string (enum)</td><td>Yes</td><td>The communication protocol used by the endpoint, such as MQTT or HTTP.</td><td><code>MQTT</code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.activate</code></td><td>boolean</td><td>Yes</td><td>Indicates whether the endpoint is activated (true or false).</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.url</code></td><td>string</td><td>Yes</td><td>The URL of the endpoint, specifying its address.</td><td><code>soti.example.com</code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.verificationType</code></td><td>string (enum)</td><td>Yes</td><td>The type of verification to be used for the endpoint connection.</td><td><code>VERIFY_HOST_PEER</code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.port</code></td><td>integer</td><td>Yes</td><td>The port number used for the connection.</td><td><code>1883</code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.qosCommon</code></td><td>integer</td><td>No</td><td>The Quality of Service (QoS) level for message delivery.</td><td><code>1</code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.tenantId</code></td><td>string</td><td>No</td><td>The tenant&#x27;s unique identifier.</td><td><code>ZEBRA</code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.mqttParams</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.mqttParams.keepAlive</code></td><td>integer</td><td>No</td><td>The keep-alive interval for the MQTT connection.</td><td><code>300</code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.mqttParams.cleanSession</code></td><td>boolean</td><td>No</td><td>Indicates whether the MQTT session should be clean (true or false).</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.mqttParams.reconnectDelayMin</code></td><td>integer</td><td>No</td><td>Minimum delay before reconnecting in case of disconnection.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.mqttParams.reconnectDelayMax</code></td><td>integer</td><td>No</td><td>Maximum delay before reconnecting in case of disconnection.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.mqttParams.clientId</code></td><td>string</td><td>No</td><td>The client ID used for the MQTT connection.</td><td><code>zebra-rfd40-01</code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.mqttParams.username</code></td><td>string</td><td>No</td><td>The username for authenticating the MQTT connection.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.mqttParams.password</code></td><td>string</td><td>No</td><td>The password for authenticating the MQTT connection.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.mqttParams.publishTopics</code></td><td>array</td><td>No</td><td>A list of topics to which messages will be published.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.mqttParams.subscribeTopics</code></td><td>array</td><td>No</td><td>A list of topics to which the client will subscribe.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.securityParams</code></td><td>object</td><td>No</td><td>Security parameters for the endpoint connection.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.securityParams.format</code></td><td>string (enum)</td><td>Yes</td><td>The format of the security certificate (e.g., PEM or PFX).</td><td><code>PEM</code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.securityParams.algorithm</code></td><td>string (enum)</td><td>Yes</td><td>The encryption algorithm used (e.g., RSA256).</td><td><code>RSA256</code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.securityParams.caCertificateFile</code></td><td>string</td><td>Yes</td><td>The CA certificate file for establishing trust.</td><td><code>cloud-trusted-ca-certs.crt</code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.securityParams.clientCert</code></td><td>string</td><td>Yes</td><td>The client certificate file for authentication.</td><td><code>client_cert.pem</code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.securityParams.clientKey</code></td><td>string</td><td>Yes</td><td>The client key file for authentication.</td><td><code>client_key.pem</code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.antenna</code></td><td>boolean</td><td>No</td><td>set to true to enable antenna events</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.terminalConnection</code></td><td>boolean</td><td>No</td><td>set to true to enable terminal connection/disconnection events</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.firmwareUpdate</code></td><td>boolean</td><td>No</td><td>set to true to enable fw update events</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.gpi</code></td><td>boolean</td><td>No</td><td>set to true to enable gpi events</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.network</code></td><td>boolean</td><td>No</td><td>set to true to enable network events</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.exceptions</code></td><td>boolean</td><td>No</td><td>set to true to enable exception events</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.ntp</code></td><td>boolean</td><td>No</td><td>set to true to enable battery alerts</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.userApp</code></td><td>boolean</td><td>No</td><td>set to true to enable user app events</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.heartbeat</code></td><td>boolean</td><td>No</td><td>set to true to enable heart beat</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.power</code></td><td>boolean</td><td>No</td><td>set to true to enable power source alerts</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.battery</code></td><td>boolean</td><td>No</td><td>set to true to enable battery alerts</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.temperature</code></td><td>boolean</td><td>No</td><td>set to true to enable temperature alerts</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.fileDownload</code></td><td>boolean</td><td>No</td><td>set to true to enable file download alerts</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.cpuUsage</code></td><td>boolean</td><td>No</td><td>set to true to enable cpu usage alerts</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.flashUsage</code></td><td>boolean</td><td>No</td><td>set to true to enable flash usage alerts</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.ramUsage</code></td><td>boolean</td><td>No</td><td>set to true to enable ram usage alerts</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.heartbeatConfiguration</code></td><td>object</td><td>No</td><td></td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.heartbeatConfiguration.interval</code></td><td>integer</td><td>No</td><td>heart beat interval in seconds</td><td><code>100</code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.heartbeatConfiguration.inventoryStatus</code></td><td>boolean</td><td>No</td><td>set to true to enable inventory status as part of heartbeat message</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.heartbeatConfiguration.batteryStatus</code></td><td>boolean</td><td>No</td><td>set to true to enable battery status as part of heartbeat message</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.heartbeatConfiguration.userApps</code></td><td>boolean</td><td>No</td><td>set to true to enable user app status as part of heartbeat message</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.cpuThreshold</code></td><td>integer</td><td>No</td><td>cpu usage value(%) above which alert will be triggered</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.ramThreshold</code></td><td>integer</td><td>No</td><td>ram usage value(%) above which alert will be triggered</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.flashThreshold</code></td><td>integer</td><td>No</td><td>flash usage value(%) above which alert will be triggered</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.temperatureThreshold</code></td><td>integer</td><td>No</td><td>temperature treshold value above which alert will be triggered</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.deviceCapabilities</code></td><td>object</td><td>No</td><td>Hardware capabilities of the scanner — indicates whether Bluetooth, Wi-Fi, and barcode scanning features are supported on this particular model.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.deviceCapabilities.isBluetoothSupported</code></td><td>boolean</td><td>No</td><td>Indicates whether the device supports Bluetooth functionality.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.deviceCapabilities.isWifiSupported</code></td><td>boolean</td><td>No</td><td>Indicates whether the device supports WiFi connectivity.</td><td><code></code></td></tr>
-<tr><td><code>currentConfig.deviceCapabilities.isScannerSupported</code></td><td>boolean</td><td>No</td><td>Indicates whether the device supports scanner capabilities.</td><td><code></code></td></tr>
-<tr><td><code>response</code></td><td>object</td><td>No</td><td>Status of the command execution — check <code>code</code> to confirm success (0) or identify the error.</td><td><code></code></td></tr>
-<tr><td><code>response.code</code></td><td>integer</td><td>Yes</td><td>Response code indicating success or failure.<ul><li><strong>0</strong> — Success</li><li><strong>1</strong> — Command payload accepted</li><li><strong>2</strong> — Invalid payload</li><li><strong>3</strong> — Not able to retrieve information</li><li><strong>4</strong> — Firmware update in progress</li><li><strong>5</strong> — Can&#x27;t reboot, inventory in progress</li><li><strong>6</strong> — Region is not configured</li><li><strong>7</strong> — Interface is not available</li><li><strong>8</strong> — Insufficient flash size</li><li><strong>9</strong> — File not found</li><li><strong>10</strong> — Configuration already exists</li><li><strong>11</strong> — Inventory in progress</li><li><strong>12</strong> — No radio operation in progress</li><li><strong>13</strong> — Firmware update failed</li><li><strong>14</strong> — Battery too low for firmware update</li><li><strong>15</strong> — WIFI: SSID not found</li><li><strong>16</strong> — WIFI: Cannot delete active SSID</li><li><strong>17</strong> — WIFI: SSID missing</li><li><strong>18</strong> — WIFI: SSID already exists</li><li><strong>19</strong> — WIFI: SSID count overflow</li><li><strong>20</strong> — WiFi is not supported</li><li><strong>21</strong> — Certificate not found</li><li><strong>22</strong> — Advanced configuration not set</li><li><strong>23</strong> — Invalid enum value</li><li><strong>24</strong> — Max 32 prefilters limit exceeded</li><li><strong>25</strong> — Max 3 publish topics exceeded</li><li><strong>26</strong> — Max 1 subscribe topic exceeded</li><li><strong>27</strong> — Invalid tenant ID length</li><li><strong>28</strong> — Tag match pattern length exceeded</li></ul></td><td><code>0</code></td></tr>
-<tr><td><code>response.description</code></td><td>string</td><td>Yes</td><td>Human-readable description of the response code (e.g. &quot;Success&quot;, &quot;Invalid payload&quot;).</td><td><code>Success</code></td></tr>
+<tr><td><code>command</code></td><td>string</td><td><strong>Yes</strong></td><td>Echoes back the command name — always <code>get_config</code> for this response.</td></tr>
+<tr><td><code>requestId</code></td><td>string</td><td><strong>Yes</strong></td><td>Echoes back the requestId you sent, so you can match this response to your original request.</td></tr>
+<tr><td><code>apiVersion</code></td><td>string</td><td><strong>Yes</strong></td><td>The API version supported by the scanner (currently V1.1).</td></tr>
+<tr><td><code>currentConfig</code></td><td>object</td><td>No</td><td>Complete device configuration snapshot — contains every configurable section of the scanner in a single object. Each sub-object corresponds to a standalone get command (e.g. readerVersion = get_version, deviceStatus = get_status).</td></tr>
+<tr><td><code>currentConfig.readerVersion</code></td><td>object</td><td>No</td><td>Scanner identity — model, serial number, SKU, and firmware versions for the main device, barcode scanner, RFID radio, and IoT Connector. These values only change after a firmware update.</td></tr>
+<tr><td><code>currentConfig.readerVersion.firmwareVersion</code></td><td>string</td><td><strong>Yes</strong></td><td>The firmware version of the reader.</td></tr>
+<tr><td><code>currentConfig.readerVersion.model</code></td><td>string (enum)</td><td><strong>Yes</strong></td><td>The model of the reader, such as RFD40 or RFD90.</td></tr>
+<tr><td><code>currentConfig.readerVersion.serialNumber</code></td><td>string</td><td><strong>Yes</strong></td><td>The serial number of the reader.</td></tr>
+<tr><td><code>currentConfig.readerVersion.sku</code></td><td>string</td><td><strong>Yes</strong></td><td>The stock keeping unit (SKU) identifier for the reader.</td></tr>
+<tr><td><code>currentConfig.readerVersion.detailedVersions</code></td><td>object</td><td>No</td><td>Detailed version information for the reader.</td></tr>
+<tr><td><code>currentConfig.readerVersion.detailedVersions.scannerFirmware</code></td><td>string</td><td>No</td><td>The firmware version of the scanner component.</td></tr>
+<tr><td><code>currentConfig.readerVersion.detailedVersions.radioFirmware</code></td><td>string</td><td>No</td><td>The firmware version of the radio component.</td></tr>
+<tr><td><code>currentConfig.readerVersion.detailedVersions.iotcVersion</code></td><td>string (enum)</td><td>No</td><td>The version of the IoT Connector (IoTC) software.</td></tr>
+<tr><td><code>currentConfig.deviceStatus</code></td><td>object</td><td>No</td><td>Real-time device health — power source, RFID radio state, temperature, battery level and health, NTP clock sync, and paired terminal (phone/tablet) connection.</td></tr>
+<tr><td><code>currentConfig.deviceStatus.powerSource</code></td><td>string (enum)</td><td><strong>Yes</strong></td><td>The source of power for the device (e.g., DC, Wall Charger, USB, or Cradle).</td></tr>
+<tr><td><code>currentConfig.deviceStatus.radioActivity</code></td><td>string (enum)</td><td><strong>Yes</strong></td><td>The activity status of the device&#x27;s radio (e.g., Active or Inactive).</td></tr>
+<tr><td><code>currentConfig.deviceStatus.radioConnection</code></td><td>string (enum)</td><td><strong>Yes</strong></td><td>The connection status of the device&#x27;s radio (e.g., Connected or Disconnected).</td></tr>
+<tr><td><code>currentConfig.deviceStatus.hostname</code></td><td>string</td><td><strong>Yes</strong></td><td>The hostname of the device on the network.</td></tr>
+<tr><td><code>currentConfig.deviceStatus.systemTime </code></td><td>string</td><td><strong>Yes</strong></td><td>The system time of the device in ISO 8601 format.</td></tr>
+<tr><td><code>currentConfig.deviceStatus.temperature</code></td><td>integer</td><td><strong>Yes</strong></td><td>The current temperature of the device in degrees Celsius.</td></tr>
+<tr><td><code>currentConfig.deviceStatus.ntp</code></td><td>object</td><td>No</td><td>Details about the Network Time Protocol (NTP) synchronization.</td></tr>
+<tr><td><code>currentConfig.deviceStatus.ntp.offset</code></td><td>integer</td><td>No</td><td>The offset in milliseconds between the device&#x27;s clock and the NTP server.</td></tr>
+<tr><td><code>currentConfig.deviceStatus.ntp.reach</code></td><td>integer</td><td>No</td><td>The reachability score of the NTP server.</td></tr>
+<tr><td><code>currentConfig.deviceStatus.terminalConnection</code></td><td>object</td><td>No</td><td>Details about the terminal connection to the device.</td></tr>
+<tr><td><code>currentConfig.deviceStatus.terminalConnection.status</code></td><td>string (enum)</td><td>No</td><td>The connection status of the terminal (e.g., Connected or Disconnected).</td></tr>
+<tr><td><code>currentConfig.deviceStatus.terminalConnection.type</code></td><td>string (enum)</td><td>No</td><td>The type of terminal connection (e.g., Bluetooth, CIO, or USB).</td></tr>
+<tr><td><code>currentConfig.deviceStatus.batteryStatus</code></td><td>object</td><td>No</td><td>Information about the battery status of the device.</td></tr>
+<tr><td><code>currentConfig.deviceStatus.batteryStatus.capacity</code></td><td>integer</td><td>No</td><td>The battery capacity remaining in mAh.</td></tr>
+<tr><td><code>currentConfig.deviceStatus.batteryStatus.stateOfHealth</code></td><td>string (enum)</td><td>No</td><td>The overall health of the battery (e.g., Good, Average, or Poor).</td></tr>
+<tr><td><code>currentConfig.deviceStatus.batteryStatus.chargePercentage</code></td><td>integer</td><td>No</td><td>The percentage of battery charge remaining.</td></tr>
+<tr><td><code>currentConfig.deviceStatus.batteryStatus.chargeStatus</code></td><td>integer</td><td>No</td><td>The charging status of the device battery: 0 - Charger not connected, 1 - Charger connected and charging in progress, 2 - Charger connected and battery is 100%.</td></tr>
+<tr><td><code>currentConfig.currentRegion</code></td><td>object</td><td>No</td><td>Regulatory radio configuration — country, regulatory standard, available frequency channels, transmit power limits, frequency hopping, and Listen Before Talk settings. These are factory-set and cannot be changed.</td></tr>
+<tr><td><code>currentConfig.currentRegion.frequencyHopping</code></td><td>boolean</td><td><strong>Yes</strong></td><td>Indicates whether frequency hopping is enabled in the region.</td></tr>
+<tr><td><code>currentConfig.currentRegion.channelData</code></td><td>array</td><td><strong>Yes</strong></td><td>List of channel frequencies available in the region, represented as strings.</td></tr>
+<tr><td><code>currentConfig.currentRegion.country</code></td><td>string</td><td><strong>Yes</strong></td><td>The country for which the device is configured.</td></tr>
+<tr><td><code>currentConfig.currentRegion.lbtEnabled</code></td><td>boolean</td><td><strong>Yes</strong></td><td>Specifies if Listen Before Talk (LBT) is enabled for the region.</td></tr>
+<tr><td><code>currentConfig.currentRegion.maxTxPowerSupported</code></td><td>number</td><td><strong>Yes</strong></td><td>The maximum transmission power supported in the region, measured in dBm.</td></tr>
+<tr><td><code>currentConfig.currentRegion.minTxPowerSupported</code></td><td>number</td><td><strong>Yes</strong></td><td>The minimum transmission power supported in the region, measured in dBm.</td></tr>
+<tr><td><code>currentConfig.currentRegion.regulatoryStandard</code></td><td>string</td><td><strong>Yes</strong></td><td>The regulatory standard governing the region&#x27;s transmission rules.</td></tr>
+<tr><td><code>currentConfig.ethConfig</code></td><td>object</td><td>No</td><td>Detailed schema for Ethernet configuration.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails</code></td><td>object</td><td>No</td><td></td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.interfaceName</code></td><td>string</td><td><strong>Yes</strong></td><td>Name of the network interface.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.status</code></td><td>string (enum)</td><td><strong>Yes</strong></td><td>Status of the network interface.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.hostname</code></td><td>string</td><td><strong>Yes</strong></td><td>Hostname assigned to the device.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.macAddress</code></td><td>string</td><td><strong>Yes</strong></td><td>MAC address of the network interface.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.linkStatus</code></td><td>object</td><td>No</td><td></td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.linkStatus.status</code></td><td>string (enum)</td><td><strong>Yes</strong></td><td>Current status of the network link.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.linkStatus.linkSpeed</code></td><td>string</td><td><strong>Yes</strong></td><td>Speed of the network link.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv4Configuration</code></td><td>object</td><td>No</td><td></td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv4Configuration.ipAddress</code></td><td>string</td><td>No</td><td>IPv4 address of the network interface.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv4Configuration.subnetMask</code></td><td>string</td><td>No</td><td>Subnet mask for the IPv4 configuration.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv4Configuration.gateway</code></td><td>string</td><td>No</td><td>Gateway address for the IPv4 configuration.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv4Configuration.enableDhcp</code></td><td>boolean (enum)</td><td>No</td><td>Indicates if DHCP is enabled for IPv4 configuration.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv4Configuration.dnsServer</code></td><td>string</td><td>No</td><td>DNS server address for the IPv4 configuration.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv4Configuration.domainName</code></td><td>string</td><td>No</td><td>Domain name for the IPv4 configuration.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv6Configuration</code></td><td>object</td><td>No</td><td></td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv6Configuration.ipAddress</code></td><td>string</td><td>No</td><td>IPv6 address of the network interface.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv6Configuration.prefix</code></td><td>integer</td><td>No</td><td>Prefix length for the IPv6 configuration.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv6Configuration.gateway</code></td><td>string</td><td>No</td><td>Gateway address for the IPv6 configuration.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv6Configuration.enableAuto</code></td><td>boolean</td><td>No</td><td>Indicates if auto-configuration is enabled for IPv6.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv6Configuration.dnsServer</code></td><td>string</td><td>No</td><td>DNS server address for the IPv6 configuration.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.ipv6Configuration.domainName</code></td><td>string</td><td>No</td><td>Domain name for the IPv6 configuration.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.security</code></td><td>object</td><td>No</td><td></td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.security.securityStatus</code></td><td>boolean</td><td>No</td><td>Indicates if security features are enabled.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.security.EAP802_1X</code></td><td>object</td><td>No</td><td></td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.security.EAP802_1X.authentication</code></td><td>string (enum)</td><td>No</td><td>Authentication method for 802.1X security.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.security.EAP802_1X.innerAuthentication</code></td><td>string (enum)</td><td>No</td><td>Inner authentication method for 802.1X security.</td></tr>
+<tr><td><code>currentConfig.ethConfig.interfaceDetails.security.EAP802_1X.certificate</code></td><td>string</td><td>No</td><td>Certificate used for 802.1X authentication.</td></tr>
+<tr><td><code>currentConfig.wifiConfig</code></td><td>object</td><td>No</td><td>Wi-Fi network configuration — interface status (enabled/disabled), connected access point (SSID, signal, security type), IP addressing (IPv4/IPv6, DHCP or static), and enterprise security credentials (WPA2/WPA3 Personal or Enterprise, certificates).</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails</code></td><td>object</td><td>No</td><td></td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.interfaceName</code></td><td>string</td><td><strong>Yes</strong></td><td>The name of the network interface (e.g., wlan0).</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.status</code></td><td>string (enum)</td><td><strong>Yes</strong></td><td>The status of the network interface, either &quot;ENABLED&quot; or &quot;DISABLED&quot;.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.hostname</code></td><td>string</td><td><strong>Yes</strong></td><td>The hostname of the device.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.macAddress</code></td><td>string</td><td><strong>Yes</strong></td><td>The MAC address of the network interface.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.accessPoint</code></td><td>object</td><td>No</td><td></td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.accessPoint.essid</code></td><td>string</td><td><strong>Yes</strong></td><td>The ESSID (network name) of the access point.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.accessPoint.status</code></td><td>string (enum)</td><td><strong>Yes</strong></td><td>The connection status to the access point, either &quot;CONNECTED&quot; or &quot;DISCONNECTED&quot;.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.accessPoint.securityType</code></td><td>string (enum)</td><td><strong>Yes</strong></td><td>The security type used by the access point.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.accessPoint.isPreferred</code></td><td>boolean</td><td><strong>Yes</strong></td><td>Indicates whether this access point is preferred for connection.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.accessPoint.autoConn</code></td><td>boolean</td><td>No</td><td>This field is deprecated and kept for backward compatibility.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv4Configuration</code></td><td>object</td><td>No</td><td></td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv4Configuration.ipAddress</code></td><td>string</td><td>No</td><td>The IPv4 address of the device.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv4Configuration.subnetMask</code></td><td>string</td><td>No</td><td>The subnet mask of the network.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv4Configuration.gateway</code></td><td>string</td><td>No</td><td>The IPv4 gateway address.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv4Configuration.enableDhcp</code></td><td>boolean</td><td>No</td><td>Indicates if DHCP is enabled for IPv4 configuration.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv4Configuration.dnsServer</code></td><td>string</td><td>No</td><td>The IPv4 address of the DNS server.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv4Configuration.domainName</code></td><td>string</td><td>No</td><td>The domain name of the network.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv6Configuration</code></td><td>object</td><td>No</td><td></td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv6Configuration.ipAddress</code></td><td>string</td><td>No</td><td>The IPv6 address of the device.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv6Configuration.prefix</code></td><td>integer</td><td>No</td><td>The prefix length of the IPv6 address.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv6Configuration.gateway</code></td><td>string</td><td>No</td><td>The IPv6 gateway address.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv6Configuration.enableAuto</code></td><td>boolean (enum)</td><td>No</td><td>Specifies if automatic IPv6 configuration is enabled.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv6Configuration.dnsServer</code></td><td>string</td><td>No</td><td>The IPv6 address of the DNS server.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.ipv6Configuration.domainName</code></td><td>string</td><td>No</td><td>The domain name of the IPv6 network.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails</code></td><td>object</td><td>No</td><td></td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Personal</code></td><td>object</td><td>No</td><td></td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Personal.password</code></td><td>string</td><td>No</td><td>The password used for WPA2-Personal security.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Personal</code></td><td>object</td><td>No</td><td></td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Personal.password</code></td><td>string</td><td>No</td><td>The password used for WPA3-Personal security.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Enterprise</code></td><td>object</td><td>No</td><td></td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Enterprise.authentication</code></td><td>string (enum)</td><td>No</td><td>The authentication method for WPA2-Enterprise.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Enterprise.innerAuthentication</code></td><td>string (enum)</td><td>No</td><td>The inner authentication protocol for WPA2-Enterprise.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Enterprise.identity</code></td><td>string</td><td>No</td><td>The identity used for WPA2-Enterprise authentication.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Enterprise.anonymousIdentity</code></td><td>string</td><td>No</td><td>The anonymous identity used for WPA2-Enterprise authentication.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Enterprise.password</code></td><td>string</td><td>No</td><td>The password for WPA2-Enterprise authentication.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Enterprise.passphrase</code></td><td>string</td><td>No</td><td>The passphrase for WPA2-Enterprise.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Enterprise.certificate</code></td><td>array</td><td>No</td><td>The certificates used for WPA2-Enterprise.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA2Enterprise.protocol</code></td><td>string (enum)</td><td>No</td><td>The protocol used for WPA2-Enterprise.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Enterprise</code></td><td>object</td><td>No</td><td></td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Enterprise.authentication</code></td><td>string (enum)</td><td>No</td><td>The authentication method for WPA3-Enterprise.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Enterprise.innerAuthentication</code></td><td>string (enum)</td><td>No</td><td>The inner authentication protocol for WPA3-Enterprise.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Enterprise.identity</code></td><td>string</td><td>No</td><td>The identity used for WPA3-Enterprise authentication.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Enterprise.anonymousIdentity</code></td><td>string</td><td>No</td><td>The anonymous identity used for WPA3-Enterprise authentication.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Enterprise.password</code></td><td>string</td><td>No</td><td>The password for WPA3-Enterprise authentication.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Enterprise.passphrase</code></td><td>string</td><td>No</td><td>The passphrase for WPA3-Enterprise.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Enterprise.certificate</code></td><td>array</td><td>No</td><td>The certificates used for WPA3-Enterprise.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.WPA3Enterprise.protocol</code></td><td>string (enum)</td><td>No</td><td>The protocol used for WPA3-Enterprise.</td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.OWEPublic</code></td><td>object</td><td>No</td><td></td></tr>
+<tr><td><code>currentConfig.wifiConfig.interfaceDetails.securityDetails.OWEPublic.authentication</code></td><td>string</td><td>No</td><td>The authentication method for OWE-Public access.</td></tr>
+<tr><td><code>currentConfig.installedCerts</code></td><td>object</td><td>No</td><td>Installed TLS/SSL certificates — lists every certificate on the device with its type (client, server, MQTT, Wi-Fi), issuer, subject, validity dates, and public key details. Used for secure MQTT and enterprise Wi-Fi connections.</td></tr>
+<tr><td><code>currentConfig.installedCerts.certInfo</code></td><td>array</td><td>No</td><td>A list of installed certificates with their details.</td></tr>
+<tr><td><code>currentConfig.epConfig</code></td><td>object</td><td>No</td><td>MQTT endpoint configuration — broker connection details (URL, port, protocol), authentication (username/password, TLS certificates), publish/subscribe topics with QoS levels, keep-alive and reconnect settings, and event configuration (which device events are forwarded to the broker).</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration</code></td><td>object</td><td>No</td><td></td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.endpointName</code></td><td>string</td><td>No</td><td>The name of the endpoint, e.g., &quot;MDM&quot; for Mobile Device Management.</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.epType</code></td><td>string (enum)</td><td><strong>Yes</strong></td><td>The type of endpoint, specifying its functionality (e.g., Management, Control, etc.).</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.protocol</code></td><td>string (enum)</td><td><strong>Yes</strong></td><td>The communication protocol used by the endpoint, such as MQTT or HTTP.</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.activate</code></td><td>boolean</td><td><strong>Yes</strong></td><td>Indicates whether the endpoint is activated (true or false).</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.url</code></td><td>string</td><td><strong>Yes</strong></td><td>The URL of the endpoint, specifying its address.</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.verificationType</code></td><td>string (enum)</td><td><strong>Yes</strong></td><td>The type of verification to be used for the endpoint connection.</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.port</code></td><td>integer</td><td><strong>Yes</strong></td><td>The port number used for the connection.</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.qosCommon</code></td><td>integer</td><td>No</td><td>The Quality of Service (QoS) level for message delivery.</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.tenantId</code></td><td>string</td><td>No</td><td>The tenant&#x27;s unique identifier.</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.mqttParams</code></td><td>object</td><td>No</td><td></td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.mqttParams.keepAlive</code></td><td>integer</td><td>No</td><td>The keep-alive interval for the MQTT connection.</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.mqttParams.cleanSession</code></td><td>boolean</td><td>No</td><td>Indicates whether the MQTT session should be clean (true or false).</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.mqttParams.reconnectDelayMin</code></td><td>integer</td><td>No</td><td>Minimum delay before reconnecting in case of disconnection.</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.mqttParams.reconnectDelayMax</code></td><td>integer</td><td>No</td><td>Maximum delay before reconnecting in case of disconnection.</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.mqttParams.clientId</code></td><td>string</td><td>No</td><td>The client ID used for the MQTT connection.</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.mqttParams.username</code></td><td>string</td><td>No</td><td>The username for authenticating the MQTT connection.</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.mqttParams.password</code></td><td>string</td><td>No</td><td>The password for authenticating the MQTT connection.</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.mqttParams.publishTopics</code></td><td>array</td><td>No</td><td>A list of topics to which messages will be published.</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.mqttParams.subscribeTopics</code></td><td>array</td><td>No</td><td>A list of topics to which the client will subscribe.</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.securityParams</code></td><td>object</td><td>No</td><td>Security parameters for the endpoint connection.</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.securityParams.format</code></td><td>string (enum)</td><td><strong>Yes</strong></td><td>The format of the security certificate (e.g., PEM or PFX).</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.securityParams.algorithm</code></td><td>string (enum)</td><td><strong>Yes</strong></td><td>The encryption algorithm used (e.g., RSA256).</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.securityParams.caCertificateFile</code></td><td>string</td><td><strong>Yes</strong></td><td>The CA certificate file for establishing trust.</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.securityParams.clientCert</code></td><td>string</td><td><strong>Yes</strong></td><td>The client certificate file for authentication.</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.securityParams.clientKey</code></td><td>string</td><td><strong>Yes</strong></td><td>The client key file for authentication.</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration</code></td><td>object</td><td>No</td><td></td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.antenna</code></td><td>boolean</td><td>No</td><td>set to true to enable antenna events</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.terminalConnection</code></td><td>boolean</td><td>No</td><td>set to true to enable terminal connection/disconnection events</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.firmwareUpdate</code></td><td>boolean</td><td>No</td><td>set to true to enable fw update events</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.gpi</code></td><td>boolean</td><td>No</td><td>set to true to enable gpi events</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.network</code></td><td>boolean</td><td>No</td><td>set to true to enable network events</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.exceptions</code></td><td>boolean</td><td>No</td><td>set to true to enable exception events</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.ntp</code></td><td>boolean</td><td>No</td><td>set to true to enable battery alerts</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.userApp</code></td><td>boolean</td><td>No</td><td>set to true to enable user app events</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.heartbeat</code></td><td>boolean</td><td>No</td><td>set to true to enable heart beat</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.power</code></td><td>boolean</td><td>No</td><td>set to true to enable power source alerts</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.battery</code></td><td>boolean</td><td>No</td><td>set to true to enable battery alerts</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.temperature</code></td><td>boolean</td><td>No</td><td>set to true to enable temperature alerts</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.fileDownload</code></td><td>boolean</td><td>No</td><td>set to true to enable file download alerts</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.cpuUsage</code></td><td>boolean</td><td>No</td><td>set to true to enable cpu usage alerts</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.flashUsage</code></td><td>boolean</td><td>No</td><td>set to true to enable flash usage alerts</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.ramUsage</code></td><td>boolean</td><td>No</td><td>set to true to enable ram usage alerts</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.heartbeatConfiguration</code></td><td>object</td><td>No</td><td></td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.heartbeatConfiguration.interval</code></td><td>integer</td><td>No</td><td>heart beat interval in seconds</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.heartbeatConfiguration.inventoryStatus</code></td><td>boolean</td><td>No</td><td>set to true to enable inventory status as part of heartbeat message</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.heartbeatConfiguration.batteryStatus</code></td><td>boolean</td><td>No</td><td>set to true to enable battery status as part of heartbeat message</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.heartbeatConfiguration.userApps</code></td><td>boolean</td><td>No</td><td>set to true to enable user app status as part of heartbeat message</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.cpuThreshold</code></td><td>integer</td><td>No</td><td>cpu usage value(%) above which alert will be triggered</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.ramThreshold</code></td><td>integer</td><td>No</td><td>ram usage value(%) above which alert will be triggered</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.flashThreshold</code></td><td>integer</td><td>No</td><td>flash usage value(%) above which alert will be triggered</td></tr>
+<tr><td><code>currentConfig.epConfig.configuration.eventConfiguration.temperatureThreshold</code></td><td>integer</td><td>No</td><td>temperature treshold value above which alert will be triggered</td></tr>
+<tr><td><code>currentConfig.deviceCapabilities</code></td><td>object</td><td>No</td><td>Hardware capabilities of the scanner — indicates whether Bluetooth, Wi-Fi, and barcode scanning features are supported on this particular model.</td></tr>
+<tr><td><code>currentConfig.deviceCapabilities.isBluetoothSupported</code></td><td>boolean</td><td>No</td><td>Indicates whether the device supports Bluetooth functionality.</td></tr>
+<tr><td><code>currentConfig.deviceCapabilities.isWifiSupported</code></td><td>boolean</td><td>No</td><td>Indicates whether the device supports WiFi connectivity.</td></tr>
+<tr><td><code>currentConfig.deviceCapabilities.isScannerSupported</code></td><td>boolean</td><td>No</td><td>Indicates whether the device supports scanner capabilities.</td></tr>
+<tr><td><code>response</code></td><td>object</td><td>No</td><td>Status of the command execution — check <code>code</code> to confirm success (0) or identify the error.</td></tr>
+<tr><td><code>response.code</code></td><td>integer</td><td><strong>Yes</strong></td><td>Response code indicating success or failure.<ul><li><strong>0</strong> — Success</li><li><strong>1</strong> — Command payload accepted</li><li><strong>2</strong> — Invalid payload</li><li><strong>3</strong> — Not able to retrieve information</li><li><strong>4</strong> — Firmware update in progress</li><li><strong>5</strong> — Can&#x27;t reboot, inventory in progress</li><li><strong>6</strong> — Region is not configured</li><li><strong>7</strong> — Interface is not available</li><li><strong>8</strong> — Insufficient flash size</li><li><strong>9</strong> — File not found</li><li><strong>10</strong> — Configuration already exists</li><li><strong>11</strong> — Inventory in progress</li><li><strong>12</strong> — No radio operation in progress</li><li><strong>13</strong> — Firmware update failed</li><li><strong>14</strong> — Battery too low for firmware update</li><li><strong>15</strong> — WIFI: SSID not found</li><li><strong>16</strong> — WIFI: Cannot delete active SSID</li><li><strong>17</strong> — WIFI: SSID missing</li><li><strong>18</strong> — WIFI: SSID already exists</li><li><strong>19</strong> — WIFI: SSID count overflow</li><li><strong>20</strong> — WiFi is not supported</li><li><strong>21</strong> — Certificate not found</li><li><strong>22</strong> — Advanced configuration not set</li><li><strong>23</strong> — Invalid enum value</li><li><strong>24</strong> — Max 32 prefilters limit exceeded</li><li><strong>25</strong> — Max 3 publish topics exceeded</li><li><strong>26</strong> — Max 1 subscribe topic exceeded</li><li><strong>27</strong> — Invalid tenant ID length</li><li><strong>28</strong> — Tag match pattern length exceeded</li></ul></td></tr>
+<tr><td><code>response.description</code></td><td>string</td><td><strong>Yes</strong></td><td>Human-readable description of the response code (e.g. &quot;Success&quot;, &quot;Invalid payload&quot;).</td></tr>
 </tbody></table>
 <h3>Response Examples</h3>
 <h4>Complete device config</h4>

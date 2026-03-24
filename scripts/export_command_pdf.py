@@ -36,12 +36,12 @@ except Exception:  # pragma: no cover
 
 def _make_header_template(command: str) -> str:
     return (
-        '<div style="width:100%; font-family:Helvetica,Arial,sans-serif; font-size:8px;'
+        '<div style="width:100%; font-family:Helvetica,Arial,sans-serif; font-size:8pt;'
         ' padding:6px 10mm 8px 10mm; display:flex; justify-content:space-between;'
         ' align-items:center; border-bottom:2.5px solid #003d6b;">'
-        '<span style="font-weight:700; font-size:9px; color:#003d6b;'
+        '<span style="font-weight:700; font-size:9pt; color:#003d6b;'
         ' letter-spacing:0.5px; text-transform:uppercase;">ZEBRA TECHNOLOGIES</span>'
-        f'<span style="color:#546a7b; font-size:7.5px; font-style:italic;">'
+        f'<span style="color:#546a7b; font-size:8pt; font-style:italic;">'
         f'{html.escape(command)} &mdash; RFD40 / RFD90 IoT Connector API Reference</span>'
         '</div>'
     )
@@ -49,7 +49,7 @@ def _make_header_template(command: str) -> str:
 
 def _make_footer_template() -> str:
     return (
-        '<div style="width:100%; font-family:Helvetica,Arial,sans-serif; font-size:7px;'
+        '<div style="width:100%; font-family:Helvetica,Arial,sans-serif; font-size:8pt;'
         ' padding:8px 10mm 6px 10mm; display:flex; justify-content:space-between;'
         ' align-items:center; border-top:2px solid #003d6b; color:#546a7b;">'
         '<span>API Version: V1.1 &nbsp;|&nbsp; Document Version: 1.0.0</span>'
@@ -266,16 +266,16 @@ def table_html(rows: List[Dict[str, str]], title: str) -> str:
         return f"<h3>{html.escape(title)}</h3><p>No fields available.</p>"
     out = [f"<h3>{html.escape(title)}</h3>"]
     out.append("<table>")
-    out.append("<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th><th>Example</th></tr></thead>")
+    out.append("<thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>")
     out.append("<tbody>")
     for r in rows:
+        req_val = f"<strong>{r['required']}</strong>" if r['required'] == 'Yes' else r['required']
         out.append(
             "<tr>"
             f"<td><code>{r['field']}</code></td>"
             f"<td>{r['type']}</td>"
-            f"<td>{r['required']}</td>"
+            f"<td>{req_val}</td>"
             f"<td>{render_table_description(r['description'])}</td>"
-            f"<td><code>{r['example']}</code></td>"
             "</tr>"
         )
     out.append("</tbody></table>")
@@ -539,10 +539,14 @@ h1 {{
     font-size: 16pt;
     font-weight: 700;
     letter-spacing: 0.3px;
+    margin-top: 36pt;
     margin-bottom: 4px;
     color: #003d6b;
     padding-bottom: 6px;
     border-bottom: 2px solid #003d6b;
+}}
+h1:first-of-type {{
+    margin-top: 0;
 }}
 h2 {{
     margin-top: 24pt;
@@ -585,16 +589,14 @@ strong {{ color: #1a1a1a; }}
 /* ── Code ── */
 pre, code {{ font-family: "Courier New", Courier, monospace; }}
 code {{
-    background: #eaecf0;
-    border: 1px solid #c0c4cc;
+    background: #f4f4f4;
     border-radius: 3px;
     padding: 1px 5px;
     font-size: 9.5pt;
     color: #1a1a1a;
 }}
 pre {{
-    background: #f0f2f5;
-    border: 1px solid #8a94a6;
+    background: #f5f5f5;
     border-left: 4px solid #003d6b;
     border-radius: 4px;
     padding: 12px 14px;
