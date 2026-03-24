@@ -2689,7 +2689,7 @@ pre[class*="language-"] {
       ${"false"===this.allowServerSelection?"":q`<div class='nav-bar-info ${this.navActiveItemMarker}' id='link-servers' data-action='navigate' data-content-id='servers' tabindex='0' part='section-navbar-item section-navbar-servers'> API Servers </div>`}
       ${"false"!==this.allowAuthentication&&this.resolvedSpec.securitySchemes?q`<div class='nav-bar-info ${this.navActiveItemMarker}' id='link-auth' data-action='navigate' data-content-id='auth' tabindex='0' part='section-navbar-item section-navbar-auth'> Authentication </div>`:""}
 
-      <div id='link-operations-top' class='nav-bar-section operations' style='display:none' data-action='navigate' data-content-id='${"focused"===this.renderStyle?"":"operations-top"}' part='section-navbar-item section-navbar-operations-top'>
+      <div id='link-operations-top' class='nav-bar-section operations' style='display:none;height:0;overflow:hidden;visibility:hidden;position:absolute' data-action='navigate' data-content-id='${"focused"===this.renderStyle?"":"operations-top"}' part='section-navbar-item section-navbar-operations-top'>
         <div style='font-size:16px; display:flex; margin-left:10px;'>
           ${"focused"===this.renderStyle?q`
               <div class='nav-bar-expand-all'
@@ -2703,7 +2703,7 @@ pre[class*="language-"] {
                 title='Collapse all'
               >▸</div>`:""}  
         </div>
-        <div class='nav-bar-section-title' style='display:none'></div>
+        <div class='nav-bar-section-title'></div>
       </div>
 
       <!-- TAGS AND PATHS-->
