@@ -116,14 +116,28 @@
     function applyOverrides() {
       var rd = document.querySelector('rapi-doc');
       if (!rd || !rd.shadowRoot) return;
-      var sr = rd.shadowRoot;
+      injectSheet(rd.shadowRoot);
+      /* Walk ALL nested shadow roots (api-request, api-response, schema-table, etc.) */
+      walkAndInject(rd.shadowRoot);
+    }
+
+    function injectSheet(sr) {
+      if (!sr || !sr.adoptedStyleSheets) return;
       var sheets = sr.adoptedStyleSheets;
-      var hasMqtt = false;
       for (var i = 0; i < sheets.length; i++) {
-        if (sheets[i]._isMqtt) { hasMqtt = true; break; }
+        if (sheets[i]._isMqtt) return;
       }
-      if (!hasMqtt) {
-        sr.adoptedStyleSheets = [].concat(Array.from(sheets), [mqttSheet]);
+      sr.adoptedStyleSheets = [].concat(Array.from(sheets), [mqttSheet]);
+    }
+
+    function walkAndInject(root) {
+      if (!root) return;
+      var els = root.querySelectorAll('*');
+      for (var i = 0; i < els.length; i++) {
+        if (els[i].shadowRoot) {
+          injectSheet(els[i].shadowRoot);
+          walkAndInject(els[i].shadowRoot);
+        }
       }
     }
     /* Poll for initial setup */
