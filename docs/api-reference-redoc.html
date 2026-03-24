@@ -15,7 +15,6 @@
     body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: #fff; }
     rapi-doc { width: 100%; height: 100%; }
     rapi-doc::part(section-operation-summary) { font-size: 1.1rem; }
-    /* Fix nav path offset */
     rapi-doc::part(section-navbar-path) { padding-left: 16px !important; }
   </style>
 </head>
@@ -51,7 +50,6 @@
   <script type="module" src="js/rapidoc-min.js?v=3"></script>
   <script>
   (function() {
-    /* Create our override stylesheet ONCE — stored in closure */
     var mqttSheet = new CSSStyleSheet();
     mqttSheet.replaceSync([
       '.m-btn.primary { display: none !important; }',
@@ -83,8 +81,7 @@
         sr.adoptedStyleSheets = [].concat(Array.from(sheets), [mqttSheet]);
       }
     }
-
-    /* Poll for initial setup + re-apply inline hide after Lit re-renders */
+    /* Poll for initial setup */
     var attempts = 0;
     var poll = setInterval(function() {
       applyOverrides();
@@ -198,7 +195,5 @@
     startObserver();
   })();
   </script>
-
-
 </body>
 </html>

@@ -1,6 +1,6 @@
 Retrieves **real-time health and status** of the scanner — battery, temperature, radio, power, clock sync, and terminal connection.
 
-**Download pdf:** 📄 [Download get_status as PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_status_formatted.pdf)
+**Download pdf:** 📄 [Download get_status as PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_status.pdf)
 
 **Command details:**
 

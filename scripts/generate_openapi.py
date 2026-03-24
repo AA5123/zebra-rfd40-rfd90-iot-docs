@@ -115,8 +115,8 @@ def find_command_pdf(op_name):
     """
     if not os.path.isdir(COMMAND_PDFS_DIR):
         return None
-    # Prefer _formatted version, fall back to plain
-    for suffix in ["_formatted.pdf", ".pdf"]:
+    # Prefer plain, fall back to _formatted (legacy)
+    for suffix in [".pdf", "_formatted.pdf"]:
         filename = op_name + suffix
         if os.path.exists(os.path.join(COMMAND_PDFS_DIR, filename)):
             return f"{GITHUB_PAGES_BASE}/{filename}"
@@ -403,7 +403,7 @@ def build_openapi():
 
         # Auto-add PDF download link if a PDF exists and description doesn't already have one
         pdf_url = find_command_pdf(op_name)
-        if pdf_url and isinstance(description, str) and "Download" not in description and "download" not in description:
+        if pdf_url and isinstance(description, str) and "Download pdf:" not in description and "download pdf:" not in description:
             pdf_link = f"\n\n**Download pdf:** \U0001F4C4 [Download {op_name} as PDF]({pdf_url})"
             description = description + pdf_link
         elif pdf_url and not description:
