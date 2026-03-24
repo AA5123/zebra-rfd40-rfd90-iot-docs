@@ -15,8 +15,6 @@
     body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: #fff; }
     rapi-doc { width: 100%; height: 100%; }
     rapi-doc::part(section-operation-summary) { font-size: 1.1rem; }
-    /* Hide OPERATIONS header — ::part() works from outside shadow DOM, immune to Lit */
-    rapi-doc::part(section-navbar-operations-top) { display: none !important; }
     /* Fix nav path offset */
     rapi-doc::part(section-navbar-path) { padding-left: 16px !important; }
   </style>
@@ -50,7 +48,7 @@
   >
   </rapi-doc>
 
-  <script type="module" src="https://unpkg.com/rapidoc@9.3.4/dist/rapidoc-min.js"></script>
+  <script type="module" src="js/rapidoc-min.js"></script>
   <script>
   (function() {
     /* Create our override stylesheet ONCE — stored in closure */
@@ -64,8 +62,6 @@
       '.path { display: none !important; }',
       '.nav-bar-path { padding-left: 16px !important; }',
       '.nav-bar-path .method-fg.small { display: none !important; width: 0 !important; margin: 0 !important; padding: 0 !important; }',
-      '#link-operations-top { display: none !important; }',
-      '.nav-bar-section.operations { display: none !important; }',
       'textarea { min-height: 40px !important; max-height: 180px !important; height: auto !important; resize: vertical !important; font-size: 13px !important; padding: 8px !important; }',
       'pre { max-height: 250px !important; overflow: auto !important; padding: 8px 12px !important; font-size: 13px !important; }',
       '.tab-content { padding: 0 !important; }',
@@ -74,53 +70,17 @@
     ].join('\n'));
     mqttSheet._isMqtt = true;
 
-    /**
-     * Intercept the adoptedStyleSheets setter on the ShadowRoot instance
-     * so Lit's adoptStyles() can never remove our custom sheet.
-     */
-    var trapped = false;
-    function trapAdoptedStyleSheets(sr) {
-      if (trapped) return;
-      /* Walk prototype chain to find the native descriptor */
-      var desc = null;
-      var proto = sr;
-      while (proto && !desc) {
-        desc = Object.getOwnPropertyDescriptor(proto, 'adoptedStyleSheets');
-        if (!desc) proto = Object.getPrototypeOf(proto);
-      }
-      if (!desc || !desc.set) return;
-      Object.defineProperty(sr, 'adoptedStyleSheets', {
-        get: function() { return desc.get.call(this); },
-        set: function(sheets) {
-          var arr = Array.isArray(sheets) ? sheets.slice() : Array.from(sheets);
-          var found = false;
-          for (var i = 0; i < arr.length; i++) {
-            if (arr[i]._isMqtt) { found = true; break; }
-          }
-          if (!found) arr.push(mqttSheet);
-          desc.set.call(this, arr);
-        },
-        configurable: true,
-        enumerable: true
-      });
-      /* Apply immediately */
-      var current = desc.get.call(sr);
-      var has = false;
-      for (var i = 0; i < current.length; i++) {
-        if (current[i]._isMqtt) { has = true; break; }
-      }
-      if (!has) desc.set.call(sr, [].concat(Array.from(current), [mqttSheet]));
-      trapped = true;
-    }
-
     function applyOverrides() {
       var rd = document.querySelector('rapi-doc');
       if (!rd || !rd.shadowRoot) return;
-      trapAdoptedStyleSheets(rd.shadowRoot);
-      /* Belt-and-suspenders: inline-hide the OPERATIONS element */
-      var ops = rd.shadowRoot.querySelector('#link-operations-top');
-      if (ops && ops.style.display !== 'none') {
-        ops.style.setProperty('display', 'none', 'important');
+      var sr = rd.shadowRoot;
+      var sheets = sr.adoptedStyleSheets;
+      var hasMqtt = false;
+      for (var i = 0; i < sheets.length; i++) {
+        if (sheets[i]._isMqtt) { hasMqtt = true; break; }
+      }
+      if (!hasMqtt) {
+        sr.adoptedStyleSheets = [].concat(Array.from(sheets), [mqttSheet]);
       }
     }
 
