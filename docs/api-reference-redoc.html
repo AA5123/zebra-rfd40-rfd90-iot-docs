@@ -57,33 +57,32 @@
     function hideHttpMethods() {
       var rd = document.querySelector('rapi-doc');
       if (!rd || !rd.shadowRoot) return;
-      var style = rd.shadowRoot.querySelector('style[data-mqtt-hide]');
-      if (!style) {
-        style = document.createElement('style');
-        style.setAttribute('data-mqtt-hide', '1');
-        style.textContent = [
-          /* Hide HTTP method badges */
+      var sr = rd.shadowRoot;
+
+      /* Use adoptedStyleSheets — Lit CANNOT wipe these because they're
+         not DOM nodes; they're attached via the CSSStyleSheet API */
+      if (!sr._mqttSheetAdded) {
+        var sheet = new CSSStyleSheet();
+        sheet.replaceSync([
           '.m-btn.primary { display: none !important; }',
           '.method-fg { display: none !important; }',
           '.req-res-title .method { display: none !important; }',
           '.endpoint-head .method { display: none !important; }',
           '.nav-bar-tag .method { display: none !important; }',
           '.path { display: none !important; }',
-          /* Fix nav operation offset — remove space reserved for hidden method badge */
           '.nav-bar-path { padding-left: 16px !important; }',
           '.nav-bar-path .method-fg.small { display: none !important; width: 0 !important; margin: 0 !important; padding: 0 !important; }',
-          /* Hide OPERATIONS header in nav */
           '#link-operations-top { display: none !important; }',
           '.nav-bar-section.operations { display: none !important; }',
           '.nav-bar-section-title { display: none !important; }',
-          /* Compact request/response body examples */
           'textarea { min-height: 40px !important; max-height: 180px !important; height: auto !important; resize: vertical !important; font-size: 13px !important; padding: 8px !important; }',
           'pre { max-height: 250px !important; overflow: auto !important; padding: 8px 12px !important; font-size: 13px !important; }',
           '.tab-content { padding: 0 !important; }',
           '.tab-panels { padding: 0 !important; }',
           '.table-title { padding: 6px 0 !important; }',
-        ].join('\n');
-        rd.shadowRoot.appendChild(style);
+        ].join('\n'));
+        sr.adoptedStyleSheets = [...sr.adoptedStyleSheets, sheet];
+        sr._mqttSheetAdded = true;
       }
       /* Also directly hide the OPERATIONS element in case CSS specificity loses */
       var opsEl = rd.shadowRoot.querySelector('#link-operations-top');
