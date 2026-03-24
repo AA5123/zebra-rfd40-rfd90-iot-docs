@@ -288,7 +288,7 @@ def build_openapi():
     openapi = OrderedDict()
     openapi["openapi"] = "3.0.0"
     openapi["info"] = OrderedDict([
-        ("title", "RFD40 / RFD90 IOT developer guide"),
+        ("title", "RFD40 / RFD90 API reference document"),
         ("version", "v2"),
         ("description",
          "MQTT-based API for managing and controlling Zebra RFD40 and RFD90 RFID readers. "
