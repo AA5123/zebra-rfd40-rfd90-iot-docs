@@ -326,7 +326,19 @@
                             }
                         }
                     }
-                }
+                },
+                "x-error-codes": [
+                    {
+                        "code": 0,
+                        "description": "Success",
+                        "iot_status_code": "IOT_STATUS_SUCCESS"
+                    },
+                    {
+                        "code": 3,
+                        "description": "Not able to retrieve information",
+                        "iot_status_code": "IOT_ERROR_INFO_NOT_AVAILABLE"
+                    }
+                ]
             }
         },
         "/get_status": {
@@ -590,7 +602,19 @@
                             }
                         }
                     }
-                }
+                },
+                "x-error-codes": [
+                    {
+                        "code": 0,
+                        "description": "Success",
+                        "iot_status_code": "IOT_STATUS_SUCCESS"
+                    },
+                    {
+                        "code": 3,
+                        "description": "Not able to retrieve information",
+                        "iot_status_code": "IOT_ERROR_INFO_NOT_AVAILABLE"
+                    }
+                ]
             }
         },
         "/get_version": {
@@ -2309,7 +2333,19 @@
                             }
                         }
                     }
-                }
+                },
+                "x-error-codes": [
+                    {
+                        "code": 0,
+                        "description": "Success",
+                        "iot_status_code": "IOT_STATUS_SUCCESS"
+                    },
+                    {
+                        "code": 3,
+                        "description": "Not able to retrieve information",
+                        "iot_status_code": "IOT_ERROR_INFO_NOT_AVAILABLE"
+                    }
+                ]
             }
         },
         "/set_config": {
@@ -4850,7 +4886,69 @@
                             }
                         }
                     }
-                }
+                },
+                "x-error-codes": [
+                    {
+                        "code": 0,
+                        "description": "Success",
+                        "iot_status_code": "IOT_STATUS_SUCCESS"
+                    },
+                    {
+                        "code": 2,
+                        "description": "Invalid payload",
+                        "iot_status_code": "IOT_ERROR_INVALID_PAYLOAD"
+                    },
+                    {
+                        "code": 10,
+                        "description": "Configuration already exist",
+                        "iot_status_code": "IOT_ERROR_CONFIG_ALREADY_EXIST"
+                    },
+                    {
+                        "code": 15,
+                        "description": "WIFI Error - SSID not found",
+                        "iot_status_code": "IOT_ERROR_SSID_NOT_FOUND"
+                    },
+                    {
+                        "code": 17,
+                        "description": "WIFI Error - SSID missed",
+                        "iot_status_code": "IOT_ERROR_SSID_MISSED"
+                    },
+                    {
+                        "code": 18,
+                        "description": "WIFI Error - SSID already exist",
+                        "iot_status_code": "IOT_ERROR_SSID_ALREADY_EXIST"
+                    },
+                    {
+                        "code": 19,
+                        "description": "WIFI Error - SSID count overflow",
+                        "iot_status_code": "IOT_ERROR_SSID_LIMIT_OVERFLOW"
+                    },
+                    {
+                        "code": 20,
+                        "description": "Wifi is not supported",
+                        "iot_status_code": "IOT_ERROR_WIFI_INTER_NOT_SUPPORTED"
+                    },
+                    {
+                        "code": 23,
+                        "description": "Invalid enum value",
+                        "iot_status_code": "IOT_ERROR_INVALID_ENUM"
+                    },
+                    {
+                        "code": 25,
+                        "description": "Max 3 publish topics exceeded",
+                        "iot_status_code": "IOT_ERROR_PUBLISH_TOPICS_EXCEEDED"
+                    },
+                    {
+                        "code": 26,
+                        "description": "Max 1 subscribe topic exceeded",
+                        "iot_status_code": "IOT_ERROR_SUBSCRIBE_TOPIC_EXCEEDED"
+                    },
+                    {
+                        "code": 27,
+                        "description": "Invalid tenant ID length",
+                        "iot_status_code": "IOT_ERROR_INVALID_TENANTID_LENGTH"
+                    }
+                ]
             }
         },
         "/delete_wifi_profile": {
@@ -4984,7 +5082,34 @@
                             }
                         }
                     }
-                }
+                },
+                "x-error-codes": [
+                    {
+                        "code": 0,
+                        "description": "Success",
+                        "iot_status_code": "IOT_STATUS_SUCCESS"
+                    },
+                    {
+                        "code": 2,
+                        "description": "Invalid payload",
+                        "iot_status_code": "IOT_ERROR_INVALID_PAYLOAD"
+                    },
+                    {
+                        "code": 15,
+                        "description": "WIFI Error - SSID not found",
+                        "iot_status_code": "IOT_ERROR_SSID_NOT_FOUND"
+                    },
+                    {
+                        "code": 16,
+                        "description": "WIFI Error - Cannot delete active SSID",
+                        "iot_status_code": "IOT_ERROR_DELETE_ACTIVE_SSID"
+                    },
+                    {
+                        "code": 17,
+                        "description": "WIFI Error - SSID missed",
+                        "iot_status_code": "IOT_ERROR_SSID_MISSED"
+                    }
+                ]
             }
         },
         "/get_eth": {
@@ -5295,7 +5420,19 @@
                             }
                         }
                     }
-                }
+                },
+                "x-error-codes": [
+                    {
+                        "code": 0,
+                        "description": "Success",
+                        "iot_status_code": "IOT_STATUS_SUCCESS"
+                    },
+                    {
+                        "code": 3,
+                        "description": "Not able to retrieve information",
+                        "iot_status_code": "IOT_ERROR_INFO_NOT_AVAILABLE"
+                    }
+                ]
             }
         },
         "/get_wifi": {
@@ -5974,7 +6111,19 @@
                             }
                         }
                     }
-                }
+                },
+                "x-error-codes": [
+                    {
+                        "code": 0,
+                        "description": "Success",
+                        "iot_status_code": "IOT_STATUS_SUCCESS"
+                    },
+                    {
+                        "code": 3,
+                        "description": "Not able to retrieve information",
+                        "iot_status_code": "IOT_ERROR_INFO_NOT_AVAILABLE"
+                    }
+                ]
             }
         },
         "/set_wifi": {
@@ -6563,7 +6712,49 @@
                             }
                         }
                     }
-                }
+                },
+                "x-error-codes": [
+                    {
+                        "code": 0,
+                        "description": "Success",
+                        "iot_status_code": "IOT_STATUS_SUCCESS"
+                    },
+                    {
+                        "code": 2,
+                        "description": "Invalid payload",
+                        "iot_status_code": "IOT_ERROR_INVALID_PAYLOAD"
+                    },
+                    {
+                        "code": 15,
+                        "description": "WIFI Error - SSID not found",
+                        "iot_status_code": "IOT_ERROR_SSID_NOT_FOUND"
+                    },
+                    {
+                        "code": 17,
+                        "description": "WIFI Error - SSID missed",
+                        "iot_status_code": "IOT_ERROR_SSID_MISSED"
+                    },
+                    {
+                        "code": 18,
+                        "description": "WIFI Error - SSID already exist",
+                        "iot_status_code": "IOT_ERROR_SSID_ALREADY_EXIST"
+                    },
+                    {
+                        "code": 19,
+                        "description": "WIFI Error - SSID count overflow",
+                        "iot_status_code": "IOT_ERROR_SSID_LIMIT_OVERFLOW"
+                    },
+                    {
+                        "code": 20,
+                        "description": "Wifi is not supported",
+                        "iot_status_code": "IOT_ERROR_WIFI_INTER_NOT_SUPPORTED"
+                    },
+                    {
+                        "code": 23,
+                        "description": "Invalid enum value",
+                        "iot_status_code": "IOT_ERROR_INVALID_ENUM"
+                    }
+                ]
             }
         },
         "/config_endpoint": {
@@ -7173,7 +7364,39 @@
                             }
                         }
                     }
-                }
+                },
+                "x-error-codes": [
+                    {
+                        "code": 0,
+                        "description": "Success",
+                        "iot_status_code": "IOT_STATUS_SUCCESS"
+                    },
+                    {
+                        "code": 10,
+                        "description": "Configuration already exist",
+                        "iot_status_code": "IOT_ERROR_CONFIG_ALREADY_EXIST"
+                    },
+                    {
+                        "code": 23,
+                        "description": "Invalid enum value",
+                        "iot_status_code": "IOT_ERROR_INVALID_ENUM"
+                    },
+                    {
+                        "code": 25,
+                        "description": "Max 3 publish topics exceeded",
+                        "iot_status_code": "IOT_ERROR_PUBLISH_TOPICS_EXCEEDED"
+                    },
+                    {
+                        "code": 26,
+                        "description": "Max 1 subscribe topic exceeded",
+                        "iot_status_code": "IOT_ERROR_SUBSCRIBE_TOPIC_EXCEEDED"
+                    },
+                    {
+                        "code": 27,
+                        "description": "Invalid tenant ID length",
+                        "iot_status_code": "IOT_ERROR_INVALID_TENANTID_LENGTH"
+                    }
+                ]
             }
         },
         "/get_endpoint_config": {
@@ -7807,7 +8030,19 @@
                             }
                         }
                     }
-                }
+                },
+                "x-error-codes": [
+                    {
+                        "code": 0,
+                        "description": "Success",
+                        "iot_status_code": "IOT_STATUS_SUCCESS"
+                    },
+                    {
+                        "code": 3,
+                        "description": "Not able to retrieve information",
+                        "iot_status_code": "IOT_ERROR_INFO_NOT_AVAILABLE"
+                    }
+                ]
             }
         },
         "/delete_certificate": {
@@ -7958,7 +8193,24 @@
                             }
                         }
                     }
-                }
+                },
+                "x-error-codes": [
+                    {
+                        "code": 0,
+                        "description": "Success",
+                        "iot_status_code": "IOT_STATUS_SUCCESS"
+                    },
+                    {
+                        "code": 9,
+                        "description": "File not found",
+                        "iot_status_code": "IOT_STATUS_FILE_NOT_FOUND"
+                    },
+                    {
+                        "code": 21,
+                        "description": "Certificate not found",
+                        "iot_status_code": "IOT_ERROR_CERT_NOT_FOUND"
+                    }
+                ]
             }
         },
         "/get_installed_certificate": {
@@ -8153,7 +8405,29 @@
                             }
                         }
                     }
-                }
+                },
+                "x-error-codes": [
+                    {
+                        "code": 0,
+                        "description": "Success",
+                        "iot_status_code": "IOT_STATUS_SUCCESS"
+                    },
+                    {
+                        "code": 3,
+                        "description": "Not able to retrieve information",
+                        "iot_status_code": "IOT_ERROR_INFO_NOT_AVAILABLE"
+                    },
+                    {
+                        "code": 9,
+                        "description": "File not found",
+                        "iot_status_code": "IOT_STATUS_FILE_NOT_FOUND"
+                    },
+                    {
+                        "code": 21,
+                        "description": "Certificate not found",
+                        "iot_status_code": "IOT_ERROR_CERT_NOT_FOUND"
+                    }
+                ]
             }
         },
         "/install_certificate": {
@@ -8497,7 +8771,34 @@
                             }
                         }
                     }
-                }
+                },
+                "x-error-codes": [
+                    {
+                        "code": 0,
+                        "description": "Success",
+                        "iot_status_code": "IOT_STATUS_SUCCESS"
+                    },
+                    {
+                        "code": 1,
+                        "description": "Command payload is accepted",
+                        "iot_status_code": "IOT_STATUS_CMD_PAYLOAD_ACCEPTED"
+                    },
+                    {
+                        "code": 9,
+                        "description": "File not found",
+                        "iot_status_code": "IOT_STATUS_FILE_NOT_FOUND"
+                    },
+                    {
+                        "code": 21,
+                        "description": "Certificate not found",
+                        "iot_status_code": "IOT_ERROR_CERT_NOT_FOUND"
+                    },
+                    {
+                        "code": 23,
+                        "description": "Invalid enum value",
+                        "iot_status_code": "IOT_ERROR_INVALID_ENUM"
+                    }
+                ]
             }
         },
         "/reboot": {
@@ -8603,7 +8904,19 @@
                             }
                         }
                     }
-                }
+                },
+                "x-error-codes": [
+                    {
+                        "code": 0,
+                        "description": "Success",
+                        "iot_status_code": "IOT_STATUS_SUCCESS"
+                    },
+                    {
+                        "code": 5,
+                        "description": "Can't reboot device, inventory in progress",
+                        "iot_status_code": "IOT_ERROR_IN_REBOOT_INVENTORY_IN_PROGRESS"
+                    }
+                ]
             }
         },
         "/set_os": {
@@ -8844,7 +9157,44 @@
                             }
                         }
                     }
-                }
+                },
+                "x-error-codes": [
+                    {
+                        "code": 0,
+                        "description": "Success",
+                        "iot_status_code": "IOT_STATUS_SUCCESS"
+                    },
+                    {
+                        "code": 1,
+                        "description": "Command payload is accepted",
+                        "iot_status_code": "IOT_STATUS_CMD_PAYLOAD_ACCEPTED"
+                    },
+                    {
+                        "code": 4,
+                        "description": "Firmware update in progress",
+                        "iot_status_code": "IOT_STATUS_FW_UPDATE_IN_PROGRESS"
+                    },
+                    {
+                        "code": 8,
+                        "description": "Insufficient flash size",
+                        "iot_status_code": "IOT_ERROR_LOW_FLASH_SIZE"
+                    },
+                    {
+                        "code": 9,
+                        "description": "File not found",
+                        "iot_status_code": "IOT_STATUS_FILE_NOT_FOUND"
+                    },
+                    {
+                        "code": 13,
+                        "description": "Firmware update Failed",
+                        "iot_status_code": "IOT_ERROR_FW_UPDATE_FAIL"
+                    },
+                    {
+                        "code": 14,
+                        "description": "Battery is low, Cannot update firmware",
+                        "iot_status_code": "IOT_ERROR_FW_UPDATE_FAIL_LOW_BATTERY"
+                    }
+                ]
             }
         },
         "/control_operation": {
@@ -9001,7 +9351,29 @@
                             }
                         }
                     }
-                }
+                },
+                "x-error-codes": [
+                    {
+                        "code": 0,
+                        "description": "Success",
+                        "iot_status_code": "IOT_STATUS_SUCCESS"
+                    },
+                    {
+                        "code": 11,
+                        "description": "Inventory in progress",
+                        "iot_status_code": "IOT_ERROR_INVENTORY_IN_PROGRESS"
+                    },
+                    {
+                        "code": 12,
+                        "description": "No Radio Operation in Progress",
+                        "iot_status_code": "IOT_ERROR_NO_RADIO_OP_IN_PROGRESS"
+                    },
+                    {
+                        "code": 23,
+                        "description": "Invalid enum value",
+                        "iot_status_code": "IOT_ERROR_INVALID_ENUM"
+                    }
+                ]
             }
         },
         "/get_operating_mode": {
@@ -9511,7 +9883,19 @@
                             }
                         }
                     }
-                }
+                },
+                "x-error-codes": [
+                    {
+                        "code": 0,
+                        "description": "Success",
+                        "iot_status_code": "IOT_STATUS_SUCCESS"
+                    },
+                    {
+                        "code": 3,
+                        "description": "Not able to retrieve information",
+                        "iot_status_code": "IOT_ERROR_INFO_NOT_AVAILABLE"
+                    }
+                ]
             }
         },
         "/set_operating_mode": {
@@ -10254,7 +10638,39 @@
                             }
                         }
                     }
-                }
+                },
+                "x-error-codes": [
+                    {
+                        "code": 0,
+                        "description": "Success",
+                        "iot_status_code": "IOT_STATUS_SUCCESS"
+                    },
+                    {
+                        "code": 11,
+                        "description": "Inventory in progress",
+                        "iot_status_code": "IOT_ERROR_INVENTORY_IN_PROGRESS"
+                    },
+                    {
+                        "code": 22,
+                        "description": "Advanced configuration not set",
+                        "iot_status_code": "IOT_CTRL_ADVANCED_PROFILE_NOT_SET"
+                    },
+                    {
+                        "code": 23,
+                        "description": "Invalid enum value",
+                        "iot_status_code": "IOT_ERROR_INVALID_ENUM"
+                    },
+                    {
+                        "code": 24,
+                        "description": "Max 32 prefilters limit exceeded",
+                        "iot_status_code": "IOT_ERROR_PREFILTERS_LIMIT_EXCEEDED"
+                    },
+                    {
+                        "code": 28,
+                        "description": "Tag match pattern length exceeded",
+                        "iot_status_code": "IOT_ERROR_TAG_MATCH_PATTERN_LENGTH_EXCEEDED"
+                    }
+                ]
             }
         },
         "/get_post_filter": {
@@ -10434,7 +10850,19 @@
                             }
                         }
                     }
-                }
+                },
+                "x-error-codes": [
+                    {
+                        "code": 0,
+                        "description": "Success",
+                        "iot_status_code": "IOT_STATUS_SUCCESS"
+                    },
+                    {
+                        "code": 3,
+                        "description": "Not able to retrieve information",
+                        "iot_status_code": "IOT_ERROR_INFO_NOT_AVAILABLE"
+                    }
+                ]
             }
         },
         "/set_post_filter": {
@@ -10657,7 +11085,19 @@
                             }
                         }
                     }
-                }
+                },
+                "x-error-codes": [
+                    {
+                        "code": 0,
+                        "description": "Success",
+                        "iot_status_code": "IOT_STATUS_SUCCESS"
+                    },
+                    {
+                        "code": 23,
+                        "description": "Invalid enum value",
+                        "iot_status_code": "IOT_ERROR_INVALID_ENUM"
+                    }
+                ]
             }
         },
         "/heartBeatEVT": {

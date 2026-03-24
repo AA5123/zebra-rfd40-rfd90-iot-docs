@@ -282,6 +282,26 @@ def table_html(rows: List[Dict[str, str]], title: str) -> str:
     return "\n".join(out)
 
 
+def error_codes_table_html(error_codes: List[Dict]) -> str:
+    """Render the x-error-codes list as an HTML table."""
+    if not error_codes:
+        return ""
+    out = ["<h2>Status / Error Codes</h2>"]
+    out.append("<table>")
+    out.append("<thead><tr><th>Code</th><th>Status Constant</th><th>Description</th></tr></thead>")
+    out.append("<tbody>")
+    for e in error_codes:
+        out.append(
+            "<tr>"
+            f"<td>{html.escape(str(e.get('code', '')))}</td>"
+            f"<td><code>{html.escape(str(e.get('iot_status_code', '')))}</code></td>"
+            f"<td>{html.escape(str(e.get('description', '')))}</td>"
+            "</tr>"
+        )
+    out.append("</tbody></table>")
+    return "\n".join(out)
+
+
 def choose_browser_executable() -> Optional[str]:
     candidates = [
         "msedge",
@@ -476,6 +496,9 @@ def build_html(command: str, op: Dict[str, Any]) -> str:
     # Remove PDF download link from description (avoid self-referencing in PDF)
     if isinstance(description, str):
         description = re.sub(r"\n\n\*\*Download pdf:\*\*[^\n]*", "", description).strip()
+
+    # Extract error codes from x-error-codes extension
+    error_codes = op.get("x-error-codes", [])
 
     return f"""<!doctype html>
 <html lang=\"en\">
@@ -708,6 +731,7 @@ h2, h3 {{ page-break-inside: avoid; }}
 <h2>Response</h2>
 {table_html(resp_rows, 'Response Fields')}
 {examples_to_html(resp_examples, 'Response Examples')}
+{error_codes_table_html(error_codes)}
 <div class=\"doc-footer-bar\">
     <span>API Version: V1.1 &nbsp;|&nbsp; Document Version: 1.0.0</span>
     <span>Zebra Confidential</span>

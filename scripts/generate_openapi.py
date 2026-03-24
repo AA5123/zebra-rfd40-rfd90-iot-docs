@@ -35,6 +35,7 @@ RESPONSE_DIR = os.path.join(SCHEMAS_DIR, "response")
 EVENTS_DIR = os.path.join(SCHEMAS_DIR, "events")
 
 TAG_CONFIG_PATH = os.path.join(SCHEMAS_DIR, "tag_config.json")
+ERROR_CODES_PATH = os.path.join(SCHEMAS_DIR, "error_codes.json")
 OP_DESCRIPTIONS_DIR = os.path.join(SCHEMAS_DIR, "operation_descriptions")
 
 COMMAND_PDFS_DIR = os.path.join(PROJECT_ROOT, "docs", "command-pdfs")
@@ -77,6 +78,25 @@ def load_operation_descriptions():
                 with open(filepath, "r", encoding="utf-8") as f:
                     descriptions[op_name] = f.read().strip()
     return descriptions
+
+
+def load_error_codes():
+    """Load error_codes.json and return a dict mapping command -> list of error code entries."""
+    if not os.path.exists(ERROR_CODES_PATH):
+        print(f"  WARNING: {ERROR_CODES_PATH} not found, skipping error codes")
+        return {}
+    all_codes = load_json(ERROR_CODES_PATH).get("codes", [])
+    cmd_map = {}  # command_name -> [code entries]
+    for entry in all_codes:
+        for cmd in entry.get("commands", []):
+            if cmd == "*":
+                continue  # wildcard handled separately
+            cmd_map.setdefault(cmd, []).append(entry)
+    # Prepend code 0 (Success) to every command
+    code_zero = [e for e in all_codes if e.get("code") == 0]
+    for cmd in cmd_map:
+        cmd_map[cmd] = code_zero + cmd_map[cmd]
+    return cmd_map
 
 
 def load_example_descriptions():
@@ -268,6 +288,7 @@ def build_openapi():
     tag_config = load_tag_config()
     op_descriptions = load_operation_descriptions()
     example_data = load_example_descriptions()
+    error_codes_map = load_error_codes()
 
     tag_groups = tag_config.get("tag_groups", {})
     tag_descriptions = tag_config.get("tag_descriptions", {})
@@ -437,6 +458,18 @@ def build_openapi():
                 op["responses"] = OrderedDict([
                     ("200", OrderedDict([("description", "Success")])),
             ])
+
+        # Inject filtered error codes as x-error-codes extension
+        error_codes_for_cmd = error_codes_map.get(op_name, [])
+        if error_codes_for_cmd:
+            op["x-error-codes"] = [
+                OrderedDict([
+                    ("code", e["code"]),
+                    ("description", e["description"]),
+                    ("iot_status_code", e["iot_status_code"]),
+                ])
+                for e in error_codes_for_cmd
+            ]
 
         paths[f"/{op_name}"] = OrderedDict([("post", op)])
 
