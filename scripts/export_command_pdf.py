@@ -469,22 +469,25 @@ strong {{ color: #1a1a1a; }}
 /* ── Code ── */
 pre, code {{ font-family: "Courier New", Courier, monospace; }}
 code {{
-    background: #f4f4f4;
+    background: #eaecf0;
+    border: 1px solid #c0c4cc;
     border-radius: 3px;
-    padding: 1px 4px;
+    padding: 1px 5px;
     font-size: 9.5pt;
     color: #1a1a1a;
 }}
 pre {{
-    background: #f5f5f5;
+    background: #f0f2f5;
+    border: 1px solid #8a94a6;
     border-left: 4px solid #003d6b;
     border-radius: 4px;
-    padding: 10px 14px;
+    padding: 12px 14px;
     overflow-x: auto;
     white-space: pre-wrap;
     word-break: break-word;
     color: #1a1a1a;
     font-size: 9pt;
+    line-height: 1.5;
     margin: 8pt 0;
 }}
 pre code {{
@@ -500,11 +503,11 @@ table {{
     width: 100%;
     margin-top: 10px;
     table-layout: fixed;
-    border: 1px solid #c8d1dc;
+    border: 1.5px solid #003d6b;
     overflow: hidden;
 }}
 th, td {{
-    border: 1px solid #d0d8e2;
+    border: 1px solid #8a94a6;
     padding: 7px 9px;
     vertical-align: top;
     font-size: 10pt;
@@ -518,6 +521,7 @@ th {{
     font-size: 9.5pt;
     letter-spacing: 0.3px;
     font-family: Helvetica, Arial, sans-serif;
+    border-color: #002d50;
 }}
 tr:nth-child(odd) td {{ background: #ffffff; }}
 tr:nth-child(even) td {{ background: #f7f9fb; }}
