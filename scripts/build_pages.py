@@ -645,14 +645,14 @@ def wrap(title, current_href, body_html):
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{title} - RFD40 / RFD90 IOT developer guide</title>
+  <title>{title} - RFD40 / RFD90 API reference document</title>
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/docs.css" />
 </head>
 <body>
     <header class="doc-header">
         <button id="toc-toggle" class="toc-toggle" type="button" aria-label="Hide navigation" aria-expanded="true">◀</button>
-        <div class="doc-header-title">RFD40 / RFD90 IOT developer guide</div>
+        <div class="doc-header-title">RFD40 / RFD90 API reference document</div>
     </header>
     <div id="toc-backdrop" class="toc-backdrop" aria-hidden="true"></div>
     <div class="layout-shell">
@@ -680,7 +680,7 @@ def main():
         print("Generated docs/" + html_name)
 
     home_body = """
-<h1>RFD40 / RFD90 IOT developer guide</h1>
+<h1>RFD40 / RFD90 API reference document</h1>
 <p>Comprehensive developer documentation for Zebra RFD40/RFD90 handheld RFID readers.</p>
 <hr>
 <h2>Documentation</h2>
@@ -708,7 +708,7 @@ def main():
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <title>API Reference - RFD40 / RFD90 IOT developer guide</title>
+  <title>API Reference - RFD40 / RFD90 API reference document</title>
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/redoc-zebra.css?v=14" />
   <style>
@@ -717,11 +717,12 @@ def main():
     body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: #fff; }
     rapi-doc { width: 100%; height: 100%; }
     rapi-doc::part(section-operation-summary) { font-size: 1.1rem; }
+    rapi-doc::part(section-navbar-path) { padding-left: 16px !important; }
   </style>
 </head>
 <body>
   <rapi-doc
-    spec-url="openapi.yaml"
+    spec-url="openapi.yaml?v=30"
     render-style="read"
     show-header="false"
     show-side-nav="true"
@@ -748,41 +749,46 @@ def main():
   >
   </rapi-doc>
 
-  <script type="module" src="https://unpkg.com/rapidoc/dist/rapidoc-min.js"></script>
+  <script type="module" src="js/rapidoc-min.js?v=3"></script>
   <script>
   (function() {
-    /* After RapiDoc loads, hide HTTP method badges (POST/GET) since this is MQTT */
-    function hideHttpMethods() {
+    var mqttSheet = new CSSStyleSheet();
+    mqttSheet.replaceSync([
+      '.m-btn.primary { display: none !important; }',
+      '.method-fg { display: none !important; }',
+      '.req-res-title .method { display: none !important; }',
+      '.endpoint-head .method { display: none !important; }',
+      '.nav-bar-tag .method { display: none !important; }',
+      '.path { display: none !important; }',
+      '.nav-bar-path { padding-left: 16px !important; }',
+      '.nav-bar-path .method-fg.small { display: none !important; width: 0 !important; margin: 0 !important; padding: 0 !important; }',
+      'textarea { min-height: 40px !important; max-height: 180px !important; height: auto !important; resize: vertical !important; font-size: 13px !important; padding: 8px !important; }',
+      'pre { max-height: 250px !important; overflow: auto !important; padding: 8px 12px !important; font-size: 13px !important; }',
+      '.tab-content { padding: 0 !important; }',
+      '.tab-panels { padding: 0 !important; }',
+      '.table-title { padding: 6px 0 !important; }',
+    ].join('\\n'));
+    mqttSheet._isMqtt = true;
+
+    function applyOverrides() {
       var rd = document.querySelector('rapi-doc');
       if (!rd || !rd.shadowRoot) return;
-      var style = rd.shadowRoot.querySelector('style[data-mqtt-hide]');
-      if (!style) {
-        style = document.createElement('style');
-        style.setAttribute('data-mqtt-hide', '1');
-        style.textContent = [
-          /* Hide HTTP method badges */
-          '.m-btn.primary { display: none !important; }',
-          '.method-fg { display: none !important; }',
-          '.req-res-title .method { display: none !important; }',
-          '.endpoint-head .method { display: none !important; }',
-          '.nav-bar-tag .method { display: none !important; }',
-          '.path { display: none !important; }',
-          /* Compact request/response body examples */
-          'textarea { min-height: 40px !important; max-height: 180px !important; height: auto !important; resize: vertical !important; font-size: 13px !important; padding: 8px !important; }',
-          'pre { max-height: 250px !important; overflow: auto !important; padding: 8px 12px !important; font-size: 13px !important; }',
-          '.tab-content { padding: 0 !important; }',
-          '.tab-panels { padding: 0 !important; }',
-          '.table-title { padding: 6px 0 !important; }',
-        ].join('\\n');
-        rd.shadowRoot.appendChild(style);
+      var sr = rd.shadowRoot;
+      var sheets = sr.adoptedStyleSheets;
+      var hasMqtt = false;
+      for (var i = 0; i < sheets.length; i++) {
+        if (sheets[i]._isMqtt) { hasMqtt = true; break; }
+      }
+      if (!hasMqtt) {
+        sr.adoptedStyleSheets = [].concat(Array.from(sheets), [mqttSheet]);
       }
     }
     /* Poll for initial setup */
     var attempts = 0;
     var poll = setInterval(function() {
-      hideHttpMethods();
+      applyOverrides();
       processAllBlocks();
-      if (++attempts > 30) clearInterval(poll);
+      if (++attempts > 200) clearInterval(poll);
     }, 500);
 
     /* Process all pre and textarea blocks: add copy, resize.
@@ -876,7 +882,7 @@ def main():
         return;
       }
       var observer = new MutationObserver(function() {
-        hideHttpMethods();
+        applyOverrides();
         processAllBlocks();
       });
       observer.observe(rd.shadowRoot, { childList: true, subtree: true });
@@ -897,13 +903,14 @@ def main():
         f.write(redoc_standalone_html)
     print("Generated docs/api-reference-redoc.html")
 
-    api_ref_body = """<iframe src="api-reference-redoc.html?v=29" title="API Reference" class="api-ref-iframe"></iframe>"""
+    api_ref_body = """<iframe id="api-iframe" src="api-reference-redoc.html" title="API Reference" class="api-ref-iframe"></iframe>
+<script>document.getElementById('api-iframe').src='api-reference-redoc.html?v='+Date.now();</script>"""
     api_ref_html = """<!DOCTYPE html>
 <html lang="en" class="layout-api-ref-page">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>4. API Reference - RFD40 / RFD90 IOT developer guide</title>
+  <title>4. API Reference - RFD40 / RFD90 API reference document</title>
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/docs.css" />
   <link rel="stylesheet" href="css/api-reference.css" />
@@ -917,7 +924,7 @@ def main():
 <body>
     <header class="doc-header">
         <button id="toc-toggle" class="toc-toggle" type="button" aria-label="Hide navigation" aria-expanded="true">◀</button>
-        <div class="doc-header-title">RFD40 / RFD90 IOT developer guide</div>
+        <div class="doc-header-title">RFD40 / RFD90 API reference document</div>
     </header>
     <div id="toc-backdrop" class="toc-backdrop" aria-hidden="true"></div>
     <div class="layout-shell">
