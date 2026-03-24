@@ -261,6 +261,26 @@ def _resolve_refs(obj, base_path):
         return obj
 
 
+def filter_response_code_description(schema, error_codes_for_cmd):
+    """Replace the code field description in a response schema with only the relevant error codes."""
+    if not error_codes_for_cmd:
+        return
+    # Navigate to response.properties.code
+    props = schema.get("properties", {})
+    response_obj = props.get("response", {})
+    if isinstance(response_obj, dict):
+        resp_props = response_obj.get("properties", {})
+        code_field = resp_props.get("code")
+        if isinstance(code_field, dict) and "description" in code_field:
+            lines = ["Response code indicating success or failure."]
+            for e in error_codes_for_cmd:
+                lines.append(f"- **{e['code']}** \u2014 {e['description']}")
+            code_field["description"] = "\n".join(lines)
+            # Update maximum to match actual range
+            max_code = max(e["code"] for e in error_codes_for_cmd)
+            code_field["maximum"] = max_code
+
+
 def sort_operations(operations, tag_config):
     """
     Sort operations to match the order defined in tag_config.json tag_groups.
@@ -436,6 +456,8 @@ def build_openapi():
                     resp_examples = extract_examples(resp_schema, resp_title, example_data)
 
                     resp_schema_clean = extract_schema(resp_schema, resp_path)
+                    # Filter the code field description to only show relevant error codes
+                    filter_response_code_description(resp_schema_clean, error_codes_map.get(op_name, []))
                     resp_content = OrderedDict()
                     resp_content["application/json"] = OrderedDict()
                     resp_content["application/json"]["schema"] = resp_schema_clean
