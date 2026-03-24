@@ -762,17 +762,44 @@ def main():
       '.path { display: none !important; }',
       '.nav-bar-path { padding-left: 16px !important; }',
       '.nav-bar-path .method-fg.small { display: none !important; width: 0 !important; margin: 0 !important; padding: 0 !important; }',
+
+      /* ── Widen the main content area ── */
+      '.main-content { max-width: 100% !important; width: 100% !important; padding: 0 32px !important; }',
+      '.main-content > div, .main-content .operation-body { max-width: 100% !important; width: 100% !important; }',
+      '.section-gap, .section-gap--read-mode { max-width: 100% !important; width: 100% !important; padding: 0 24px !important; }',
+      '.main-content.read-mode { max-width: 100% !important; }',
+      '.api-content { max-width: 100% !important; width: 100% !important; }',
+
+      /* ── Tables: Zebra navy headers + alternating rows ── */
+      'table { border-collapse: collapse !important; width: 100% !important; border: 1.5px solid #003d6b !important; border-radius: 0 !important; }',
+      'th { background: #003d6b !important; color: #fff !important; font-weight: 600 !important; font-size: 13px !important; letter-spacing: 0.3px !important; padding: 8px 10px !important; text-align: left !important; border-color: #002d50 !important; }',
+      'td { padding: 7px 10px !important; vertical-align: top !important; font-size: 13px !important; border: 1px solid #8a94a6 !important; word-break: break-word !important; }',
+      'tr:nth-child(odd) td { background: #ffffff !important; }',
+      'tr:nth-child(even) td { background: #f7f9fb !important; }',
+
+      /* ── Headings: navy accent ── */
+      '.api-content h2, .section-gap h2 { color: #003d6b !important; border-bottom: 2px solid #003d6b !important; padding-bottom: 6px !important; margin-top: 28px !important; font-size: 20px !important; }',
+      '.api-content h3, .section-gap h3 { color: #003d6b !important; margin-top: 20px !important; font-size: 16px !important; }',
+
+      /* ── Code blocks: match PDF styling ── */
+      'pre { background: #f5f5f5 !important; border-left: 4px solid #003d6b !important; border-radius: 4px !important; padding: 12px 14px !important; font-size: 13px !important; line-height: 1.5 !important; max-height: 300px !important; overflow: auto !important; }',
+      'code { background: #f4f4f4 !important; border-radius: 3px !important; padding: 1px 5px !important; font-size: 12.5px !important; color: #1a1a1a !important; }',
+      'pre code { background: none !important; border: none !important; padding: 0 !important; font-size: 13px !important; }',
+
+      /* ── Textareas (request bodies) ── */
       'textarea { min-height: 40px !important; max-height: 180px !important; height: auto !important; resize: vertical !important; font-size: 13px !important; padding: 8px !important; }',
-      'pre { max-height: 250px !important; overflow: auto !important; padding: 8px 12px !important; font-size: 13px !important; }',
+
+      /* ── Tab & misc spacing ── */
       '.tab-content { padding: 0 !important; }',
       '.tab-panels { padding: 0 !important; }',
       '.table-title { padding: 6px 0 !important; }',
-      /* Widen the main content area */
-      '.main-content { max-width: 100% !important; width: 100% !important; padding: 0 24px !important; }',
-      '.main-content > div, .main-content .operation-body { max-width: 100% !important; width: 100% !important; }',
-      '.section-gap, .section-gap--read-mode { max-width: 100% !important; width: 100% !important; padding: 0 16px !important; }',
-      '.main-content.read-mode { max-width: 100% !important; }',
-      '.api-content { max-width: 100% !important; width: 100% !important; }',
+
+      /* ── Description text ── */
+      '.m-markdown p, .m-markdown li { font-size: 14px !important; line-height: 1.6 !important; color: #1a1a1a !important; }',
+      '.m-markdown strong { color: #1a1a1a !important; }',
+
+      /* ── Note / blockquote callouts ── */
+      '.m-markdown blockquote { background: #e8f0f8 !important; border-left: 4px solid #003d6b !important; border-radius: 4px !important; padding: 8px 12px !important; margin: 12px 0 8px !important; }',
     ].join('\\n'));
     mqttSheet._isMqtt = true;
 
