@@ -10,12 +10,18 @@ Output:
 """
 
 import argparse
+import base64
 import html
 import json
 import os
+import random
 import re
+import secrets
 import shutil
+import socket
+import struct
 import subprocess
+import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -23,6 +29,116 @@ try:
     import yaml  # type: ignore
 except Exception:  # pragma: no cover
     yaml = None
+
+
+# ── CDP (Chrome DevTools Protocol) helpers for per-page header/footer ──────
+
+
+def _make_header_template(command: str) -> str:
+    return (
+        '<div style="width:100%; font-family:Helvetica,Arial,sans-serif; font-size:8px;'
+        ' padding:6px 10mm 8px 10mm; display:flex; justify-content:space-between;'
+        ' align-items:center; border-bottom:2.5px solid #003d6b;">'
+        '<span style="font-weight:700; font-size:9px; color:#003d6b;'
+        ' letter-spacing:0.5px; text-transform:uppercase;">ZEBRA TECHNOLOGIES</span>'
+        f'<span style="color:#546a7b; font-size:7.5px; font-style:italic;">'
+        f'{html.escape(command)} &mdash; RFD40 / RFD90 IoT Connector API Reference</span>'
+        '</div>'
+    )
+
+
+def _make_footer_template() -> str:
+    return (
+        '<div style="width:100%; font-family:Helvetica,Arial,sans-serif; font-size:7px;'
+        ' padding:8px 10mm 6px 10mm; display:flex; justify-content:space-between;'
+        ' align-items:center; border-top:2px solid #003d6b; color:#546a7b;">'
+        '<span>API Version: V1.1 &nbsp;|&nbsp; Document Version: 1.0.0</span>'
+        '<span>Page <span class="pageNumber"></span> of <span class="totalPages"></span>'
+        ' &nbsp;|&nbsp; Zebra Confidential</span>'
+        '</div>'
+    )
+
+
+def _ws_connect(host: str, port: int, path: str) -> socket.socket:
+    sock = socket.create_connection((host, port), timeout=15)
+    key = base64.b64encode(secrets.token_bytes(16)).decode()
+    req = (
+        f"GET {path} HTTP/1.1\r\n"
+        f"Host: {host}:{port}\r\n"
+        f"Upgrade: websocket\r\n"
+        f"Connection: Upgrade\r\n"
+        f"Sec-WebSocket-Key: {key}\r\n"
+        f"Sec-WebSocket-Version: 13\r\n\r\n"
+    )
+    sock.sendall(req.encode())
+    resp = b""
+    while b"\r\n\r\n" not in resp:
+        resp += sock.recv(4096)
+    if b"101" not in resp.split(b"\r\n")[0]:
+        raise RuntimeError(f"WebSocket handshake failed:\n{resp.decode(errors='replace')}")
+    return sock
+
+
+def _ws_send(sock: socket.socket, data: str) -> None:
+    payload = data.encode()
+    frame = bytearray()
+    frame.append(0x81)
+    mask_key = secrets.token_bytes(4)
+    length = len(payload)
+    if length < 126:
+        frame.append(0x80 | length)
+    elif length < 65536:
+        frame.append(0x80 | 126)
+        frame.extend(struct.pack(">H", length))
+    else:
+        frame.append(0x80 | 127)
+        frame.extend(struct.pack(">Q", length))
+    frame.extend(mask_key)
+    masked = bytearray(b ^ mask_key[i % 4] for i, b in enumerate(payload))
+    frame.extend(masked)
+    sock.sendall(frame)
+
+
+def _ws_recv(sock: socket.socket) -> str:
+    def read_exact(n: int) -> bytes:
+        buf = b""
+        while len(buf) < n:
+            chunk = sock.recv(n - len(buf))
+            if not chunk:
+                raise ConnectionError("Connection closed")
+            buf += chunk
+        return buf
+
+    header = read_exact(2)
+    masked = bool(header[1] & 0x80)
+    length = header[1] & 0x7F
+    if length == 126:
+        length = struct.unpack(">H", read_exact(2))[0]
+    elif length == 127:
+        length = struct.unpack(">Q", read_exact(8))[0]
+    if masked:
+        mask_key = read_exact(4)
+    payload = read_exact(length)
+    if masked:
+        payload = bytes(b ^ mask_key[i % 4] for i, b in enumerate(payload))
+    opcode = header[0] & 0x0F
+    if opcode == 0x08:
+        raise ConnectionError("WebSocket closed by server")
+    return payload.decode()
+
+
+def _cdp_call(sock: socket.socket, method: str, params: Optional[dict] = None, msg_id: int = 1) -> dict:
+    msg: dict = {"id": msg_id, "method": method}
+    if params:
+        msg["params"] = params
+    _ws_send(sock, json.dumps(msg))
+    while True:
+        raw = _ws_recv(sock)
+        data = json.loads(raw)
+        if data.get("id") == msg_id:
+            if "error" in data:
+                raise RuntimeError(f"CDP error: {data['error']}")
+            return data.get("result", {})
 
 
 def load_spec(spec_path: Path) -> Dict[str, Any]:
@@ -560,6 +676,8 @@ tr:nth-child(even) td {{ background: #f7f9fb; }}
 .download-bar a svg {{ fill: #fff; width: 16px; height: 16px; }}
 @media print {{
     .download-bar {{ display: none; }}
+    .doc-header-bar {{ display: none; }}
+    .doc-footer-bar {{ display: none; }}
 }}
 
 /* ── Print rules ── */
@@ -597,33 +715,114 @@ h2, h3 {{ page-break-inside: avoid; }}
 """
 
 
-def try_generate_pdf(browser: str, html_path: Path, pdf_path: Path) -> Tuple[bool, str]:
-    cmd = [
-        browser,
-        "--headless",
-        "--disable-gpu",
-        "--no-first-run",
-        "--no-default-browser-check",
-        "--disable-extensions",
-        "--no-pdf-header-footer",
-        f"--print-to-pdf={str(pdf_path)}",
-        html_path.resolve().as_uri(),
-    ]
+def try_generate_pdf(browser: str, html_path: Path, pdf_path: Path, command: str = "") -> Tuple[bool, str]:
+    """Generate PDF via Chrome DevTools Protocol with per-page header/footer."""
+    file_url = "file:///" + str(html_path.resolve()).replace("\\", "/").replace(" ", "%20")
+    cdp_port = random.randint(9200, 9399)
+    user_data = os.path.join(os.environ.get("TEMP", "."), f"chrome_pdf_{cdp_port}")
+
+    chrome = subprocess.Popen(
+        [
+            browser,
+            f"--remote-debugging-port={cdp_port}",
+            f"--user-data-dir={user_data}",
+            "--headless",
+            "--disable-gpu",
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--disable-extensions",
+            "about:blank",
+        ],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+
     try:
-        completed = subprocess.run(cmd, capture_output=True, text=True, check=False, timeout=45)
-    except subprocess.TimeoutExpired:
-        return False, "Timed out while generating PDF via browser"
+        # Wait for DevTools to be ready
+        ws_url = None
+        for _ in range(30):
+            time.sleep(0.5)
+            try:
+                conn = socket.create_connection(("127.0.0.1", cdp_port), timeout=2)
+                req = f"GET /json HTTP/1.1\r\nHost: 127.0.0.1:{cdp_port}\r\n\r\n"
+                conn.sendall(req.encode())
+                resp = b""
+                while True:
+                    chunk = conn.recv(4096)
+                    if not chunk:
+                        break
+                    resp += chunk
+                    if b"\r\n0\r\n" in resp or (b"\r\n\r\n" in resp and b"[" in resp):
+                        break
+                conn.close()
+                body = resp.split(b"\r\n\r\n", 1)[1]
+                if b"\r\n" in body and body[0:1] != b"[":
+                    body = body.split(b"\r\n", 1)[1]
+                targets = json.loads(body.split(b"\r\n0")[0] if b"\r\n0" in body else body)
+                for t in targets:
+                    if t.get("type") == "page":
+                        ws_url = t["webSocketDebuggerUrl"]
+                        break
+                if ws_url:
+                    break
+            except (ConnectionRefusedError, OSError, json.JSONDecodeError):
+                continue
+
+        if not ws_url:
+            return False, "Could not connect to Chrome DevTools"
+
+        ws_path = "/" + ws_url.split("/", 3)[3]
+        sock = _ws_connect("127.0.0.1", cdp_port, ws_path)
+        sock.settimeout(120)  # Large docs need more time for printToPDF
+
+        _cdp_call(sock, "Page.enable", msg_id=1)
+        _cdp_call(sock, "Page.navigate", {"url": file_url}, msg_id=2)
+        time.sleep(3)  # Wait for page to load
+
+        result = _cdp_call(
+            sock,
+            "Page.printToPDF",
+            {
+                "landscape": False,
+                "displayHeaderFooter": True,
+                "headerTemplate": _make_header_template(command),
+                "footerTemplate": _make_footer_template(),
+                "printBackground": True,
+                "paperWidth": 8.27,
+                "paperHeight": 11.69,
+                "marginTop": 1.4,
+                "marginBottom": 1.3,
+                "marginLeft": 0.55,
+                "marginRight": 0.55,
+                "preferCSSPageSize": False,
+            },
+            msg_id=3,
+        )
+
+        pdf_data = base64.b64decode(result["data"])
+        os.makedirs(os.path.dirname(pdf_path), exist_ok=True)
+        with open(pdf_path, "wb") as f:
+            f.write(pdf_data)
+
+        sock.close()
+        return True, "OK"
+
     except Exception as ex:
-        return False, f"Failed to invoke browser: {ex}"
-
-    if completed.returncode != 0:
-        err = completed.stderr.strip() or completed.stdout.strip() or "Unknown error"
-        return False, err
-
-    if not pdf_path.exists():
-        return False, "Browser command completed, but PDF file was not created"
-
-    return True, "OK"
+        return False, f"CDP PDF generation failed: {ex}"
+    finally:
+        chrome.terminate()
+        try:
+            chrome.wait(timeout=10)
+        except subprocess.TimeoutExpired:
+            chrome.kill()
+        # Wait for port to be fully released
+        for _ in range(20):
+            try:
+                probe = socket.create_connection(("127.0.0.1", cdp_port), timeout=0.5)
+                probe.close()
+                time.sleep(0.5)
+            except (ConnectionRefusedError, OSError):
+                break
 
 
 def main() -> None:
@@ -649,7 +848,7 @@ def main() -> None:
 
     browser = choose_browser_executable()
     if browser:
-        ok, msg = try_generate_pdf(browser, html_path, pdf_path)
+        ok, msg = try_generate_pdf(browser, html_path, pdf_path, args.command)
         if ok:
             print(f"Generated HTML: {html_path}")
             print(f"Generated PDF:  {pdf_path}")
