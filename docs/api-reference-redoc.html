@@ -96,6 +96,18 @@
       '.m-markdown p, .m-markdown li { font-size: 14px !important; line-height: 1.6 !important; color: #1a1a1a !important; }',
       '.m-markdown strong { color: #1a1a1a !important; }',
 
+      /* ── Schema table: widen and improve readability ── */
+      '.schema-table { width: 100% !important; max-width: 100% !important; }',
+      '.schema-table .tr { display: grid !important; grid-template-columns: minmax(160px, 1fr) minmax(80px, auto) 3fr !important; width: 100% !important; }',
+      '.schema-table .td { padding: 8px 10px !important; font-size: 13px !important; word-break: break-word !important; min-width: 0 !important; }',
+      '.schema-table .key { min-width: 140px !important; }',
+      '.schema-table .key-type { min-width: 70px !important; white-space: nowrap !important; }',
+      '.schema-table .key-descr { min-width: 0 !important; flex: 1 !important; }',
+      '.tree { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; }',
+      '.req-res-info { width: 100% !important; max-width: 100% !important; }',
+      '.request-body-container, .response-body-container { width: 100% !important; max-width: 100% !important; }',
+      '.schema-table-header { display: grid !important; grid-template-columns: minmax(160px, 1fr) minmax(80px, auto) 3fr !important; width: 100% !important; }',
+
       /* ── Note / blockquote callouts ── */
       '.m-markdown blockquote { background: #e8f0f8 !important; border-left: 4px solid #003d6b !important; border-radius: 4px !important; padding: 8px 12px !important; margin: 12px 0 8px !important; }',
     ].join('\n'));
