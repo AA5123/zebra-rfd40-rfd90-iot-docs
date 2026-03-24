@@ -22,14 +22,14 @@ CHROME_PATH = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 CDP_PORT = 9223  # DevTools port
 
 HEADER_TEMPLATE = """
-<div style="width:100%; font-family:Segoe UI,Calibri,Arial,sans-serif; font-size:8px; padding:6px 10mm 8px 10mm; display:flex; justify-content:space-between; align-items:center; border-bottom:2.5px solid #1f3b5c;">
-    <span style="font-weight:700; font-size:9px; color:#1f3b5c; letter-spacing:0.5px; text-transform:uppercase;">ZEBRA TECHNOLOGIES</span>
+<div style="width:100%; font-family:Helvetica,Arial,sans-serif; font-size:8px; padding:6px 10mm 8px 10mm; display:flex; justify-content:space-between; align-items:center; border-bottom:2.5px solid #003d6b;">
+    <span style="font-weight:700; font-size:9px; color:#003d6b; letter-spacing:0.5px; text-transform:uppercase;">ZEBRA TECHNOLOGIES</span>
     <span style="color:#546a7b; font-size:7.5px; font-style:italic;">get_status &mdash; RFD40 / RFD90 IoT Connector API Reference</span>
 </div>
 """
 
 FOOTER_TEMPLATE = """
-<div style="width:100%; font-family:Segoe UI,Calibri,Arial,sans-serif; font-size:7px; padding:8px 10mm 6px 10mm; display:flex; justify-content:space-between; align-items:center; border-top:2px solid #1f3b5c; color:#546a7b;">
+<div style="width:100%; font-family:Helvetica,Arial,sans-serif; font-size:7px; padding:8px 10mm 6px 10mm; display:flex; justify-content:space-between; align-items:center; border-top:2px solid #003d6b; color:#546a7b;">
     <span>API Version: V1.1 &nbsp;|&nbsp; Document Version: 1.0.0 &nbsp;|&nbsp; Last Updated: 2026-03-12</span>
     <span>Page <span class="pageNumber"></span> of <span class="totalPages"></span> &nbsp;|&nbsp; Zebra Confidential</span>
 </div>
