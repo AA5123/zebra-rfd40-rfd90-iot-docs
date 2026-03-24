@@ -15,6 +15,10 @@
     body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: #fff; }
     rapi-doc { width: 100%; height: 100%; }
     rapi-doc::part(section-operation-summary) { font-size: 1.1rem; }
+    /* Hide OPERATIONS header — ::part() works from outside shadow DOM, immune to Lit */
+    rapi-doc::part(section-navbar-operations-top) { display: none !important; }
+    /* Fix nav path offset */
+    rapi-doc::part(section-navbar-path) { padding-left: 16px !important; }
   </style>
 </head>
 <body>
