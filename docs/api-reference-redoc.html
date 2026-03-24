@@ -70,10 +70,8 @@
           '.nav-bar-path .method-fg.small { display: none !important; width: 0 !important; margin: 0 !important; padding: 0 !important; }',
           /* Hide OPERATIONS header in nav */
           '#link-operations-top { display: none !important; }',
+          '.nav-bar-section.operations { display: none !important; }',
           '.nav-bar-section-title { display: none !important; }',
-          '.nav-bar-h1 { display: none !important; }',
-          '#operations-top { display: none !important; }',
-          '[data-content-id="operations-top"] { display: none !important; }',
           /* Compact request/response body examples */
           'textarea { min-height: 40px !important; max-height: 180px !important; height: auto !important; resize: vertical !important; font-size: 13px !important; padding: 8px !important; }',
           'pre { max-height: 250px !important; overflow: auto !important; padding: 8px 12px !important; font-size: 13px !important; }',
@@ -83,13 +81,16 @@
         ].join('\n');
         rd.shadowRoot.appendChild(style);
       }
+      /* Also directly hide the OPERATIONS element in case CSS specificity loses */
+      var opsEl = rd.shadowRoot.querySelector('#link-operations-top');
+      if (opsEl) opsEl.style.setProperty('display', 'none', 'important');
     }
-    /* Poll for initial setup */
+    /* Poll for initial setup — keep polling to re-apply after Lit re-renders */
     var attempts = 0;
     var poll = setInterval(function() {
       hideHttpMethods();
       processAllBlocks();
-      if (++attempts > 30) clearInterval(poll);
+      if (++attempts > 200) clearInterval(poll);
     }, 500);
 
     /* Process all pre and textarea blocks: add copy, resize.
