@@ -12,36 +12,12 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; height: 100%; }
-    body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: #fff; display: flex; height: 100vh; overflow: hidden; margin: 0; }
-    #tree-sidebar {
-      width: 260px; min-width: 260px; height: 100vh; overflow-y: auto;
-      background: #fff; border-right: 1px solid #e5e7eb; padding: 8px 0;
-    }
-    #tree-sidebar .grp-hdr {
-      font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
-      color: #555; padding: 14px 16px 6px; cursor: pointer; user-select: none;
-      display: flex; align-items: center;
-    }
-    #tree-sidebar .grp-hdr:hover { color: #0073bb; }
-    #tree-sidebar .tri { display: inline-block; font-size: 10px; margin-right: 6px; transition: transform 0.15s; }
-    #tree-sidebar .grp-hdr.open .tri { transform: rotate(90deg); }
-    #tree-sidebar .grp-body { overflow: hidden; }
-    #tree-sidebar .grp-body.collapsed { display: none; }
-    #tree-sidebar .tag-name {
-      padding: 6px 8px 6px 28px; cursor: pointer; color: #333; font-weight: 600; font-size: 13px;
-    }
-    #tree-sidebar .tag-name:hover { color: #0073bb; background: #f2f3f3; }
-    #tree-sidebar .op-link {
-      display: block; padding: 3px 8px 3px 44px; color: #666; text-decoration: none;
-      cursor: pointer; font-size: 12px;
-    }
-    #tree-sidebar .op-link:hover { color: #0073bb; background: #f2f3f3; }
-    rapi-doc { flex: 1; min-width: 0; height: 100vh; }
+    body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: #fff; }
+    rapi-doc { width: 100%; height: 100%; }
     rapi-doc::part(section-operation-summary) { font-size: 1.1rem; }
   </style>
 </head>
 <body>
-  <nav id="tree-sidebar"></nav>
   <rapi-doc
     spec-url="openapi.yaml?v=29"
     render-style="read"
@@ -214,122 +190,6 @@
   })();
   </script>
 
-  <script>
-  /* ── Collapsible x-tagGroups tree sidebar ──
-     Strategy: Build sidebar OUTSIDE rapi-doc (in regular DOM) so Lit re-renders
-     cannot touch it. Keep show-side-nav="true" so hidden nav elements exist in
-     shadow DOM for programmatic click-based navigation. Inject a tiny CSS rule
-     into shadow root to hide the native nav panel. */
-  (function() {
-    var TREE = [
-      { group: 'MANAGEMENT', tags: [
-        { name: 'Device Status', ops: ['get_status', 'get_version', 'get_current_region'] },
-        { name: 'Device Configuration', ops: ['get_config', 'set_config'] },
-        { name: 'Network Configuration', ops: ['get_wifi', 'set_wifi', 'delete_wifi_profile', 'get_eth'] },
-        { name: 'MQTT Endpoint Configuration', ops: ['config_endpoint', 'get_endpoint_config'] },
-        { name: 'Certificate Management', ops: ['install_certificate', 'delete_certificate', 'get_installed_certificate'] },
-        { name: 'System Operations', ops: ['reboot', 'set_os'] }
-      ]},
-      { group: 'CONTROL', tags: [
-        { name: 'Inventory Control', ops: ['control_operation'] },
-        { name: 'Operating Mode', ops: ['get_operating_mode', 'set_operating_mode'] },
-        { name: 'Tag Filtering', ops: ['get_post_filter', 'set_post_filter'] }
-      ]},
-      { group: 'EVENTS', tags: [
-        { name: 'Device Health', ops: ['heartBeatEVT'] },
-        { name: 'Alerts', ops: ['alerts', 'alert_short'] },
-        { name: 'Exceptions', ops: ['exceptionEVT'] },
-        { name: 'MQTT Connectivity', ops: ['mqttConnEVT'] },
-        { name: 'Event Configuration', ops: ['config_events'] }
-      ]},
-      { group: 'DATA', tags: [
-        { name: 'Tag Data Event', ops: ['dataEVT'] }
-      ]}
-    ];
 
-    /* ── Build the sidebar in regular DOM (immune to Lit) ── */
-    var sidebar = document.getElementById('tree-sidebar');
-    for (var gi = 0; gi < TREE.length; gi++) {
-      var g = TREE[gi];
-      var hdr = document.createElement('div');
-      hdr.className = 'grp-hdr open';
-      hdr.innerHTML = '<span class="tri">\u25B6</span>' + g.group;
-      var body = document.createElement('div');
-      body.className = 'grp-body';
-      (function(h, b) {
-        h.addEventListener('click', function() { h.classList.toggle('open'); b.classList.toggle('collapsed'); });
-      })(hdr, body);
-
-      for (var ti = 0; ti < g.tags.length; ti++) {
-        var tag = g.tags[ti];
-        var tagDiv = document.createElement('div');
-        tagDiv.className = 'tag-name';
-        tagDiv.textContent = tag.name;
-        (function(tName) {
-          tagDiv.addEventListener('click', function() { navTo(tName, null); });
-        })(tag.name);
-        body.appendChild(tagDiv);
-
-        for (var oi = 0; oi < tag.ops.length; oi++) {
-          var opDiv = document.createElement('div');
-          opDiv.className = 'op-link';
-          opDiv.textContent = tag.ops[oi];
-          (function(opName, tName) {
-            opDiv.addEventListener('click', function() { navTo(tName, opName); });
-          })(tag.ops[oi], tag.name);
-          body.appendChild(opDiv);
-        }
-      }
-      sidebar.appendChild(hdr);
-      sidebar.appendChild(body);
-    }
-
-    /* ── Hide native RapiDoc nav panel (keep elements for click navigation) ── */
-    function hideNativeNav() {
-      var rd = document.querySelector('rapi-doc');
-      if (!rd || !rd.shadowRoot) { setTimeout(hideNativeNav, 300); return; }
-      var sr = rd.shadowRoot;
-      if (!sr.querySelector('style[data-hide-nav]')) {
-        var css = document.createElement('style');
-        css.setAttribute('data-hide-nav', '1');
-        css.textContent = '.nav-bar { display:none !important; }';
-        sr.appendChild(css);
-      }
-    }
-    hideNativeNav();
-    /* Re-inject if Lit ever wipes the style */
-    setInterval(hideNativeNav, 3000);
-
-    /* ── Navigate by clicking hidden nav elements in shadow DOM ── */
-    function navTo(tagName, opName) {
-      var rd = document.querySelector('rapi-doc');
-      if (!rd || !rd.shadowRoot) return;
-      var sr = rd.shadowRoot;
-
-      if (opName) {
-        /* Find the hidden .nav-bar-path whose text matches the operation */
-        var paths = sr.querySelectorAll('.nav-bar-path');
-        for (var i = 0; i < paths.length; i++) {
-          if (paths[i].textContent.trim().indexOf(opName) >= 0) {
-            paths[i].click();
-            return;
-          }
-        }
-        /* Fallback: scroll to any element whose ID contains the operation name */
-        var el = sr.querySelector('[id*="' + opName + '"]');
-        if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
-      }
-      if (tagName) {
-        var tags = sr.querySelectorAll('.nav-bar-tag');
-        for (var j = 0; j < tags.length; j++) {
-          if (tags[j].textContent.trim().indexOf(tagName) >= 0) {
-            tags[j].click();
-            return;
-          }
-        }
-      }
-    }
-  })();
-  </script>
 </body>
 </html>
