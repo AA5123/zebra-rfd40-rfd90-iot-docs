@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <title>API Reference - RFD40 / RFD90 IOT developer guide</title>
+  <title>API Reference - RFD40 / RFD90 API reference document</title>
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/redoc-zebra.css?v=14" />
   <style>
@@ -66,7 +66,6 @@
       '.nav-bar-path .method-fg.small { display: none !important; width: 0 !important; margin: 0 !important; padding: 0 !important; }',
       '#link-operations-top { display: none !important; }',
       '.nav-bar-section.operations { display: none !important; }',
-      '.nav-bar-section-title { display: none !important; }',
       'textarea { min-height: 40px !important; max-height: 180px !important; height: auto !important; resize: vertical !important; font-size: 13px !important; padding: 8px !important; }',
       'pre { max-height: 250px !important; overflow: auto !important; padding: 8px 12px !important; font-size: 13px !important; }',
       '.tab-content { padding: 0 !important; }',
@@ -75,29 +74,60 @@
     ].join('\n'));
     mqttSheet._isMqtt = true;
 
-    function hideHttpMethods() {
+    /**
+     * Intercept the adoptedStyleSheets setter on the ShadowRoot instance
+     * so Lit's adoptStyles() can never remove our custom sheet.
+     */
+    var trapped = false;
+    function trapAdoptedStyleSheets(sr) {
+      if (trapped) return;
+      /* Walk prototype chain to find the native descriptor */
+      var desc = null;
+      var proto = sr;
+      while (proto && !desc) {
+        desc = Object.getOwnPropertyDescriptor(proto, 'adoptedStyleSheets');
+        if (!desc) proto = Object.getPrototypeOf(proto);
+      }
+      if (!desc || !desc.set) return;
+      Object.defineProperty(sr, 'adoptedStyleSheets', {
+        get: function() { return desc.get.call(this); },
+        set: function(sheets) {
+          var arr = Array.isArray(sheets) ? sheets.slice() : Array.from(sheets);
+          var found = false;
+          for (var i = 0; i < arr.length; i++) {
+            if (arr[i]._isMqtt) { found = true; break; }
+          }
+          if (!found) arr.push(mqttSheet);
+          desc.set.call(this, arr);
+        },
+        configurable: true,
+        enumerable: true
+      });
+      /* Apply immediately */
+      var current = desc.get.call(sr);
+      var has = false;
+      for (var i = 0; i < current.length; i++) {
+        if (current[i]._isMqtt) { has = true; break; }
+      }
+      if (!has) desc.set.call(sr, [].concat(Array.from(current), [mqttSheet]));
+      trapped = true;
+    }
+
+    function applyOverrides() {
       var rd = document.querySelector('rapi-doc');
       if (!rd || !rd.shadowRoot) return;
-      var sr = rd.shadowRoot;
-
-      /* Ensure our sheet is in adoptedStyleSheets — Lit may have replaced the array */
-      var sheets = sr.adoptedStyleSheets;
-      var hasMqtt = false;
-      for (var i = 0; i < sheets.length; i++) {
-        if (sheets[i]._isMqtt) { hasMqtt = true; break; }
+      trapAdoptedStyleSheets(rd.shadowRoot);
+      /* Belt-and-suspenders: inline-hide the OPERATIONS element */
+      var ops = rd.shadowRoot.querySelector('#link-operations-top');
+      if (ops && ops.style.display !== 'none') {
+        ops.style.setProperty('display', 'none', 'important');
       }
-      if (!hasMqtt) {
-        sr.adoptedStyleSheets = [...sheets, mqttSheet];
-      }
-
-      /* Belt-and-suspenders: also inline-hide the OPERATIONS element */
-      var opsEl = sr.querySelector('#link-operations-top');
-      if (opsEl) opsEl.style.setProperty('display', 'none', 'important');
     }
-    /* Poll for initial setup — keep polling to re-apply after Lit re-renders */
+
+    /* Poll for initial setup + re-apply inline hide after Lit re-renders */
     var attempts = 0;
     var poll = setInterval(function() {
-      hideHttpMethods();
+      applyOverrides();
       processAllBlocks();
       if (++attempts > 200) clearInterval(poll);
     }, 500);
@@ -193,7 +223,7 @@
         return;
       }
       var observer = new MutationObserver(function() {
-        hideHttpMethods();
+        applyOverrides();
         processAllBlocks();
       });
       observer.observe(rd.shadowRoot, { childList: true, subtree: true });
