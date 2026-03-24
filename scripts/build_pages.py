@@ -740,7 +740,7 @@ def main():
     mono-font="Consolas, Monaco, monospace"
     schema-style="table"
     schema-expand-level="1"
-    default-schema-tab="example"
+    default-schema-tab="schema"
     show-method-in-nav-bar="false"
     use-path-in-nav-bar="false"
     allow-try="false"
