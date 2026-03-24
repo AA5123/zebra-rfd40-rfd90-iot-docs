@@ -496,6 +496,8 @@ def build_html(command: str, op: Dict[str, Any]) -> str:
     # Remove PDF download link from description (avoid self-referencing in PDF)
     if isinstance(description, str):
         description = re.sub(r"\n\n\*\*Download pdf:\*\*[^\n]*", "", description).strip()
+        # Remove markdown error codes table (rendered separately from x-error-codes)
+        description = re.sub(r"\n\n\*\*Status / Error Codes\*\*\n.*", "", description, flags=re.DOTALL).strip()
 
     # Extract error codes from x-error-codes extension
     error_codes = op.get("x-error-codes", [])

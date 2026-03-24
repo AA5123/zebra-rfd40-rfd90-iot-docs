@@ -459,7 +459,7 @@ def build_openapi():
                     ("200", OrderedDict([("description", "Success")])),
             ])
 
-        # Inject filtered error codes as x-error-codes extension
+        # Inject filtered error codes as x-error-codes extension + description table
         error_codes_for_cmd = error_codes_map.get(op_name, [])
         if error_codes_for_cmd:
             op["x-error-codes"] = [
@@ -470,6 +470,21 @@ def build_openapi():
                 ])
                 for e in error_codes_for_cmd
             ]
+            # Append markdown table to description so RapiDoc renders it
+            ec_lines = [
+                "\n\n**Status / Error Codes**\n",
+                "| Code | Status Constant | Description |",
+                "|------|----------------|-------------|",
+            ]
+            for e in error_codes_for_cmd:
+                ec_lines.append(
+                    f"| {e['code']} | `{e['iot_status_code']}` | {e['description']} |"
+                )
+            ec_table = "\n".join(ec_lines)
+            current_desc = op.get("description", "")
+            # Remove any previous error codes table (idempotent)
+            current_desc = re.sub(r"\n\n\*\*Status / Error Codes\*\*\n.*", "", current_desc, flags=re.DOTALL)
+            op["description"] = current_desc + ec_table
 
         paths[f"/{op_name}"] = OrderedDict([("post", op)])
 
