@@ -53,39 +53,45 @@
   <script type="module" src="https://unpkg.com/rapidoc@9.3.4/dist/rapidoc-min.js"></script>
   <script>
   (function() {
-    /* After RapiDoc loads, hide HTTP method badges (POST/GET) since this is MQTT */
+    /* Create our override stylesheet ONCE — stored in closure */
+    var mqttSheet = new CSSStyleSheet();
+    mqttSheet.replaceSync([
+      '.m-btn.primary { display: none !important; }',
+      '.method-fg { display: none !important; }',
+      '.req-res-title .method { display: none !important; }',
+      '.endpoint-head .method { display: none !important; }',
+      '.nav-bar-tag .method { display: none !important; }',
+      '.path { display: none !important; }',
+      '.nav-bar-path { padding-left: 16px !important; }',
+      '.nav-bar-path .method-fg.small { display: none !important; width: 0 !important; margin: 0 !important; padding: 0 !important; }',
+      '#link-operations-top { display: none !important; }',
+      '.nav-bar-section.operations { display: none !important; }',
+      '.nav-bar-section-title { display: none !important; }',
+      'textarea { min-height: 40px !important; max-height: 180px !important; height: auto !important; resize: vertical !important; font-size: 13px !important; padding: 8px !important; }',
+      'pre { max-height: 250px !important; overflow: auto !important; padding: 8px 12px !important; font-size: 13px !important; }',
+      '.tab-content { padding: 0 !important; }',
+      '.tab-panels { padding: 0 !important; }',
+      '.table-title { padding: 6px 0 !important; }',
+    ].join('\n'));
+    mqttSheet._isMqtt = true;
+
     function hideHttpMethods() {
       var rd = document.querySelector('rapi-doc');
       if (!rd || !rd.shadowRoot) return;
       var sr = rd.shadowRoot;
 
-      /* Use adoptedStyleSheets — Lit CANNOT wipe these because they're
-         not DOM nodes; they're attached via the CSSStyleSheet API */
-      if (!sr._mqttSheetAdded) {
-        var sheet = new CSSStyleSheet();
-        sheet.replaceSync([
-          '.m-btn.primary { display: none !important; }',
-          '.method-fg { display: none !important; }',
-          '.req-res-title .method { display: none !important; }',
-          '.endpoint-head .method { display: none !important; }',
-          '.nav-bar-tag .method { display: none !important; }',
-          '.path { display: none !important; }',
-          '.nav-bar-path { padding-left: 16px !important; }',
-          '.nav-bar-path .method-fg.small { display: none !important; width: 0 !important; margin: 0 !important; padding: 0 !important; }',
-          '#link-operations-top { display: none !important; }',
-          '.nav-bar-section.operations { display: none !important; }',
-          '.nav-bar-section-title { display: none !important; }',
-          'textarea { min-height: 40px !important; max-height: 180px !important; height: auto !important; resize: vertical !important; font-size: 13px !important; padding: 8px !important; }',
-          'pre { max-height: 250px !important; overflow: auto !important; padding: 8px 12px !important; font-size: 13px !important; }',
-          '.tab-content { padding: 0 !important; }',
-          '.tab-panels { padding: 0 !important; }',
-          '.table-title { padding: 6px 0 !important; }',
-        ].join('\n'));
-        sr.adoptedStyleSheets = [...sr.adoptedStyleSheets, sheet];
-        sr._mqttSheetAdded = true;
+      /* Ensure our sheet is in adoptedStyleSheets — Lit may have replaced the array */
+      var sheets = sr.adoptedStyleSheets;
+      var hasMqtt = false;
+      for (var i = 0; i < sheets.length; i++) {
+        if (sheets[i]._isMqtt) { hasMqtt = true; break; }
       }
-      /* Also directly hide the OPERATIONS element in case CSS specificity loses */
-      var opsEl = rd.shadowRoot.querySelector('#link-operations-top');
+      if (!hasMqtt) {
+        sr.adoptedStyleSheets = [...sheets, mqttSheet];
+      }
+
+      /* Belt-and-suspenders: also inline-hide the OPERATIONS element */
+      var opsEl = sr.querySelector('#link-operations-top');
       if (opsEl) opsEl.style.setProperty('display', 'none', 'important');
     }
     /* Poll for initial setup — keep polling to re-apply after Lit re-renders */
