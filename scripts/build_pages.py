@@ -733,7 +733,7 @@ def main():
 </head>
 <body>
   <rapi-doc
-    spec-url="openapi.yaml?v=35"
+    spec-url="openapi.yaml?v=36"
     render-style="read"
     sort-endpoints-by="none"
     show-header="false"
@@ -940,17 +940,22 @@ def main():
       for (var a = 0; a < allEls.length; a++) {
         var sp = allEls[a];
         if (sp.getAttribute('data-enum-styled')) continue;
-        var innerH = sp.innerHTML;
-        /* Match both "Allowed:" and "Enum:" labels */
-        if (innerH.indexOf('Allowed:') === -1 && innerH.indexOf('Enum:') === -1) continue;
+        var text = sp.textContent;
+        if (text.indexOf('Allowed:') === -1 && text.indexOf('Enum:') === -1) continue;
+        /* Only process small enum-display elements, not large description blocks */
+        var enumMatch = text.match(/(Allowed|Enum):[\\s]*(.*)/s);
+        if (!enumMatch) continue;
+        var beforeEnum = text.substring(0, text.indexOf(enumMatch[0])).trim();
+        if (beforeEnum.length > 100) continue;
         sp.setAttribute('data-enum-styled', '1');
-        sp.innerHTML = innerH.replace(/(Allowed|Enum):\\s*(?:<\\/b>)?\\s*([^<]+)/g, function(m, label, valStr) {
-          var vals = valStr.split(/\\s*\\|\\s*/).filter(function(v){ return v.trim() !== ''; });
-          var badges = vals.map(function(v) {
-            return '<span style="display:inline-block;background:#fff;border:1px solid #bbb;border-radius:3px;padding:2px 10px;margin:2px 4px 2px 0;font-family:Consolas,Monaco,monospace;font-size:13px;color:#333;">' + v.trim() + '</span>';
-          }).join('');
-          return '<div style="margin-top:4px;"><span style="font-weight:600;color:#555;font-size:13px;">Enum:</span> ' + badges + '</div>';
-        });
+        var valStr = enumMatch[2].trim();
+        /* Split on both regular pipe | and thick pipe \\u2503 */
+        var vals = valStr.split(/[|\\u2503]/).map(function(v){ return v.trim(); }).filter(function(v){ return v !== ''; });
+        var badges = vals.map(function(v) {
+          return '<span style="display:inline-block;background:#fff;border:1px solid #bbb;border-radius:3px;padding:2px 10px;margin:2px 4px 2px 0;font-family:Consolas,Monaco,monospace;font-size:13px;color:#333;">' + v + '</span>';
+        }).join('');
+        var prefix = beforeEnum.length > 0 ? beforeEnum + '<br>' : '';
+        sp.innerHTML = prefix + '<div style="margin-top:4px;"><span style="font-weight:600;color:#555;font-size:13px;">Enum:</span> ' + badges + '</div>';
       }
       /* <pre> blocks (response examples) */
       var pres = root.querySelectorAll('pre');
