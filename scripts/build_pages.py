@@ -733,7 +733,7 @@ def main():
 </head>
 <body>
   <rapi-doc
-    spec-url="openapi.yaml?v=38"
+    spec-url="openapi.yaml?v=39"
     render-style="read"
     sort-endpoints-by="none"
     show-header="false"
@@ -917,7 +917,7 @@ def main():
       if (!root.querySelector('style[data-copy-style]')) {
         var style = document.createElement('style');
         style.setAttribute('data-copy-style', '1');
-        style.textContent = 'pre { background: #f6f8fa !important; background-color: #f6f8fa !important; }';
+        style.textContent = 'pre { background: #f5f5f5 !important; background-color: #f5f5f5 !important; }';
         if (root.appendChild) root.appendChild(style);
       }
       /* Rename REQUEST / RESPONSE headers to MQTT-friendly labels */
@@ -969,7 +969,7 @@ def main():
         pre.setAttribute('data-copy-added', '1');
         /* Overwrite the entire inline style to force grey background */
         var existingStyle = pre.getAttribute('style') || '';
-        pre.setAttribute('style', existingStyle.replace(/background[^;]*;?/gi, '') + ';position:relative !important;background:#f6f8fa !important;background-color:#f6f8fa !important;');
+        pre.setAttribute('style', existingStyle.replace(/background[^;]*;?/gi, '') + ';position:relative !important;background:#f5f5f5 !important;background-color:#f5f5f5 !important;');
         var btn = document.createElement('button');
         btn.textContent = 'Copy';
         btn.setAttribute('style', 'position:absolute !important;top:4px !important;right:4px !important;padding:3px 10px !important;font-size:11px !important;cursor:pointer !important;background:#3b82f6 !important;border:1px solid #2563eb !important;border-radius:4px !important;color:#fff !important;z-index:10 !important;');
@@ -993,7 +993,7 @@ def main():
         /* Create a <pre> to replace the textarea visually */
         var fakePre = document.createElement('pre');
         fakePre.textContent = val;
-        fakePre.style.cssText = 'position:relative;background:#f6f8fa;border:1px solid #e2e8f0;border-radius:6px;padding:12px 50px 12px 16px;font-family:Consolas,Monaco,monospace;font-size:16px;white-space:pre-wrap;word-break:break-word;color:#333;line-height:1.5;margin:0;overflow:auto;max-height:250px;';
+        fakePre.style.cssText = 'position:relative;background:#f5f5f5;border:1px solid #e2e8f0;border-radius:6px;padding:12px 50px 12px 16px;font-family:Consolas,Monaco,monospace;font-size:16px;white-space:pre-wrap;word-break:break-word;color:#333;line-height:1.5;margin:0;overflow:auto;max-height:250px;';
         fakePre.setAttribute('data-copy-added','1');
         /* Copy button inside the pre */
         var btn2 = document.createElement('button');
