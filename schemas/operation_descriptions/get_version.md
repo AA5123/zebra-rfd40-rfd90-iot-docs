@@ -2,13 +2,11 @@ Retrieves the **scanner's identity card** — model, serial number, SKU, and all
 
 **Command details:**
 
-- Pattern Name: Reader Identity and Firmware Retrieval
-- Communication Type: Bidirectional (Cloud to Device, Device to Cloud)
-- MQTT Version: 3.1.1
-- API Version: V1.1
-- Document Version: 1.0.0
-- Last Updated: 2026-03-12
-- Applies To: RFD40 Series, RFD90 Series
+| | |
+|---|---|
+| Pattern Name | Reader Identity and Firmware Retrieval |
+| Communication Type | Bidirectional (Cloud to Device, Device to Cloud) |
+| Applies To | RFD40 Series, RFD90 Series |
 
 **Response fields:**
 

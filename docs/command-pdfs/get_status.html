@@ -222,17 +222,16 @@ h2, h3 { page-break-inside: avoid; }
 <h1>get_status</h1>
 <div class="meta">Command: <code>get_status</code></div>
 <h2>Description</h2>
-<p>Retrieves <strong>real-time health and status</strong> of the scanner — battery, temperature, radio, power, clock sync, and terminal connection.</p>
+<p>## Overview</p>
+<p>The <code>get_status</code> command retrieves the current status of a Zebra handheld RFID reader. The response includes power source information, radio activity and connection state, device temperature, system time, Network Time Protocol (NTP) synchronization details, terminal connection status, and battery health metrics.</p>
+<p>Use this command to monitor device health, verify connectivity before starting operations, and collect telemetry data for fleet management dashboards. The command requires no configuration parameters beyond the standard envelope fields.</p>
+<p>&gt; <strong>Note •</strong> The <code>deviceStatus</code> object in the response is optional. When the device cannot retrieve status information (response code <code>3</code>), the response omits this object.</p>
 <h3>Command details:</h3>
-<ul>
-<li>Pattern Name: Reader Health and Status Retrieval</li>
-<li>Communication Type: Bidirectional (Cloud to Device, Device to Cloud)</li>
-<li>MQTT Version: 3.1.1</li>
-<li>API Version: V1.1</li>
-<li>Document Version: 1.0.0</li>
-<li>Last Updated: 2026-03-12</li>
-<li>Applies To: RFD40 Series, RFD90 Series</li>
-</ul>
+<table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>Pattern Name</td><td>Device Status Retrieval</td></tr>
+<tr><td>Communication Type</td><td>Bidirectional (Cloud to Device, Device to Cloud)</td></tr>
+<tr><td>Applies To</td><td>RFD40 Series, RFD90 Series</td></tr>
+</tbody></table>
 <h3>Response fields:</h3>
 <table><thead><tr><th>Field</th><th>What it tells you</th></tr></thead><tbody>
 <tr><td><code>powerSource</code></td><td>How the scanner is powered — DC, Wall Charger, USB, or Cradle</td></tr>
@@ -245,27 +244,17 @@ h2, h3 { page-break-inside: avoid; }
 <tr><td><code>terminalConnection</code></td><td>Paired phone/tablet — connection status and type (Bluetooth, USB, CIO)</td></tr>
 <tr><td><code>batteryStatus</code></td><td>Battery capacity (mAh), charge %, health (Good/Average/Poor), charge state</td></tr>
 </tbody></table>
-<h3>Typical use cases:</h3>
-<ul>
-<li>Dashboard monitoring — show live scanner health on a management console.</li>
-<li>Battery management — track charge levels across a fleet before a shift starts.</li>
-<li>Troubleshooting — check if radio is connected, temperature is normal, clock is synced.</li>
-</ul>
-<h3>MQTT topics for this command:</h3>
-<ul>
-<li>Command topic (Cloud to Device):</li>
-</ul>
-<p><code>&lt;tenantId&gt;/CTRL/clients/cmnd/&lt;deviceSerial&gt;</code></p>
-<ul>
-<li>Response topic (Device to Cloud):</li>
-</ul>
-<p><code>&lt;tenantId&gt;/CTRL/clients/resp/&lt;deviceSerial&gt;</code></p>
-<h3>Example:</h3>
-<ul>
-<li>Command: <code>zebra/CTRL/clients/cmnd/RFD40-12345678</code></li>
-<li>Response: <code>zebra/CTRL/clients/resp/RFD40-12345678</code></li>
-</ul>
-<p>Ensure these topic paths match your configured endpoint topics.</p>
+<p>## Use Cases</p>
+<p>### Fleet Health Monitoring</p>
+<p>A warehouse management platform polls all readers at five-minute intervals using <code>get_status</code>. The system collects <code>batteryStatus.chargePercentage</code>, <code>temperature</code>, and <code>radioConnection</code> values from each device. When <code>chargePercentage</code> drops below 20 or <code>temperature</code> exceeds 45 degrees Celsius, the platform generates an alert and schedules the device for charging or cooldown.</p>
+<p>### Pre-Operation Readiness Check</p>
+<p>Before starting an inventory scan, a mobile application sends <code>get_status</code> to verify that <code>radioConnection</code> is <code>CONNECTED</code> and <code>batteryStatus.stateOfHealth</code> is not <code>POOR</code>. If either condition fails, the application prompts the operator to reconnect the sled or replace the battery before proceeding with <code>control_operation</code>.</p>
+<p>### Battery Replacement Planning</p>
+<p>A device management system tracks <code>batteryStatus.stateOfHealth</code> across the fleet over time. When a device transitions from <code>GOOD</code> to <code>AVERAGE</code>, the system adds the device to a scheduled replacement queue. Devices reporting <code>POOR</code> state of health are flagged for immediate battery swap.</p>
+<p>### Time Synchronization Verification</p>
+<p>An enterprise system queries <code>get_status</code> to check the <code>ntp.offset</code> and <code>ntp.reach</code> values. A high offset indicates clock drift that can cause timestamp mismatches in tag event data. The system triggers an NTP resynchronization when the offset exceeds the configured threshold.</p>
+<p>### Terminal Connection Diagnostics</p>
+<p>A field service technician troubleshoots connectivity issues between an RFD40 sled and a host mobile computer. The technician sends <code>get_status</code> and checks <code>terminalConnection.status</code> and <code>terminalConnection.type</code> to confirm whether the sled is connected over Bluetooth, USB, or CIO, and whether the connection is active.</p>
 <h2>Request</h2>
 <h3>Request Fields</h3>
 <table>

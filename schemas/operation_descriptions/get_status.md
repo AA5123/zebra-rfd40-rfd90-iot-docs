@@ -1,16 +1,18 @@
-Retrieves **real-time health and status** of the scanner — battery, temperature, radio, power, clock sync, and terminal connection.
+## Overview
 
-**Download pdf:** 📄 [Download get_status as PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_status.pdf)
+The `get_status` command retrieves the current status of a Zebra handheld RFID reader. The response includes power source information, radio activity and connection state, device temperature, system time, Network Time Protocol (NTP) synchronization details, terminal connection status, and battery health metrics.
+
+Use this command to monitor device health, verify connectivity before starting operations, and collect telemetry data for fleet management dashboards. The command requires no configuration parameters beyond the standard envelope fields.
+
+> **Note •** The `deviceStatus` object in the response is optional. When the device cannot retrieve status information (response code `3`), the response omits this object.
 
 **Command details:**
 
-- Pattern Name: Reader Health and Status Retrieval
-- Communication Type: Bidirectional (Cloud to Device, Device to Cloud)
-- MQTT Version: 3.1.1
-- API Version: V1.1
-- Document Version: 1.0.0
-- Last Updated: 2026-03-12
-- Applies To: RFD40 Series, RFD90 Series
+| | |
+|---|---|
+| Pattern Name | Device Status Retrieval |
+| Communication Type | Bidirectional (Cloud to Device, Device to Cloud) |
+| Applies To | RFD40 Series, RFD90 Series |
 
 **Response fields:**
 
@@ -26,20 +28,26 @@ Retrieves **real-time health and status** of the scanner — battery, temperatur
 | `terminalConnection` | Paired phone/tablet — connection status and type (Bluetooth, USB, CIO) |
 | `batteryStatus` | Battery capacity (mAh), charge %, health (Good/Average/Poor), charge state |
 
-**Typical use cases:**
-- Dashboard monitoring — show live scanner health on a management console.
-- Battery management — track charge levels across a fleet before a shift starts.
-- Troubleshooting — check if radio is connected, temperature is normal, clock is synced.
+## Use Cases
 
-**MQTT topics for this command:**
+### Fleet Health Monitoring
 
-- Command topic (Cloud to Device):
-  `<tenantId>/CTRL/clients/cmnd/<deviceSerial>`
-- Response topic (Device to Cloud):
-  `<tenantId>/CTRL/clients/resp/<deviceSerial>`
+A warehouse management platform polls all readers at five-minute intervals using `get_status`. The system collects `batteryStatus.chargePercentage`, `temperature`, and `radioConnection` values from each device. When `chargePercentage` drops below 20 or `temperature` exceeds 45 degrees Celsius, the platform generates an alert and schedules the device for charging or cooldown.
 
-**Example:**
-- Command: `zebra/CTRL/clients/cmnd/RFD40-12345678`
-- Response: `zebra/CTRL/clients/resp/RFD40-12345678`
+### Pre-Operation Readiness Check
 
-Ensure these topic paths match your configured endpoint topics.
+Before starting an inventory scan, a mobile application sends `get_status` to verify that `radioConnection` is `CONNECTED` and `batteryStatus.stateOfHealth` is not `POOR`. If either condition fails, the application prompts the operator to reconnect the sled or replace the battery before proceeding with `control_operation`.
+
+### Battery Replacement Planning
+
+A device management system tracks `batteryStatus.stateOfHealth` across the fleet over time. When a device transitions from `GOOD` to `AVERAGE`, the system adds the device to a scheduled replacement queue. Devices reporting `POOR` state of health are flagged for immediate battery swap.
+
+### Time Synchronization Verification
+
+An enterprise system queries `get_status` to check the `ntp.offset` and `ntp.reach` values. A high offset indicates clock drift that can cause timestamp mismatches in tag event data. The system triggers an NTP resynchronization when the offset exceeds the configured threshold.
+
+### Terminal Connection Diagnostics
+
+A field service technician troubleshoots connectivity issues between an RFD40 sled and a host mobile computer. The technician sends `get_status` and checks `terminalConnection.status` and `terminalConnection.type` to confirm whether the sled is connected over Bluetooth, USB, or CIO, and whether the connection is active.
+
+**Download pdf:** 📄 [Download get_status as PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_status.pdf)
