@@ -508,7 +508,7 @@ def build_openapi():
             ]
             # Append markdown table to description so RapiDoc renders it
             ec_lines = [
-                "\n\n**Status / Error Codes**\n",
+                "\n\n## Status / Error Codes\n",
                 "| Code | Status Constant | Description |",
                 "|------|----------------|-------------|",
             ]
@@ -519,7 +519,7 @@ def build_openapi():
             ec_table = "\n".join(ec_lines)
             current_desc = op.get("description", "")
             # Remove any previous error codes table (idempotent)
-            current_desc = re.sub(r"\n\n\*\*Status / Error Codes\*\*\n.*", "", current_desc, flags=re.DOTALL)
+            current_desc = re.sub(r"\n\n## Status / Error Codes\n.*", "", current_desc, flags=re.DOTALL)
             op["description"] = current_desc + ec_table
 
         paths[f"/{op_name}"] = OrderedDict([("post", op)])
