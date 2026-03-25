@@ -49,5 +49,3 @@ An enterprise system queries `get_status` to check the `ntp.offset` and `ntp.rea
 **Terminal Connection Diagnostics**
 
 A field service technician troubleshoots connectivity issues between an RFD40 sled and a host mobile computer. The technician sends `get_status` and checks `terminalConnection.status` and `terminalConnection.type` to confirm whether the sled is connected over Bluetooth, USB, or CIO, and whether the connection is active.
-
-**Download pdf:** 📄 [Download get_status as PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_status.pdf)

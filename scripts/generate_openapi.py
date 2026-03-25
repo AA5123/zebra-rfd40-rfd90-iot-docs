@@ -410,11 +410,16 @@ def build_openapi():
         if isinstance(description, str):
             description = re.sub(r"\n\n\*\*Supported readers:\*\*\s*RFD40,\s*RFD90\s*$", "", description).strip()
 
-        # Auto-add PDF download link if a PDF exists and description doesn't already have one
+        # Auto-add PDF download link at top of description (below heading)
         pdf_url = find_command_pdf(op_name)
         if pdf_url and isinstance(description, str) and "Download pdf:" not in description and "download pdf:" not in description:
-            pdf_link = f"\n\n**Download pdf:** \U0001F4C4 [Download {op_name} as PDF]({pdf_url})"
-            description = description + pdf_link
+            pdf_link = f"**Download pdf:** \U0001F4C4 [Download {op_name} as PDF]({pdf_url})\n\n"
+            description = pdf_link + description
+        elif pdf_url and isinstance(description, str) and "Download pdf:" in description:
+            # Remove existing PDF link from wherever it is, then prepend
+            description = re.sub(r'\n*\*\*Download pdf:\*\*.*?\n*', '', description).strip()
+            pdf_link = f"**Download pdf:** \U0001F4C4 [Download {op_name} as PDF]({pdf_url})\n\n"
+            description = pdf_link + description
         elif pdf_url and not description:
             description = f"**Download pdf:** \U0001F4C4 [Download {op_name} as PDF]({pdf_url})"
 
