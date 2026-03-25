@@ -752,6 +752,7 @@ def main():
     mono-font="Consolas, Monaco, monospace"
     schema-style="table"
     schema-expand-level="1"
+    schema-description-expanded="true"
     default-schema-tab="schema"
     show-method-in-nav-bar="false"
     use-path-in-nav-bar="false"
