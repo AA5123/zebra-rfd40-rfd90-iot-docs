@@ -650,7 +650,8 @@ def wrap(title, current_href, body_html):
   <link rel="stylesheet" href="css/docs.css" />
 </head>
 <body>
-    <header class="doc-header">
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <header class="doc-header" role="banner">
         <button id="toc-toggle" class="toc-toggle" type="button" aria-label="Hide navigation" aria-expanded="true">◀</button>
         <div class="doc-header-title">RFD40 / RFD90 API reference document</div>
     </header>
@@ -658,7 +659,7 @@ def wrap(title, current_href, body_html):
     <div class="layout-shell">
     <div class="layout">
 {sidebar(current_href)}
-    <main class="main">
+    <main id="main-content" class="main" role="main">
 {body_html}
     </main>
   </div>
@@ -860,6 +861,8 @@ def main():
     var poll = setInterval(function() {
       applyOverrides();
       processAllBlocks();
+      var rd = document.querySelector('rapi-doc');
+      if (rd && rd.shadowRoot) styleHeadings(rd.shadowRoot);
       if (++attempts > 200) clearInterval(poll);
     }, 500);
 
@@ -946,6 +949,17 @@ def main():
       }
     }
 
+    /* Style operation headings (.summary .title) directly via DOM */
+    function styleHeadings(root) {
+      if (!root) return;
+      var titles = root.querySelectorAll('.summary .title');
+      for (var t = 0; t < titles.length; t++) {
+        if (titles[t].getAttribute('data-styled')) continue;
+        titles[t].setAttribute('data-styled', '1');
+        titles[t].style.cssText = 'font-size:28px!important;font-weight:700!important;color:#003d6b!important;letter-spacing:0.3px!important;border-bottom:3px solid #003d6b!important;padding-bottom:8px!important;display:block!important;margin-bottom:12px!important;';
+      }
+    }
+
     /* MutationObserver: catch lazily rendered content (operations render on scroll) */
     function startObserver() {
       var rd = document.querySelector('rapi-doc');
@@ -956,6 +970,7 @@ def main():
       var observer = new MutationObserver(function() {
         applyOverrides();
         processAllBlocks();
+        styleHeadings(rd.shadowRoot);
       });
       observer.observe(rd.shadowRoot, { childList: true, subtree: true });
       /* Also observe nested shadow roots */
@@ -965,6 +980,8 @@ def main():
           observer.observe(all[i].shadowRoot, { childList: true, subtree: true });
         }
       }
+      /* Initial pass */
+      styleHeadings(rd.shadowRoot);
     }
     startObserver();
   })();

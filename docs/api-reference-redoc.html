@@ -158,6 +158,8 @@
     var poll = setInterval(function() {
       applyOverrides();
       processAllBlocks();
+      var rd = document.querySelector('rapi-doc');
+      if (rd && rd.shadowRoot) styleHeadings(rd.shadowRoot);
       if (++attempts > 200) clearInterval(poll);
     }, 500);
 
@@ -244,6 +246,17 @@
       }
     }
 
+    /* Style operation headings (.summary .title) directly via DOM */
+    function styleHeadings(root) {
+      if (!root) return;
+      var titles = root.querySelectorAll('.summary .title');
+      for (var t = 0; t < titles.length; t++) {
+        if (titles[t].getAttribute('data-styled')) continue;
+        titles[t].setAttribute('data-styled', '1');
+        titles[t].style.cssText = 'font-size:28px!important;font-weight:700!important;color:#003d6b!important;letter-spacing:0.3px!important;border-bottom:3px solid #003d6b!important;padding-bottom:8px!important;display:block!important;margin-bottom:12px!important;';
+      }
+    }
+
     /* MutationObserver: catch lazily rendered content (operations render on scroll) */
     function startObserver() {
       var rd = document.querySelector('rapi-doc');
@@ -254,6 +267,7 @@
       var observer = new MutationObserver(function() {
         applyOverrides();
         processAllBlocks();
+        styleHeadings(rd.shadowRoot);
       });
       observer.observe(rd.shadowRoot, { childList: true, subtree: true });
       /* Also observe nested shadow roots */
@@ -263,6 +277,8 @@
           observer.observe(all[i].shadowRoot, { childList: true, subtree: true });
         }
       }
+      /* Initial pass */
+      styleHeadings(rd.shadowRoot);
     }
     startObserver();
   })();
