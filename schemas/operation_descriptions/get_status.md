@@ -30,46 +30,46 @@ Use this command to monitor device health, verify connectivity before starting o
 
 ## Use Cases
 
-### Fleet Health Monitoring
+### **Fleet Health Monitoring**
 
-A warehouse management platform polls all readers at five-minute intervals using `get_status`. The system collects:
+> A warehouse management platform polls all readers at five-minute intervals using `get_status`. The system collects:
+>
+>   - `batteryStatus.chargePercentage`
+>   - `temperature`
+>   - `radioConnection`
+>
+> When **chargePercentage** drops below **20** or **temperature** exceeds **45 °C**, the platform generates an **alert** and schedules the device for **charging** or **cooldown**.
 
-  - `batteryStatus.chargePercentage`
-  - `temperature`
-  - `radioConnection`
+### **Pre-Operation Readiness Check**
 
-When **chargePercentage** drops below **20** or **temperature** exceeds **45 °C**, the platform generates an **alert** and schedules the device for **charging** or **cooldown**.
+> Before starting an inventory scan, a mobile application sends `get_status` to verify:
+>
+>   - `radioConnection` is **CONNECTED**
+>   - `batteryStatus.stateOfHealth` is not **POOR**
+>
+> If either condition fails, the application prompts the operator to **reconnect the sled** or **replace the battery** before proceeding with `control_operation`.
 
-### Pre-Operation Readiness Check
+### **Battery Replacement Planning**
 
-Before starting an inventory scan, a mobile application sends `get_status` to verify:
+> A device management system tracks `batteryStatus.stateOfHealth` across the fleet over time:
+>
+>   - **GOOD → AVERAGE** — device is added to a **scheduled replacement queue**
+>   - **POOR** — device is flagged for **immediate battery swap**
 
-  - `radioConnection` is **CONNECTED**
-  - `batteryStatus.stateOfHealth` is not **POOR**
+### **Time Synchronization Verification**
 
-If either condition fails, the application prompts the operator to **reconnect the sled** or **replace the battery** before proceeding with `control_operation`.
+> An enterprise system queries `get_status` to check:
+>
+>   - `ntp.offset` — a high offset indicates **clock drift** that can cause **timestamp mismatches** in tag event data
+>   - `ntp.reach` — sync success history
+>
+> The system triggers an **NTP resynchronization** when the offset exceeds the configured threshold.
 
-### Battery Replacement Planning
+### **Terminal Connection Diagnostics**
 
-A device management system tracks `batteryStatus.stateOfHealth` across the fleet over time:
-
-  - **GOOD → AVERAGE** — device is added to a **scheduled replacement queue**
-  - **POOR** — device is flagged for **immediate battery swap**
-
-### Time Synchronization Verification
-
-An enterprise system queries `get_status` to check:
-
-  - `ntp.offset` — a high offset indicates **clock drift** that can cause **timestamp mismatches** in tag event data
-  - `ntp.reach` — sync success history
-
-The system triggers an **NTP resynchronization** when the offset exceeds the configured threshold.
-
-### Terminal Connection Diagnostics
-
-A field service technician troubleshoots connectivity issues between an **RFD40 sled** and a **host mobile computer**. The technician sends `get_status` and checks:
-
-  - `terminalConnection.status` — whether the connection is **active**
-  - `terminalConnection.type` — connected over **Bluetooth**, **USB**, or **CIO**
+> A field service technician troubleshoots connectivity issues between an **RFD40 sled** and a **host mobile computer**. The technician sends `get_status` and checks:
+>
+>   - `terminalConnection.status` — whether the connection is **active**
+>   - `terminalConnection.type` — connected over **Bluetooth**, **USB**, or **CIO**
 
 **Download pdf:** 📄 [Download get_status as PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_status.pdf)
