@@ -285,9 +285,11 @@ def sort_operations(operations, tag_config):
     """
     Sort operations to match the order defined in tag_config.json tag_groups.
     Operations whose tag appears earlier in the config appear first.
-    Within the same tag, operations are sorted alphabetically.
+    Within the same tag, uses explicit operation_order if defined,
+    otherwise falls back to alphabetical order.
     """
     tag_groups = tag_config.get("tag_groups", {})
+    op_order = tag_config.get("operation_order", {})
 
     # Build a tag -> (group_index, tag_index) mapping for sorting
     tag_order = {}
@@ -298,6 +300,13 @@ def sort_operations(operations, tag_config):
     def sort_key(op_tuple):
         op_name, tag, source, filepath = op_tuple
         order = tag_order.get(tag, (999, 999))
+        # Use explicit operation order if defined for this tag
+        if tag in op_order:
+            try:
+                op_idx = op_order[tag].index(op_name)
+            except ValueError:
+                op_idx = 999
+            return (order[0], order[1], op_idx)
         return (order[0], order[1], op_name)
 
     return sorted(operations, key=sort_key)

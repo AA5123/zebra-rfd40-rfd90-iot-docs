@@ -24,6 +24,9 @@
             "Tag Data Event"
         ]
     },
+    "operation_order": {
+        "Device Status": ["get_status", "get_version", "get_current_region"]
+    },
     "tag_descriptions": {
         "Device Status": "Check what the scanner **is** — its identity, health, and regional settings.\n\n| Command | Purpose |\n|---|---|\n| `get_status` | Real-time health — battery, temperature, radio state, power source, clock sync, terminal connection |\n| `get_version` | Scanner identity — model, serial number, SKU, and firmware versions (main, scanner, radio, IoTC) |\n| `get_current_region` | Regulatory radio config — country, frequency channels, power limits, frequency hopping, LBT |\n\nAll three are **read-only** commands. Use them for monitoring dashboards, firmware audits, and compliance checks.",
         "Device Configuration": "Read or write the scanner's **complete configuration** in a single command.\n\n| Command | Purpose |\n|---|---|\n| `get_config` | Retrieve everything — equivalent to calling get_version + get_status + get_current_region + get_wifi + get_eth + get_endpoint_config + get_installed_certificate at once |\n| `set_config` | Apply configuration changes — Wi-Fi, endpoint, events, and more in one payload |\n\n`get_config` is read-only. `set_config` is the primary way to push settings to one or many scanners.",

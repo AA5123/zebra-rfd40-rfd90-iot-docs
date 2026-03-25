@@ -105,242 +105,6 @@
         }
     ],
     "paths": {
-        "/get_current_region": {
-            "post": {
-                "tags": [
-                    "Device Status"
-                ],
-                "summary": "get_current_region",
-                "description": "Retrieves the **regulatory radio configuration** of the scanner — which country's rules it follows, what frequencies it can use, and power limits.\n\n**Response fields:**\n\n| Field | What it tells you |\n|---|---|\n| `country` | The country this scanner is configured for (e.g. United States, Germany) |\n| `regulatoryStandard` | The radio regulation it follows (e.g. FCC for US, ETSI for Europe) |\n| `frequencyHopping` | Whether the scanner automatically switches between frequency channels |\n| `lbtEnabled` | Whether Listen Before Talk is enabled (required in some regions like Japan/EU) |\n| `maxTxPowerSupported` | Maximum allowed transmit power in dBm |\n| `minTxPowerSupported` | Minimum transmit power in dBm |\n| `channelData` | List of all available frequency channels (in kHz) the scanner can use |\n\n**Typical use cases:**\n- Compliance auditing — verify scanners are configured for the correct country before deployment.\n- RF planning — check available channels and power limits for site planning.\n- Multi-region management — confirm scanners shipped to different countries have the right region settings.\n\n**Download pdf:** 📄 [Download get_current_region as PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_current_region.pdf)\n\n**Status / Error Codes**\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 3 | `IOT_ERROR_INFO_NOT_AVAILABLE` | Not able to retrieve information |",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "command": {
-                                        "type": "string",
-                                        "enum": [
-                                            "get_current_region"
-                                        ],
-                                        "example": "get_current_region",
-                                        "description": "Must be `get_current_region`. Tells the scanner to return its regulatory radio configuration."
-                                    },
-                                    "requestId": {
-                                        "type": "string",
-                                        "example": "abc123",
-                                        "description": "A unique ID you assign to this request. The scanner echoes it back in the response so you can match requests to responses."
-                                    }
-                                },
-                                "required": [
-                                    "command",
-                                    "requestId"
-                                ]
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "default": {
-                        "description": "get_current_region response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "command": {
-                                            "type": "string",
-                                            "example": "get_current_region",
-                                            "description": "Echoes back the command name — always `get_current_region` for this response."
-                                        },
-                                        "requestId": {
-                                            "type": "string",
-                                            "example": "abc123",
-                                            "description": "Echoes back the requestId you sent, so you can match this response to your original request."
-                                        },
-                                        "apiVersion": {
-                                            "type": "string",
-                                            "enum": [
-                                                "V1.0",
-                                                "V1.1"
-                                            ],
-                                            "example": "V1.1",
-                                            "description": "The API version of the IoT Connector responding to this command."
-                                        },
-                                        "currentRegion": {
-                                            "type": "object",
-                                            "description": "Regulatory radio configuration — country, regulatory standard, available frequency channels, transmit power limits, frequency hopping, and Listen Before Talk settings. These are factory-set and cannot be changed.",
-                                            "properties": {
-                                                "frequencyHopping": {
-                                                    "type": "boolean",
-                                                    "description": "Indicates whether frequency hopping is enabled in the region."
-                                                },
-                                                "channelData": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "\"915250,915750\""
-                                                    },
-                                                    "description": "List of channel frequencies available in the region, represented as strings."
-                                                },
-                                                "country": {
-                                                    "type": "string",
-                                                    "example": "USA",
-                                                    "description": "The country for which the device is configured."
-                                                },
-                                                "lbtEnabled": {
-                                                    "type": "boolean",
-                                                    "description": "Specifies if Listen Before Talk (LBT) is enabled for the region."
-                                                },
-                                                "maxTxPowerSupported": {
-                                                    "type": "number",
-                                                    "example": 29.2,
-                                                    "description": "The maximum transmission power supported in the region, measured in dBm."
-                                                },
-                                                "minTxPowerSupported": {
-                                                    "type": "number",
-                                                    "example": "10.0",
-                                                    "description": "The minimum transmission power supported in the region, measured in dBm."
-                                                },
-                                                "regulatoryStandard": {
-                                                    "type": "string",
-                                                    "example": "ETSI_EU_800M_900M_3_CHANNEL",
-                                                    "description": "The regulatory standard governing the region's transmission rules."
-                                                }
-                                            },
-                                            "required": [
-                                                "frequencyHopping",
-                                                "channelData",
-                                                "country",
-                                                "lbtEnabled",
-                                                "maxTxPowerSupported",
-                                                "minTxPowerSupported",
-                                                "regulatoryStandard"
-                                            ]
-                                        },
-                                        "response": {
-                                            "type": "object",
-                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
-                                            "properties": {
-                                                "code": {
-                                                    "type": "integer",
-                                                    "example": "0",
-                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **3** — Not able to retrieve information",
-                                                    "minimum": 0,
-                                                    "maximum": 3
-                                                },
-                                                "description": {
-                                                    "type": "string",
-                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
-                                                    "example": "Success"
-                                                }
-                                            },
-                                            "required": [
-                                                "code",
-                                                "description"
-                                            ]
-                                        }
-                                    },
-                                    "required": [
-                                        "command",
-                                        "requestId",
-                                        "apiVersion",
-                                        "response"
-                                    ]
-                                },
-                                "examples": {
-                                    "Current region info": {
-                                        "description": "Response with current device region configuration",
-                                        "value": {
-                                            "command": "get_current_region",
-                                            "requestId": "abc123",
-                                            "apiVersion": "V1.1",
-                                            "currentRegion": {
-                                                "frequencyHopping": true,
-                                                "channelData": [
-                                                    "91575",
-                                                    "91525",
-                                                    "90325",
-                                                    "92675",
-                                                    "92625",
-                                                    "90425",
-                                                    "92725",
-                                                    "92025",
-                                                    "91925",
-                                                    "90925",
-                                                    "91875",
-                                                    "91775",
-                                                    "90525",
-                                                    "90475",
-                                                    "92525",
-                                                    "92175",
-                                                    "91475",
-                                                    "90675",
-                                                    "91375",
-                                                    "92225",
-                                                    "91125",
-                                                    "91175",
-                                                    "90375",
-                                                    "90875",
-                                                    "90575",
-                                                    "91225",
-                                                    "90625",
-                                                    "91725",
-                                                    "91425",
-                                                    "90725",
-                                                    "91825",
-                                                    "91625",
-                                                    "91025",
-                                                    "91075",
-                                                    "90775",
-                                                    "92475",
-                                                    "90975",
-                                                    "91975",
-                                                    "91675",
-                                                    "91325",
-                                                    "92375",
-                                                    "90825",
-                                                    "92575",
-                                                    "91275",
-                                                    "92425",
-                                                    "92125",
-                                                    "92075",
-                                                    "92275",
-                                                    "90275",
-                                                    "92325"
-                                                ],
-                                                "country": "United States",
-                                                "lbtEnabled": false,
-                                                "maxTxPowerSupported": 300,
-                                                "minTxPowerSupported": 0,
-                                                "regulatoryStandard": "FCC"
-                                            },
-                                            "response": {
-                                                "code": 0,
-                                                "description": "Success"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "x-error-codes": [
-                    {
-                        "code": 0,
-                        "description": "Success",
-                        "iot_status_code": "IOT_STATUS_SUCCESS"
-                    },
-                    {
-                        "code": 3,
-                        "description": "Not able to retrieve information",
-                        "iot_status_code": "IOT_ERROR_INFO_NOT_AVAILABLE"
-                    }
-                ]
-            }
-        },
         "/get_status": {
             "post": {
                 "tags": [
@@ -799,6 +563,242 @@
                         }
                     }
                 }
+            }
+        },
+        "/get_current_region": {
+            "post": {
+                "tags": [
+                    "Device Status"
+                ],
+                "summary": "get_current_region",
+                "description": "Retrieves the **regulatory radio configuration** of the scanner — which country's rules it follows, what frequencies it can use, and power limits.\n\n**Response fields:**\n\n| Field | What it tells you |\n|---|---|\n| `country` | The country this scanner is configured for (e.g. United States, Germany) |\n| `regulatoryStandard` | The radio regulation it follows (e.g. FCC for US, ETSI for Europe) |\n| `frequencyHopping` | Whether the scanner automatically switches between frequency channels |\n| `lbtEnabled` | Whether Listen Before Talk is enabled (required in some regions like Japan/EU) |\n| `maxTxPowerSupported` | Maximum allowed transmit power in dBm |\n| `minTxPowerSupported` | Minimum transmit power in dBm |\n| `channelData` | List of all available frequency channels (in kHz) the scanner can use |\n\n**Typical use cases:**\n- Compliance auditing — verify scanners are configured for the correct country before deployment.\n- RF planning — check available channels and power limits for site planning.\n- Multi-region management — confirm scanners shipped to different countries have the right region settings.\n\n**Download pdf:** 📄 [Download get_current_region as PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_current_region.pdf)\n\n**Status / Error Codes**\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 3 | `IOT_ERROR_INFO_NOT_AVAILABLE` | Not able to retrieve information |",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "command": {
+                                        "type": "string",
+                                        "enum": [
+                                            "get_current_region"
+                                        ],
+                                        "example": "get_current_region",
+                                        "description": "Must be `get_current_region`. Tells the scanner to return its regulatory radio configuration."
+                                    },
+                                    "requestId": {
+                                        "type": "string",
+                                        "example": "abc123",
+                                        "description": "A unique ID you assign to this request. The scanner echoes it back in the response so you can match requests to responses."
+                                    }
+                                },
+                                "required": [
+                                    "command",
+                                    "requestId"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "get_current_region response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "command": {
+                                            "type": "string",
+                                            "example": "get_current_region",
+                                            "description": "Echoes back the command name — always `get_current_region` for this response."
+                                        },
+                                        "requestId": {
+                                            "type": "string",
+                                            "example": "abc123",
+                                            "description": "Echoes back the requestId you sent, so you can match this response to your original request."
+                                        },
+                                        "apiVersion": {
+                                            "type": "string",
+                                            "enum": [
+                                                "V1.0",
+                                                "V1.1"
+                                            ],
+                                            "example": "V1.1",
+                                            "description": "The API version of the IoT Connector responding to this command."
+                                        },
+                                        "currentRegion": {
+                                            "type": "object",
+                                            "description": "Regulatory radio configuration — country, regulatory standard, available frequency channels, transmit power limits, frequency hopping, and Listen Before Talk settings. These are factory-set and cannot be changed.",
+                                            "properties": {
+                                                "frequencyHopping": {
+                                                    "type": "boolean",
+                                                    "description": "Indicates whether frequency hopping is enabled in the region."
+                                                },
+                                                "channelData": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "\"915250,915750\""
+                                                    },
+                                                    "description": "List of channel frequencies available in the region, represented as strings."
+                                                },
+                                                "country": {
+                                                    "type": "string",
+                                                    "example": "USA",
+                                                    "description": "The country for which the device is configured."
+                                                },
+                                                "lbtEnabled": {
+                                                    "type": "boolean",
+                                                    "description": "Specifies if Listen Before Talk (LBT) is enabled for the region."
+                                                },
+                                                "maxTxPowerSupported": {
+                                                    "type": "number",
+                                                    "example": 29.2,
+                                                    "description": "The maximum transmission power supported in the region, measured in dBm."
+                                                },
+                                                "minTxPowerSupported": {
+                                                    "type": "number",
+                                                    "example": "10.0",
+                                                    "description": "The minimum transmission power supported in the region, measured in dBm."
+                                                },
+                                                "regulatoryStandard": {
+                                                    "type": "string",
+                                                    "example": "ETSI_EU_800M_900M_3_CHANNEL",
+                                                    "description": "The regulatory standard governing the region's transmission rules."
+                                                }
+                                            },
+                                            "required": [
+                                                "frequencyHopping",
+                                                "channelData",
+                                                "country",
+                                                "lbtEnabled",
+                                                "maxTxPowerSupported",
+                                                "minTxPowerSupported",
+                                                "regulatoryStandard"
+                                            ]
+                                        },
+                                        "response": {
+                                            "type": "object",
+                                            "description": "Status of the command execution — check `code` to confirm success (0) or identify the error.",
+                                            "properties": {
+                                                "code": {
+                                                    "type": "integer",
+                                                    "example": "0",
+                                                    "description": "Response code indicating success or failure.\n- **0** — Success\n- **3** — Not able to retrieve information",
+                                                    "minimum": 0,
+                                                    "maximum": 3
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "description": "Human-readable description of the response code (e.g. \"Success\", \"Invalid payload\").",
+                                                    "example": "Success"
+                                                }
+                                            },
+                                            "required": [
+                                                "code",
+                                                "description"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "command",
+                                        "requestId",
+                                        "apiVersion",
+                                        "response"
+                                    ]
+                                },
+                                "examples": {
+                                    "Current region info": {
+                                        "description": "Response with current device region configuration",
+                                        "value": {
+                                            "command": "get_current_region",
+                                            "requestId": "abc123",
+                                            "apiVersion": "V1.1",
+                                            "currentRegion": {
+                                                "frequencyHopping": true,
+                                                "channelData": [
+                                                    "91575",
+                                                    "91525",
+                                                    "90325",
+                                                    "92675",
+                                                    "92625",
+                                                    "90425",
+                                                    "92725",
+                                                    "92025",
+                                                    "91925",
+                                                    "90925",
+                                                    "91875",
+                                                    "91775",
+                                                    "90525",
+                                                    "90475",
+                                                    "92525",
+                                                    "92175",
+                                                    "91475",
+                                                    "90675",
+                                                    "91375",
+                                                    "92225",
+                                                    "91125",
+                                                    "91175",
+                                                    "90375",
+                                                    "90875",
+                                                    "90575",
+                                                    "91225",
+                                                    "90625",
+                                                    "91725",
+                                                    "91425",
+                                                    "90725",
+                                                    "91825",
+                                                    "91625",
+                                                    "91025",
+                                                    "91075",
+                                                    "90775",
+                                                    "92475",
+                                                    "90975",
+                                                    "91975",
+                                                    "91675",
+                                                    "91325",
+                                                    "92375",
+                                                    "90825",
+                                                    "92575",
+                                                    "91275",
+                                                    "92425",
+                                                    "92125",
+                                                    "92075",
+                                                    "92275",
+                                                    "90275",
+                                                    "92325"
+                                                ],
+                                                "country": "United States",
+                                                "lbtEnabled": false,
+                                                "maxTxPowerSupported": 300,
+                                                "minTxPowerSupported": 0,
+                                                "regulatoryStandard": "FCC"
+                                            },
+                                            "response": {
+                                                "code": 0,
+                                                "description": "Success"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-error-codes": [
+                    {
+                        "code": 0,
+                        "description": "Success",
+                        "iot_status_code": "IOT_STATUS_SUCCESS"
+                    },
+                    {
+                        "code": 3,
+                        "description": "Not able to retrieve information",
+                        "iot_status_code": "IOT_ERROR_INFO_NOT_AVAILABLE"
+                    }
+                ]
             }
         },
         "/get_config": {
