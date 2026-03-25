@@ -82,24 +82,24 @@
 
       /* ── Tables: Zebra navy headers + alternating rows ── */
       'table { border-collapse: collapse !important; width: 100% !important; border: 1.5px solid #003d6b !important; border-radius: 0 !important; }',
-      'th { background: #003d6b !important; color: #fff !important; font-weight: 600 !important; font-size: 30px !important; letter-spacing: 0.3px !important; padding: 18px 24px !important; text-align: left !important; border-color: #002d50 !important; }',
-      'td { padding: 16px 24px !important; vertical-align: top !important; font-size: 30px !important; border: 1px solid #8a94a6 !important; word-break: break-word !important; }',
+      'th { background: #003d6b !important; color: #fff !important; font-weight: 600 !important; font-size: 18px !important; letter-spacing: 0.3px !important; padding: 11px 14px !important; text-align: left !important; border-color: #002d50 !important; }',
+      'td { padding: 10px 14px !important; vertical-align: top !important; font-size: 18px !important; border: 1px solid #8a94a6 !important; word-break: break-word !important; }',
       'tr:nth-child(odd) td { background: #ffffff !important; }',
       'tr:nth-child(even) td { background: #f7f9fb !important; }',
 
       /* ── Headings: navy accent ── */
-      '.endpoint-body .summary .title, .summary .title, div.summary div.title { font-size: 64px !important; font-weight: 700 !important; color: #003d6b !important; letter-spacing: 0.3px !important; border-bottom: 3px solid #003d6b !important; padding-bottom: 10px !important; display: block !important; margin-bottom: 12px !important; }',
+      '.endpoint-body .summary .title, .summary .title, div.summary div.title { font-size: 38px !important; font-weight: 700 !important; color: #003d6b !important; letter-spacing: 0.3px !important; border-bottom: 3px solid #003d6b !important; padding-bottom: 10px !important; display: block !important; margin-bottom: 12px !important; }',
       '.endpoint-head .descr { display: none !important; }',
-      '.api-content h2, .section-gap h2, .section-gap--read-mode h2 { color: #003d6b !important; border-bottom: 2px solid #003d6b !important; padding-bottom: 6px !important; margin-top: 28px !important; font-size: 44px !important; }',
-      '.api-content h3, .section-gap h3 { color: #003d6b !important; margin-top: 20px !important; font-size: 36px !important; }',
+      '.api-content h2, .section-gap h2, .section-gap--read-mode h2 { color: #003d6b !important; border-bottom: 2px solid #003d6b !important; padding-bottom: 6px !important; margin-top: 28px !important; font-size: 28px !important; }',
+      '.api-content h3, .section-gap h3 { color: #003d6b !important; margin-top: 20px !important; font-size: 22px !important; }',
 
       /* ── Code blocks: match PDF styling ── */
-      'pre { background: #f5f5f5 !important; border-left: 4px solid #003d6b !important; border-radius: 4px !important; padding: 24px 28px !important; font-size: 28px !important; line-height: 1.5 !important; max-height: 600px !important; overflow: auto !important; }',
-      'code { background: #f4f4f4 !important; border-radius: 3px !important; padding: 2px 10px !important; font-size: 28px !important; color: #1a1a1a !important; }',
-      'pre code { background: none !important; border: none !important; padding: 0 !important; font-size: 28px !important; }',
+      'pre { background: #f5f5f5 !important; border-left: 4px solid #003d6b !important; border-radius: 4px !important; padding: 14px 16px !important; font-size: 16px !important; line-height: 1.5 !important; max-height: 400px !important; overflow: auto !important; }',
+      'code { background: #f4f4f4 !important; border-radius: 3px !important; padding: 1px 6px !important; font-size: 16px !important; color: #1a1a1a !important; }',
+      'pre code { background: none !important; border: none !important; padding: 0 !important; font-size: 16px !important; }',
 
       /* ── Textareas (request bodies) ── */
-      'textarea { min-height: 80px !important; max-height: 360px !important; height: auto !important; resize: vertical !important; font-size: 28px !important; padding: 16px !important; }',
+      'textarea { min-height: 50px !important; max-height: 220px !important; height: auto !important; resize: vertical !important; font-size: 16px !important; padding: 10px !important; }',
 
       /* ── Tab & misc spacing ── */
       '.tab-content { padding: 0 !important; }',
@@ -107,23 +107,23 @@
       '.table-title { padding: 6px 0 !important; }',
 
       /* ── Description text ── */
-      '.m-markdown p, .m-markdown li { font-size: 32px !important; line-height: 1.6 !important; color: #1a1a1a !important; }',
+      '.m-markdown p, .m-markdown li { font-size: 20px !important; line-height: 1.6 !important; color: #1a1a1a !important; }',
       '.m-markdown strong { color: #1a1a1a !important; }',
 
       /* ── Schema table: widen and improve readability ── */
-      ':host { --font-size-small: 30px !important; --font-size-regular: 32px !important; --font-size-mono: 28px !important; }',
+      ':host { --font-size-small: 18px !important; --font-size-regular: 20px !important; --font-size-mono: 16px !important; }',
       '.schema-table { width: 100% !important; max-width: 100% !important; }',
       '.schema-table .tr { display: grid !important; grid-template-columns: minmax(160px, 1fr) minmax(80px, auto) 3fr !important; width: 100% !important; }',
-      '.schema-table .td { padding: 16px 24px !important; font-size: 30px !important; word-break: break-word !important; min-width: 0 !important; }',
-      '.schema-table .key { min-width: 140px !important; font-size: 30px !important; }',
-      '.schema-table .key-type { min-width: 70px !important; white-space: nowrap !important; font-size: 30px !important; }',
-      '.schema-table .key-descr { min-width: 0 !important; flex: 1 !important; font-size: 30px !important; }',
-      '.obj-descr { font-size: 30px !important; }',
-      '.descr-text { font-size: 30px !important; }',
-      'span.descr-text { font-size: 30px !important; }',
-      '.schema-description { font-size: 30px !important; }',
-      '.toolbar-btn { font-size: 28px !important; }',
-      '.request-body-container *, .response-body-container * { --font-size-small: 30px !important; --font-size-regular: 32px !important; }',
+      '.schema-table .td { padding: 10px 14px !important; font-size: 20px !important; word-break: break-word !important; min-width: 0 !important; }',
+      '.schema-table .key { min-width: 140px !important; font-size: 20px !important; }',
+      '.schema-table .key-type { min-width: 70px !important; white-space: nowrap !important; font-size: 20px !important; }',
+      '.schema-table .key-descr { min-width: 0 !important; flex: 1 !important; font-size: 20px !important; }',
+      '.obj-descr { font-size: 20px !important; }',
+      '.descr-text { font-size: 20px !important; }',
+      'span.descr-text { font-size: 20px !important; }',
+      '.schema-description { font-size: 20px !important; }',
+      '.toolbar-btn { font-size: 16px !important; }',
+      '.request-body-container *, .response-body-container * { --font-size-small: 18px !important; --font-size-regular: 20px !important; }',
       '.tree { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; }',
       '.req-res-info { width: 100% !important; max-width: 100% !important; }',
       '.request-body-container, .response-body-container { width: 100% !important; max-width: 100% !important; }',
