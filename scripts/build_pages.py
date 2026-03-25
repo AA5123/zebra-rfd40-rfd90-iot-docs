@@ -733,7 +733,7 @@ def main():
 </head>
 <body>
   <rapi-doc
-    spec-url="openapi.yaml?v=36"
+    spec-url="openapi.yaml?v=37"
     render-style="read"
     sort-endpoints-by="none"
     show-header="false"
@@ -935,27 +935,31 @@ def main():
             '<div style="font-size:14px;color:#333;margin:2px 0;"><b>Published on:</b> <code style="background:#f4f4f4;padding:1px 5px;border-radius:3px;">' + topicPrefix + 'resp/{deviceSerial}</code></div>';
         }
       }
-      /* Style enum values as bordered code badges */
-      var allEls = root.querySelectorAll('span, div');
-      for (var a = 0; a < allEls.length; a++) {
-        var sp = allEls[a];
-        if (sp.getAttribute('data-enum-styled')) continue;
-        var text = sp.textContent;
-        if (text.indexOf('Allowed:') === -1 && text.indexOf('Enum:') === -1) continue;
-        /* Only process small enum-display elements, not large description blocks */
-        var enumMatch = text.match(/(Allowed|Enum):[\\s]*(.*)/s);
-        if (!enumMatch) continue;
-        var beforeEnum = text.substring(0, text.indexOf(enumMatch[0])).trim();
-        if (beforeEnum.length > 100) continue;
-        sp.setAttribute('data-enum-styled', '1');
-        var valStr = enumMatch[2].trim();
-        /* Split on both regular pipe | and thick pipe \\u2503 */
-        var vals = valStr.split(/[|\\u2503]/).map(function(v){ return v.trim(); }).filter(function(v){ return v !== ''; });
+      /* Style enum "Allowed:" values as bordered code badges */
+      var boldTexts = root.querySelectorAll('.bold-text');
+      for (var a = 0; a < boldTexts.length; a++) {
+        var bt = boldTexts[a];
+        if (bt.getAttribute('data-enum-styled')) continue;
+        var label = bt.textContent.trim();
+        if (label !== 'Allowed:' && label !== 'Value:') continue;
+        bt.setAttribute('data-enum-styled', '1');
+        var parentDiv = bt.parentElement;
+        if (!parentDiv) continue;
+        /* Collect text nodes after the bold-text span */
+        var valText = '';
+        var sibling = bt.nextSibling;
+        while (sibling) {
+          if (sibling.nodeType === 3) valText += sibling.textContent;
+          sibling = sibling.nextSibling;
+        }
+        valText = valText.trim();
+        if (!valText) continue;
+        /* Split on thick pipe U+2503 or regular pipe */
+        var vals = valText.split(/[|\\u2503]/).map(function(v){ return v.trim(); }).filter(function(v){ return v !== ''; });
         var badges = vals.map(function(v) {
           return '<span style="display:inline-block;background:#fff;border:1px solid #bbb;border-radius:3px;padding:2px 10px;margin:2px 4px 2px 0;font-family:Consolas,Monaco,monospace;font-size:13px;color:#333;">' + v + '</span>';
         }).join('');
-        var prefix = beforeEnum.length > 0 ? beforeEnum + '<br>' : '';
-        sp.innerHTML = prefix + '<div style="margin-top:4px;"><span style="font-weight:600;color:#555;font-size:13px;">Enum:</span> ' + badges + '</div>';
+        parentDiv.innerHTML = '<span style="font-weight:600;color:#555;font-size:13px;">Enum:</span> ' + badges;
       }
       /* <pre> blocks (response examples) */
       var pres = root.querySelectorAll('pre');
