@@ -30,7 +30,7 @@
 </head>
 <body>
   <rapi-doc
-    spec-url="openapi.yaml?v=39"
+    spec-url="openapi.yaml?v=40"
     render-style="read"
     sort-endpoints-by="none"
     show-header="false"
@@ -214,7 +214,7 @@
       if (!root.querySelector('style[data-copy-style]')) {
         var style = document.createElement('style');
         style.setAttribute('data-copy-style', '1');
-        style.textContent = 'pre { background: #f5f5f5 !important; background-color: #f5f5f5 !important; }';
+        style.textContent = 'pre { background: #f5f5f5 !important; background-color: #f5f5f5 !important; } pre[style] { background: #f5f5f5 !important; background-color: #f5f5f5 !important; } .response-panel pre, .json pre, pre.example-panel { background: #f5f5f5 !important; background-color: #f5f5f5 !important; }';
         if (root.appendChild) root.appendChild(style);
       }
       /* Rename REQUEST / RESPONSE headers to MQTT-friendly labels */
@@ -279,6 +279,15 @@
           };
         })(pre, btn);
         pre.appendChild(btn);
+      }
+      /* Force background on ALL pre blocks (including response examples rendered later) */
+      var allPres = root.querySelectorAll('pre');
+      for (var p = 0; p < allPres.length; p++) {
+        var pr = allPres[p];
+        var s = pr.getAttribute('style') || '';
+        if (s.indexOf('#f5f5f5') === -1) {
+          pr.setAttribute('style', s.replace(/background[^;]*;?/gi, '') + ';background:#f5f5f5 !important;background-color:#f5f5f5 !important;');
+        }
       }
       /* <textarea> blocks (request body examples) — replace with read-only <pre> */
       var tas = root.querySelectorAll('textarea');
