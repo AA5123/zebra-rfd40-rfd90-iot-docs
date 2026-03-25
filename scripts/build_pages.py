@@ -885,7 +885,6 @@ def main():
       var rd = document.querySelector('rapi-doc');
       if (rd && rd.shadowRoot) {
         styleHeadings(rd.shadowRoot);
-        styleMqttHeaders(rd.shadowRoot);
       }
       if (++attempts > 200) clearInterval(poll);
     }, 500);
@@ -973,69 +972,6 @@ def main():
       }
     }
 
-    /* Restyle REQUEST / RESPONSE sections to MQTT-style headers */
-    function styleMqttHeaders(root) {
-      if (!root) return;
-      /* Search for req-res-title in THIS shadow root */
-      var titles = root.querySelectorAll('.req-res-title');
-      for (var t = 0; t < titles.length; t++) {
-        if (titles[t].getAttribute('data-mqtt-styled')) continue;
-        titles[t].setAttribute('data-mqtt-styled', '1');
-        /* Walk up to find the command name from the closest operation section */
-        var cmdName = findCommandName(titles[t], root);
-        if (!cmdName) continue;
-        var isEvent = /EVT$/.test(cmdName) || cmdName === 'alerts' || cmdName === 'alert_short';
-        var topicPrefix = '{tenantId}/MGMT/clients/';
-        var txt = titles[t].textContent.trim().toUpperCase();
-        if (txt.indexOf('REQUEST') !== -1 && !isEvent) {
-          titles[t].innerHTML = '<div style="font-size:20px;font-weight:700;color:#003d6b;margin-bottom:4px;">Command Payload (Request)</div>' +
-            '<div style="font-size:14px;color:#333;margin:2px 0;"><b>Publish to:</b> <code style="background:#f4f4f4;padding:1px 5px;border-radius:3px;">' + topicPrefix + 'cmnd/{deviceSerial}</code></div>';
-        } else if (txt.indexOf('RESPONSE') !== -1) {
-          var label = isEvent ? 'Event Payload' : 'Response Payload';
-          var topicPath = isEvent ? topicPrefix + 'evt/{deviceSerial}' : topicPrefix + 'resp/{deviceSerial}';
-          titles[t].innerHTML = '<div style="font-size:20px;font-weight:700;color:#003d6b;margin-bottom:4px;">' + label + '</div>' +
-            '<div style="font-size:14px;color:#333;margin:2px 0;"><b>Published on:</b> <code style="background:#f4f4f4;padding:1px 5px;border-radius:3px;">' + topicPath + '</code></div>';
-        }
-      }
-      /* Also recurse into nested shadow roots */
-      var els = root.querySelectorAll('*');
-      for (var i = 0; i < els.length; i++) {
-        if (els[i].shadowRoot) styleMqttHeaders(els[i].shadowRoot);
-      }
-    }
-
-    /* Find the command name by walking up host elements to the section-gap with .summary .title */
-    function findCommandName(el, shadowRoot) {
-      /* Try looking in the same shadow root for a .summary .title */
-      var title = shadowRoot.querySelector('.summary .title');
-      if (title) return title.textContent.trim().replace(/^\\//, '');
-      /* Walk up through host elements to parent shadow roots */
-      var host = shadowRoot.host;
-      while (host) {
-        var parentRoot = host.getRootNode();
-        if (parentRoot && parentRoot !== document) {
-          /* parentRoot is a shadow root */
-          /* Find the closest section-gap ancestor of our host */
-          var section = host.closest('.section-gap, .section-gap--read-mode, [id]');
-          if (section) {
-            var t = section.querySelector('.summary .title');
-            if (t) return t.textContent.trim().replace(/^\\//, '');
-            /* Also check for id attribute which RapiDoc sets to the path */
-            var id = section.getAttribute('id');
-            if (id) return id.replace(/^\\/?/, '');
-          }
-          /* Try broader search in parent shadow root */
-          title = parentRoot.querySelector('.summary .title');
-          if (title) return title.textContent.trim().replace(/^\\//, '');
-          /* Go up another level */
-          host = parentRoot.host;
-        } else {
-          break;
-        }
-      }
-      return '';
-    }
-
     /* Style operation headings (.summary .title) directly via DOM */
     function styleHeadings(root) {
       if (!root) return;
@@ -1058,7 +994,6 @@ def main():
         applyOverrides();
         processAllBlocks();
         styleHeadings(rd.shadowRoot);
-        styleMqttHeaders(rd.shadowRoot);
       });
       observer.observe(rd.shadowRoot, { childList: true, subtree: true });
       /* Also observe nested shadow roots */
