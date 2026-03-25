@@ -2,7 +2,7 @@ Retrieves the **current Wi-Fi configuration** of the scanner — connected netwo
 
 **Command details:**
 
-| | |
+| Property | Value |
 |---|---|
 | Pattern Name | Wi-Fi Configuration Retrieval |
 | Communication Type | Bidirectional (Cloud to Device, Device to Cloud) |

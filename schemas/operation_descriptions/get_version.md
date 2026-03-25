@@ -2,7 +2,7 @@ Retrieves the **scanner's identity card** — model, serial number, SKU, and all
 
 **Command details:**
 
-| | |
+| Property | Value |
 |---|---|
 | Pattern Name | Reader Identity and Firmware Retrieval |
 | Communication Type | Bidirectional (Cloud to Device, Device to Cloud) |

@@ -8,7 +8,7 @@ Use this command to monitor device health, verify connectivity before starting o
 
 **Command details:**
 
-| | |
+| Property | Value |
 |---|---|
 | Pattern Name | Device Status Retrieval |
 | Communication Type | Bidirectional (Cloud to Device, Device to Cloud) |
