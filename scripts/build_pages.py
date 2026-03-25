@@ -926,15 +926,13 @@ def main():
         if (reqResTitles[r].getAttribute('data-mqtt-styled')) continue;
         reqResTitles[r].setAttribute('data-mqtt-styled', '1');
         var txt = reqResTitles[r].textContent.trim().toUpperCase();
+        var topicPrefix = '{tenantId}/MGMT/clients/';
         if (txt.indexOf('REQUEST') !== -1) {
-          reqResTitles[r].innerHTML = '<span style="font-size:20px;font-weight:700;color:#003d6b;">Command Payload (Request)</span>';
+          reqResTitles[r].innerHTML = '<div style="font-size:20px;font-weight:700;color:#003d6b;margin-bottom:4px;">Command Payload (Request)</div>' +
+            '<div style="font-size:14px;color:#333;margin:2px 0;"><b>Publish to:</b> <code style="background:#f4f4f4;padding:1px 5px;border-radius:3px;">' + topicPrefix + 'cmnd/{deviceSerial}</code></div>';
         } else if (txt.indexOf('RESPONSE') !== -1) {
-          /* Check if this is an event (no REQUEST sibling = event) */
-          var hasRequest = root.querySelector('.req-res-title');
-          var allTitles = root.querySelectorAll('.req-res-title');
-          var onlyResponse = allTitles.length === 1 && txt.indexOf('RESPONSE') !== -1;
-          var label = 'Response Payload';
-          reqResTitles[r].innerHTML = '<span style="font-size:20px;font-weight:700;color:#003d6b;">' + label + '</span>';
+          reqResTitles[r].innerHTML = '<div style="font-size:20px;font-weight:700;color:#003d6b;margin-bottom:4px;">Response Payload</div>' +
+            '<div style="font-size:14px;color:#333;margin:2px 0;"><b>Published on:</b> <code style="background:#f4f4f4;padding:1px 5px;border-radius:3px;">' + topicPrefix + 'resp/{deviceSerial}</code></div>';
         }
       }
       /* <pre> blocks (response examples) */
