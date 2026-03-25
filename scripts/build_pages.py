@@ -989,13 +989,11 @@ def main():
         var txt = titles[t].textContent.trim().toUpperCase();
         if (txt.indexOf('REQUEST') !== -1 && !isEvent) {
           titles[t].innerHTML = '<div style="font-size:20px;font-weight:700;color:#003d6b;margin-bottom:4px;">Command Payload (Request)</div>' +
-            '<div style="font-size:14px;color:#333;margin:2px 0;"><b>Content Type:</b> application/json</div>' +
             '<div style="font-size:14px;color:#333;margin:2px 0;"><b>Publish to:</b> <code style="background:#f4f4f4;padding:1px 5px;border-radius:3px;">' + topicPrefix + 'cmnd/{deviceSerial}</code></div>';
         } else if (txt.indexOf('RESPONSE') !== -1) {
           var label = isEvent ? 'Event Payload' : 'Response Payload';
           var topicPath = isEvent ? topicPrefix + 'evt/{deviceSerial}' : topicPrefix + 'resp/{deviceSerial}';
           titles[t].innerHTML = '<div style="font-size:20px;font-weight:700;color:#003d6b;margin-bottom:4px;">' + label + '</div>' +
-            '<div style="font-size:14px;color:#333;margin:2px 0;"><b>Content Type:</b> application/json</div>' +
             '<div style="font-size:14px;color:#333;margin:2px 0;"><b>Published on:</b> <code style="background:#f4f4f4;padding:1px 5px;border-radius:3px;">' + topicPath + '</code></div>';
         }
       }
