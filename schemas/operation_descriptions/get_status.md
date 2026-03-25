@@ -30,46 +30,61 @@ Use this command to monitor device health, verify connectivity before starting o
 
 ## Use Cases
 
-### **Fleet Health Monitoring**
+<h4><b>Fleet Health Monitoring</b></h4>
+<div style="margin-left: 20px;">
 
-> A warehouse management platform polls all readers at five-minute intervals using `get_status`. The system collects:
->
->   - `batteryStatus.chargePercentage`
->   - `temperature`
->   - `radioConnection`
->
-> When **chargePercentage** drops below **20** or **temperature** exceeds **45 °C**, the platform generates an **alert** and schedules the device for **charging** or **cooldown**.
+A warehouse management platform polls all readers at five-minute intervals using `get_status`. The system collects:
 
-### **Pre-Operation Readiness Check**
+  - `batteryStatus.chargePercentage`
+  - `temperature`
+  - `radioConnection`
 
-> Before starting an inventory scan, a mobile application sends `get_status` to verify:
->
->   - `radioConnection` is **CONNECTED**
->   - `batteryStatus.stateOfHealth` is not **POOR**
->
-> If either condition fails, the application prompts the operator to **reconnect the sled** or **replace the battery** before proceeding with `control_operation`.
+When **chargePercentage** drops below **20** or **temperature** exceeds **45 °C**, the platform generates an **alert** and schedules the device for **charging** or **cooldown**.
 
-### **Battery Replacement Planning**
+</div>
 
-> A device management system tracks `batteryStatus.stateOfHealth` across the fleet over time:
->
->   - **GOOD → AVERAGE** — device is added to a **scheduled replacement queue**
->   - **POOR** — device is flagged for **immediate battery swap**
+<h4><b>Pre-Operation Readiness Check</b></h4>
+<div style="margin-left: 20px;">
 
-### **Time Synchronization Verification**
+Before starting an inventory scan, a mobile application sends `get_status` to verify:
 
-> An enterprise system queries `get_status` to check:
->
->   - `ntp.offset` — a high offset indicates **clock drift** that can cause **timestamp mismatches** in tag event data
->   - `ntp.reach` — sync success history
->
-> The system triggers an **NTP resynchronization** when the offset exceeds the configured threshold.
+  - `radioConnection` is **CONNECTED**
+  - `batteryStatus.stateOfHealth` is not **POOR**
 
-### **Terminal Connection Diagnostics**
+If either condition fails, the application prompts the operator to **reconnect the sled** or **replace the battery** before proceeding with `control_operation`.
 
-> A field service technician troubleshoots connectivity issues between an **RFD40 sled** and a **host mobile computer**. The technician sends `get_status` and checks:
->
->   - `terminalConnection.status` — whether the connection is **active**
->   - `terminalConnection.type` — connected over **Bluetooth**, **USB**, or **CIO**
+</div>
+
+<h4><b>Battery Replacement Planning</b></h4>
+<div style="margin-left: 20px;">
+
+A device management system tracks `batteryStatus.stateOfHealth` across the fleet over time:
+
+  - **GOOD → AVERAGE** — device is added to a **scheduled replacement queue**
+  - **POOR** — device is flagged for **immediate battery swap**
+
+</div>
+
+<h4><b>Time Synchronization Verification</b></h4>
+<div style="margin-left: 20px;">
+
+An enterprise system queries `get_status` to check:
+
+  - `ntp.offset` — a high offset indicates **clock drift** that can cause **timestamp mismatches** in tag event data
+  - `ntp.reach` — sync success history
+
+The system triggers an **NTP resynchronization** when the offset exceeds the configured threshold.
+
+</div>
+
+<h4><b>Terminal Connection Diagnostics</b></h4>
+<div style="margin-left: 20px;">
+
+A field service technician troubleshoots connectivity issues between an **RFD40 sled** and a **host mobile computer**. The technician sends `get_status` and checks:
+
+  - `terminalConnection.status` — whether the connection is **active**
+  - `terminalConnection.type` — connected over **Bluetooth**, **USB**, or **CIO**
+
+</div>
 
 **Download pdf:** 📄 [Download get_status as PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_status.pdf)
