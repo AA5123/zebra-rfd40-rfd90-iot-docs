@@ -423,18 +423,6 @@ def build_openapi():
         elif pdf_url and not description:
             description = f"**Download pdf:** \U0001F4C4 [Download {op_name} as PDF]({pdf_url})"
 
-        # Auto-add MQTT topic info below PDF link
-        is_event = source == "events"
-        if isinstance(description, str) and "Publish to:" not in description and "Published on:" not in description:
-            if is_event:
-                mqtt_info = f"\n\n**Published on:** `{{tenantId}}/MGMT/clients/evt/{{deviceSerial}}`"
-            else:
-                mqtt_info = (
-                    f"\n\n**Publish to:** `{{tenantId}}/MGMT/clients/cmnd/{{deviceSerial}}`"
-                    f"\n\n**Response on:** `{{tenantId}}/MGMT/clients/resp/{{deviceSerial}}`"
-                )
-            description = description + mqtt_info
-
         # Build the operation
         op = OrderedDict()
         op["tags"] = [tag_name]
