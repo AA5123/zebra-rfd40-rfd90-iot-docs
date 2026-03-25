@@ -733,7 +733,7 @@ def main():
 </head>
 <body>
   <rapi-doc
-    spec-url="openapi.yaml?v=41"
+    spec-url="openapi.yaml?v=42"
     render-style="read"
     sort-endpoints-by="none"
     show-header="false"
@@ -813,6 +813,10 @@ def main():
       'pre { background: #f5f5f5 !important; border-left: 4px solid #003d6b !important; border-radius: 4px !important; padding: 12px 14px !important; font-size: 17px !important; line-height: 1.5 !important; max-height: 300px !important; overflow: auto !important; }',
       'pre[style] { background: #f5f5f5 !important; background-color: #f5f5f5 !important; }',
       ':host pre { background: #f5f5f5 !important; background-color: #f5f5f5 !important; }',
+      'json-tree { background: #f5f5f5 !important; border-radius: 4px !important; }',
+      'json-tree.border.tree { background: #f5f5f5 !important; }',
+      '.json-tree { background: #f5f5f5 !important; }',
+      ':host(.border.tree) { background: #f5f5f5 !important; }',
       'code { background: #f4f4f4 !important; border-radius: 3px !important; padding: 1px 5px !important; font-size: 17px !important; color: #1a1a1a !important; }',
       'pre code { background: none !important; border: none !important; padding: 0 !important; font-size: 17px !important; }',
 
@@ -922,6 +926,14 @@ def main():
         if (st && st.indexOf('#f5f5f5') === -1) {
           allP[x].setAttribute('style', st.replace(/background[^;]*;?/gi, '') + ';background:#f5f5f5 !important;background-color:#f5f5f5 !important;');
         }
+      }
+      /* Force #f5f5f5 on json-tree elements (response examples use div.json-tree, not <pre>) */
+      var jsonTrees = root.querySelectorAll('json-tree, .json-tree');
+      for (var jt = 0; jt < jsonTrees.length; jt++) {
+        jsonTrees[jt].style.setProperty('background', '#f5f5f5', 'important');
+        jsonTrees[jt].style.setProperty('background-color', '#f5f5f5', 'important');
+        jsonTrees[jt].style.setProperty('border-radius', '4px', 'important');
+      }
       }
       /* Rename REQUEST / RESPONSE headers to MQTT-friendly labels */
       var reqResTitles = root.querySelectorAll('.req-res-title');
