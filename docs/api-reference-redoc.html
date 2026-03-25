@@ -217,6 +217,23 @@
         style.textContent = 'pre { background: #f6f8fa !important; background-color: #f6f8fa !important; }';
         if (root.appendChild) root.appendChild(style);
       }
+      /* Rename REQUEST / RESPONSE headers to MQTT-friendly labels */
+      var reqResTitles = root.querySelectorAll('.req-res-title');
+      for (var r = 0; r < reqResTitles.length; r++) {
+        if (reqResTitles[r].getAttribute('data-mqtt-styled')) continue;
+        reqResTitles[r].setAttribute('data-mqtt-styled', '1');
+        var txt = reqResTitles[r].textContent.trim().toUpperCase();
+        if (txt.indexOf('REQUEST') !== -1) {
+          reqResTitles[r].innerHTML = '<span style="font-size:20px;font-weight:700;color:#003d6b;">Command Payload (Request)</span>';
+        } else if (txt.indexOf('RESPONSE') !== -1) {
+          /* Check if this is an event (no REQUEST sibling = event) */
+          var hasRequest = root.querySelector('.req-res-title');
+          var allTitles = root.querySelectorAll('.req-res-title');
+          var onlyResponse = allTitles.length === 1 && txt.indexOf('RESPONSE') !== -1;
+          var label = 'Response Payload';
+          reqResTitles[r].innerHTML = '<span style="font-size:20px;font-weight:700;color:#003d6b;">' + label + '</span>';
+        }
+      }
       /* <pre> blocks (response examples) */
       var pres = root.querySelectorAll('pre');
       for (var i = 0; i < pres.length; i++) {
