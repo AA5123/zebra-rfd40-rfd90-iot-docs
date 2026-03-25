@@ -883,7 +883,10 @@ def main():
       applyOverrides();
       processAllBlocks();
       var rd = document.querySelector('rapi-doc');
-      if (rd && rd.shadowRoot) styleHeadings(rd.shadowRoot);
+      if (rd && rd.shadowRoot) {
+        styleHeadings(rd.shadowRoot);
+        styleMqttHeaders(rd.shadowRoot);
+      }
       if (++attempts > 200) clearInterval(poll);
     }, 500);
 
@@ -970,6 +973,49 @@ def main():
       }
     }
 
+    /* Restyle REQUEST / RESPONSE sections to MQTT-style headers */
+    function styleMqttHeaders(root) {
+      if (!root) return;
+      /* Walk all shadow roots */
+      var els = root.querySelectorAll('*');
+      for (var i = 0; i < els.length; i++) {
+        if (els[i].shadowRoot) styleMqttHeaders(els[i].shadowRoot);
+      }
+      /* Find the operation path to determine the command name */
+      var sections = root.querySelectorAll('.section-gap, .section-gap--read-mode');
+      for (var s = 0; s < sections.length; s++) {
+        if (sections[s].getAttribute('data-mqtt-styled')) continue;
+        sections[s].setAttribute('data-mqtt-styled', '1');
+        /* Get the command name from the .summary .title or path */
+        var titleEl = sections[s].querySelector('.summary .title');
+        var pathEl = sections[s].querySelector('.path');
+        var cmdName = '';
+        if (titleEl) cmdName = titleEl.textContent.trim().replace(/^\//, '');
+        else if (pathEl) cmdName = pathEl.textContent.trim().replace(/^\//, '');
+        if (!cmdName) continue;
+        /* Determine if this is an event (ends with EVT or is alerts/alert_short) */
+        var isEvent = /EVT$/.test(cmdName) || cmdName === 'alerts' || cmdName === 'alert_short';
+        var topicPrefix = '{tenantId}/MGMT/clients/';
+        /* Find all req-res-title spans */
+        var titles = sections[s].querySelectorAll('.req-res-title');
+        for (var t = 0; t < titles.length; t++) {
+          var txt = titles[t].textContent.trim().toUpperCase();
+          if (txt.indexOf('REQUEST') !== -1 && !isEvent) {
+            titles[t].innerHTML = '<div style="font-size:20px;font-weight:700;color:#003d6b;margin-bottom:4px;">Command Payload (Request)</div>' +
+              '<div style="font-size:14px;color:#333;margin:2px 0;"><b>Content Type:</b> application/json</div>' +
+              '<div style="font-size:14px;color:#333;margin:2px 0;"><b>Publish to:</b> <code style="background:#f4f4f4;padding:1px 5px;border-radius:3px;">' + topicPrefix + 'cmnd/{deviceSerial}</code></div>';
+          } else if (txt.indexOf('RESPONSE') !== -1) {
+            var label = isEvent ? 'Event Payload' : 'Response Payload';
+            var topicLabel = isEvent ? 'Published on:' : 'Published on:';
+            var topicPath = isEvent ? topicPrefix + 'evt/{deviceSerial}' : topicPrefix + 'resp/{deviceSerial}';
+            titles[t].innerHTML = '<div style="font-size:20px;font-weight:700;color:#003d6b;margin-bottom:4px;">' + label + '</div>' +
+              '<div style="font-size:14px;color:#333;margin:2px 0;"><b>Content Type:</b> application/json</div>' +
+              '<div style="font-size:14px;color:#333;margin:2px 0;"><b>' + topicLabel + '</b> <code style="background:#f4f4f4;padding:1px 5px;border-radius:3px;">' + topicPath + '</code></div>';
+          }
+        }
+      }
+    }
+
     /* Style operation headings (.summary .title) directly via DOM */
     function styleHeadings(root) {
       if (!root) return;
@@ -992,6 +1038,7 @@ def main():
         applyOverrides();
         processAllBlocks();
         styleHeadings(rd.shadowRoot);
+        styleMqttHeaders(rd.shadowRoot);
       });
       observer.observe(rd.shadowRoot, { childList: true, subtree: true });
       /* Also observe nested shadow roots */
