@@ -1,0 +1,424 @@
+/*
+ * ============================================================================
+ *  Zebra RFD40/RFD90 IoT Connector — RapiDoc Override Stylesheet
+ * ============================================================================
+ *
+ *  Design System:  Zebra Navy (#003d6b)
+ *  Base Scale:     1.2× ratio (all sizes derived from 16px base × 1.2)
+ *  Injected via:   adoptedStyleSheets into RapiDoc shadow roots
+ *  Last updated:   2026-03-25
+ *
+ *  Font Size Reference (1.2× scale):
+ *  ─────────────────────────────────
+ *    Code / mono:       17px
+ *    Table cells:       18px
+ *    Body / schema:     19px
+ *    H3 headings:       24px
+ *    H2 headings:       29px
+ *    Operation title:   34px  (via JS)
+ *    H1 / page title:   38px
+ *
+ *  Enum badges:         16px  (monospace, bordered)
+ *  MQTT topic paths:    17px  (code style)
+ *  Command headers:     24px  (bold, navy)
+ *
+ * ============================================================================
+ */
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   1. HIDE UNWANTED ELEMENTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.m-btn.primary {
+  display: none !important;
+}
+
+.method-fg {
+  display: none !important;
+}
+
+.req-res-title .method {
+  display: none !important;
+}
+
+.endpoint-head .method {
+  display: none !important;
+}
+
+.nav-bar-tag .method {
+  display: none !important;
+}
+
+.path {
+  display: none !important;
+}
+
+.nav-bar-path {
+  padding-left: 16px !important;
+}
+
+.nav-bar-path .method-fg.small {
+  display: none !important;
+  width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.endpoint-head .descr {
+  display: none !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   2. LAYOUT — Full-width content area
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.main-content {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding: 0 24px !important;
+}
+
+.main-content > div,
+.main-content .operation-body {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+.section-gap,
+.section-gap--read-mode {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding: 8px 24px !important;
+  margin: 0 !important;
+}
+
+.main-content.read-mode {
+  max-width: 100% !important;
+}
+
+.api-content {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   3. SPACING — Tight, compact sections
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.endpoint-body {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.expanded-endpoint-body {
+  padding: 8px 0 !important;
+}
+
+.tag-description {
+  margin: 8px 0 !important;
+  padding: 4px 0 !important;
+}
+
+.divider {
+  margin: 8px 0 !important;
+}
+
+.req-res-info {
+  margin-top: 12px !important;
+  padding: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.request-body-container,
+.response-body-container {
+  margin: 4px 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.m-markdown {
+  margin: 0 !important;
+}
+
+.m-markdown p {
+  margin: 0 0 8px 0 !important;
+}
+
+.m-markdown table {
+  margin: 4px 0 8px 0 !important;
+}
+
+.m-markdown h2 {
+  margin: 16px 0 8px 0 !important;
+}
+
+.m-markdown h3 {
+  margin: 12px 0 6px 0 !important;
+}
+
+.tab-content {
+  padding: 0 !important;
+}
+
+.tab-panels {
+  padding: 0 !important;
+}
+
+.table-title {
+  padding: 6px 0 !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   4. TABLES — Navy headers, zebra-striped rows
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  border: 1.5px solid #003d6b !important;
+  border-radius: 0 !important;
+}
+
+th {
+  background: #003d6b !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  font-size: 18px !important;
+  letter-spacing: 0.3px !important;
+  padding: 9px 12px !important;
+  text-align: left !important;
+  border-color: #002d50 !important;
+}
+
+td {
+  padding: 8px 12px !important;
+  vertical-align: top !important;
+  font-size: 18px !important;
+  border: 1px solid #8a94a6 !important;
+  word-break: break-word !important;
+}
+
+tr:nth-child(odd) td {
+  background: #ffffff !important;
+}
+
+tr:nth-child(even) td {
+  background: #f7f9fb !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   5. HEADINGS — Navy accent with bottom borders
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.endpoint-body .summary .title,
+.summary .title,
+div.summary div.title {
+  font-size: 38px !important;
+  font-weight: 700 !important;
+  color: #003d6b !important;
+  letter-spacing: 0.3px !important;
+  border-bottom: 3px solid #003d6b !important;
+  padding-bottom: 10px !important;
+  display: block !important;
+  margin-bottom: 12px !important;
+}
+
+.api-content h2,
+.section-gap h2,
+.section-gap--read-mode h2 {
+  color: #003d6b !important;
+  border-bottom: 2px solid #003d6b !important;
+  padding-bottom: 6px !important;
+  margin-top: 28px !important;
+  font-size: 29px !important;
+}
+
+.api-content h3,
+.section-gap h3 {
+  color: #003d6b !important;
+  margin-top: 20px !important;
+  font-size: 24px !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   6. CODE BLOCKS — Grey background, navy left border
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+pre {
+  background: #f5f5f5 !important;
+  border-left: 4px solid #003d6b !important;
+  border-radius: 4px !important;
+  padding: 12px 14px !important;
+  font-size: 17px !important;
+  line-height: 1.5 !important;
+  max-height: 300px !important;
+  overflow: auto !important;
+}
+
+code {
+  background: #f4f4f4 !important;
+  border-radius: 3px !important;
+  padding: 1px 5px !important;
+  font-size: 17px !important;
+  color: #1a1a1a !important;
+}
+
+pre code {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  font-size: 17px !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   7. TEXTAREAS (request body editors)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+textarea {
+  min-height: 40px !important;
+  max-height: 180px !important;
+  height: auto !important;
+  resize: vertical !important;
+  font-size: 17px !important;
+  padding: 8px !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   8. DESCRIPTION TEXT — Body copy
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.m-markdown p,
+.m-markdown li {
+  font-size: 19px !important;
+  line-height: 1.6 !important;
+  color: #1a1a1a !important;
+}
+
+.m-markdown strong {
+  color: #1a1a1a !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   9. SCHEMA TABLE — Full-width, readable field descriptions
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:host {
+  --font-size-small: 19px !important;
+  --font-size-regular: 19px !important;
+  --font-size-mono: 17px !important;
+}
+
+.schema-table {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.schema-table .tr {
+  display: grid !important;
+  grid-template-columns: minmax(160px, 1fr) minmax(80px, auto) 3fr !important;
+  width: 100% !important;
+}
+
+.schema-table .td {
+  padding: 8px 12px !important;
+  font-size: 19px !important;
+  word-break: break-word !important;
+  min-width: 0 !important;
+}
+
+.schema-table .key {
+  min-width: 140px !important;
+  font-size: 19px !important;
+}
+
+.schema-table .key-type {
+  min-width: 70px !important;
+  white-space: nowrap !important;
+  font-size: 19px !important;
+}
+
+.schema-table .key-descr {
+  min-width: 0 !important;
+  flex: 1 !important;
+  font-size: 19px !important;
+}
+
+.obj-descr {
+  font-size: 19px !important;
+}
+
+.descr-text {
+  font-size: 19px !important;
+}
+
+span.descr-text {
+  font-size: 19px !important;
+}
+
+.schema-description {
+  font-size: 19px !important;
+}
+
+.toolbar-btn {
+  font-size: 17px !important;
+}
+
+.request-body-container *,
+.response-body-container * {
+  --font-size-small: 19px !important;
+  --font-size-regular: 19px !important;
+}
+
+.tree {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+}
+
+.schema-table-header {
+  display: grid !important;
+  grid-template-columns: minmax(160px, 1fr) minmax(80px, auto) 3fr !important;
+  width: 100% !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   10. BLOCKQUOTES / CALLOUTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.m-markdown blockquote {
+  background: #e8f0f8 !important;
+  border-left: 4px solid #003d6b !important;
+  border-radius: 4px !important;
+  padding: 8px 12px !important;
+  margin: 12px 0 8px !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COLOR PALETTE REFERENCE
+   ═══════════════════════════════════════════════════════════════════════════
+ *
+ *  Primary Navy:      #003d6b
+ *  Dark Navy:         #002d50
+ *  Body Text:         #1a1a1a
+ *  Muted Text:        #555555
+ *  Border Grey:       #8a94a6
+ *  Badge Border:      #bbbbbb
+ *  Code Background:   #f4f4f4 / #f5f5f5 / #f6f8fa
+ *  Even Row:          #f7f9fb
+ *  Odd Row:           #ffffff
+ *  Blockquote BG:     #e8f0f8
+ *
+ * ═══════════════════════════════════════════════════════════════════════════ */
