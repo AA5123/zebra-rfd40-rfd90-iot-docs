@@ -733,7 +733,7 @@ def main():
 </head>
 <body>
   <rapi-doc
-    spec-url="openapi.yaml?v=40"
+    spec-url="openapi.yaml?v=41"
     render-style="read"
     sort-endpoints-by="none"
     show-header="false"
@@ -811,6 +811,8 @@ def main():
 
       /* ── Code blocks: match PDF styling ── */
       'pre { background: #f5f5f5 !important; border-left: 4px solid #003d6b !important; border-radius: 4px !important; padding: 12px 14px !important; font-size: 17px !important; line-height: 1.5 !important; max-height: 300px !important; overflow: auto !important; }',
+      'pre[style] { background: #f5f5f5 !important; background-color: #f5f5f5 !important; }',
+      ':host pre { background: #f5f5f5 !important; background-color: #f5f5f5 !important; }',
       'code { background: #f4f4f4 !important; border-radius: 3px !important; padding: 1px 5px !important; font-size: 17px !important; color: #1a1a1a !important; }',
       'pre code { background: none !important; border: none !important; padding: 0 !important; font-size: 17px !important; }',
 
@@ -913,12 +915,13 @@ def main():
     }
 
     function addCopyToElement(root) {
-      /* Inject a style tag into this shadow root to force pre background */
-      if (!root.querySelector('style[data-copy-style]')) {
-        var style = document.createElement('style');
-        style.setAttribute('data-copy-style', '1');
-        style.textContent = 'pre { background: #f5f5f5 !important; background-color: #f5f5f5 !important; } pre[style] { background: #f5f5f5 !important; background-color: #f5f5f5 !important; } .response-panel pre, .json pre, pre.example-panel { background: #f5f5f5 !important; background-color: #f5f5f5 !important; }';
-        if (root.appendChild) root.appendChild(style);
+      /* Force #f5f5f5 on every pre by stripping inline background on EVERY pass (Lit re-renders reset it) */
+      var allP = root.querySelectorAll('pre');
+      for (var x = 0; x < allP.length; x++) {
+        var st = allP[x].getAttribute('style');
+        if (st && st.indexOf('#f5f5f5') === -1) {
+          allP[x].setAttribute('style', st.replace(/background[^;]*;?/gi, '') + ';background:#f5f5f5 !important;background-color:#f5f5f5 !important;');
+        }
       }
       /* Rename REQUEST / RESPONSE headers to MQTT-friendly labels */
       var reqResTitles = root.querySelectorAll('.req-res-title');
@@ -982,15 +985,6 @@ def main():
           };
         })(pre, btn);
         pre.appendChild(btn);
-      }
-      /* Force background on ALL pre blocks (including response examples rendered later) */
-      var allPres = root.querySelectorAll('pre');
-      for (var p = 0; p < allPres.length; p++) {
-        var pr = allPres[p];
-        var s = pr.getAttribute('style') || '';
-        if (s.indexOf('#f5f5f5') === -1) {
-          pr.setAttribute('style', s.replace(/background[^;]*;?/gi, '') + ';background:#f5f5f5 !important;background-color:#f5f5f5 !important;');
-        }
       }
       /* <textarea> blocks (request body examples) — replace with read-only <pre> */
       var tas = root.querySelectorAll('textarea');
