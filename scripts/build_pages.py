@@ -778,13 +778,18 @@ def main():
       '.nav-bar-path { padding-left: 16px !important; }',
       '.nav-bar-path .method-fg.small { display: none !important; width: 0 !important; margin: 0 !important; padding: 0 !important; }',
 
-      /* ── Hide REQUEST BODY label, "default" status, standalone "Response" label, grey dividers ── */
+      /* ── Hide REQUEST BODY label, "default" status, standalone "Response" label, grey dividers, OBJECT badge ── */
       '.request-body-container > .req-res-title { display: none !important; }',
       '.resp-head { display: none !important; }',
       '.response-status { display: none !important; }',
       '.request-body-container .req-body-title { display: none !important; }',
       '.response-body-container .resp-body-title { display: none !important; }',
       '.divider { display: none !important; }',
+      '.schema-object-type { display: none !important; }',
+      '.object-type { display: none !important; }',
+      '.schema-array-type { display: none !important; }',
+      '.schema-multitype-selector { display: none !important; }',
+      '.obj-type { display: none !important; }',
 
       /* ── Widen the main content area ── */
       '.main-content { max-width: 100% !important; width: 100% !important; padding: 0 24px !important; }',
@@ -952,6 +957,17 @@ def main():
     }
 
     function addCopyToElement(root) {
+      /* Hide OBJECT/ARRAY type badges via JS */
+      var spans = root.querySelectorAll('span, div');
+      for (var s = 0; s < spans.length; s++) {
+        var el = spans[s];
+        if (el.getAttribute('data-obj-hidden')) continue;
+        var t = el.textContent.trim();
+        if ((t === 'OBJECT' || t === 'ARRAY') && el.children.length === 0) {
+          el.setAttribute('data-obj-hidden', '1');
+          el.style.display = 'none';
+        }
+      }
       /* Inject a style tag into this shadow root to force pre background */
       if (!root.querySelector('style[data-copy-style]')) {
         var style = document.createElement('style');
