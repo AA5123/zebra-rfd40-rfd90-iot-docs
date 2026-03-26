@@ -1,179 +1,329 @@
 {
-    "_comment": "IoT Connector status/error codes. Used by generate_openapi.py to inject per-command error tables.",
+    "_comment": "IoT Connector response codes. Used by generate_openapi.py to inject per-command error tables.",
     "codes": [
         {
             "code": 0,
             "description": "Success",
             "iot_status_code": "IOT_STATUS_SUCCESS",
-            "commands": ["*"]
+            "commands": [
+                "*"
+            ],
+            "cause": "Command executed successfully",
+            "recommended_action": "No action required"
         },
         {
             "code": 1,
             "description": "Command payload is accepted",
             "iot_status_code": "IOT_STATUS_CMD_PAYLOAD_ACCEPTED",
-            "commands": ["set_os", "install_certificate"]
+            "commands": [
+                "set_os",
+                "install_certificate"
+            ],
+            "cause": "The device accepted the payload and is processing it asynchronously",
+            "recommended_action": "Wait for a follow-up event or poll status to confirm completion"
         },
         {
             "code": 2,
             "description": "Invalid payload",
             "iot_status_code": "IOT_ERROR_INVALID_PAYLOAD",
-            "commands": ["set_wifi", "delete_wifi_profile", "set_config"]
+            "commands": [
+                "set_wifi",
+                "delete_wifi_profile",
+                "set_config"
+            ],
+            "cause": "The JSON payload is malformed or contains invalid field values",
+            "recommended_action": "Validate the payload against the command schema and correct any errors"
         },
         {
             "code": 3,
             "description": "Not able to retrieve information",
             "iot_status_code": "IOT_ERROR_INFO_NOT_AVAILABLE",
-            "commands": ["get_status", "get_config", "get_endpoint_config", "get_wifi", "get_eth", "get_current_region", "get_installed_certificate", "get_operating_mode", "get_post_filter"]
+            "commands": [
+                "get_status",
+                "get_config",
+                "get_endpoint_config",
+                "get_wifi",
+                "get_eth",
+                "get_current_region",
+                "get_installed_certificate",
+                "get_operating_mode",
+                "get_post_filter"
+            ],
+            "cause": "The device could not gather the requested information at this time",
+            "recommended_action": "Retry the command after a short delay; if persistent, reboot the device"
         },
         {
             "code": 4,
             "description": "Firmware update in progress",
             "iot_status_code": "IOT_STATUS_FW_UPDATE_IN_PROGRESS",
-            "commands": ["set_os"]
+            "commands": [
+                "set_os"
+            ],
+            "cause": "A firmware update is already running on the device",
+            "recommended_action": "Wait for the current update to complete before sending another set_os command"
         },
         {
             "code": 5,
             "description": "Can't reboot device, inventory in progress",
             "iot_status_code": "IOT_ERROR_IN_REBOOT_INVENTORY_IN_PROGRESS",
-            "commands": ["reboot"]
+            "commands": [
+                "reboot"
+            ],
+            "cause": "An RFID inventory operation is currently active",
+            "recommended_action": "Stop the inventory with control_operation before rebooting"
         },
         {
             "code": 6,
             "description": "Region is not configured",
             "iot_status_code": "IOT_STATUS_REGION_NOT_CONFIGURED",
-            "commands": ["cloud_connect"]
+            "commands": [
+                "cloud_connect"
+            ],
+            "cause": "No regulatory region has been set on the device",
+            "recommended_action": "Configure the region before attempting to connect"
         },
         {
             "code": 7,
             "description": "Interface is not available",
             "iot_status_code": "IOT_ERROR_INTERFACE_NOT_AVAILABLE",
-            "commands": ["cloud_connect"]
+            "commands": [
+                "cloud_connect"
+            ],
+            "cause": "The requested network interface is not present or not enabled",
+            "recommended_action": "Verify the device has the required network interface and that it is enabled"
         },
         {
             "code": 8,
             "description": "Insufficient flash size",
             "iot_status_code": "IOT_ERROR_LOW_FLASH_SIZE",
-            "commands": ["set_os"]
+            "commands": [
+                "set_os"
+            ],
+            "cause": "Not enough free flash storage to download the firmware file",
+            "recommended_action": "Free up flash space or use a smaller firmware package"
         },
         {
             "code": 9,
             "description": "File not found",
             "iot_status_code": "IOT_STATUS_FILE_NOT_FOUND",
-            "commands": ["install_certificate", "delete_certificate", "get_installed_certificate", "set_os"]
+            "commands": [
+                "install_certificate",
+                "delete_certificate",
+                "get_installed_certificate",
+                "set_os"
+            ],
+            "cause": "The specified file or certificate could not be found on the device or server",
+            "recommended_action": "Verify the file path or URL is correct and the file exists"
         },
         {
             "code": 10,
             "description": "Configuration already exist",
             "iot_status_code": "IOT_ERROR_CONFIG_ALREADY_EXIST",
-            "commands": ["config_endpoint", "set_config"]
+            "commands": [
+                "config_endpoint",
+                "set_config"
+            ],
+            "cause": "An endpoint or configuration with the same name already exists",
+            "recommended_action": "Delete the existing configuration first or use a different name"
         },
         {
             "code": 11,
             "description": "Inventory in progress",
             "iot_status_code": "IOT_ERROR_INVENTORY_IN_PROGRESS",
-            "commands": ["control_operation", "set_operating_mode"]
+            "commands": [
+                "control_operation",
+                "set_operating_mode"
+            ],
+            "cause": "An RFID inventory operation is currently running",
+            "recommended_action": "Stop the current inventory before starting a new operation or changing the mode"
         },
         {
             "code": 12,
             "description": "No Radio Operation in Progress",
             "iot_status_code": "IOT_ERROR_NO_RADIO_OP_IN_PROGRESS",
-            "commands": ["control_operation"]
+            "commands": [
+                "control_operation"
+            ],
+            "cause": "A stop command was sent but no radio operation is currently active",
+            "recommended_action": "No action required — the radio is already idle"
         },
         {
             "code": 13,
             "description": "Firmware update Failed",
             "iot_status_code": "IOT_ERROR_FW_UPDATE_FAIL",
-            "commands": ["set_os"]
+            "commands": [
+                "set_os"
+            ],
+            "cause": "The firmware download or installation failed",
+            "recommended_action": "Check the firmware URL, network connectivity, and retry the update"
         },
         {
             "code": 14,
             "description": "Battery is low, Cannot update firmware",
             "iot_status_code": "IOT_ERROR_FW_UPDATE_FAIL_LOW_BATTERY",
-            "commands": ["set_os"]
+            "commands": [
+                "set_os"
+            ],
+            "cause": "Battery charge is too low to safely perform a firmware update",
+            "recommended_action": "Charge the device or connect to external power before retrying"
         },
         {
             "code": 15,
             "description": "WIFI Error - SSID not found",
             "iot_status_code": "IOT_ERROR_SSID_NOT_FOUND",
-            "commands": ["set_wifi", "delete_wifi_profile", "set_config"]
+            "commands": [
+                "set_wifi",
+                "delete_wifi_profile",
+                "set_config"
+            ],
+            "cause": "The specified Wi-Fi SSID does not exist in saved profiles",
+            "recommended_action": "Verify the SSID name is correct and that the profile has been saved"
         },
         {
             "code": 16,
             "description": "WIFI Error - Cannot delete active SSID",
             "iot_status_code": "IOT_ERROR_DELETE_ACTIVE_SSID",
-            "commands": ["delete_wifi_profile"]
+            "commands": [
+                "delete_wifi_profile"
+            ],
+            "cause": "The Wi-Fi profile being deleted is the currently connected network",
+            "recommended_action": "Disconnect from the network or connect to a different SSID before deleting"
         },
         {
             "code": 17,
             "description": "WIFI Error - SSID missed",
             "iot_status_code": "IOT_ERROR_SSID_MISSED",
-            "commands": ["set_wifi", "delete_wifi_profile", "set_config"]
+            "commands": [
+                "set_wifi",
+                "delete_wifi_profile",
+                "set_config"
+            ],
+            "cause": "The required SSID field is missing from the payload",
+            "recommended_action": "Include the SSID field in the command payload"
         },
         {
             "code": 18,
             "description": "WIFI Error - SSID already exist",
             "iot_status_code": "IOT_ERROR_SSID_ALREADY_EXIST",
-            "commands": ["set_wifi", "set_config"]
+            "commands": [
+                "set_wifi",
+                "set_config"
+            ],
+            "cause": "A Wi-Fi profile with this SSID is already saved on the device",
+            "recommended_action": "Delete the existing profile first or update it instead of creating a new one"
         },
         {
             "code": 19,
             "description": "WIFI Error - SSID count overflow",
             "iot_status_code": "IOT_ERROR_SSID_LIMIT_OVERFLOW",
-            "commands": ["set_wifi", "set_config"]
+            "commands": [
+                "set_wifi",
+                "set_config"
+            ],
+            "cause": "The maximum number of saved Wi-Fi profiles has been reached",
+            "recommended_action": "Delete an unused Wi-Fi profile before adding a new one"
         },
         {
             "code": 20,
             "description": "Wifi is not supported",
             "iot_status_code": "IOT_ERROR_WIFI_INTER_NOT_SUPPORTED",
-            "commands": ["set_wifi", "set_config"]
+            "commands": [
+                "set_wifi",
+                "set_config"
+            ],
+            "cause": "The device hardware does not have a Wi-Fi interface",
+            "recommended_action": "Use Ethernet or another supported interface for network connectivity"
         },
         {
             "code": 21,
             "description": "Certificate not found",
             "iot_status_code": "IOT_ERROR_CERT_NOT_FOUND",
-            "commands": ["delete_certificate", "get_installed_certificate", "install_certificate"]
+            "commands": [
+                "delete_certificate",
+                "get_installed_certificate",
+                "install_certificate"
+            ],
+            "cause": "The specified certificate is not installed on the device",
+            "recommended_action": "Verify the certificate name and install it using install_certificate if needed"
         },
         {
             "code": 22,
             "description": "Advanced configuration not set",
             "iot_status_code": "IOT_CTRL_ADVANCED_PROFILE_NOT_SET",
-            "commands": ["set_operating_mode"]
+            "commands": [
+                "set_operating_mode"
+            ],
+            "cause": "The operating mode requires an advanced profile that has not been configured",
+            "recommended_action": "Configure the advanced profile settings before setting the operating mode"
         },
         {
             "code": 23,
             "description": "Invalid enum value",
             "iot_status_code": "IOT_ERROR_INVALID_ENUM",
-            "commands": ["config_endpoint", "set_config", "set_wifi", "install_certificate", "control_operation", "set_operating_mode", "set_post_filter"]
+            "commands": [
+                "config_endpoint",
+                "set_config",
+                "set_wifi",
+                "install_certificate",
+                "control_operation",
+                "set_operating_mode",
+                "set_post_filter"
+            ],
+            "cause": "A field value does not match any of the allowed enum options",
+            "recommended_action": "Check the schema for allowed values and correct the field"
         },
         {
             "code": 24,
             "description": "Max 32 prefilters limit exceeded",
             "iot_status_code": "IOT_ERROR_PREFILTERS_LIMIT_EXCEEDED",
-            "commands": ["set_operating_mode"]
+            "commands": [
+                "set_operating_mode"
+            ],
+            "cause": "More than 32 prefilter rules were specified",
+            "recommended_action": "Reduce the number of prefilter rules to 32 or fewer"
         },
         {
             "code": 25,
             "description": "Max 3 publish topics exceeded",
             "iot_status_code": "IOT_ERROR_PUBLISH_TOPICS_EXCEEDED",
-            "commands": ["config_endpoint", "set_config"]
+            "commands": [
+                "config_endpoint",
+                "set_config"
+            ],
+            "cause": "More than 3 publish topics were specified in the endpoint configuration",
+            "recommended_action": "Reduce the number of publish topics to 3 or fewer"
         },
         {
             "code": 26,
             "description": "Max 1 subscribe topic exceeded",
             "iot_status_code": "IOT_ERROR_SUBSCRIBE_TOPIC_EXCEEDED",
-            "commands": ["config_endpoint", "set_config"]
+            "commands": [
+                "config_endpoint",
+                "set_config"
+            ],
+            "cause": "More than 1 subscribe topic was specified in the endpoint configuration",
+            "recommended_action": "Use only 1 subscribe topic per endpoint"
         },
         {
             "code": 27,
             "description": "Invalid tenant ID length",
             "iot_status_code": "IOT_ERROR_INVALID_TENANTID_LENGTH",
-            "commands": ["config_endpoint", "set_config"]
+            "commands": [
+                "config_endpoint",
+                "set_config"
+            ],
+            "cause": "The tenant ID exceeds the maximum allowed character length",
+            "recommended_action": "Shorten the tenant ID to within the allowed limit"
         },
         {
             "code": 28,
             "description": "Tag match pattern length exceeded",
             "iot_status_code": "IOT_ERROR_TAG_MATCH_PATTERN_LENGTH_EXCEEDED",
-            "commands": ["set_operating_mode"]
+            "commands": [
+                "set_operating_mode"
+            ],
+            "cause": "The tag match pattern string exceeds the maximum allowed length",
+            "recommended_action": "Shorten the tag match pattern to within the allowed limit"
         }
     ]
 }

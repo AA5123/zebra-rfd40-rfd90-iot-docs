@@ -510,23 +510,25 @@ def build_openapi():
                     ("code", e["code"]),
                     ("description", e["description"]),
                     ("iot_status_code", e["iot_status_code"]),
+                    ("cause", e.get("cause", "")),
+                    ("recommended_action", e.get("recommended_action", "")),
                 ])
                 for e in error_codes_for_cmd
             ]
             # Append markdown table to description so RapiDoc renders it
             ec_lines = [
-                "\n\n## Status / Error Codes\n",
-                "| Code | Status Constant | Description |",
-                "|------|----------------|-------------|",
+                "\n\n## Response Codes\n",
+                "| Code | Status Constant | Description | Cause | Recommended Action |",
+                "|------|----------------|-------------|-------|--------------------|",
             ]
             for e in error_codes_for_cmd:
                 ec_lines.append(
-                    f"| {e['code']} | `{e['iot_status_code']}` | {e['description']} |"
+                    f"| {e['code']} | `{e['iot_status_code']}` | {e['description']} | {e.get('cause', '')} | {e.get('recommended_action', '')} |"
                 )
             ec_table = "\n".join(ec_lines)
             current_desc = op.get("description", "")
-            # Remove any previous error codes table (idempotent)
-            current_desc = re.sub(r"\n\n## Status / Error Codes\n.*", "", current_desc, flags=re.DOTALL)
+            # Remove any previous error/response codes table (idempotent)
+            current_desc = re.sub(r"\n\n## (Status / Error Codes|Response Codes)\n.*", "", current_desc, flags=re.DOTALL)
             op["description"] = current_desc + ec_table
 
         paths[f"/{op_name}"] = OrderedDict([("post", op)])

@@ -286,9 +286,9 @@ def error_codes_table_html(error_codes: List[Dict]) -> str:
     """Render the x-error-codes list as an HTML table."""
     if not error_codes:
         return ""
-    out = ["<h2>Status / Error Codes</h2>"]
+    out = ["<h2>Response Codes</h2>"]
     out.append("<table>")
-    out.append("<thead><tr><th>Code</th><th>Status Constant</th><th>Description</th></tr></thead>")
+    out.append("<thead><tr><th>Code</th><th>Status Constant</th><th>Description</th><th>Cause</th><th>Recommended Action</th></tr></thead>")
     out.append("<tbody>")
     for e in error_codes:
         out.append(
@@ -296,6 +296,8 @@ def error_codes_table_html(error_codes: List[Dict]) -> str:
             f"<td>{html.escape(str(e.get('code', '')))}</td>"
             f"<td><code>{html.escape(str(e.get('iot_status_code', '')))}</code></td>"
             f"<td>{html.escape(str(e.get('description', '')))}</td>"
+            f"<td>{html.escape(str(e.get('cause', '')))}</td>"
+            f"<td>{html.escape(str(e.get('recommended_action', '')))}</td>"
             "</tr>"
         )
     out.append("</tbody></table>")
@@ -497,7 +499,7 @@ def build_html(command: str, op: Dict[str, Any]) -> str:
     if isinstance(description, str):
         description = re.sub(r"\n\n\*\*Download pdf:\*\*[^\n]*", "", description).strip()
         # Remove markdown error codes table (rendered separately from x-error-codes)
-        description = re.sub(r"\n\n\*\*Status / Error Codes\*\*\n.*", "", description, flags=re.DOTALL).strip()
+        description = re.sub(r"\n\n\*\*(Status / Error Codes|Response Codes)\*\*\n.*", "", description, flags=re.DOTALL).strip()
 
     # Extract error codes from x-error-codes extension
     error_codes = op.get("x-error-codes", [])
