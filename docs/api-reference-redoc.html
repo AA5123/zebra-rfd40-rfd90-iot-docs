@@ -174,89 +174,32 @@
         }
       }
     }
-    /* Inject collapsible MANAGEMENT / CONTROL / EVENTS / DATA group headers into sidebar nav */
+    /* Inject MANAGEMENT / CONTROL / EVENTS / DATA group headers into sidebar nav */
     function injectGroupHeaders(sr) {
       if (!sr) return;
       var existing = sr.querySelectorAll('[data-tag-group-header]');
       if (existing.length >= 4) return;
       for (var e = 0; e < existing.length; e++) existing[e].remove();
-      /* Also remove any previously wrapped containers */
-      var oldWraps = sr.querySelectorAll('[data-tag-group-wrap]');
-      for (var w = 0; w < oldWraps.length; w++) {
-        var parent = oldWraps[w].parentElement;
-        while (oldWraps[w].firstChild) parent.insertBefore(oldWraps[w].firstChild, oldWraps[w]);
-        parent.removeChild(oldWraps[w]);
-      }
       var groups = [
-        { name: 'MANAGEMENT', tags: ['Device Status','Device Configuration','Network Configuration','MQTT Endpoint Configuration','Certificate Management','System Operations'] },
-        { name: 'CONTROL', tags: ['Inventory Control','Operating Mode','Tag Filtering'] },
-        { name: 'EVENTS', tags: ['Device Health','Alerts','Exceptions','MQTT Connectivity','Event Configuration'] },
-        { name: 'DATA', tags: ['Tag Data Event'] }
+        { name: 'MANAGEMENT', first: 'Device Status' },
+        { name: 'CONTROL', first: 'Inventory Control' },
+        { name: 'EVENTS', first: 'Device Health' },
+        { name: 'DATA', first: 'Tag Data Event' }
       ];
-      /* Build a tag→group lookup */
-      var tagToGroup = {};
-      for (var g = 0; g < groups.length; g++) {
-        for (var t = 0; t < groups[g].tags.length; t++) tagToGroup[groups[g].tags[t]] = g;
-      }
+      var firstMap = {};
+      for (var g = 0; g < groups.length; g++) firstMap[groups[g].first] = groups[g].name;
       var navTags = sr.querySelectorAll('.nav-bar-tag');
       if (navTags.length === 0) return;
-      /* Collect DOM elements per group: each .nav-bar-tag + its siblings (.nav-bar-path) until next .nav-bar-tag */
-      var groupEls = [[], [], [], []];
       for (var i = 0; i < navTags.length; i++) {
         var tagText = navTags[i].textContent.trim();
-        var gIdx = tagToGroup[tagText];
-        if (gIdx === undefined) continue;
-        groupEls[gIdx].push(navTags[i]);
-        /* Collect .nav-bar-path items that follow this tag */
-        var next = navTags[i].nextElementSibling;
-        while (next && !next.classList.contains('nav-bar-tag') && !next.hasAttribute('data-tag-group-header')) {
-          if (next.classList.contains('nav-bar-path')) groupEls[gIdx].push(next);
-          next = next.nextElementSibling;
+        if (firstMap[tagText]) {
+          var hdr = document.createElement('div');
+          hdr.setAttribute('data-tag-group-header', '1');
+          hdr.textContent = firstMap[tagText];
+          var isFirst = (tagText === 'Device Status');
+          hdr.style.cssText = 'font-size:18px;font-weight:800;color:#003d6b;text-transform:uppercase;letter-spacing:2px;padding:' + (isFirst ? '10px' : '18px') + ' 16px 10px;' + (isFirst ? '' : 'margin-top:8px;border-top:2px solid #003d6b;');
+          navTags[i].parentElement.insertBefore(hdr, navTags[i]);
         }
-      }
-      var container = navTags[0].parentElement;
-      for (var g = 0; g < groups.length; g++) {
-        if (groupEls[g].length === 0) continue;
-        var isFirst = (g === 0);
-        /* Create header */
-        var hdr = document.createElement('div');
-        hdr.setAttribute('data-tag-group-header', '1');
-        hdr.style.cssText = 'font-size:18px;font-weight:800;color:#003d6b;text-transform:uppercase;letter-spacing:2px;padding:' + (isFirst ? '10px' : '18px') + ' 16px 10px;' + (isFirst ? '' : 'margin-top:8px;border-top:2px solid #003d6b;') + 'cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;';
-        var label = document.createElement('span');
-        label.textContent = groups[g].name;
-        var arrow = document.createElement('span');
-        arrow.textContent = '▲';
-        arrow.style.cssText = 'font-size:12px;transition:transform 0.2s;';
-        arrow.setAttribute('data-group-arrow', '1');
-        hdr.appendChild(label);
-        hdr.appendChild(arrow);
-        /* Create wrapper for group items */
-        var wrap = document.createElement('div');
-        wrap.setAttribute('data-tag-group-wrap', '1');
-        wrap.style.cssText = 'overflow:hidden;transition:max-height 0.3s ease;';
-        for (var el = 0; el < groupEls[g].length; el++) {
-          wrap.appendChild(groupEls[g][el]);
-        }
-        /* Toggle collapse/expand on click */
-        (function(wrapEl, arrowEl) {
-          var collapsed = false;
-          wrapEl._collapsed = false;
-          hdr.addEventListener('click', function() {
-            collapsed = !collapsed;
-            wrapEl._collapsed = collapsed;
-            if (collapsed) {
-              wrapEl.style.maxHeight = '0px';
-              wrapEl.style.overflow = 'hidden';
-              arrowEl.style.transform = 'rotate(180deg)';
-            } else {
-              wrapEl.style.maxHeight = 'none';
-              wrapEl.style.overflow = 'visible';
-              arrowEl.style.transform = 'rotate(0deg)';
-            }
-          });
-        })(wrap, arrow);
-        container.appendChild(hdr);
-        container.appendChild(wrap);
       }
     }
     /* Poll for initial setup */
