@@ -723,7 +723,6 @@ def main():
       color: #003d6b !important;
       letter-spacing: 0.3px !important;
       padding-bottom: 10px !important;
-      border-bottom: 3px solid #003d6b !important;
       display: block !important;
       margin-bottom: 12px !important;
     }
@@ -826,7 +825,7 @@ def main():
       /* ── Headings: navy accent ── */
       '.endpoint-body .summary .title, .summary .title, div.summary div.title, .only-large-font { font-size: 4.5rem !important; font-weight: 800 !important; color: #003d6b !important; letter-spacing: 0.3px !important; padding-bottom: 10px !important; display: block !important; margin-bottom: 8px !important; }',
       '.endpoint-head .descr { display: none !important; }',
-      '.api-content h2, .section-gap h2, .section-gap--read-mode h2 { color: #003d6b !important; font-weight: 700 !important; border-bottom: 2px solid #003d6b !important; padding-bottom: 6px !important; margin-top: 36px !important; margin-bottom: 20px !important; font-size: 2.36rem !important; }',
+      '.api-content h2, .section-gap h2, .section-gap--read-mode h2 { color: #003d6b !important; font-weight: 700 !important; padding-bottom: 6px !important; margin-top: 36px !important; margin-bottom: 20px !important; font-size: 2.36rem !important; }',
       '.api-content h3, .section-gap h3 { color: #003d6b !important; font-weight: 600 !important; margin-top: 28px !important; margin-bottom: 8px !important; font-size: 1.83rem !important; }',
 
       /* ── Code blocks ── */
