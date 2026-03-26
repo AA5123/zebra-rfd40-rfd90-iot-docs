@@ -985,7 +985,7 @@ def main():
               var ajLabel = document.createElement('span');
               ajLabel.setAttribute('data-appjson-injected', '1');
               ajLabel.textContent = 'application/json';
-              ajLabel.style.cssText = 'position:absolute;right:0;top:0;font-size:16px;color:#333;font-weight:400;';
+              ajLabel.style.cssText = 'position:absolute;right:0;top:0;font-size:20px;color:#333;font-weight:400;';
               sibling.appendChild(ajLabel);
               break;
             }
