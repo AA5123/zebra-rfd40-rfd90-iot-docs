@@ -6,6 +6,14 @@ Use this command to monitor device health, verify connectivity before starting o
 
 > **Note:** The `deviceStatus` object in the response is optional. When the device cannot retrieve status information (response code `3`), the response omits this object.
 
+## Related Commands
+
+| Command | Relationship |
+|---|---|
+| `get_version` | Retrieve device identity — model, serial number, SKU, firmware versions |
+| `get_current_region` | Inspect regulatory radio configuration — region, channels, power limits |
+| `get_config` | Retrieve the full device configuration including status, version, and region in one call |
+
 ### Command Details
 
 | Property | Value |

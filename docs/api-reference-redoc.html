@@ -70,13 +70,18 @@
       '.endpoint-head .method { display: none !important; }',
       '.nav-bar-tag .method { display: none !important; }',
       '.path { display: none !important; }',
+      '.endpoint-url { display: none !important; }',
+      '.only-large-font-size { display: none !important; }',
       '.nav-bar-path { padding-left: 16px !important; }',
       '.nav-bar-path .method-fg.small { display: none !important; width: 0 !important; margin: 0 !important; padding: 0 !important; }',
 
-      /* ── Hide REQUEST BODY label, "default" status, standalone "Response" label ── */
+      /* ── Hide REQUEST BODY label, "default" status, standalone "Response" label, grey dividers ── */
       '.request-body-container > .req-res-title { display: none !important; }',
       '.resp-head { display: none !important; }',
       '.response-status { display: none !important; }',
+      '.request-body-container .req-body-title { display: none !important; }',
+      '.response-body-container .resp-body-title { display: none !important; }',
+      '.divider { display: none !important; }',
 
       /* ── Widen the main content area ── */
       '.main-content { max-width: 100% !important; width: 100% !important; padding: 0 24px !important; }',
@@ -259,10 +264,10 @@
         var txt = reqResTitles[r].textContent.trim().toUpperCase();
         var topicPrefix = '{tenantId}/MGMT/clients/';
         if (txt.indexOf('REQUEST') !== -1) {
-          reqResTitles[r].innerHTML = '<div style="font-size:29px;font-weight:700;color:#003d6b;border-bottom:2px solid #003d6b;padding-bottom:6px;margin-bottom:8px;">Command Payload (Request)</div>' +
+          reqResTitles[r].innerHTML = '<div style="font-size:29px;font-weight:700;color:#003d6b;border-bottom:2px solid #003d6b;padding-bottom:6px;margin-top:32px;margin-bottom:8px;">Command Payload</div>' +
             '<div style="font-size:17px;color:#333;margin:2px 0;"><b>Publish to:</b> <code style="background:#f4f4f4;padding:1px 5px;border-radius:3px;">' + topicPrefix + 'cmnd/{deviceSerial}</code></div>';
         } else if (txt.indexOf('RESPONSE') !== -1) {
-          reqResTitles[r].innerHTML = '<div style="font-size:29px;font-weight:700;color:#003d6b;border-bottom:2px solid #003d6b;padding-bottom:6px;margin-bottom:8px;">Response Payload</div>' +
+          reqResTitles[r].innerHTML = '<div style="font-size:29px;font-weight:700;color:#003d6b;border-bottom:2px solid #003d6b;padding-bottom:6px;margin-top:32px;margin-bottom:8px;">Response Payload</div>' +
             '<div style="font-size:17px;color:#333;margin:2px 0;"><b>Published on:</b> <code style="background:#f4f4f4;padding:1px 5px;border-radius:3px;">' + topicPrefix + 'resp/{deviceSerial}</code></div>';
         }
       }
@@ -345,6 +350,37 @@
     }
 
     /* Style operation headings (.summary .title) directly via DOM */
+    /* Breadcrumb mapping: operation -> { group, tag } */
+    var breadcrumbMap = {
+      'get_status': { group: 'Management', tag: 'Device Status' },
+      'get_version': { group: 'Management', tag: 'Device Status' },
+      'get_current_region': { group: 'Management', tag: 'Device Status' },
+      'get_config': { group: 'Management', tag: 'Device Configuration' },
+      'set_config': { group: 'Management', tag: 'Device Configuration' },
+      'get_wifi': { group: 'Management', tag: 'Network Configuration' },
+      'set_wifi': { group: 'Management', tag: 'Network Configuration' },
+      'delete_wifi_profile': { group: 'Management', tag: 'Network Configuration' },
+      'get_eth': { group: 'Management', tag: 'Network Configuration' },
+      'config_endpoint': { group: 'Management', tag: 'MQTT Endpoint Configuration' },
+      'get_endpoint_config': { group: 'Management', tag: 'MQTT Endpoint Configuration' },
+      'install_certificate': { group: 'Management', tag: 'Certificate Management' },
+      'delete_certificate': { group: 'Management', tag: 'Certificate Management' },
+      'get_installed_certificate': { group: 'Management', tag: 'Certificate Management' },
+      'reboot': { group: 'Management', tag: 'System Operations' },
+      'set_os': { group: 'Management', tag: 'System Operations' },
+      'control_operation': { group: 'Control', tag: 'Inventory Control' },
+      'set_operating_mode': { group: 'Control', tag: 'Operating Mode' },
+      'get_operating_mode': { group: 'Control', tag: 'Operating Mode' },
+      'set_post_filter': { group: 'Control', tag: 'Tag Filtering' },
+      'get_post_filter': { group: 'Control', tag: 'Tag Filtering' },
+      'heartBeatEVT': { group: 'Events', tag: 'Device Health' },
+      'alerts': { group: 'Events', tag: 'Alerts' },
+      'alert_short': { group: 'Events', tag: 'Alerts' },
+      'exceptionEVT': { group: 'Events', tag: 'Exceptions' },
+      'mqttConnEVT': { group: 'Events', tag: 'MQTT Connectivity' },
+      'config_events': { group: 'Events', tag: 'Event Configuration' },
+      'dataEVT': { group: 'Data', tag: 'Tag Data Event' }
+    };
     function styleHeadings(root) {
       if (!root) return;
       /* Target multiple possible selectors for operation title */
@@ -356,7 +392,16 @@
         /* Only style operation-name-like elements (skip generic headings) */
         if (!txt || txt.length > 80) continue;
         titles[t].setAttribute('data-styled', '1');
-        titles[t].style.cssText = 'font-size:42px!important;font-weight:800!important;color:#003d6b!important;letter-spacing:0.3px!important;border-bottom:3px solid #003d6b!important;padding-bottom:10px!important;display:block!important;margin-bottom:16px!important;';
+        titles[t].style.cssText = 'font-size:42px!important;font-weight:800!important;color:#003d6b!important;letter-spacing:0.3px!important;border-bottom:3px solid #003d6b!important;padding-bottom:10px!important;display:block!important;margin-bottom:4px!important;';
+        /* Add breadcrumb below title */
+        var bc = breadcrumbMap[txt];
+        if (bc && !titles[t].parentElement.querySelector('[data-breadcrumb]')) {
+          var crumb = document.createElement('div');
+          crumb.setAttribute('data-breadcrumb', '1');
+          crumb.style.cssText = 'font-size:14px;color:#666;margin-bottom:16px;font-weight:400;';
+          crumb.innerHTML = '<span style="color:#888;">' + bc.group + '</span> <span style="color:#aaa;margin:0 4px;">›</span> <span style="color:#888;">' + bc.tag + '</span> <span style="color:#aaa;margin:0 4px;">›</span> <span style="color:#003d6b;font-weight:600;">' + txt + '</span>';
+          titles[t].parentElement.insertBefore(crumb, titles[t].nextSibling);
+        }
       }
     }
 
