@@ -791,12 +791,12 @@ def main():
       '.schema-multitype-selector { display: none !important; }',
       '.obj-type { display: none !important; }',
 
-      /* ── Content area: readable width with generous padding ── */
-      '.main-content { max-width: 1200px !important; width: 100% !important; padding: 0 40px !important; }',
-      '.main-content > div, .main-content .operation-body { max-width: 1200px !important; width: 100% !important; }',
-      '.section-gap, .section-gap--read-mode { max-width: 1200px !important; width: 100% !important; padding: 12px 40px !important; margin: 0 !important; }',
-      '.main-content.read-mode { max-width: 1200px !important; }',
-      '.api-content { max-width: 1200px !important; width: 100% !important; }',
+      /* ── Content area: full width with generous padding ── */
+      '.main-content { max-width: 100% !important; width: 100% !important; padding: 0 40px !important; }',
+      '.main-content > div, .main-content .operation-body { max-width: 100% !important; width: 100% !important; }',
+      '.section-gap, .section-gap--read-mode { max-width: 100% !important; width: 100% !important; padding: 12px 40px !important; margin: 0 !important; }',
+      '.main-content.read-mode { max-width: 100% !important; }',
+      '.api-content { max-width: 100% !important; width: 100% !important; }',
 
       /* ── Section spacing: breathable layout ── */
       '.endpoint-body { padding: 0 !important; margin: 0 !important; }',
