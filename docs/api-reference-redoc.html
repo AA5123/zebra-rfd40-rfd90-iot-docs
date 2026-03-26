@@ -90,8 +90,8 @@
       '.m-markdown { margin: 0 !important; }',
       '.m-markdown p { margin: 0 0 8px 0 !important; }',
       '.m-markdown table { margin: 4px 0 8px 0 !important; }',
-      '.m-markdown h2 { margin: 16px 0 8px 0 !important; }',
-      '.m-markdown h3 { margin: 12px 0 6px 0 !important; }',
+      '.m-markdown h2 { margin: 28px 0 16px 0 !important; font-weight: 700 !important; }',
+      '.m-markdown h3 { margin: 24px 0 6px 0 !important; font-weight: 600 !important; }',
 
       /* ── Tables: Zebra navy headers + alternating rows ── */
       'table { border-collapse: collapse !important; width: 100% !important; border: 1.5px solid #003d6b !important; border-radius: 0 !important; }',
@@ -101,10 +101,10 @@
       'tr:nth-child(even) td { background: #f7f9fb !important; }',
 
       /* ── Headings: navy accent ── */
-      '.endpoint-body .summary .title, .summary .title, div.summary div.title { font-size: 38px !important; font-weight: 700 !important; color: #003d6b !important; letter-spacing: 0.3px !important; border-bottom: 3px solid #003d6b !important; padding-bottom: 10px !important; display: block !important; margin-bottom: 12px !important; }',
+      '.endpoint-body .summary .title, .summary .title, div.summary div.title { font-size: 42px !important; font-weight: 800 !important; color: #003d6b !important; letter-spacing: 0.3px !important; border-bottom: 3px solid #003d6b !important; padding-bottom: 10px !important; display: block !important; margin-bottom: 16px !important; }',
       '.endpoint-head .descr { display: none !important; }',
-      '.api-content h2, .section-gap h2, .section-gap--read-mode h2 { color: #003d6b !important; border-bottom: 2px solid #003d6b !important; padding-bottom: 6px !important; margin-top: 28px !important; font-size: 29px !important; }',
-      '.api-content h3, .section-gap h3 { color: #003d6b !important; margin-top: 20px !important; font-size: 24px !important; }',
+      '.api-content h2, .section-gap h2, .section-gap--read-mode h2 { color: #003d6b !important; font-weight: 700 !important; border-bottom: 2px solid #003d6b !important; padding-bottom: 6px !important; margin-top: 28px !important; margin-bottom: 16px !important; font-size: 29px !important; }',
+      '.api-content h3, .section-gap h3 { color: #003d6b !important; font-weight: 600 !important; margin-top: 24px !important; margin-bottom: 6px !important; font-size: 24px !important; }',
 
       /* ── Code blocks: match PDF styling ── */
       'pre { background: #f5f5f5 !important; border-left: 4px solid #003d6b !important; border-radius: 4px !important; padding: 12px 14px !important; font-size: 17px !important; line-height: 1.5 !important; max-height: 300px !important; overflow: auto !important; }',
@@ -254,10 +254,10 @@
         var txt = reqResTitles[r].textContent.trim().toUpperCase();
         var topicPrefix = '{tenantId}/MGMT/clients/';
         if (txt.indexOf('REQUEST') !== -1) {
-          reqResTitles[r].innerHTML = '<div style="font-size:24px;font-weight:700;color:#003d6b;margin-bottom:4px;">Command Payload (Request)</div>' +
+          reqResTitles[r].innerHTML = '<div style="font-size:29px;font-weight:700;color:#003d6b;border-bottom:2px solid #003d6b;padding-bottom:6px;margin-bottom:8px;">Command Payload (Request)</div>' +
             '<div style="font-size:17px;color:#333;margin:2px 0;"><b>Publish to:</b> <code style="background:#f4f4f4;padding:1px 5px;border-radius:3px;">' + topicPrefix + 'cmnd/{deviceSerial}</code></div>';
         } else if (txt.indexOf('RESPONSE') !== -1) {
-          reqResTitles[r].innerHTML = '<div style="font-size:24px;font-weight:700;color:#003d6b;margin-bottom:4px;">Response Payload</div>' +
+          reqResTitles[r].innerHTML = '<div style="font-size:29px;font-weight:700;color:#003d6b;border-bottom:2px solid #003d6b;padding-bottom:6px;margin-bottom:8px;">Response Payload</div>' +
             '<div style="font-size:17px;color:#333;margin:2px 0;"><b>Published on:</b> <code style="background:#f4f4f4;padding:1px 5px;border-radius:3px;">' + topicPrefix + 'resp/{deviceSerial}</code></div>';
         }
       }
@@ -346,7 +346,7 @@
       for (var t = 0; t < titles.length; t++) {
         if (titles[t].getAttribute('data-styled')) continue;
         titles[t].setAttribute('data-styled', '1');
-        titles[t].style.cssText = 'font-size:34px!important;font-weight:700!important;color:#003d6b!important;letter-spacing:0.3px!important;border-bottom:3px solid #003d6b!important;padding-bottom:8px!important;display:block!important;margin-bottom:12px!important;';
+        titles[t].style.cssText = 'font-size:42px!important;font-weight:800!important;color:#003d6b!important;letter-spacing:0.3px!important;border-bottom:3px solid #003d6b!important;padding-bottom:10px!important;display:block!important;margin-bottom:16px!important;';
       }
     }
 

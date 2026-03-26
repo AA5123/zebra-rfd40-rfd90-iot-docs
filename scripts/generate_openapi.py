@@ -412,16 +412,17 @@ def build_openapi():
 
         # Auto-add PDF download link at top of description (below heading)
         pdf_url = find_command_pdf(op_name)
-        if pdf_url and isinstance(description, str) and "Download pdf:" not in description and "download pdf:" not in description:
-            pdf_link = f"**Download pdf:** \U0001F4C4 [Download {op_name} as PDF]({pdf_url})\n\n"
+        if pdf_url and isinstance(description, str) and "Download pdf:" not in description and "Download PDF]" not in description:
+            pdf_link = f"\U0001F4C4 [Download PDF]({pdf_url})\n\n"
             description = pdf_link + description
         elif pdf_url and isinstance(description, str) and "Download pdf:" in description:
             # Remove existing PDF link from wherever it is, then prepend
             description = re.sub(r'\n*\*\*Download pdf:\*\*.*?\n*', '', description).strip()
-            pdf_link = f"**Download pdf:** \U0001F4C4 [Download {op_name} as PDF]({pdf_url})\n\n"
+            description = re.sub(r'\n*\U0001F4C4 \[Download PDF\].*?\n*', '', description).strip()
+            pdf_link = f"\U0001F4C4 [Download PDF]({pdf_url})\n\n"
             description = pdf_link + description
         elif pdf_url and not description:
-            description = f"**Download pdf:** \U0001F4C4 [Download {op_name} as PDF]({pdf_url})"
+            description = f"\U0001F4C4 [Download PDF]({pdf_url})"
 
         # Build the operation
         op = OrderedDict()
