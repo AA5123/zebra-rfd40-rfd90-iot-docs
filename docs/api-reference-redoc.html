@@ -263,8 +263,7 @@
         var len = fullText.length;
         /* Exact matches — only small leaf elements */
         if (len < 30 && el.children.length <= 1) {
-          if (/^(OBJECT|ARRAY|object|array|default|Response)$/.test(fullText) ||
-              /^application\/json$/i.test(fullText)) {
+          if (/^(OBJECT|ARRAY|object|array|default|Response)$/.test(fullText)) {
             el.setAttribute('data-obj-hidden', '1');
             el.style.display = 'none';
             continue;
