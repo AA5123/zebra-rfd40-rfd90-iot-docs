@@ -1016,10 +1016,10 @@ def main():
         var txt = reqResTitles[r].textContent.trim().toUpperCase();
         var topicPrefix = '{tenantId}/MGMT/clients/';
         if (txt.indexOf('REQUEST') !== -1) {
-          reqResTitles[r].innerHTML = '<div style="font-size:1.75rem;font-weight:600;color:#003d6b;padding-bottom:4px;margin-top:28px;margin-bottom:8px;">Command Payload</div>' +
+          reqResTitles[r].innerHTML = '<div style="font-size:2.25rem;font-weight:700;color:#003d6b;padding-bottom:6px;margin-top:16px;margin-bottom:8px;">Command Payload</div>' +
             '<div style="font-size:1.125rem;color:#333;margin:4px 0 12px;"><b>Publish to:</b> <code style="background:#f4f4f4;padding:2px 6px;border-radius:3px;">' + topicPrefix + 'cmnd/{deviceSerial}</code></div>';
         } else if (txt.indexOf('RESPONSE') !== -1) {
-          reqResTitles[r].innerHTML = '<div style="font-size:1.75rem;font-weight:600;color:#003d6b;padding-bottom:4px;margin-top:28px;margin-bottom:8px;">Response Payload</div>' +
+          reqResTitles[r].innerHTML = '<div style="font-size:2.25rem;font-weight:700;color:#003d6b;padding-bottom:6px;margin-top:16px;margin-bottom:8px;">Response Payload</div>' +
             '<div style="font-size:1.125rem;color:#333;margin:4px 0 12px;"><b>Published on:</b> <code style="background:#f4f4f4;padding:2px 6px;border-radius:3px;">' + topicPrefix + 'resp/{deviceSerial}</code></div>';
         }
       }
