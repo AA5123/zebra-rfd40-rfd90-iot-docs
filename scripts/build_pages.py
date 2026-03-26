@@ -722,6 +722,7 @@ def main():
       font-weight: 800 !important;
       color: #003d6b !important;
       letter-spacing: 0.3px !important;
+      border-bottom: 3px solid #003d6b !important;
       padding-bottom: 10px !important;
       display: block !important;
       margin-bottom: 12px !important;
