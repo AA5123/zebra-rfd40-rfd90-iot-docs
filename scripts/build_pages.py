@@ -957,14 +957,15 @@ def main():
     }
 
     function addCopyToElement(root) {
-      /* Hide OBJECT/ARRAY type badges via JS — check all elements */
+      /* Hide unwanted labels via JS — check all elements */
       var allEls = root.querySelectorAll('*');
       for (var s = 0; s < allEls.length; s++) {
         var el = allEls[s];
         if (el.getAttribute('data-obj-hidden')) continue;
-        var t = (el.textContent || '').trim();
-        /* Match standalone OBJECT or ARRAY text (may have whitespace) */
-        if (/^(OBJECT|ARRAY|object|array|default|Response)$/.test(t)) {
+        var t = (el.textContent || '').trim().replace(/\s+/g, ' ');
+        if (/^(OBJECT|ARRAY|object|array|default|Response)$/.test(t) ||
+            /^REQUEST BODY/i.test(t) ||
+            /^application\/json$/i.test(t)) {
           el.setAttribute('data-obj-hidden', '1');
           el.style.display = 'none';
         }
