@@ -813,8 +813,8 @@ def main():
       '.m-markdown { margin: 0 !important; }',
       '.m-markdown p { margin: 0 0 16px 0 !important; }',
       '.m-markdown table { margin: 8px 0 16px 0 !important; }',
-      '.m-markdown h2 { margin: 36px 0 20px 0 !important; font-weight: 700 !important; font-size: 2.36rem !important; color: #003d6b !important; border-bottom: 2px solid #003d6b !important; padding-bottom: 6px !important; }',
-      '.m-markdown h3 { margin: 36px 0 20px 0 !important; font-weight: 700 !important; font-size: 2.36rem !important; color: #003d6b !important; border-bottom: 2px solid #003d6b !important; padding-bottom: 6px !important; }',
+      '.m-markdown h2 { margin: 36px 0 20px 0 !important; font-weight: 700 !important; font-size: 2.36rem !important; color: #003d6b !important; padding-bottom: 6px !important; }',
+      '.m-markdown h3 { margin: 36px 0 20px 0 !important; font-weight: 700 !important; font-size: 2.36rem !important; color: #003d6b !important; padding-bottom: 6px !important; }',
 
       /* ── Tables: Zebra navy headers + alternating rows ── */
       'table { border-collapse: collapse !important; width: 100% !important; border: 1.5px solid #003d6b !important; border-radius: 0 !important; }',
@@ -824,7 +824,7 @@ def main():
       'tr:nth-child(even) td { background: #f7f9fb !important; }',
 
       /* ── Headings: navy accent ── */
-      '.endpoint-body .summary .title, .summary .title, div.summary div.title, .only-large-font { font-size: 3.65rem !important; font-weight: 800 !important; color: #003d6b !important; letter-spacing: 0.3px !important; border-bottom: 3px solid #003d6b !important; padding-bottom: 10px !important; display: block !important; margin-bottom: 8px !important; }',
+      '.endpoint-body .summary .title, .summary .title, div.summary div.title, .only-large-font { font-size: 4.5rem !important; font-weight: 800 !important; color: #003d6b !important; letter-spacing: 0.3px !important; padding-bottom: 10px !important; display: block !important; margin-bottom: 8px !important; }',
       '.endpoint-head .descr { display: none !important; }',
       '.api-content h2, .section-gap h2, .section-gap--read-mode h2 { color: #003d6b !important; font-weight: 700 !important; border-bottom: 2px solid #003d6b !important; padding-bottom: 6px !important; margin-top: 36px !important; margin-bottom: 20px !important; font-size: 2.36rem !important; }',
       '.api-content h3, .section-gap h3 { color: #003d6b !important; font-weight: 600 !important; margin-top: 28px !important; margin-bottom: 8px !important; font-size: 1.83rem !important; }',
@@ -1014,10 +1014,10 @@ def main():
         var txt = reqResTitles[r].textContent.trim().toUpperCase();
         var topicPrefix = '{tenantId}/MGMT/clients/';
         if (txt.indexOf('REQUEST') !== -1) {
-          reqResTitles[r].innerHTML = '<div style="font-size:2.36rem;font-weight:700;color:#003d6b;border-bottom:2px solid #003d6b;padding-bottom:6px;margin-top:36px;margin-bottom:12px;">Command Payload</div>' +
+          reqResTitles[r].innerHTML = '<div style="font-size:2.36rem;font-weight:700;color:#003d6b;padding-bottom:6px;margin-top:36px;margin-bottom:12px;">Command Payload</div>' +
             '<div style="font-size:1.3rem;color:#333;margin:4px 0 12px;"><b>Publish to:</b> <code style="background:#f4f4f4;padding:2px 6px;border-radius:3px;">' + topicPrefix + 'cmnd/{deviceSerial}</code></div>';
         } else if (txt.indexOf('RESPONSE') !== -1) {
-          reqResTitles[r].innerHTML = '<div style="font-size:2.36rem;font-weight:700;color:#003d6b;border-bottom:2px solid #003d6b;padding-bottom:6px;margin-top:36px;margin-bottom:12px;">Response Payload</div>' +
+          reqResTitles[r].innerHTML = '<div style="font-size:2.36rem;font-weight:700;color:#003d6b;padding-bottom:6px;margin-top:36px;margin-bottom:12px;">Response Payload</div>' +
             '<div style="font-size:1.3rem;color:#333;margin:4px 0 12px;"><b>Published on:</b> <code style="background:#f4f4f4;padding:2px 6px;border-radius:3px;">' + topicPrefix + 'resp/{deviceSerial}</code></div>';
         }
       }
@@ -1142,7 +1142,7 @@ def main():
         /* Only style operation-name-like elements (skip generic headings) */
         if (!txt || txt.length > 80) continue;
         titles[t].setAttribute('data-styled', '1');
-        titles[t].style.cssText = 'font-size:72px!important;font-weight:900!important;color:#003d6b!important;letter-spacing:0.3px!important;border-bottom:3px solid #003d6b!important;padding-bottom:10px!important;display:block!important;margin-bottom:4px!important;';
+        titles[t].style.cssText = 'font-size:88px!important;font-weight:900!important;color:#003d6b!important;letter-spacing:0.3px!important;padding-bottom:10px!important;display:block!important;margin-bottom:4px!important;';
         /* Add breadcrumb below title */
         var bc = breadcrumbMap[txt];
         if (bc && !titles[t].parentElement.querySelector('[data-breadcrumb]')) {
