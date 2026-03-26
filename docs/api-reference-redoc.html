@@ -174,6 +174,34 @@
         }
       }
     }
+    /* Inject MANAGEMENT / CONTROL / EVENTS / DATA group headers into sidebar nav */
+    function injectGroupHeaders(sr) {
+      if (!sr) return;
+      var existing = sr.querySelectorAll('[data-tag-group-header]');
+      if (existing.length >= 4) return;
+      for (var e = 0; e < existing.length; e++) existing[e].remove();
+      var groups = [
+        { name: 'MANAGEMENT', first: 'Device Status' },
+        { name: 'CONTROL', first: 'Inventory Control' },
+        { name: 'EVENTS', first: 'Device Health' },
+        { name: 'DATA', first: 'Tag Data Event' }
+      ];
+      var firstMap = {};
+      for (var g = 0; g < groups.length; g++) firstMap[groups[g].first] = groups[g].name;
+      var navTags = sr.querySelectorAll('.nav-bar-tag');
+      if (navTags.length === 0) return;
+      for (var i = 0; i < navTags.length; i++) {
+        var tagText = navTags[i].textContent.trim();
+        if (firstMap[tagText]) {
+          var hdr = document.createElement('div');
+          hdr.setAttribute('data-tag-group-header', '1');
+          hdr.textContent = firstMap[tagText];
+          var isFirst = (tagText === 'Device Status');
+          hdr.style.cssText = 'font-size:12px;font-weight:700;color:#003d6b;text-transform:uppercase;letter-spacing:1.5px;padding:' + (isFirst ? '8px' : '14px') + ' 16px 6px;' + (isFirst ? '' : 'margin-top:4px;border-top:1.5px solid #d0d5dd;');
+          navTags[i].parentElement.insertBefore(hdr, navTags[i]);
+        }
+      }
+    }
     /* Poll for initial setup */
     var attempts = 0;
     var poll = setInterval(function() {
@@ -182,6 +210,7 @@
       var rd = document.querySelector('rapi-doc');
       if (rd && rd.shadowRoot) {
         styleHeadings(rd.shadowRoot);
+        injectGroupHeaders(rd.shadowRoot);
       }
       if (++attempts > 200) clearInterval(poll);
     }, 500);
@@ -332,6 +361,7 @@
         applyOverrides();
         processAllBlocks();
         styleHeadings(rd.shadowRoot);
+        injectGroupHeaders(rd.shadowRoot);
       });
       observer.observe(rd.shadowRoot, { childList: true, subtree: true });
       /* Also observe nested shadow roots */
@@ -343,6 +373,7 @@
       }
       /* Initial pass */
       styleHeadings(rd.shadowRoot);
+      injectGroupHeaders(rd.shadowRoot);
     }
     startObserver();
   })();
