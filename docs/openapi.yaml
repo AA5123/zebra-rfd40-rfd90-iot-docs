@@ -8,63 +8,63 @@
     "tags": [
         {
             "name": "Device Status",
-            "description": "The Device Status group provides **read-only visibility** into the scanner's current state. Use `get_status` to check real-time health including battery level, temperature, radio state, power source, NTP clock sync, and terminal connection. Use `get_version` to retrieve the scanner's identity — model, serial number, SKU, and all firmware versions (main, scanner, radio, IoTC). Use `get_current_region` to inspect the regulatory radio configuration — country code, frequency channels, power limits, frequency hopping, and LBT settings. These three commands are essential for monitoring dashboards, firmware audits, and regional compliance checks."
+            "description": "The Device Status group provides read-only visibility into the scanner's current state. Use `get_status` to check real-time health including battery level, temperature, radio state, power source, NTP clock sync, and terminal connection. Use `get_version` to retrieve the scanner's identity — model, serial number, SKU, and all firmware versions (main, scanner, radio, IoTC). Use `get_current_region` to inspect the regulatory radio configuration — country code, frequency channels, power limits, frequency hopping, and LBT settings. These three commands are essential for monitoring dashboards, firmware audits, and regional compliance checks."
         },
         {
             "name": "Device Configuration",
-            "description": "Read or write the scanner's **complete configuration** in a single command.\n\n| Command | Purpose |\n|---|---|\n| `get_config` | Retrieve everything — equivalent to calling get_version + get_status + get_current_region + get_wifi + get_eth + get_endpoint_config + get_installed_certificate at once |\n| `set_config` | Apply configuration changes — Wi-Fi, endpoint, events, and more in one payload |\n\n`get_config` is read-only. `set_config` is the primary way to push settings to one or many scanners."
+            "description": "Read or write the scanner's complete configuration in a single command.\n\n| Command | Purpose |\n|---|---|\n| `get_config` | Retrieve everything — equivalent to calling get_version + get_status + get_current_region + get_wifi + get_eth + get_endpoint_config + get_installed_certificate at once |\n| `set_config` | Apply configuration changes — Wi-Fi, endpoint, events, and more in one payload |\n\n`get_config` is read-only. `set_config` is the primary way to push settings to one or many scanners."
         },
         {
             "name": "Network Configuration",
-            "description": "Manage the scanner's **Wi-Fi and Ethernet** network connections.\n\n| Command | Purpose |\n|---|---|\n| `get_wifi` | Current Wi-Fi status — connected SSID, IP address, signal, security type |\n| `set_wifi` | Configure Wi-Fi — add/update SSID, set security (WPA2/WPA3/Enterprise), IP settings |\n| `delete_wifi_profile` | Remove a saved Wi-Fi profile by SSID |\n| `get_eth` | Ethernet status — link state, speed, IP address, 802.1X security |\n\nThe scanner supports both Wi-Fi and Ethernet simultaneously. Wi-Fi profiles are stored on device and auto-connect on reboot."
+            "description": "Manage the scanner's Wi-Fi and Ethernet network connections.\n\n| Command | Purpose |\n|---|---|\n| `get_wifi` | Current Wi-Fi status — connected SSID, IP address, signal, security type |\n| `set_wifi` | Configure Wi-Fi — add/update SSID, set security (WPA2/WPA3/Enterprise), IP settings |\n| `delete_wifi_profile` | Remove a saved Wi-Fi profile by SSID |\n| `get_eth` | Ethernet status — link state, speed, IP address, 802.1X security |\n\nThe scanner supports both Wi-Fi and Ethernet simultaneously. Wi-Fi profiles are stored on device and auto-connect on reboot."
         },
         {
             "name": "MQTT Endpoint Configuration",
-            "description": "Configure **where the scanner sends data** — the MQTT broker connection.\n\n| Command | Purpose |\n|---|---|\n| `config_endpoint` | Set up or update the MQTT broker — URL, port, protocol, credentials, topics, TLS settings |\n| `get_endpoint_config` | Retrieve the current MQTT endpoint configuration |\n\nThe scanner communicates with your backend via MQTT. These commands control the broker URL, publish/subscribe topics, QoS levels, keep-alive, and reconnect behavior."
+            "description": "Configure where the scanner sends data — the MQTT broker connection.\n\n| Command | Purpose |\n|---|---|\n| `config_endpoint` | Set up or update the MQTT broker — URL, port, protocol, credentials, topics, TLS settings |\n| `get_endpoint_config` | Retrieve the current MQTT endpoint configuration |\n\nThe scanner communicates with your backend via MQTT. These commands control the broker URL, publish/subscribe topics, QoS levels, keep-alive, and reconnect behavior."
         },
         {
             "name": "Certificate Management",
-            "description": "Manage **TLS/SSL certificates** for secure MQTT and Wi-Fi Enterprise connections.\n\n| Command | Purpose |\n|---|---|\n| `install_certificate` | Upload a certificate (CA, client, MQTT, Wi-Fi) to the scanner |\n| `delete_certificate` | Remove an installed certificate by name |\n| `get_installed_certificate` | List all certificates currently installed on the device |\n\nCertificates are required for MQTT-TLS connections and WPA2/WPA3 Enterprise Wi-Fi authentication."
+            "description": "Manage TLS/SSL certificates for secure MQTT and Wi-Fi Enterprise connections.\n\n| Command | Purpose |\n|---|---|\n| `install_certificate` | Upload a certificate (CA, client, MQTT, Wi-Fi) to the scanner |\n| `delete_certificate` | Remove an installed certificate by name |\n| `get_installed_certificate` | List all certificates currently installed on the device |\n\nCertificates are required for MQTT-TLS connections and WPA2/WPA3 Enterprise Wi-Fi authentication."
         },
         {
             "name": "System Operations",
-            "description": "Perform **system-level actions** on the scanner.\n\n| Command | Purpose |\n|---|---|\n| `reboot` | Restart the scanner — applies pending configuration changes |\n| `set_os` | Trigger a firmware update on the device |\n\n⚠️ Both commands interrupt normal scanner operation. `reboot` requires no active inventory. `set_os` requires sufficient battery level."
+            "description": "Perform system-level actions on the scanner.\n\n| Command | Purpose |\n|---|---|\n| `reboot` | Restart the scanner — applies pending configuration changes |\n| `set_os` | Trigger a firmware update on the device |\n\n⚠️ Both commands interrupt normal scanner operation. `reboot` requires no active inventory. `set_os` requires sufficient battery level."
         },
         {
             "name": "Inventory Control",
-            "description": "**Start and stop** RFID tag reading (inventory) operations.\n\n| Command | Purpose |\n|---|---|\n| `control_operation` | Start or stop an RFID inventory scan |\n\nWhen started, the scanner continuously reads RFID tags and publishes tag data events to the MQTT broker. Use `stop` to end the scan."
+            "description": "Start and stop RFID tag reading (inventory) operations.\n\n| Command | Purpose |\n|---|---|\n| `control_operation` | Start or stop an RFID inventory scan |\n\nWhen started, the scanner continuously reads RFID tags and publishes tag data events to the MQTT broker. Use `stop` to end the scan."
         },
         {
             "name": "Operating Mode",
-            "description": "Configure **how the scanner reads tags** — mode, power, and session settings.\n\n| Command | Purpose |\n|---|---|\n| `set_operating_mode` | Set the RFID operating mode — transmit power, session, tag population, and more |\n| `get_operating_mode` | Retrieve the current RFID operating mode settings |\n\nOperating mode controls the RF parameters that affect read range, speed, and tag population handling."
+            "description": "Configure how the scanner reads tags — mode, power, and session settings.\n\n| Command | Purpose |\n|---|---|\n| `set_operating_mode` | Set the RFID operating mode — transmit power, session, tag population, and more |\n| `get_operating_mode` | Retrieve the current RFID operating mode settings |\n\nOperating mode controls the RF parameters that affect read range, speed, and tag population handling."
         },
         {
             "name": "Tag Filtering",
-            "description": "Filter **which tags are reported** after an inventory scan.\n\n| Command | Purpose |\n|---|---|\n| `set_post_filter` | Define filter rules — match by EPC pattern, memory bank, or mask to include/exclude specific tags |\n| `get_post_filter` | Retrieve the current tag filter configuration |\n\nPost-filters are applied after the radio reads tags, reducing noise by only reporting tags that match your criteria."
+            "description": "Filter which tags are reported after an inventory scan.\n\n| Command | Purpose |\n|---|---|\n| `set_post_filter` | Define filter rules — match by EPC pattern, memory bank, or mask to include/exclude specific tags |\n| `get_post_filter` | Retrieve the current tag filter configuration |\n\nPost-filters are applied after the radio reads tags, reducing noise by only reporting tags that match your criteria."
         },
         {
             "name": "Device Health",
-            "description": "Periodic **heartbeat events** sent by the scanner to confirm it is alive and connected.\n\n| Event | Purpose |\n|---|---|\n| `heartBeatEVT` | Periodic health pulse — battery status, inventory state, and connectivity confirmation |\n\nHeartbeat interval is configurable via `set_config` → `eventConfiguration` → `heartbeatConfiguration`. If heartbeats stop arriving, the scanner may be offline or disconnected."
+            "description": "Periodic heartbeat events sent by the scanner to confirm it is alive and connected.\n\n| Event | Purpose |\n|---|---|\n| `heartBeatEVT` | Periodic health pulse — battery status, inventory state, and connectivity confirmation |\n\nHeartbeat interval is configurable via `set_config` → `eventConfiguration` → `heartbeatConfiguration`. If heartbeats stop arriving, the scanner may be offline or disconnected."
         },
         {
             "name": "Alerts",
-            "description": "**Alert events** triggered by significant device state changes.\n\n| Event | Purpose |\n|---|---|\n| `alerts` | Full alert details — battery, temperature, power, network, firmware, and antenna alerts |\n| `alert_short` | Compact alert summary for lightweight monitoring |\n\nAlerts are push-based — the scanner publishes them automatically when a threshold is crossed or a state changes. Enable/disable specific alerts via `set_config` → `eventConfiguration`."
+            "description": "Alert events triggered by significant device state changes.\n\n| Event | Purpose |\n|---|---|\n| `alerts` | Full alert details — battery, temperature, power, network, firmware, and antenna alerts |\n| `alert_short` | Compact alert summary for lightweight monitoring |\n\nAlerts are push-based — the scanner publishes them automatically when a threshold is crossed or a state changes. Enable/disable specific alerts via `set_config` → `eventConfiguration`."
         },
         {
             "name": "Exceptions",
-            "description": "**Exception events** for errors and unexpected conditions.\n\n| Event | Purpose |\n|---|---|\n| `exceptionEVT` | Error reports — radio failures, configuration errors, and other exceptional conditions |\n\nExceptions indicate something went wrong that may require operator attention or automated recovery."
+            "description": "Exception events for errors and unexpected conditions.\n\n| Event | Purpose |\n|---|---|\n| `exceptionEVT` | Error reports — radio failures, configuration errors, and other exceptional conditions |\n\nExceptions indicate something went wrong that may require operator attention or automated recovery."
         },
         {
             "name": "MQTT Connectivity",
-            "description": "**MQTT connection state** change events.\n\n| Event | Purpose |\n|---|---|\n| `mqttConnEVT` | Broker connection/disconnection events — tracks when the scanner connects to or loses connection with the MQTT broker |\n\nUse these events to monitor broker connectivity across your fleet and trigger reconnection alerts."
+            "description": "MQTT connection state change events.\n\n| Event | Purpose |\n|---|---|\n| `mqttConnEVT` | Broker connection/disconnection events — tracks when the scanner connects to or loses connection with the MQTT broker |\n\nUse these events to monitor broker connectivity across your fleet and trigger reconnection alerts."
         },
         {
             "name": "Event Configuration",
-            "description": "Configure **which events** the scanner publishes to the MQTT broker.\n\n| Command | Purpose |\n|---|---|\n| `config_events` | Enable or disable specific events and alerts — heartbeat, battery, temperature, network, firmware, NTP, etc. |\n\nEvent configuration controls which device events are forwarded to the broker. You can also set the heartbeat interval and choose what data to include in heartbeats."
+            "description": "Configure which events the scanner publishes to the MQTT broker.\n\n| Command | Purpose |\n|---|---|\n| `config_events` | Enable or disable specific events and alerts — heartbeat, battery, temperature, network, firmware, NTP, etc. |\n\nEvent configuration controls which device events are forwarded to the broker. You can also set the heartbeat interval and choose what data to include in heartbeats."
         },
         {
             "name": "Tag Data Event",
-            "description": "**RFID tag read data** published during an active inventory scan.\n\n| Event | Purpose |\n|---|---|\n| `dataEVT` | Tag data — EPC, RSSI, antenna, timestamp, and optional memory bank data for each tag read |\n\nTag data events stream continuously while inventory is running. Each event contains one or more tag reads with EPC (Electronic Product Code), signal strength, and read metadata."
+            "description": "RFID tag read data published during an active inventory scan.\n\n| Event | Purpose |\n|---|---|\n| `dataEVT` | Tag data — EPC, RSSI, antenna, timestamp, and optional memory bank data for each tag read |\n\nTag data events stream continuously while inventory is running. Each event contains one or more tag reads with EPC (Electronic Product Code), signal strength, and read metadata."
         }
     ],
     "x-tagGroups": [
