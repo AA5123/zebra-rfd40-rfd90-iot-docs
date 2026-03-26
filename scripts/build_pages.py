@@ -957,15 +957,29 @@ def main():
     }
 
     function addCopyToElement(root) {
-      /* Hide unwanted labels via JS — check all elements */
+      /* Hide unwanted labels via JS — only leaf-level elements */
       var allEls = root.querySelectorAll('*');
       for (var s = 0; s < allEls.length; s++) {
         var el = allEls[s];
         if (el.getAttribute('data-obj-hidden')) continue;
-        var t = (el.textContent || '').trim().replace(/\s+/g, ' ');
-        if (/^(OBJECT|ARRAY|object|array|default|Response)$/.test(t) ||
-            /^REQUEST BODY/i.test(t) ||
-            /^application\/json$/i.test(t)) {
+        var directText = '';
+        for (var cn = 0; cn < el.childNodes.length; cn++) {
+          if (el.childNodes[cn].nodeType === 3) directText += el.childNodes[cn].textContent;
+        }
+        directText = directText.trim().replace(/\\s+/g, ' ');
+        var fullText = (el.textContent || '').trim().replace(/\\s+/g, ' ');
+        /* Only hide if element is small (leaf) — avoid hiding containers */
+        var isLeaf = (el.children.length <= 1 && fullText.length < 60);
+        if (!isLeaf) continue;
+        if (/^(OBJECT|ARRAY|object|array|default|Response)$/.test(fullText)) {
+          el.setAttribute('data-obj-hidden', '1');
+          el.style.display = 'none';
+        }
+        if (/^REQUEST\\s*BODY/i.test(fullText)) {
+          el.setAttribute('data-obj-hidden', '1');
+          el.style.display = 'none';
+        }
+        if (/^application\\/json$/i.test(fullText)) {
           el.setAttribute('data-obj-hidden', '1');
           el.style.display = 'none';
         }
