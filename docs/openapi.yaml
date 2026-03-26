@@ -143,7 +143,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "get_status response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -419,7 +419,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "get_version response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -603,7 +603,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "get_current_region response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -835,7 +835,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "get_config response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3337,7 +3337,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "set_config response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -5007,7 +5007,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "delete_wifi_profile response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -5147,7 +5147,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "get_eth response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -5470,7 +5470,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "get_wifi response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -6645,7 +6645,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "set_wifi response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -7302,7 +7302,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "config_endpoint response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -7462,7 +7462,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "get_endpoint_config response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -8125,7 +8125,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "delete_certificate response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -8244,7 +8244,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "get_installed_certificate response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -8704,7 +8704,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "install_certificate response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -8836,7 +8836,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "reboot response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -9090,7 +9090,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "set_os response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -9280,7 +9280,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "control_operation response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -9423,7 +9423,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "get_operating_mode response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -10570,7 +10570,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "set_operating_mode response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -10713,7 +10713,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "get_post_filter response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -11017,7 +11017,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "set_post_filter response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -12226,7 +12226,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "config_events response",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {

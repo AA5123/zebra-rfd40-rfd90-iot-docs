@@ -478,7 +478,7 @@ def build_openapi():
                     if resp_examples:
                         resp_content["application/json"]["examples"] = resp_examples
 
-                    resp_desc = RESPONSE_DESCRIPTIONS.get(op_name, f"{op_name} response")
+                    resp_desc = ""
 
                     op["responses"] = OrderedDict([
                         ("default", OrderedDict([
