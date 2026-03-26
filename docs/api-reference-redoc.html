@@ -101,7 +101,7 @@
       'tr:nth-child(even) td { background: #f7f9fb !important; }',
 
       /* ── Headings: navy accent ── */
-      '.endpoint-body .summary .title, .summary .title, div.summary div.title { font-size: 42px !important; font-weight: 800 !important; color: #003d6b !important; letter-spacing: 0.3px !important; border-bottom: 3px solid #003d6b !important; padding-bottom: 10px !important; display: block !important; margin-bottom: 16px !important; }',
+      '.endpoint-body .summary .title, .summary .title, div.summary div.title, .only-large-font { font-size: 42px !important; font-weight: 800 !important; color: #003d6b !important; letter-spacing: 0.3px !important; border-bottom: 3px solid #003d6b !important; padding-bottom: 10px !important; display: block !important; margin-bottom: 16px !important; }',
       '.endpoint-head .descr { display: none !important; }',
       '.api-content h2, .section-gap h2, .section-gap--read-mode h2 { color: #003d6b !important; font-weight: 700 !important; border-bottom: 2px solid #003d6b !important; padding-bottom: 6px !important; margin-top: 28px !important; margin-bottom: 16px !important; font-size: 29px !important; }',
       '.api-content h3, .section-gap h3 { color: #003d6b !important; font-weight: 600 !important; margin-top: 24px !important; margin-bottom: 6px !important; font-size: 24px !important; }',
@@ -342,9 +342,14 @@
     /* Style operation headings (.summary .title) directly via DOM */
     function styleHeadings(root) {
       if (!root) return;
-      var titles = root.querySelectorAll('.summary .title');
+      /* Target multiple possible selectors for operation title */
+      var selectors = '.summary .title, .endpoint-body .summary .title, h1, .tag--name, [class*="title"][class*="summary"]';
+      var titles = root.querySelectorAll(selectors);
       for (var t = 0; t < titles.length; t++) {
         if (titles[t].getAttribute('data-styled')) continue;
+        var txt = (titles[t].textContent || '').trim();
+        /* Only style operation-name-like elements (skip generic headings) */
+        if (!txt || txt.length > 80) continue;
         titles[t].setAttribute('data-styled', '1');
         titles[t].style.cssText = 'font-size:42px!important;font-weight:800!important;color:#003d6b!important;letter-spacing:0.3px!important;border-bottom:3px solid #003d6b!important;padding-bottom:10px!important;display:block!important;margin-bottom:16px!important;';
       }
