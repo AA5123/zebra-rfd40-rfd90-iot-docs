@@ -803,8 +803,9 @@ def main():
       '.expanded-endpoint-body { padding: 8px 0 !important; }',
       '.tag-description { margin: 8px 0 !important; padding: 4px 0 !important; }',
       '.divider { margin: 8px 0 !important; }',
-      '.req-res-info { margin-top: 12px !important; padding: 0 !important; }',
+      '.req-res-info { margin-top: 4px !important; padding: 0 !important; }',
       '.request-body-container, .response-body-container { margin: 4px 0 !important; padding: 0 !important; }',
+      'api-response { margin-top: 0 !important; padding-top: 0 !important; }',
       '.m-markdown { margin: 0 !important; }',
       '.m-markdown p { margin: 0 0 8px 0 !important; }',
       '.m-markdown table { margin: 4px 0 8px 0 !important; }',
@@ -1011,7 +1012,7 @@ def main():
           reqResTitles[r].innerHTML = '<div style="font-size:29px;font-weight:700;color:#003d6b;border-bottom:2px solid #003d6b;padding-bottom:6px;margin-top:32px;margin-bottom:8px;">Command Payload</div>' +
             '<div style="font-size:17px;color:#333;margin:2px 0;"><b>Publish to:</b> <code style="background:#f4f4f4;padding:1px 5px;border-radius:3px;">' + topicPrefix + 'cmnd/{deviceSerial}</code></div>';
         } else if (txt.indexOf('RESPONSE') !== -1) {
-          reqResTitles[r].innerHTML = '<div style="font-size:29px;font-weight:700;color:#003d6b;border-bottom:2px solid #003d6b;padding-bottom:6px;margin-top:32px;margin-bottom:8px;">Response Payload</div>' +
+          reqResTitles[r].innerHTML = '<div style="font-size:29px;font-weight:700;color:#003d6b;border-bottom:2px solid #003d6b;padding-bottom:6px;margin-top:8px;margin-bottom:8px;">Response Payload</div>' +
             '<div style="font-size:17px;color:#333;margin:2px 0;"><b>Published on:</b> <code style="background:#f4f4f4;padding:1px 5px;border-radius:3px;">' + topicPrefix + 'resp/{deviceSerial}</code></div>';
         }
       }
