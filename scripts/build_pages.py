@@ -775,12 +775,12 @@ def main():
       '.path { display: none !important; }',
       '.endpoint-url { display: none !important; }',
       '.only-large-font-size { display: none !important; }',
-      '.nav-bar-path { padding-left: 16px !important; font-size: 14px !important; }',
+      '.nav-bar-path { padding-left: 16px !important; font-size: 18px !important; }',
       '.nav-bar-path .method-fg.small { display: none !important; width: 0 !important; margin: 0 !important; padding: 0 !important; }',
-      '.nav-bar-tag { font-size: 15px !important; font-weight: 600 !important; }',
-      '.nav-bar-info { font-size: 14px !important; }',
-      '.nav-bar-section { font-size: 14px !important; }',
-      '[data-tag-group-header] { font-size: 13px !important; }',
+      '.nav-bar-tag { font-size: 20px !important; font-weight: 600 !important; }',
+      '.nav-bar-info { font-size: 18px !important; }',
+      '.nav-bar-section { font-size: 18px !important; }',
+      '[data-tag-group-header] { font-size: 17px !important; }',
 
       /* ── Hide REQUEST BODY label, "default" status, standalone "Response" label, grey dividers, OBJECT badge ── */
       '.request-body-container > .req-res-title { display: none !important; }',
@@ -921,7 +921,7 @@ def main():
           hdr.setAttribute('data-tag-group-header', '1');
           hdr.textContent = firstMap[tagText];
           var isFirst = (tagText === 'Device Status');
-          hdr.style.cssText = 'font-size:13px;font-weight:800;color:#003d6b;text-transform:uppercase;letter-spacing:2px;padding:' + (isFirst ? '10px' : '18px') + ' 16px 10px;' + (isFirst ? '' : 'margin-top:8px;border-top:2px solid #003d6b;');
+          hdr.style.cssText = 'font-size:17px;font-weight:800;color:#003d6b;text-transform:uppercase;letter-spacing:2px;padding:' + (isFirst ? '10px' : '18px') + ' 16px 10px;' + (isFirst ? '' : 'margin-top:8px;border-top:2px solid #003d6b;');
           navTags[i].parentElement.insertBefore(hdr, navTags[i]);
         }
       }
