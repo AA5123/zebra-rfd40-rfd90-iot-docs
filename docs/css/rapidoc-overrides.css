@@ -4,23 +4,23 @@
  * ============================================================================
  *
  *  Design System:  Zebra Navy (#003d6b)
- *  Base Scale:     1.2× ratio (all sizes derived from 16px base × 1.2)
+ *  Type Scale:     Major Third 1.25× (all sizes derived from 16px base)
  *  Injected via:   adoptedStyleSheets into RapiDoc shadow roots
- *  Last updated:   2026-03-25
+ *  Last updated:   2026-03-26
  *
- *  Font Size Reference (1.2× scale):
+ *  Font Size Reference (unified 1.25× scale):
  *  ─────────────────────────────────
- *    Code / mono:       17px
- *    Table cells:       18px
- *    Body / schema:     19px
- *    H3 headings:       24px
- *    H2 headings:       29px
- *    Operation title:   34px  (via JS)
- *    H1 / page title:   38px
+ *    Small / captions: 1rem     (16px)
+ *    Code / mono:      1.125rem (18px)
+ *    Table / labels:   1.25rem  (20px)
+ *    Body / schema:    1.375rem (22px)
+ *    H3 headings:      1.75rem  (28px)
+ *    H2 headings:      2.25rem  (36px)
+ *    Operation title:  3.5rem   (56px)
  *
- *  Enum badges:         16px  (monospace, bordered)
- *  MQTT topic paths:    17px  (code style)
- *  Command headers:     24px  (bold, navy)
+ *  Enum badges:         1.125rem  (monospace, bordered)
+ *  MQTT topic paths:    1.125rem  (code style)
+ *  Command headers:     1.75rem   (bold, navy)
  *
  * ============================================================================
  */
@@ -154,11 +154,11 @@
 }
 
 .m-markdown h2 {
-  margin: 16px 0 8px 0 !important;
+  margin: 36px 0 16px 0 !important;
 }
 
 .m-markdown h3 {
-  margin: 12px 0 6px 0 !important;
+  margin: 28px 0 8px 0 !important;
 }
 
 .tab-content {
@@ -189,7 +189,7 @@ th {
   background: #003d6b !important;
   color: #fff !important;
   font-weight: 600 !important;
-  font-size: 18px !important;
+  font-size: 1.25rem !important;
   letter-spacing: 0.3px !important;
   padding: 9px 12px !important;
   text-align: left !important;
@@ -199,7 +199,7 @@ th {
 td {
   padding: 8px 12px !important;
   vertical-align: top !important;
-  font-size: 18px !important;
+  font-size: 1.25rem !important;
   border: 1px solid #8a94a6 !important;
   word-break: break-word !important;
 }
@@ -220,8 +220,8 @@ tr:nth-child(even) td {
 .endpoint-body .summary .title,
 .summary .title,
 div.summary div.title {
-  font-size: 38px !important;
-  font-weight: 700 !important;
+  font-size: 3.5rem !important;
+  font-weight: 800 !important;
   color: #003d6b !important;
   letter-spacing: 0.3px !important;
   border-bottom: 3px solid #003d6b !important;
@@ -236,15 +236,19 @@ div.summary div.title {
   color: #003d6b !important;
   border-bottom: 2px solid #003d6b !important;
   padding-bottom: 6px !important;
-  margin-top: 28px !important;
-  font-size: 29px !important;
+  margin-top: 36px !important;
+  margin-bottom: 16px !important;
+  font-size: 2.25rem !important;
+  font-weight: 700 !important;
 }
 
 .api-content h3,
 .section-gap h3 {
   color: #003d6b !important;
-  margin-top: 20px !important;
-  font-size: 24px !important;
+  margin-top: 28px !important;
+  margin-bottom: 8px !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
 }
 
 
@@ -257,7 +261,7 @@ pre {
   border-left: 4px solid #003d6b !important;
   border-radius: 4px !important;
   padding: 12px 14px !important;
-  font-size: 17px !important;
+  font-size: 1.125rem !important;
   line-height: 1.5 !important;
   max-height: 300px !important;
   overflow: auto !important;
@@ -267,7 +271,7 @@ code {
   background: #f4f4f4 !important;
   border-radius: 3px !important;
   padding: 1px 5px !important;
-  font-size: 17px !important;
+  font-size: 1.125rem !important;
   color: #1a1a1a !important;
 }
 
@@ -275,7 +279,7 @@ pre code {
   background: none !important;
   border: none !important;
   padding: 0 !important;
-  font-size: 17px !important;
+  font-size: 1.125rem !important;
 }
 
 
@@ -288,7 +292,7 @@ textarea {
   max-height: 180px !important;
   height: auto !important;
   resize: vertical !important;
-  font-size: 17px !important;
+  font-size: 1.125rem !important;
   padding: 8px !important;
 }
 
