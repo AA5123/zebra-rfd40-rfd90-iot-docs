@@ -825,7 +825,8 @@ def main():
       'tr:nth-child(even) td { background: #f7f9fb !important; }',
 
       /* ── Headings: navy accent ── */
-      '.endpoint-body .summary .title, .summary .title, div.summary div.title, .only-large-font { font-size: 3.5rem !important; font-weight: 800 !important; color: #003d6b !important; letter-spacing: 0.3px !important; border-bottom: 3px solid #003d6b !important; padding-bottom: 10px !important; display: block !important; margin-bottom: 8px !important; }',
+      '.summary { overflow: visible !important; }',
+      '.endpoint-body .summary .title, .summary .title, div.summary div.title, .only-large-font { font-size: 3.5rem !important; font-weight: 800 !important; color: #003d6b !important; letter-spacing: 0.3px !important; border-bottom: 3px solid #003d6b !important; box-shadow: 0 3px 0 0 #003d6b !important; padding-bottom: 10px !important; display: block !important; width: 100% !important; margin-bottom: 8px !important; }',
       '.endpoint-head .descr { display: none !important; }',
       '.api-content h2, .section-gap h2, .section-gap--read-mode h2 { color: #003d6b !important; font-weight: 700 !important; padding-bottom: 6px !important; margin-top: 16px !important; margin-bottom: 8px !important; font-size: 2.25rem !important; }',
       '.api-content h3, .section-gap h3 { color: #003d6b !important; font-weight: 600 !important; margin-top: 12px !important; margin-bottom: 6px !important; font-size: 1.75rem !important; }',
@@ -1134,7 +1135,7 @@ def main():
     };
     function styleHeadings(root) {
       if (!root) return;
-      /* Only target operation title elements — visual styling handled by mqttSheet CSS */
+      /* Target operation title elements */
       var selectors = '.summary .title, .endpoint-body .summary .title, [class*="title"][class*="summary"]';
       var titles = root.querySelectorAll(selectors);
       for (var t = 0; t < titles.length; t++) {
@@ -1143,7 +1144,11 @@ def main():
         /* Only style operation-name-like elements (skip generic headings) */
         if (!txt || txt.length > 80) continue;
         titles[t].setAttribute('data-styled', '1');
-        titles[t].style.cssText = 'border-bottom:3px solid #003d6b !important;padding-bottom:10px !important;display:block !important;margin-bottom:8px !important;';
+        /* Full inline style — font + border via box-shadow (immune to parent overflow:hidden) */
+        titles[t].style.cssText = 'font-size:3.5rem !important;font-weight:800 !important;color:#003d6b !important;letter-spacing:0.3px !important;display:block !important;width:100% !important;padding-bottom:10px !important;margin-bottom:8px !important;border-bottom:3px solid #003d6b !important;box-shadow:0 3px 0 0 #003d6b !important;';
+        /* Also ensure parent .summary is not clipping */
+        var parent = titles[t].closest('.summary') || titles[t].parentElement;
+        if (parent) { parent.style.overflow = 'visible'; }
         /* Add breadcrumb below title */
         var bc = breadcrumbMap[txt];
         if (bc && !titles[t].parentElement.querySelector('[data-breadcrumb]')) {
