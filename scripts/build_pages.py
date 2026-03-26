@@ -711,7 +711,7 @@ def main():
   <meta http-equiv="Expires" content="0" />
   <title>API Reference - RFD40 / RFD90 API reference document</title>
   <link href="https://fonts.googleapis.com/css?family=Inter:400,600,700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/redoc-zebra.css?v=15" />
+  <link rel="stylesheet" href="css/redoc-zebra.css?v=16" />
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; height: 100%; }
@@ -733,7 +733,7 @@ def main():
 </head>
 <body>
   <rapi-doc
-    spec-url="openapi.yaml?v=43"
+    spec-url="openapi.yaml?v=44"
     render-style="read"
     sort-endpoints-by="none"
     show-header="false"
@@ -762,7 +762,7 @@ def main():
   >
   </rapi-doc>
 
-  <script type="module" src="js/rapidoc-min.js?v=4"></script>
+  <script type="module" src="js/rapidoc-min.js?v=5"></script>
   <script>
   (function() {
     var mqttSheet = new CSSStyleSheet();
