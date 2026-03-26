@@ -8,7 +8,7 @@
     "tags": [
         {
             "name": "Device Status",
-            "description": "The Device Status group provides read-only visibility into the scanner's current state. Use `get_status` to check real-time health including battery level, temperature, radio state, power source, NTP clock sync, and terminal connection. Use `get_version` to retrieve the scanner's identity — model, serial number, SKU, and all firmware versions (main, scanner, radio, IoTC). Use `get_current_region` to inspect the regulatory radio configuration — country code, frequency channels, power limits, frequency hopping, and LBT settings. These three commands are essential for monitoring dashboards, firmware audits, and regional compliance checks."
+            "description": "Query the scanner's current state without changing any settings. These three read-only commands cover health monitoring, device identification, and regulatory configuration.\n\n| Command | What It Returns |\n|---|---|\n| `get_status` | Real-time health — battery level, temperature, radio activity, power source, NTP clock sync, and terminal connection |\n| `get_version` | Device identity — model, serial number, SKU, and all firmware versions (main, scanner, radio, IoTC) |\n| `get_current_region` | Radio regulation — country code, frequency channels, power limits, frequency hopping, and LBT settings |\n\nUse these commands for monitoring dashboards, firmware audits, and compliance checks."
         },
         {
             "name": "Device Configuration",
