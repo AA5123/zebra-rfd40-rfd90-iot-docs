@@ -222,17 +222,24 @@ h2, h3 { page-break-inside: avoid; }
 <h1>get_status</h1>
 <div class="meta">Command: <code>get_status</code></div>
 <h2>Description</h2>
+<p>📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_status.pdf)</p>
 <p>## Overview</p>
 <p>The <code>get_status</code> command retrieves the current status of a Zebra handheld RFID reader. The response includes power source information, radio activity and connection state, device temperature, system time, Network Time Protocol (NTP) synchronization details, terminal connection status, and battery health metrics.</p>
 <p>Use this command to monitor device health, verify connectivity before starting operations, and collect telemetry data for fleet management dashboards. The command requires no configuration parameters beyond the standard envelope fields.</p>
-<p>&gt; <strong>Note •</strong> The <code>deviceStatus</code> object in the response is optional. When the device cannot retrieve status information (response code <code>3</code>), the response omits this object.</p>
-<h3>Command details:</h3>
-<table><thead><tr><th></th><th></th></tr></thead><tbody>
+<p>&gt; <strong>Note:</strong> The <code>deviceStatus</code> object in the response is optional. When the device cannot retrieve status information (response code <code>3</code>), the response omits this object.</p>
+<p>## Related Commands</p>
+<table><thead><tr><th>Command</th><th>Relationship</th></tr></thead><tbody>
+<tr><td><code>get_version</code></td><td>Retrieve device identity — model, serial number, SKU, firmware versions</td></tr>
+<tr><td><code>get_current_region</code></td><td>Inspect regulatory radio configuration — region, channels, power limits</td></tr>
+<tr><td><code>get_config</code></td><td>Retrieve the full device configuration including status, version, and region in one call</td></tr>
+</tbody></table>
+<p>## Command Details</p>
+<table><thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>
 <tr><td>Pattern Name</td><td>Device Status Retrieval</td></tr>
 <tr><td>Communication Type</td><td>Bidirectional (Cloud to Device, Device to Cloud)</td></tr>
 <tr><td>Applies To</td><td>RFD40 Series, RFD90 Series</td></tr>
 </tbody></table>
-<h3>Response fields:</h3>
+<p>## Response Fields</p>
 <table><thead><tr><th>Field</th><th>What it tells you</th></tr></thead><tbody>
 <tr><td><code>powerSource</code></td><td>How the scanner is powered — DC, Wall Charger, USB, or Cradle</td></tr>
 <tr><td><code>radioActivity</code></td><td>Whether the RFID radio is currently active or idle</td></tr>
@@ -246,15 +253,20 @@ h2, h3 { page-break-inside: avoid; }
 </tbody></table>
 <p>## Use Cases</p>
 <p>### Fleet Health Monitoring</p>
-<p>A warehouse management platform polls all readers at five-minute intervals using <code>get_status</code>. The system collects <code>batteryStatus.chargePercentage</code>, <code>temperature</code>, and <code>radioConnection</code> values from each device. When <code>chargePercentage</code> drops below 20 or <code>temperature</code> exceeds 45 degrees Celsius, the platform generates an alert and schedules the device for charging or cooldown.</p>
+<p>A warehouse management platform polls all readers at five-minute intervals using <code>get_status</code>. The system collects <code>batteryStatus.chargePercentage</code>, <code>temperature</code>, and <code>radioConnection</code> values from each device. When chargePercentage drops below 20 or temperature exceeds 45 °C, the platform generates an alert and schedules the device for charging or cooldown.</p>
 <p>### Pre-Operation Readiness Check</p>
-<p>Before starting an inventory scan, a mobile application sends <code>get_status</code> to verify that <code>radioConnection</code> is <code>CONNECTED</code> and <code>batteryStatus.stateOfHealth</code> is not <code>POOR</code>. If either condition fails, the application prompts the operator to reconnect the sled or replace the battery before proceeding with <code>control_operation</code>.</p>
+<p>Before starting an inventory scan, a mobile application sends <code>get_status</code> to verify that <code>radioConnection</code> is CONNECTED and <code>batteryStatus.stateOfHealth</code> is not POOR. If either condition fails, the application prompts the operator to reconnect the sled or replace the battery before proceeding with <code>control_operation</code>.</p>
 <p>### Battery Replacement Planning</p>
-<p>A device management system tracks <code>batteryStatus.stateOfHealth</code> across the fleet over time. When a device transitions from <code>GOOD</code> to <code>AVERAGE</code>, the system adds the device to a scheduled replacement queue. Devices reporting <code>POOR</code> state of health are flagged for immediate battery swap.</p>
+<p>A device management system tracks <code>batteryStatus.stateOfHealth</code> across the fleet over time. When a device transitions from GOOD to AVERAGE, the system adds the device to a scheduled replacement queue. Devices reporting POOR state of health are flagged for immediate battery swap.</p>
 <p>### Time Synchronization Verification</p>
 <p>An enterprise system queries <code>get_status</code> to check the <code>ntp.offset</code> and <code>ntp.reach</code> values. A high offset indicates clock drift that can cause timestamp mismatches in tag event data. The system triggers an NTP resynchronization when the offset exceeds the configured threshold.</p>
 <p>### Terminal Connection Diagnostics</p>
 <p>A field service technician troubleshoots connectivity issues between an RFD40 sled and a host mobile computer. The technician sends <code>get_status</code> and checks <code>terminalConnection.status</code> and <code>terminalConnection.type</code> to confirm whether the sled is connected over Bluetooth, USB, or CIO, and whether the connection is active.</p>
+<p>## Response Codes</p>
+<table><thead><tr><th>Code</th><th>Status Constant</th><th>Description</th><th>Cause</th><th>Recommended Action</th></tr></thead><tbody>
+<tr><td>0</td><td><code>IOT_STATUS_SUCCESS</code></td><td>Success</td><td>Command executed successfully</td><td>No action required</td></tr>
+<tr><td>3</td><td><code>IOT_ERROR_INFO_NOT_AVAILABLE</code></td><td>Not able to retrieve information</td><td>The device could not gather the requested information at this time</td><td>Retry the command after a short delay; if persistent, reboot the device</td></tr>
+</tbody></table>
 <h2>Request</h2>
 <h3>Request Fields</h3>
 <table>
@@ -331,12 +343,12 @@ h2, h3 { page-break-inside: avoid; }
     &quot;description&quot;: &quot;Success&quot;
   }
 }</code></pre>
-<h2>Status / Error Codes</h2>
+<h2>Response Codes</h2>
 <table>
-<thead><tr><th>Code</th><th>Status Constant</th><th>Description</th></tr></thead>
+<thead><tr><th>Code</th><th>Status Constant</th><th>Description</th><th>Cause</th><th>Recommended Action</th></tr></thead>
 <tbody>
-<tr><td>0</td><td><code>IOT_STATUS_SUCCESS</code></td><td>Success</td></tr>
-<tr><td>3</td><td><code>IOT_ERROR_INFO_NOT_AVAILABLE</code></td><td>Not able to retrieve information</td></tr>
+<tr><td>0</td><td><code>IOT_STATUS_SUCCESS</code></td><td>Success</td><td>Command executed successfully</td><td>No action required</td></tr>
+<tr><td>3</td><td><code>IOT_ERROR_INFO_NOT_AVAILABLE</code></td><td>Not able to retrieve information</td><td>The device could not gather the requested information at this time</td><td>Retry the command after a short delay; if persistent, reboot the device</td></tr>
 </tbody></table>
 <div class="doc-footer-bar">
     <span>API Version: V1.1 &nbsp;|&nbsp; Document Version: 1.0.0</span>

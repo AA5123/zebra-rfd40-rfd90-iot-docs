@@ -14,7 +14,7 @@ Use this command to monitor device health, verify connectivity before starting o
 | `get_current_region` | Inspect regulatory radio configuration — region, channels, power limits |
 | `get_config` | Retrieve the full device configuration including status, version, and region in one call |
 
-### Command Details
+## Command Details
 
 | Property | Value |
 |---|---|
@@ -22,7 +22,7 @@ Use this command to monitor device health, verify connectivity before starting o
 | Communication Type | Bidirectional (Cloud to Device, Device to Cloud) |
 | Applies To | RFD40 Series, RFD90 Series |
 
-### Response Fields
+## Response Fields
 
 | Field | What it tells you |
 |---|---|

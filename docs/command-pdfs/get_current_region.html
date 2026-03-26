@@ -222,6 +222,7 @@ h2, h3 { page-break-inside: avoid; }
 <h1>get_current_region</h1>
 <div class="meta">Command: <code>get_current_region</code></div>
 <h2>Description</h2>
+<p>📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_current_region.pdf)</p>
 <p>Retrieves the <strong>regulatory radio configuration</strong> of the scanner — which country&#x27;s rules it follows, what frequencies it can use, and power limits.</p>
 <h3>Response fields:</h3>
 <table><thead><tr><th>Field</th><th>What it tells you</th></tr></thead><tbody>
@@ -239,6 +240,11 @@ h2, h3 { page-break-inside: avoid; }
 <li>RF planning — check available channels and power limits for site planning.</li>
 <li>Multi-region management — confirm scanners shipped to different countries have the right region settings.</li>
 </ul>
+<p>## Response Codes</p>
+<table><thead><tr><th>Code</th><th>Status Constant</th><th>Description</th><th>Cause</th><th>Recommended Action</th></tr></thead><tbody>
+<tr><td>0</td><td><code>IOT_STATUS_SUCCESS</code></td><td>Success</td><td>Command executed successfully</td><td>No action required</td></tr>
+<tr><td>3</td><td><code>IOT_ERROR_INFO_NOT_AVAILABLE</code></td><td>Not able to retrieve information</td><td>The device could not gather the requested information at this time</td><td>Retry the command after a short delay; if persistent, reboot the device</td></tr>
+</tbody></table>
 <h2>Request</h2>
 <h3>Request Fields</h3>
 <table>
@@ -344,12 +350,12 @@ h2, h3 { page-break-inside: avoid; }
     &quot;description&quot;: &quot;Success&quot;
   }
 }</code></pre>
-<h2>Status / Error Codes</h2>
+<h2>Response Codes</h2>
 <table>
-<thead><tr><th>Code</th><th>Status Constant</th><th>Description</th></tr></thead>
+<thead><tr><th>Code</th><th>Status Constant</th><th>Description</th><th>Cause</th><th>Recommended Action</th></tr></thead>
 <tbody>
-<tr><td>0</td><td><code>IOT_STATUS_SUCCESS</code></td><td>Success</td></tr>
-<tr><td>3</td><td><code>IOT_ERROR_INFO_NOT_AVAILABLE</code></td><td>Not able to retrieve information</td></tr>
+<tr><td>0</td><td><code>IOT_STATUS_SUCCESS</code></td><td>Success</td><td>Command executed successfully</td><td>No action required</td></tr>
+<tr><td>3</td><td><code>IOT_ERROR_INFO_NOT_AVAILABLE</code></td><td>Not able to retrieve information</td><td>The device could not gather the requested information at this time</td><td>Retry the command after a short delay; if persistent, reboot the device</td></tr>
 </tbody></table>
 <div class="doc-footer-bar">
     <span>API Version: V1.1 &nbsp;|&nbsp; Document Version: 1.0.0</span>
