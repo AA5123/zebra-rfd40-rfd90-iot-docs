@@ -269,10 +269,20 @@
             continue;
           }
         }
-        /* REQUEST BODY — may contain child spans (* and application/json), allow up to 5 children */
-        if (len < 80 && el.children.length <= 5 && /REQUEST\s*BODY/i.test(fullText) && !/Field|Type|Description/i.test(fullText)) {
+        /* REQUEST BODY — strip the label text but keep application/json visible */
+        if (len < 80 && /REQUEST\s*BODY/i.test(fullText) && !/Field|Type|Description/i.test(fullText)) {
           el.setAttribute('data-obj-hidden', '1');
-          el.style.display = 'none';
+          /* Hide child nodes that contain REQUEST BODY or * but keep application/json */
+          for (var cn = 0; cn < el.childNodes.length; cn++) {
+            var child = el.childNodes[cn];
+            var ct = (child.textContent || '').trim();
+            if (child.nodeType === 3 && /REQUEST\s*BODY/i.test(ct)) {
+              child.textContent = '';
+            } else if (child.nodeType === 1 && ct === '*') {
+              child.style.display = 'none';
+            }
+          }
+          el.style.cssText = 'text-align:right!important;padding:4px 12px!important;';
         }
       }
       /* Inject a style tag into this shadow root to force pre background */
