@@ -183,6 +183,12 @@ table {
   width: 100% !important;
   border: 1.5px solid #003d6b !important;
   border-radius: 0 !important;
+  table-layout: fixed !important;
+}
+
+th:first-child,
+td:first-child {
+  width: 30% !important;
 }
 
 th {
