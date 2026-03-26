@@ -718,7 +718,7 @@ def main():
     body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: #fff; }
     rapi-doc { width: 100%; height: 100%; }
     rapi-doc::part(section-endpoint-body-title) {
-      font-size: 38px !important;
+      font-size: 46px !important;
       font-weight: 700 !important;
       color: #003d6b !important;
       letter-spacing: 0.3px !important;
@@ -814,24 +814,24 @@ def main():
 
       /* ── Tables: Zebra navy headers + alternating rows ── */
       'table { border-collapse: collapse !important; width: 100% !important; border: 1.5px solid #003d6b !important; border-radius: 0 !important; }',
-      'th { background: #003d6b !important; color: #fff !important; font-weight: 600 !important; font-size: 22px !important; letter-spacing: 0.3px !important; padding: 9px 12px !important; text-align: left !important; border-color: #002d50 !important; }',
-      'td { padding: 8px 12px !important; vertical-align: top !important; font-size: 22px !important; border: 1px solid #8a94a6 !important; word-break: break-word !important; }',
+      'th { background: #003d6b !important; color: #fff !important; font-weight: 600 !important; font-size: 26px !important; letter-spacing: 0.3px !important; padding: 9px 12px !important; text-align: left !important; border-color: #002d50 !important; }',
+      'td { padding: 8px 12px !important; vertical-align: top !important; font-size: 26px !important; border: 1px solid #8a94a6 !important; word-break: break-word !important; }',
       'tr:nth-child(odd) td { background: #ffffff !important; }',
       'tr:nth-child(even) td { background: #f7f9fb !important; }',
 
       /* ── Headings: navy accent ── */
-      '.endpoint-body .summary .title, .summary .title, div.summary div.title, .only-large-font { font-size: 50px !important; font-weight: 800 !important; color: #003d6b !important; letter-spacing: 0.3px !important; border-bottom: 3px solid #003d6b !important; padding-bottom: 10px !important; display: block !important; margin-bottom: 16px !important; }',
+      '.endpoint-body .summary .title, .summary .title, div.summary div.title, .only-large-font { font-size: 60px !important; font-weight: 800 !important; color: #003d6b !important; letter-spacing: 0.3px !important; border-bottom: 3px solid #003d6b !important; padding-bottom: 10px !important; display: block !important; margin-bottom: 16px !important; }',
       '.endpoint-head .descr { display: none !important; }',
-      '.api-content h2, .section-gap h2, .section-gap--read-mode h2 { color: #003d6b !important; font-weight: 700 !important; border-bottom: 2px solid #003d6b !important; padding-bottom: 6px !important; margin-top: 28px !important; margin-bottom: 16px !important; font-size: 35px !important; }',
-      '.api-content h3, .section-gap h3 { color: #003d6b !important; font-weight: 600 !important; margin-top: 24px !important; margin-bottom: 6px !important; font-size: 29px !important; }',
+      '.api-content h2, .section-gap h2, .section-gap--read-mode h2 { color: #003d6b !important; font-weight: 700 !important; border-bottom: 2px solid #003d6b !important; padding-bottom: 6px !important; margin-top: 28px !important; margin-bottom: 16px !important; font-size: 42px !important; }',
+      '.api-content h3, .section-gap h3 { color: #003d6b !important; font-weight: 600 !important; margin-top: 24px !important; margin-bottom: 6px !important; font-size: 35px !important; }',
 
       /* ── Code blocks: match PDF styling ── */
-      'pre { background: #f5f5f5 !important; border-left: 4px solid #003d6b !important; border-radius: 4px !important; padding: 12px 14px !important; font-size: 20px !important; line-height: 1.5 !important; max-height: 300px !important; overflow: auto !important; }',
-      'code { background: #f4f4f4 !important; border-radius: 3px !important; padding: 1px 5px !important; font-size: 20px !important; color: #1a1a1a !important; }',
-      'pre code { background: none !important; border: none !important; padding: 0 !important; font-size: 20px !important; }',
+      'pre { background: #f5f5f5 !important; border-left: 4px solid #003d6b !important; border-radius: 4px !important; padding: 12px 14px !important; font-size: 24px !important; line-height: 1.5 !important; max-height: 300px !important; overflow: auto !important; }',
+      'code { background: #f4f4f4 !important; border-radius: 3px !important; padding: 1px 5px !important; font-size: 24px !important; color: #1a1a1a !important; }',
+      'pre code { background: none !important; border: none !important; padding: 0 !important; font-size: 24px !important; }',
 
       /* ── Textareas (request bodies) ── */
-      'textarea { min-height: 40px !important; max-height: 180px !important; height: auto !important; resize: vertical !important; font-size: 20px !important; padding: 8px !important; }',
+      'textarea { min-height: 40px !important; max-height: 180px !important; height: auto !important; resize: vertical !important; font-size: 24px !important; padding: 8px !important; }',
 
       /* ── Tab & misc spacing ── */
       '.tab-content { padding: 0 !important; }',
@@ -839,23 +839,23 @@ def main():
       '.table-title { padding: 6px 0 !important; }',
 
       /* ── Description text ── */
-      '.m-markdown p, .m-markdown li { font-size: 23px !important; line-height: 1.6 !important; color: #1a1a1a !important; }',
+      '.m-markdown p, .m-markdown li { font-size: 28px !important; line-height: 1.6 !important; color: #1a1a1a !important; }',
       '.m-markdown strong { color: #1a1a1a !important; }',
 
       /* ── Schema table: widen and improve readability ── */
-      ':host { --font-size-small: 23px !important; --font-size-regular: 23px !important; --font-size-mono: 20px !important; }',
+      ':host { --font-size-small: 28px !important; --font-size-regular: 28px !important; --font-size-mono: 24px !important; }',
       '.schema-table { width: 100% !important; max-width: 100% !important; }',
       '.schema-table .tr { display: grid !important; grid-template-columns: minmax(160px, 1fr) minmax(80px, auto) 3fr !important; width: 100% !important; }',
-      '.schema-table .td { padding: 8px 12px !important; font-size: 23px !important; word-break: break-word !important; min-width: 0 !important; }',
-      '.schema-table .key { min-width: 140px !important; font-size: 23px !important; }',
-      '.schema-table .key-type { min-width: 70px !important; white-space: nowrap !important; font-size: 23px !important; }',
-      '.schema-table .key-descr { min-width: 0 !important; flex: 1 !important; font-size: 23px !important; }',
-      '.obj-descr { font-size: 23px !important; }',
-      '.descr-text { font-size: 23px !important; }',
-      'span.descr-text { font-size: 23px !important; }',
-      '.schema-description { font-size: 23px !important; }',
-      '.toolbar-btn { font-size: 20px !important; }',
-      '.request-body-container *, .response-body-container * { --font-size-small: 23px !important; --font-size-regular: 23px !important; }',
+      '.schema-table .td { padding: 8px 12px !important; font-size: 28px !important; word-break: break-word !important; min-width: 0 !important; }',
+      '.schema-table .key { min-width: 140px !important; font-size: 28px !important; }',
+      '.schema-table .key-type { min-width: 70px !important; white-space: nowrap !important; font-size: 28px !important; }',
+      '.schema-table .key-descr { min-width: 0 !important; flex: 1 !important; font-size: 28px !important; }',
+      '.obj-descr { font-size: 28px !important; }',
+      '.descr-text { font-size: 28px !important; }',
+      'span.descr-text { font-size: 28px !important; }',
+      '.schema-description { font-size: 28px !important; }',
+      '.toolbar-btn { font-size: 24px !important; }',
+      '.request-body-container *, .response-body-container * { --font-size-small: 28px !important; --font-size-regular: 28px !important; }',
       '.tree { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; }',
       '.req-res-info { width: 100% !important; max-width: 100% !important; }',
       '.request-body-container, .response-body-container { width: 100% !important; max-width: 100% !important; }',
@@ -916,7 +916,7 @@ def main():
           hdr.setAttribute('data-tag-group-header', '1');
           hdr.textContent = firstMap[tagText];
           var isFirst = (tagText === 'Device Status');
-          hdr.style.cssText = 'font-size:22px;font-weight:800;color:#003d6b;text-transform:uppercase;letter-spacing:2px;padding:' + (isFirst ? '10px' : '18px') + ' 16px 10px;' + (isFirst ? '' : 'margin-top:8px;border-top:2px solid #003d6b;');
+          hdr.style.cssText = 'font-size:26px;font-weight:800;color:#003d6b;text-transform:uppercase;letter-spacing:2px;padding:' + (isFirst ? '10px' : '18px') + ' 16px 10px;' + (isFirst ? '' : 'margin-top:8px;border-top:2px solid #003d6b;');
           navTags[i].parentElement.insertBefore(hdr, navTags[i]);
         }
       }
@@ -986,7 +986,7 @@ def main():
               var ajLabel = document.createElement('span');
               ajLabel.setAttribute('data-appjson-injected', '1');
               ajLabel.textContent = 'application/json';
-              ajLabel.style.cssText = 'position:absolute;right:0;top:0;font-size:22px;color:#333;font-weight:400;';
+              ajLabel.style.cssText = 'position:absolute;right:0;top:0;font-size:26px;color:#333;font-weight:400;';
               sibling.appendChild(ajLabel);
               break;
             }
@@ -1009,11 +1009,11 @@ def main():
         var txt = reqResTitles[r].textContent.trim().toUpperCase();
         var topicPrefix = '{tenantId}/MGMT/clients/';
         if (txt.indexOf('REQUEST') !== -1) {
-          reqResTitles[r].innerHTML = '<div style="font-size:35px;font-weight:700;color:#003d6b;border-bottom:2px solid #003d6b;padding-bottom:6px;margin-top:32px;margin-bottom:8px;">Command Payload</div>' +
-            '<div style="font-size:20px;color:#333;margin:2px 0;"><b>Publish to:</b> <code style="background:#f4f4f4;padding:1px 5px;border-radius:3px;">' + topicPrefix + 'cmnd/{deviceSerial}</code></div>';
+          reqResTitles[r].innerHTML = '<div style="font-size:42px;font-weight:700;color:#003d6b;border-bottom:2px solid #003d6b;padding-bottom:6px;margin-top:32px;margin-bottom:8px;">Command Payload</div>' +
+            '<div style="font-size:24px;color:#333;margin:2px 0;"><b>Publish to:</b> <code style="background:#f4f4f4;padding:1px 5px;border-radius:3px;">' + topicPrefix + 'cmnd/{deviceSerial}</code></div>';
         } else if (txt.indexOf('RESPONSE') !== -1) {
-          reqResTitles[r].innerHTML = '<div style="font-size:35px;font-weight:700;color:#003d6b;border-bottom:2px solid #003d6b;padding-bottom:6px;margin-top:8px;margin-bottom:8px;">Response Payload</div>' +
-            '<div style="font-size:20px;color:#333;margin:2px 0;"><b>Published on:</b> <code style="background:#f4f4f4;padding:1px 5px;border-radius:3px;">' + topicPrefix + 'resp/{deviceSerial}</code></div>';
+          reqResTitles[r].innerHTML = '<div style="font-size:42px;font-weight:700;color:#003d6b;border-bottom:2px solid #003d6b;padding-bottom:6px;margin-top:8px;margin-bottom:8px;">Response Payload</div>' +
+            '<div style="font-size:24px;color:#333;margin:2px 0;"><b>Published on:</b> <code style="background:#f4f4f4;padding:1px 5px;border-radius:3px;">' + topicPrefix + 'resp/{deviceSerial}</code></div>';
         }
       }
       /* Style enum "Allowed:" values as bordered code badges */
@@ -1038,9 +1038,9 @@ def main():
         /* Split on thick pipe U+2503 or regular pipe */
         var vals = valText.split(/[|\\u2503]/).map(function(v){ return v.trim(); }).filter(function(v){ return v !== ''; });
         var badges = vals.map(function(v) {
-          return '<span style="display:inline-block;background:#fff;border:1px solid #bbb;border-radius:3px;padding:2px 10px;margin:2px 4px 2px 0;font-family:Consolas,Monaco,monospace;font-size:19px;color:#333;">' + v + '</span>';
+          return '<span style="display:inline-block;background:#fff;border:1px solid #bbb;border-radius:3px;padding:2px 10px;margin:2px 4px 2px 0;font-family:Consolas,Monaco,monospace;font-size:23px;color:#333;">' + v + '</span>';
         }).join('');
-        parentDiv.innerHTML = '<span style="font-weight:600;color:#555;font-size:19px;">Enum:</span> ' + badges;
+        parentDiv.innerHTML = '<span style="font-weight:600;color:#555;font-size:23px;">Enum:</span> ' + badges;
       }
       /* <pre> blocks (response examples) */
       var pres = root.querySelectorAll('pre');
@@ -1074,7 +1074,7 @@ def main():
         /* Create a <pre> to replace the textarea visually */
         var fakePre = document.createElement('pre');
         fakePre.textContent = val;
-        fakePre.style.cssText = 'position:relative;background:#f6f8fa;border:1px solid #e2e8f0;border-radius:6px;padding:12px 50px 12px 16px;font-family:Consolas,Monaco,monospace;font-size:19px;white-space:pre-wrap;word-break:break-word;color:#333;line-height:1.5;margin:0;overflow:auto;max-height:250px;';
+        fakePre.style.cssText = 'position:relative;background:#f6f8fa;border:1px solid #e2e8f0;border-radius:6px;padding:12px 50px 12px 16px;font-family:Consolas,Monaco,monospace;font-size:23px;white-space:pre-wrap;word-break:break-word;color:#333;line-height:1.5;margin:0;overflow:auto;max-height:250px;';
         fakePre.setAttribute('data-copy-added','1');
         /* Copy button inside the pre */
         var btn2 = document.createElement('button');
@@ -1137,13 +1137,13 @@ def main():
         /* Only style operation-name-like elements (skip generic headings) */
         if (!txt || txt.length > 80) continue;
         titles[t].setAttribute('data-styled', '1');
-        titles[t].style.cssText = 'font-size:50px!important;font-weight:800!important;color:#003d6b!important;letter-spacing:0.3px!important;border-bottom:3px solid #003d6b!important;padding-bottom:10px!important;display:block!important;margin-bottom:4px!important;';
+        titles[t].style.cssText = 'font-size:60px!important;font-weight:800!important;color:#003d6b!important;letter-spacing:0.3px!important;border-bottom:3px solid #003d6b!important;padding-bottom:10px!important;display:block!important;margin-bottom:4px!important;';
         /* Add breadcrumb below title */
         var bc = breadcrumbMap[txt];
         if (bc && !titles[t].parentElement.querySelector('[data-breadcrumb]')) {
           var crumb = document.createElement('div');
           crumb.setAttribute('data-breadcrumb', '1');
-          crumb.style.cssText = 'font-size:17px;color:#666;margin-bottom:16px;font-weight:400;';
+          crumb.style.cssText = 'font-size:20px;color:#666;margin-bottom:16px;font-weight:400;';
           crumb.innerHTML = '<span style="color:#888;">' + bc.group + '</span> <span style="color:#aaa;margin:0 4px;">›</span> <span style="color:#888;">' + bc.tag + '</span> <span style="color:#aaa;margin:0 4px;">›</span> <span style="color:#003d6b;font-weight:600;">' + txt + '</span>';
           titles[t].parentElement.insertBefore(crumb, titles[t].nextSibling);
         }
