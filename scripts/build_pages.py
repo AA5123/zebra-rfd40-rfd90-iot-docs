@@ -733,7 +733,7 @@ def main():
 </head>
 <body>
   <rapi-doc
-    spec-url="openapi.yaml?v=38"
+    spec-url="openapi.yaml?v=43"
     render-style="read"
     sort-endpoints-by="none"
     show-header="false"
