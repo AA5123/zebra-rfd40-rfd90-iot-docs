@@ -440,6 +440,7 @@
         /* Only style operation-name-like elements (skip generic headings) */
         if (!txt || txt.length > 80) continue;
         titles[t].setAttribute('data-styled', '1');
+        titles[t].style.cssText = 'border-bottom:3px solid #003d6b !important;padding-bottom:10px !important;display:block !important;margin-bottom:8px !important;';
         /* Add breadcrumb below title */
         var bc = breadcrumbMap[txt];
         if (bc && !titles[t].parentElement.querySelector('[data-breadcrumb]')) {
