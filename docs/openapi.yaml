@@ -113,7 +113,6 @@
                 "summary": "get_status",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_status.pdf)\n\n## Overview\n\nThe `get_status` command retrieves the current status of a Zebra handheld RFID reader. The response includes power source information, radio activity and connection state, device temperature, system time, Network Time Protocol (NTP) synchronization details, terminal connection status, and battery health metrics.\n\nUse this command to monitor device health, verify connectivity before starting operations, and collect telemetry data for fleet management dashboards. The command requires no configuration parameters beyond the standard envelope fields.\n\n> **Note:** The `deviceStatus` object in the response is optional. When the device cannot retrieve status information (response code `3`), the response omits this object.\n\n## Related Commands\n\n| Command | Relationship |\n|---|---|\n| `get_version` | Retrieve device identity — model, serial number, SKU, firmware versions |\n| `get_current_region` | Inspect regulatory radio configuration — region, channels, power limits |\n| `get_config` | Retrieve the full device configuration including status, version, and region in one call |\n\n### Command Details\n\n| Property | Value |\n|---|---|\n| Pattern Name | Device Status Retrieval |\n| Communication Type | Bidirectional (Cloud to Device, Device to Cloud) |\n| Applies To | RFD40 Series, RFD90 Series |\n\n### Response Fields\n\n| Field | What it tells you |\n|---|---|\n| `powerSource` | How the scanner is powered — DC, Wall Charger, USB, or Cradle |\n| `radioActivity` | Whether the RFID radio is currently active or idle |\n| `radioConnection` | Whether the radio module is connected or disconnected |\n| `hostname` | The scanner's network hostname |\n| `systemTime` | Current device clock in ISO 8601 format |\n| `temperature` | Internal temperature in °C — monitor for overheating |\n| `ntp` | Clock sync status — offset (ms drift) and reach (sync success history) |\n| `terminalConnection` | Paired phone/tablet — connection status and type (Bluetooth, USB, CIO) |\n| `batteryStatus` | Battery capacity (mAh), charge %, health (Good/Average/Poor), charge state |\n\n## Use Cases\n\n### Fleet Health Monitoring\n\nA warehouse management platform polls all readers at five-minute intervals using `get_status`. The system collects `batteryStatus.chargePercentage`, `temperature`, and `radioConnection` values from each device. When chargePercentage drops below 20 or temperature exceeds 45 °C, the platform generates an alert and schedules the device for charging or cooldown.\n\n### Pre-Operation Readiness Check\n\nBefore starting an inventory scan, a mobile application sends `get_status` to verify that `radioConnection` is CONNECTED and `batteryStatus.stateOfHealth` is not POOR. If either condition fails, the application prompts the operator to reconnect the sled or replace the battery before proceeding with `control_operation`.\n\n### Battery Replacement Planning\n\nA device management system tracks `batteryStatus.stateOfHealth` across the fleet over time. When a device transitions from GOOD to AVERAGE, the system adds the device to a scheduled replacement queue. Devices reporting POOR state of health are flagged for immediate battery swap.\n\n### Time Synchronization Verification\n\nAn enterprise system queries `get_status` to check the `ntp.offset` and `ntp.reach` values. A high offset indicates clock drift that can cause timestamp mismatches in tag event data. The system triggers an NTP resynchronization when the offset exceeds the configured threshold.\n\n### Terminal Connection Diagnostics\n\nA field service technician troubleshoots connectivity issues between an RFD40 sled and a host mobile computer. The technician sends `get_status` and checks `terminalConnection.status` and `terminalConnection.type` to confirm whether the sled is connected over Bluetooth, USB, or CIO, and whether the connection is active.\n\n## Status / Error Codes\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 3 | `IOT_ERROR_INFO_NOT_AVAILABLE` | Not able to retrieve information |",
                 "requestBody": {
-                    "description": "The get_status command requires only the standard envelope fields. No additional configuration parameters are needed.",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -144,7 +143,7 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "The response contains standard envelope fields, a deviceStatus object with device telemetry data, and a response object indicating success or failure.",
+                        "description": "Response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -390,7 +389,6 @@
                 "summary": "get_version",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_version.pdf)\n\nRetrieves the **scanner's identity card** — model, serial number, SKU, and all firmware versions.\n\n**Command details:**\n\n| Property | Value |\n|---|---|\n| Pattern Name | Reader Identity and Firmware Retrieval |\n| Communication Type | Bidirectional (Cloud to Device, Device to Cloud) |\n| Applies To | RFD40 Series, RFD90 Series |\n\n**Response fields:**\n\n| Field | What it tells you |\n|---|---|\n| `firmwareVersion` | Main device firmware version |\n| `model` | Scanner model — RFD40 or RFD90 |\n| `serialNumber` | Unique device serial number |\n| `sku` | Stock Keeping Unit — encodes model, features, and region (e.g. `RFD4031-G10B700-US`) |\n| `detailedVersions.scannerFirmware` | Barcode scanner module firmware |\n| `detailedVersions.radioFirmware` | RFID radio module firmware |\n| `detailedVersions.iotcVersion` | IoT Connector software version |\n\n**Typical use cases:**\n- Inventory — collect model/serial/SKU across all scanners for asset tracking.\n- Firmware management — check which scanners need firmware updates.\n\n**MQTT topics for this command:**\n\n- Command topic (Cloud to Device):\n  `<tenantId>/CTRL/clients/cmnd/<deviceSerial>`\n- Response topic (Device to Cloud):\n  `<tenantId>/CTRL/clients/resp/<deviceSerial>`\n\n**Example:**\n- Command: `zebra/CTRL/clients/cmnd/RFD40-12345678`\n- Response: `zebra/CTRL/clients/resp/RFD40-12345678`\n\nEnsure these topic paths match your configured endpoint topics.",
                 "requestBody": {
-                    "description": "",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -575,7 +573,6 @@
                 "summary": "get_current_region",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_current_region.pdf)\n\nRetrieves the **regulatory radio configuration** of the scanner — which country's rules it follows, what frequencies it can use, and power limits.\n\n**Response fields:**\n\n| Field | What it tells you |\n|---|---|\n| `country` | The country this scanner is configured for (e.g. United States, Germany) |\n| `regulatoryStandard` | The radio regulation it follows (e.g. FCC for US, ETSI for Europe) |\n| `frequencyHopping` | Whether the scanner automatically switches between frequency channels |\n| `lbtEnabled` | Whether Listen Before Talk is enabled (required in some regions like Japan/EU) |\n| `maxTxPowerSupported` | Maximum allowed transmit power in dBm |\n| `minTxPowerSupported` | Minimum transmit power in dBm |\n| `channelData` | List of all available frequency channels (in kHz) the scanner can use |\n\n**Typical use cases:**\n- Compliance auditing — verify scanners are configured for the correct country before deployment.\n- RF planning — check available channels and power limits for site planning.\n- Multi-region management — confirm scanners shipped to different countries have the right region settings.\n\n## Status / Error Codes\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 3 | `IOT_ERROR_INFO_NOT_AVAILABLE` | Not able to retrieve information |",
                 "requestBody": {
-                    "description": "",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -812,7 +809,6 @@
                 "summary": "get_config",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_config.pdf)\n\nRetrieves the **complete device configuration** in a single response — equivalent to calling `get_version`, `get_status`, `get_current_region`, `get_wifi`, `get_eth`, `get_endpoint_config`, and `get_installed_certificate` all at once.\n\n**Response sections:**\n\n| Section | Contents |\n|---|---|\n| `readerVersion` | Model, serial number, SKU, firmware versions (main, scanner, radio, IoTC) |\n| `deviceStatus` | Power source, radio state, temperature, battery health, NTP sync, terminal connection |\n| `currentRegion` | Country, regulatory standard, frequency channels, power limits, frequency hopping, LBT |\n| `wifiConfig` | Wi-Fi interface status, connected SSID, IP address, MAC, DHCP, security type |\n| `ethConfig` | Ethernet interface status, link speed, IP configuration |\n| `epConfig` | Active MQTT endpoint: type, broker URL, port, protocol, credentials, topics, security |\n| `installedCerts` | List of installed certificates with type, validity dates, and algorithms |\n| `eventConfiguration` | Which events/alerts are enabled (heartbeat, battery, temperature, firmware, network, etc.) |\n\n**Typical use cases:**\n- First-time setup — see how a blank scanner is configured before applying changes via `set_config`.\n- Troubleshooting — get the full picture when something isn't working.\n- Auditing — verify all settings across a fleet of scanners.\n\n## Status / Error Codes\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 3 | `IOT_ERROR_INFO_NOT_AVAILABLE` | Not able to retrieve information |",
                 "requestBody": {
-                    "description": "",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -2360,7 +2356,6 @@
                 "summary": "set_config",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/set_config.pdf)\n\nCommand issued to set the complete device configuration such as current region details, ethernet & wifi configuration, end point configuration,  event and alert configuration\n\n## Status / Error Codes\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 2 | `IOT_ERROR_INVALID_PAYLOAD` | Invalid payload |\n| 10 | `IOT_ERROR_CONFIG_ALREADY_EXIST` | Configuration already exist |\n| 15 | `IOT_ERROR_SSID_NOT_FOUND` | WIFI Error - SSID not found |\n| 17 | `IOT_ERROR_SSID_MISSED` | WIFI Error - SSID missed |\n| 18 | `IOT_ERROR_SSID_ALREADY_EXIST` | WIFI Error - SSID already exist |\n| 19 | `IOT_ERROR_SSID_LIMIT_OVERFLOW` | WIFI Error - SSID count overflow |\n| 20 | `IOT_ERROR_WIFI_INTER_NOT_SUPPORTED` | Wifi is not supported |\n| 23 | `IOT_ERROR_INVALID_ENUM` | Invalid enum value |\n| 25 | `IOT_ERROR_PUBLISH_TOPICS_EXCEEDED` | Max 3 publish topics exceeded |\n| 26 | `IOT_ERROR_SUBSCRIBE_TOPIC_EXCEEDED` | Max 1 subscribe topic exceeded |\n| 27 | `IOT_ERROR_INVALID_TENANTID_LENGTH` | Invalid tenant ID length |",
                 "requestBody": {
-                    "description": "",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -4964,7 +4959,6 @@
                 "summary": "delete_wifi_profile",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/delete_wifi_profile.pdf)\n\nCommand issued to delete saved wifi profile\n\n## Status / Error Codes\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 2 | `IOT_ERROR_INVALID_PAYLOAD` | Invalid payload |\n| 15 | `IOT_ERROR_SSID_NOT_FOUND` | WIFI Error - SSID not found |\n| 16 | `IOT_ERROR_DELETE_ACTIVE_SSID` | WIFI Error - Cannot delete active SSID |\n| 17 | `IOT_ERROR_SSID_MISSED` | WIFI Error - SSID missed |",
                 "requestBody": {
-                    "description": "",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -5126,7 +5120,6 @@
                 "summary": "get_eth",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_eth.pdf)\n\nThis API used to retrieve ethernet configuration details. Security features, static IP configuration, and IPv6 support are not available in the current API version.\n\n## Status / Error Codes\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 3 | `IOT_ERROR_INFO_NOT_AVAILABLE` | Not able to retrieve information |",
                 "requestBody": {
-                    "description": "",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -5450,7 +5443,6 @@
                 "summary": "get_wifi",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_wifi.pdf)\n\nRetrieves the **current Wi-Fi configuration** of the scanner — connected network, IP address, signal, and security settings.\n\n**Command details:**\n\n| Property | Value |\n|---|---|\n| Pattern Name | Wi-Fi Configuration Retrieval |\n| Communication Type | Bidirectional (Cloud to Device, Device to Cloud) |\n| Applies To | RFD40 Series, RFD90 Series |\n\n**Response fields:**\n\n| Field | What it tells you |\n|---|---|\n| `interfaceName` | Wi-Fi interface identifier (e.g. `wlan0`) |\n| `status` | Whether the Wi-Fi interface is Enabled or Disabled |\n| `hostname` | The scanner's network hostname |\n| `macAddress` | Wi-Fi MAC address |\n| `accessPoint.essid` | The SSID of the connected Wi-Fi network |\n| `accessPoint.status` | Connection state — Connected or Disconnected |\n| `accessPoint.securityType` | Security protocol — WPA2Personal, WPA2Enterprise, WPA3Personal, Open |\n| `accessPoint.isPreferred` | Whether this is the preferred network |\n| `accessPoint.autoConn` | Whether the scanner auto-connects to this network |\n| `ipv4Configuration.ipAddress` | Current IP address assigned to the scanner |\n| `ipv4Configuration.subnetMask` | Subnet mask |\n| `ipv4Configuration.gateway` | Default gateway |\n| `ipv4Configuration.enableDhcp` | Whether DHCP is enabled or using static IP |\n| `ipv4Configuration.dnsServer` | DNS server address |\n\n**Typical use cases:**\n- Network troubleshooting — verify the scanner is connected to the correct SSID with a valid IP.\n- Fleet monitoring — check Wi-Fi status across all scanners from a central dashboard.\n- Security audit — confirm scanners are using WPA2/WPA3 Enterprise, not open networks.\n\n**MQTT topics for this command:**\n\n- Command topic (Cloud to Device):\n  `<tenantId>/CTRL/clients/cmnd/<deviceSerial>`\n- Response topic (Device to Cloud):\n  `<tenantId>/CTRL/clients/resp/<deviceSerial>`\n\n**Example:**\n- Command: `zebra/CTRL/clients/cmnd/RFD40-12345678`\n- Response: `zebra/CTRL/clients/resp/RFD40-12345678`\n\nEnsure these topic paths match your configured endpoint topics.\n\n## Status / Error Codes\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 3 | `IOT_ERROR_INFO_NOT_AVAILABLE` | Not able to retrieve information |",
                 "requestBody": {
-                    "description": "",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -6142,7 +6134,6 @@
                 "summary": "set_wifi",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/set_wifi.pdf)\n\nThis API is used to set wifi configuration. It currently supports IPv4 addressing with DHCP-based IP assignment only; static IP configuration and IPv6 support is not available in the current API version.\n\n## Status / Error Codes\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 2 | `IOT_ERROR_INVALID_PAYLOAD` | Invalid payload |\n| 15 | `IOT_ERROR_SSID_NOT_FOUND` | WIFI Error - SSID not found |\n| 17 | `IOT_ERROR_SSID_MISSED` | WIFI Error - SSID missed |\n| 18 | `IOT_ERROR_SSID_ALREADY_EXIST` | WIFI Error - SSID already exist |\n| 19 | `IOT_ERROR_SSID_LIMIT_OVERFLOW` | WIFI Error - SSID count overflow |\n| 20 | `IOT_ERROR_WIFI_INTER_NOT_SUPPORTED` | Wifi is not supported |\n| 23 | `IOT_ERROR_INVALID_ENUM` | Invalid enum value |",
                 "requestBody": {
-                    "description": "",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -6774,7 +6765,6 @@
                 "summary": "config_endpoint",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/config_endpoint.pdf)\n\nUsing config_endpoint user can add/delete/modify the end point configuration\n\n## Status / Error Codes\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 10 | `IOT_ERROR_CONFIG_ALREADY_EXIST` | Configuration already exist |\n| 23 | `IOT_ERROR_INVALID_ENUM` | Invalid enum value |\n| 25 | `IOT_ERROR_PUBLISH_TOPICS_EXCEEDED` | Max 3 publish topics exceeded |\n| 26 | `IOT_ERROR_SUBSCRIBE_TOPIC_EXCEEDED` | Max 1 subscribe topic exceeded |\n| 27 | `IOT_ERROR_INVALID_TENANTID_LENGTH` | Invalid tenant ID length |",
                 "requestBody": {
-                    "description": "",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -7417,7 +7407,6 @@
                 "summary": "get_endpoint_config",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_endpoint_config.pdf)\n\nCommand to get configured endpoints.If API does not included endpointName argument, then  response includes all active endpoints detailed configuration & list of all saved endpoint names otherwise response includes interested endpoints configuration only\n\n## Status / Error Codes\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 3 | `IOT_ERROR_INFO_NOT_AVAILABLE` | Not able to retrieve information |",
                 "requestBody": {
-                    "description": "",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -8064,7 +8053,6 @@
                 "summary": "delete_certificate",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/delete_certificate.pdf)\n\nCommand issued to delete saved certificate\n\n## Status / Error Codes\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 9 | `IOT_STATUS_FILE_NOT_FOUND` | File not found |\n| 21 | `IOT_ERROR_CERT_NOT_FOUND` | Certificate not found |",
                 "requestBody": {
-                    "description": "",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -8233,7 +8221,6 @@
                 "summary": "get_installed_certificate",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_installed_certificate.pdf)\n\nThis API is used to get installed certificates.\n\n## Status / Error Codes\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 3 | `IOT_ERROR_INFO_NOT_AVAILABLE` | Not able to retrieve information |\n| 9 | `IOT_STATUS_FILE_NOT_FOUND` | File not found |\n| 21 | `IOT_ERROR_CERT_NOT_FOUND` | Certificate not found |",
                 "requestBody": {
-                    "description": "",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -8451,7 +8438,6 @@
                 "summary": "install_certificate",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/install_certificate.pdf)\n\nThis API is used to install certificates.\n\n## Status / Error Codes\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 1 | `IOT_STATUS_CMD_PAYLOAD_ACCEPTED` | Command payload is accepted |\n| 9 | `IOT_STATUS_FILE_NOT_FOUND` | File not found |\n| 21 | `IOT_ERROR_CERT_NOT_FOUND` | Certificate not found |\n| 23 | `IOT_ERROR_INVALID_ENUM` | Invalid enum value |",
                 "requestBody": {
-                    "description": "",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -8823,7 +8809,6 @@
                 "summary": "reboot",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/reboot.pdf)\n\nReboot command is used to perform warm reset of device. After successful reboot, device will reinitiate the connection to previously connected SOTI server. Upon failure notification will be sent\n\n## Status / Error Codes\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 5 | `IOT_ERROR_IN_REBOOT_INVENTORY_IN_PROGRESS` | Can't reboot device, inventory in progress |",
                 "requestBody": {
-                    "description": "",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -8942,7 +8927,6 @@
                 "summary": "set_os",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/set_os.pdf)\n\nCommand issued to set new firmware & initiate firmware update\n\n## Status / Error Codes\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 1 | `IOT_STATUS_CMD_PAYLOAD_ACCEPTED` | Command payload is accepted |\n| 4 | `IOT_STATUS_FW_UPDATE_IN_PROGRESS` | Firmware update in progress |\n| 8 | `IOT_ERROR_LOW_FLASH_SIZE` | Insufficient flash size |\n| 9 | `IOT_STATUS_FILE_NOT_FOUND` | File not found |\n| 13 | `IOT_ERROR_FW_UPDATE_FAIL` | Firmware update Failed |\n| 14 | `IOT_ERROR_FW_UPDATE_FAIL_LOW_BATTERY` | Battery is low, Cannot update firmware |",
                 "requestBody": {
-                    "description": "",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -9221,7 +9205,6 @@
                 "summary": "control_operation",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/control_operation.pdf)\n\nThis command controls device functionality, including RFID operations and scan operations.\n\n## Status / Error Codes\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 11 | `IOT_ERROR_INVENTORY_IN_PROGRESS` | Inventory in progress |\n| 12 | `IOT_ERROR_NO_RADIO_OP_IN_PROGRESS` | No Radio Operation in Progress |\n| 23 | `IOT_ERROR_INVALID_ENUM` | Invalid enum value |",
                 "requestBody": {
-                    "description": "",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -9401,7 +9384,6 @@
                 "summary": "get_operating_mode",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_operating_mode.pdf)\n\nThis command is designed to fetch the current operating mode information of RFID device within the IOTC system\n\n## Status / Error Codes\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 3 | `IOT_ERROR_INFO_NOT_AVAILABLE` | Not able to retrieve information |",
                 "requestBody": {
-                    "description": "",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -9924,7 +9906,6 @@
                 "summary": "set_operating_mode",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/set_operating_mode.pdf)\n\nThis operation is used to configure the operating mode of RFID devices. Note: When RFD40/90 sled is configured to FAST_READ profile, data events are not currently supported.\n\n## Status / Error Codes\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 11 | `IOT_ERROR_INVENTORY_IN_PROGRESS` | Inventory in progress |\n| 22 | `IOT_CTRL_ADVANCED_PROFILE_NOT_SET` | Advanced configuration not set |\n| 23 | `IOT_ERROR_INVALID_ENUM` | Invalid enum value |\n| 24 | `IOT_ERROR_PREFILTERS_LIMIT_EXCEEDED` | Max 32 prefilters limit exceeded |\n| 28 | `IOT_ERROR_TAG_MATCH_PATTERN_LENGTH_EXCEEDED` | Tag match pattern length exceeded |",
                 "requestBody": {
-                    "description": "",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -10700,7 +10681,6 @@
                 "summary": "get_post_filter",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/get_post_filter.pdf)\n\nThis operation is used to fetch the post filter applied to filter tag data in RFID devices. The post filter ensures that only relevant tag data is processed based on specified criteria.\n\n## Status / Error Codes\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 3 | `IOT_ERROR_INFO_NOT_AVAILABLE` | Not able to retrieve information |",
                 "requestBody": {
-                    "description": "",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -10893,7 +10873,6 @@
                 "summary": "set_post_filter",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/set_post_filter.pdf)\n\nThis operation is used to set a post-filter for RFID device, enabling the filtering of tags scanned by the device based on specific criteria.\n\n## Status / Error Codes\n\n| Code | Status Constant | Description |\n|------|----------------|-------------|\n| 0 | `IOT_STATUS_SUCCESS` | Success |\n| 23 | `IOT_ERROR_INVALID_ENUM` | Invalid enum value |",
                 "requestBody": {
-                    "description": "",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -12051,7 +12030,6 @@
                 "summary": "config_events",
                 "description": "📄 [Download PDF](https://aa5123.github.io/zebra-rfd40-rfd90-iot-docs/command-pdfs/config_events.pdf)\n\nEnables or disables specific device events. To apply the changes, a device reboot is required. For RFD4090 devices, only the following events are supported: terminalConnection, firmwareUpdate, network, exceptions, ntp, heartbeat, power, battery, and fileDownload.",
                 "requestBody": {
-                    "description": "",
                     "required": true,
                     "content": {
                         "application/json": {

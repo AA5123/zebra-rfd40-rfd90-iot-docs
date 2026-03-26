@@ -53,14 +53,10 @@ RESPONSE_DESCRIPTIONS = {
 }
 
 # Per-operation request body descriptions
-REQUEST_BODY_DESCRIPTIONS = {
-    "get_status": "The get_status command requires only the standard envelope fields. No additional configuration parameters are needed.",
-}
+REQUEST_BODY_DESCRIPTIONS = {}
 
 # Per-operation response payload descriptions
-RESPONSE_PAYLOAD_DESCRIPTIONS = {
-    "get_status": "The response contains standard envelope fields, a deviceStatus object with device telemetry data, and a response object indicating success or failure.",
-}
+RESPONSE_PAYLOAD_DESCRIPTIONS = {}
 
 
 def load_json(filepath):
@@ -468,7 +464,6 @@ def build_openapi():
                 req_content["application/json"]["examples"] = req_examples
 
             op["requestBody"] = OrderedDict([
-                ("description", REQUEST_BODY_DESCRIPTIONS.get(op_name, "")),
                 ("required", True),
                 ("content", req_content),
             ])
@@ -490,7 +485,7 @@ def build_openapi():
                     if resp_examples:
                         resp_content["application/json"]["examples"] = resp_examples
 
-                    resp_desc = RESPONSE_PAYLOAD_DESCRIPTIONS.get(op_name, "")
+                    resp_desc = ""
 
                     op["responses"] = OrderedDict([
                         ("default", OrderedDict([
