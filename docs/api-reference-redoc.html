@@ -15,8 +15,8 @@
     body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: #fff; }
     rapi-doc { width: 100%; height: 100%; }
     rapi-doc::part(section-endpoint-body-title) {
-      font-size: 46px !important;
-      font-weight: 700 !important;
+      font-size: 72px !important;
+      font-weight: 900 !important;
       color: #003d6b !important;
       letter-spacing: 0.3px !important;
       padding-bottom: 10px !important;
@@ -117,10 +117,10 @@
       'tr:nth-child(even) td { background: #f7f9fb !important; }',
 
       /* ── Headings: navy accent ── */
-      '.endpoint-body .summary .title, .summary .title, div.summary div.title, .only-large-font { font-size: 60px !important; font-weight: 800 !important; color: #003d6b !important; letter-spacing: 0.3px !important; border-bottom: 3px solid #003d6b !important; padding-bottom: 10px !important; display: block !important; margin-bottom: 16px !important; }',
+      '.endpoint-body .summary .title, .summary .title, div.summary div.title, .only-large-font { font-size: 72px !important; font-weight: 900 !important; color: #003d6b !important; letter-spacing: 0.3px !important; border-bottom: 3px solid #003d6b !important; padding-bottom: 10px !important; display: block !important; margin-bottom: 16px !important; }',
       '.endpoint-head .descr { display: none !important; }',
-      '.api-content h2, .section-gap h2, .section-gap--read-mode h2 { color: #003d6b !important; font-weight: 700 !important; border-bottom: 2px solid #003d6b !important; padding-bottom: 6px !important; margin-top: 28px !important; margin-bottom: 16px !important; font-size: 42px !important; }',
-      '.api-content h3, .section-gap h3 { color: #003d6b !important; font-weight: 600 !important; margin-top: 24px !important; margin-bottom: 6px !important; font-size: 35px !important; }',
+      '.api-content h2, .section-gap h2, .section-gap--read-mode h2 { color: #003d6b !important; font-weight: 700 !important; border-bottom: 2px solid #003d6b !important; padding-bottom: 6px !important; margin-top: 28px !important; margin-bottom: 24px !important; font-size: 42px !important; }',
+      '.api-content h3, .section-gap h3 { color: #003d6b !important; font-weight: 600 !important; margin-top: 32px !important; margin-bottom: 4px !important; font-size: 35px !important; }',
 
       /* ── Code blocks: match PDF styling ── */
       'pre { background: #f5f5f5 !important; border-left: 4px solid #003d6b !important; border-radius: 4px !important; padding: 12px 14px !important; font-size: 24px !important; line-height: 1.5 !important; max-height: 300px !important; overflow: auto !important; }',
@@ -434,7 +434,7 @@
         /* Only style operation-name-like elements (skip generic headings) */
         if (!txt || txt.length > 80) continue;
         titles[t].setAttribute('data-styled', '1');
-        titles[t].style.cssText = 'font-size:60px!important;font-weight:800!important;color:#003d6b!important;letter-spacing:0.3px!important;border-bottom:3px solid #003d6b!important;padding-bottom:10px!important;display:block!important;margin-bottom:4px!important;';
+        titles[t].style.cssText = 'font-size:72px!important;font-weight:900!important;color:#003d6b!important;letter-spacing:0.3px!important;border-bottom:3px solid #003d6b!important;padding-bottom:10px!important;display:block!important;margin-bottom:4px!important;';
         /* Add breadcrumb below title */
         var bc = breadcrumbMap[txt];
         if (bc && !titles[t].parentElement.querySelector('[data-breadcrumb]')) {
