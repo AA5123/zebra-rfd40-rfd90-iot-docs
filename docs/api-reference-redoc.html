@@ -269,20 +269,25 @@
             continue;
           }
         }
-        /* REQUEST BODY — strip the label text but keep application/json visible */
+        /* REQUEST BODY — hide entirely, then inject right-aligned application/json like Response */
         if (len < 80 && /REQUEST\s*BODY/i.test(fullText) && !/Field|Type|Description/i.test(fullText)) {
           el.setAttribute('data-obj-hidden', '1');
-          /* Hide child nodes that contain REQUEST BODY or * but keep application/json */
-          for (var cn = 0; cn < el.childNodes.length; cn++) {
-            var child = el.childNodes[cn];
-            var ct = (child.textContent || '').trim();
-            if (child.nodeType === 3 && /REQUEST\s*BODY/i.test(ct)) {
-              child.textContent = '';
-            } else if (child.nodeType === 1 && ct === '*') {
-              child.style.display = 'none';
+          el.style.display = 'none';
+          /* Find the next sibling that contains EXAMPLE/SCHEMA tabs and inject application/json */
+          var sibling = el.nextElementSibling;
+          while (sibling) {
+            var st = (sibling.textContent || '').trim();
+            if (/EXAMPLE|SCHEMA/i.test(st) && !sibling.querySelector('[data-appjson-injected]')) {
+              sibling.style.position = 'relative';
+              var ajLabel = document.createElement('span');
+              ajLabel.setAttribute('data-appjson-injected', '1');
+              ajLabel.textContent = 'application/json';
+              ajLabel.style.cssText = 'position:absolute;right:0;top:0;font-size:14px;color:#555;';
+              sibling.appendChild(ajLabel);
+              break;
             }
+            sibling = sibling.nextElementSibling;
           }
-          el.style.cssText = 'display:flex!important;justify-content:flex-end!important;padding:0 0 4px 0!important;margin:0!important;';
         }
       }
       /* Inject a style tag into this shadow root to force pre background */
