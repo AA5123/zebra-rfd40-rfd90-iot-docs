@@ -261,7 +261,7 @@
         if (el.getAttribute('data-obj-hidden')) continue;
         var t = (el.textContent || '').trim();
         /* Match standalone OBJECT or ARRAY text (may have whitespace) */
-        if (/^(OBJECT|ARRAY|object|array)$/.test(t)) {
+        if (/^(OBJECT|ARRAY|object|array|default|Response)$/.test(t)) {
           el.setAttribute('data-obj-hidden', '1');
           el.style.display = 'none';
         }
